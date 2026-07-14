@@ -127,16 +127,16 @@ onmouseenter="zagraj()">
 </a>
 
 <audio id="hover">
-    <source src="hover.mp3" type="audio/mpeg">
+    <source src="click.wav" type="audio/wav">
 </audio>
 
 <script>
 
 function zagraj(){
 
-    let dzwiek=document.getElementById("hover");
+    let dzwiek = document.getElementById("hover");
 
-    dzwiek.currentTime=0;
+    dzwiek.currentTime = 0;
 
     dzwiek.play();
 
