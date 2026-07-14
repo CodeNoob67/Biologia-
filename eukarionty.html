@@ -1,38 +1,189 @@
 <!DOCTYPE html>
-<html>
+<html lang="pl">
 <head>
+    <meta charset="UTF-8">
     <title>Eukarionty</title>
 
+    <link rel="icon" type="image/png" href="DNA.png">
+
     <style>
+        body{
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            line-height: 1.6;
+            background-color: white;
+            color: #202122;
+        }
+
+        h1{
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 48px;
+            border-bottom: 1px solid #a2a9b1;
+            margin-bottom: 25px;
+        }
+
         p{
-            font-size:24px;
+            font-size: 22px;
+        }
+
+        .powrot{
+            display: inline-block;
+            background-color: red;
+            color: black;
+            text-decoration: none;
+            font-family: Verdana, sans-serif;
+            font-size: 22px;
+            font-weight: bold;
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+        .infobox{
+            float: right;
+            width: 340px;
+            margin-left: 35px;
+            margin-bottom: 25px;
+            border: 1px solid #a2a9b1;
+            background-color: #f8f9fa;
+            font-size: 18px;
+        }
+
+        .infobox h2{
+            background-color: #d8d8aa;
+            text-align: center;
+            margin: 0;
+            padding: 12px;
+            font-family: Georgia, "Times New Roman", serif;
+        }
+
+        .infobox img{
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .podpis{
+            text-align: center;
+            font-size: 16px;
+            padding: 8px;
+            border-bottom: 1px solid #a2a9b1;
+        }
+
+        .sekcja{
+            background-color: #d8d8aa;
+            text-align: center;
+            font-weight: bold;
+            padding: 8px;
+            border-top: 1px solid #a2a9b1;
+            border-bottom: 1px solid #a2a9b1;
+        }
+
+        table{
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        td{
+            padding: 8px;
+            vertical-align: top;
+            border-bottom: 1px solid #eaecf0;
+        }
+
+        td:first-child{
+            width: 40%;
+            color: #3366cc;
+        }
+
+        .glowny-obraz{
+            display: block;
+            width: 600px;
+            max-width: 55%;
+            margin: 30px auto 30px 8%;
+        }
+
+        @media(max-width: 900px){
+            .infobox{
+                float: none;
+                width: 100%;
+                margin: 0 0 25px 0;
+            }
+
+            .glowny-obraz{
+                max-width: 100%;
+                width: 100%;
+                margin: 25px auto;
+            }
         }
     </style>
-
 </head>
 
 <body>
 
+<a class="powrot" href="evo.html#eukarionty">
+    ⬅ Powrót
+</a>
+
 <h1>Eukarionty</h1>
 
-<img src="Eukarioty.png" width="400">
+<div class="infobox">
+
+    <h2>Eukarionty</h2>
+
+    <img src="Eukarioty.png" alt="Eukarionty">
+
+    <div class="podpis">
+        Komórki eukariotyczne posiadają jądro komórkowe i liczne organella.
+    </div>
+
+    <div class="sekcja">
+        Klasyfikacja
+    </div>
+
+    <table>
+        <tr>
+            <td>Domena</td>
+            <td>Eukarionty</td>
+        </tr>
+    </table>
+
+</div>
 
 <p>
-Eukarionty to organizmy, których komórki posiadają prawdziwe jądro komórkowe.
-W jądrze znajduje się DNA, które przechowuje informacje potrzebne do życia
-i rozwoju organizmu. Komórki eukariotyczne zawierają również wiele organelli,
-takich jak mitochondria czy aparat Golgiego.
-
-Do eukariontów należą wszystkie zwierzęta, rośliny, grzyby oraz liczne protisty.
-Są znacznie bardziej złożone od bakterii i archeonów, a ich komórki mogą tworzyć
-całe tkanki, narządy oraz skomplikowane organizmy wielokomórkowe.
-
-Naukowcy uważają, że pierwsze eukarionty pojawiły się około 2 miliardów lat temu.
-Ich powstanie było jednym z najważniejszych wydarzeń w historii życia,
-ponieważ umożliwiło rozwój wszystkich złożonych organizmów żyjących obecnie na Ziemi.
+Eukarionty są jedną z trzech współczesnych domen życia obok bakterii i archeonów.
+Ich najważniejszą cechą jest obecność prawdziwego jądra komórkowego, w którym
+znajduje się materiał genetyczny. Dzięki temu komórki eukariotyczne są znacznie
+bardziej złożone od komórek bakterii i archeonów.
 </p>
 
-<a href="evo.html">⬅ Powrót</a>
+<p>
+Oprócz jądra komórkowego eukarionty posiadają wiele organelli otoczonych błonami,
+takich jak mitochondria, siateczka śródplazmatyczna, aparat Golgiego czy lizosomy.
+Każda z tych struktur pełni określone funkcje i pozwala komórce wykonywać
+bardziej skomplikowane procesy życiowe.
+</p>
+
+<img class="glowny-obraz" src="Eukarioty.png" alt="Komórka eukariotyczna">
+
+<p>
+Do eukariontów należą wszystkie zwierzęta, rośliny, grzyby oraz liczne protisty.
+Niektóre eukarionty są jednokomórkowe, jednak wiele z nich tworzy organizmy
+wielokomórkowe zbudowane z wyspecjalizowanych tkanek i narządów.
+</p>
+
+<p>
+Naukowcy uważają, że eukarionty powstały około 2 miliardów lat temu.
+Najbardziej rozpowszechniona teoria mówi, że ich komórki wyewoluowały
+w wyniku endosymbiozy, czyli trwałego połączenia kilku prostszych organizmów.
+W ten sposób powstały między innymi mitochondria, a u roślin również chloroplasty.
+</p>
+
+<p>
+Powstanie eukariontów było jednym z najważniejszych wydarzeń w historii życia.
+To właśnie z tej domeny wyewoluowały wszystkie złożone organizmy wielokomórkowe,
+w tym człowiek. Dzięki swojej budowie eukarionty mogły osiągnąć ogromną różnorodność
+kształtów, sposobów życia oraz środowisk występowania.
+</p>
 
 </body>
 </html>
