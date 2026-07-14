@@ -1,38 +1,197 @@
 <!DOCTYPE html>
-<html>
+<html lang="pl">
 <head>
+    <meta charset="UTF-8">
     <title>Zwierzęta</title>
 
+    <link rel="icon" type="image/png" href="DNA.png">
+
     <style>
+        body{
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            line-height: 1.6;
+            background-color: white;
+            color: #202122;
+        }
+
+        h1{
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 48px;
+            border-bottom: 1px solid #a2a9b1;
+            margin-bottom: 25px;
+        }
+
         p{
-            font-size:24px;
+            font-size: 22px;
+        }
+
+        .powrot{
+            display: inline-block;
+            background-color: red;
+            color: black;
+            text-decoration: none;
+            font-family: Verdana, sans-serif;
+            font-size: 22px;
+            font-weight: bold;
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+        .infobox{
+            float: right;
+            width: 340px;
+            margin-left: 35px;
+            margin-bottom: 25px;
+            border: 1px solid #a2a9b1;
+            background-color: #f8f9fa;
+            font-size: 18px;
+        }
+
+        .infobox h2{
+            background-color: #d8d8aa;
+            text-align: center;
+            margin: 0;
+            padding: 12px;
+            font-family: Georgia, "Times New Roman", serif;
+        }
+
+        .infobox img{
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .podpis{
+            text-align: center;
+            font-size: 16px;
+            padding: 8px;
+            border-bottom: 1px solid #a2a9b1;
+        }
+
+        .sekcja{
+            background-color: #d8d8aa;
+            text-align: center;
+            font-weight: bold;
+            padding: 8px;
+            border-top: 1px solid #a2a9b1;
+            border-bottom: 1px solid #a2a9b1;
+        }
+
+        table{
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        td{
+            padding: 8px;
+            vertical-align: top;
+            border-bottom: 1px solid #eaecf0;
+        }
+
+        td:first-child{
+            width: 40%;
+            color: #3366cc;
+        }
+
+        .glowny-obraz{
+            display: block;
+            width: 600px;
+            max-width: 55%;
+            margin: 30px auto 30px 8%;
+        }
+
+        @media(max-width: 900px){
+            .infobox{
+                float: none;
+                width: 100%;
+                margin: 0 0 25px 0;
+            }
+
+            .glowny-obraz{
+                max-width: 100%;
+                width: 100%;
+                margin: 25px auto;
+            }
         }
     </style>
-
 </head>
 
 <body>
 
+<a class="powrot" href="evo.html#zwierzeta">
+    ⬅ Powrót
+</a>
+
 <h1>Zwierzęta</h1>
 
-<img src="Zwierzęta.png" width="400">
+<div class="infobox">
+
+    <h2>Zwierzęta</h2>
+
+    <img src="Zwierzęta.png" alt="Zwierzęta">
+
+    <div class="podpis">
+        Zwierzęta są jedną z największych i najbardziej zróżnicowanych grup organizmów na Ziemi.
+    </div>
+
+    <div class="sekcja">
+        Klasyfikacja
+    </div>
+
+    <table>
+        <tr>
+            <td>Domena</td>
+            <td>Eukarionty</td>
+        </tr>
+
+        <tr>
+            <td>Królestwo</td>
+            <td>Zwierzęta</td>
+        </tr>
+    </table>
+
+</div>
 
 <p>
-Zwierzęta są wielokomórkowymi organizmami należącymi do eukariontów.
-Ich komórki nie posiadają ściany komórkowej, dzięki czemu mogą tworzyć
-bardzo różnorodne tkanki oraz narządy. Większość zwierząt potrafi się poruszać,
-a wszystkie odżywiają się innymi organizmami.
-
-Pierwsze zwierzęta pojawiły się w oceanach ponad 700 milionów lat temu.
-Były bardzo proste, jednak z biegiem czasu wyewoluowały w ogromną liczbę gatunków.
-Obecnie znamy ponad milion opisanych gatunków zwierząt, ale naukowcy przypuszczają,
-że na Ziemi żyje ich znacznie więcej.
-
-Do zwierząt należą między innymi gąbki, meduzy, owady, mięczaki, ryby,
-płazy, gady, ptaki i ssaki. Człowiek również jest przedstawicielem tej grupy.
+Zwierzęta są jednym z głównych królestw organizmów żywych należących do domeny
+eukariontów. Ich komórki posiadają jądro komórkowe oraz liczne organella,
+a większość gatunków jest wielokomórkowa. Zwierzęta odżywiają się cudzożywnie,
+co oznacza, że pobierają gotowe związki organiczne z innych organizmów lub ich
+szczątków.
 </p>
 
-<a href="evo.html">⬅ Powrót</a>
+<p>
+Pierwsze zwierzęta pojawiły się w oceanach ponad 700 milionów lat temu.
+Początkowo były bardzo proste i przypominały współczesne gąbki lub inne
+nieskomplikowane organizmy. Z biegiem milionów lat ewolucja doprowadziła do
+powstania ogromnej różnorodności form życia zamieszkujących morza, lądy oraz
+powietrze.
+</p>
+
+<img class="glowny-obraz" src="Zwierzęta.png" alt="Zwierzęta">
+
+<p>
+Większość zwierząt posiada wyspecjalizowane tkanki i narządy, takie jak mięśnie,
+układ nerwowy, układ pokarmowy czy narządy zmysłów. Dzięki temu mogą aktywnie
+poruszać się, zdobywać pokarm, reagować na bodźce oraz przystosowywać się do
+zmieniających się warunków środowiska.
+</p>
+
+<p>
+Królestwo zwierząt obejmuje ponad milion opisanych gatunków, jednak naukowcy
+szacują, że ich rzeczywista liczba może być wielokrotnie większa. Do zwierząt
+należą zarówno mikroskopijne organizmy wodne, jak i największe stworzenia,
+jakie kiedykolwiek żyły na Ziemi, na przykład płetwal błękitny.
+</p>
+
+<p>
+W obrębie królestwa zwierząt wyróżnia się wiele dużych grup ewolucyjnych,
+takich jak parzydełkowce, mięczaki, stawonogi, szkarłupnie czy strunowce.
+To właśnie ze strunowców wyewoluowały kręgowce, do których należą ryby,
+płazy, gady, ptaki, ssaki oraz człowiek.
+</p>
 
 </body>
 </html>
