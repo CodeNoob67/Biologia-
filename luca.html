@@ -7,146 +7,183 @@
     <link rel="icon" type="image/png" href="DNA.png">
 
     <style>
-
         body{
             font-family: Arial, sans-serif;
-            margin:40px;
-            background:white;
-            color:#202122;
-            line-height:1.6;
+            margin: 40px;
+            line-height: 1.6;
+            background-color: white;
+            color: #202122;
         }
 
         h1{
             font-family: Georgia, "Times New Roman", serif;
-            font-size:48px;
-            border-bottom:1px solid #a2a9b1;
-            padding-bottom:10px;
+            font-size: 48px;
+            border-bottom: 1px solid #a2a9b1;
+            margin-bottom: 25px;
         }
 
         p{
-            font-size:24px;
-            text-align:justify;
+            font-size: 22px;
         }
 
         .powrot{
-            display:inline-block;
-            background:red;
-            color:black;
-            text-decoration:none;
-            font-family:Verdana, sans-serif;
-            font-size:22px;
-            font-weight:bold;
-            padding:12px 22px;
-            border-radius:12px;
-            margin-bottom:25px;
+            display: inline-block;
+            background-color: red;
+            color: black;
+            text-decoration: none;
+            font-family: Verdana, sans-serif;
+            font-size: 22px;
+            font-weight: bold;
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
         }
 
         .infobox{
-            float:right;
-            width:340px;
-            margin-left:35px;
-            border:1px solid #a2a9b1;
-            background:#f8f9fa;
+            float: right;
+            width: 340px;
+            margin-left: 35px;
+            margin-bottom: 25px;
+            border: 1px solid #a2a9b1;
+            background-color: #f8f9fa;
+            font-size: 18px;
         }
 
         .infobox h2{
-            margin:0;
-            padding:10px;
-            text-align:center;
-            background:#d8d8aa;
-            font-size:30px;
-            font-family:Georgia, "Times New Roman", serif;
+            background-color: #d8d8aa;
+            text-align: center;
+            margin: 0;
+            padding: 12px;
+            font-family: Georgia, "Times New Roman", serif;
         }
 
         .infobox img{
-            width:100%;
-            display:block;
+            display: block;
+            width: 100%;
+            height: auto;
         }
 
-        .opis{
-            text-align:center;
-            padding:8px;
-            font-size:17px;
-            border-bottom:1px solid #a2a9b1;
+        .podpis{
+            text-align: center;
+            font-size: 16px;
+            padding: 8px;
+            border-bottom: 1px solid #a2a9b1;
         }
 
         .sekcja{
-            background:#d8d8aa;
-            text-align:center;
-            font-weight:bold;
-            padding:8px;
-            border-top:1px solid #a2a9b1;
-            border-bottom:1px solid #a2a9b1;
+            background-color: #d8d8aa;
+            text-align: center;
+            font-weight: bold;
+            padding: 8px;
+            border-top: 1px solid #a2a9b1;
+            border-bottom: 1px solid #a2a9b1;
         }
 
         table{
-            width:100%;
-            border-collapse:collapse;
-            font-size:18px;
+            width: 100%;
+            border-collapse: collapse;
         }
 
         td{
-            padding:8px;
-            border-bottom:1px solid #eaecf0;
-            vertical-align:top;
+            padding: 8px;
+            vertical-align: top;
+            border-bottom: 1px solid #eaecf0;
         }
 
         td:first-child{
-            width:40%;
-            color:#3366cc;
+            width: 40%;
+            color: #3366cc;
         }
 
-    </style>
+        .glowny-obraz{
+            display: block;
+            width: 600px;
+            max-width: 55%;
+            margin: 30px auto 30px 8%;
+        }
 
+        @media(max-width: 900px){
+            .infobox{
+                float: none;
+                width: 100%;
+                margin: 0 0 25px 0;
+            }
+
+            .glowny-obraz{
+                max-width: 100%;
+                width: 100%;
+                margin: 25px auto;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
 <a class="powrot" href="evo.html#luca">
-⬅ Powrót
+    ⬅ Powrót
 </a>
 
 <h1>L.U.C.A.</h1>
 
 <div class="infobox">
 
-<h2>L.U.C.A.</h2>
+    <h2>L.U.C.A.</h2>
 
-<img src="LUCA.png" alt="LUCA">
+    <img src="LUCA.png" alt="LUCA">
 
-<div class="opis">
-Rekonstrukcja komórki L.U.C.A
-</div>
+    <div class="podpis">
+        Rekonstrukcja komórki L.U.C.A
+    </div>
 
-<div class="sekcja">
-Klasyfikacja
-</div>
+    <div class="sekcja">
+        Klasyfikacja
+    </div>
 
-<table>
-
-<tr>
-<td>Komórka</td>
-<td>Prokariotyczna</td>
-</tr>
-
-</table>
+    <table>
+        <tr>
+            <td>Komórka</td>
+            <td>Prokariotyczna</td>
+        </tr>
+    </table>
 
 </div>
 
 <p>
-L.U.C.A. (Last Universal Common Ancestor) był ostatnim wspólnym przodkiem wszystkich organizmów żyjących obecnie na Ziemi. Nie był pierwszą formą życia, lecz organizmem, z którego wyewoluowały trzy współczesne domeny życia: bakterie, archeony i eukarionty. Naukowcy uważają, że żył około 3,5–4 miliardów lat temu, gdy nasza planeta była jeszcze bardzo młoda.
+L.U.C.A. to skrót od angielskiej nazwy Last Universal Common Ancestor,
+czyli ostatni uniwersalny wspólny przodek wszystkich organizmów żyjących
+obecnie na Ziemi. Nie był pierwszą formą życia, lecz organizmem, od którego
+wywodzą się wszystkie współczesne linie życia.
 </p>
 
 <p>
-Najprawdopodobniej był organizmem jednokomórkowym o budowie prokariotycznej. Oznacza to, że nie posiadał jądra komórkowego ani organelli otoczonych błonami. Mimo prostej budowy miał już materiał genetyczny w postaci DNA, rybosomy służące do produkcji białek oraz błonę komórkową oddzielającą wnętrze komórki od otoczenia.
+Naukowcy przypuszczają, że LUCA żył około 3,5–4 miliardów lat temu.
+Był prawdopodobnie organizmem jednokomórkowym o budowie prokariotycznej,
+czyli nie posiadał jądra komórkowego ani rozbudowanych organelli otoczonych
+błonami.
+</p>
+
+<img class="glowny-obraz" src="LUCA.png" alt="Artystyczna rekonstrukcja LUCA">
+
+<p>
+Mimo prostej budowy LUCA posiadał już wiele podstawowych cech wspólnych
+dla wszystkich organizmów. Miał materiał genetyczny, rybosomy służące
+do produkcji białek, błonę komórkową oraz zdolność do pozyskiwania energii
+i przekazywania informacji genetycznej kolejnym pokoleniom.
 </p>
 
 <p>
-LUCA nie był ani bakterią, ani archeonem, ani eukariontem. Żył jeszcze przed rozdzieleniem się tych trzech wielkich linii ewolucyjnych. Z tego powodu nie zalicza się go do żadnej współczesnej domeny życia. Stanowi punkt, od którego rozpoczęła się ewolucja wszystkich organizmów żyjących obecnie na naszej planecie.
+LUCA nie należał ani do bakterii, ani do archeonów, ani do eukariontów.
+Żył jeszcze przed rozdzieleniem się tych wielkich linii ewolucyjnych.
+Z tego powodu nie przypisuje się go do żadnej ze współczesnych domen życia.
 </p>
 
 <p>
-Choć LUCA wyginął miliardy lat temu i nie pozostawił skamieniałości, jego istnienie potwierdzają badania genetyczne. Porównując DNA współczesnych bakterii, archeonów i eukariontów, naukowcy odnajdują geny wspólne dla wszystkich organizmów. Dzięki temu mogą odtworzyć wiele cech tego pradawnego organizmu oraz lepiej zrozumieć początki życia na Ziemi.
+Informacje o LUCA pochodzą głównie z porównywania genów współczesnych
+organizmów. Naukowcy szukają cech wspólnych dla bakterii, archeonów
+i eukariontów, aby odtworzyć właściwości ich ostatniego wspólnego przodka.
+LUCA jest więc organizmem rekonstruowanym na podstawie danych genetycznych,
+a nie gatunkiem znanym ze skamieniałości.
 </p>
 
 </body>
