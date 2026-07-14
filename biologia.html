@@ -4,13 +4,33 @@
     <meta charset="UTF-8">
     <title>Biologia</title>
 
-
-    
     <style>
+
         body{
             font-family: Arial, sans-serif;
             background-color:#eef8f2;
             text-align:center;
+            margin:0;
+        }
+
+        .menu{
+            position:sticky;
+            top:0;
+            background:#2e8b57;
+            color:white;
+            padding:20px;
+            font-size:35px;
+            font-weight:bold;
+            box-shadow:0 3px 10px rgba(0,0,0,0.2);
+        }
+
+        .powrot{
+            position:absolute;
+            left:20px;
+            color:white;
+            text-decoration:none;
+            font-size:24px;
+            font-weight:normal;
         }
 
         h1{
@@ -24,7 +44,7 @@
             margin-bottom:60px;
         }
 
-        a{
+        .przycisk{
             display:block;
             width:500px;
             margin:25px auto;
@@ -37,29 +57,36 @@
             transition:0.2s;
         }
 
-        a:hover{
+        .przycisk:hover{
             background-color:#20633d;
             transform:scale(1.05);
         }
+
     </style>
 
 </head>
 
 <body>
-    
-<a href="index.html">← Wróć do wyboru przedmiotów</a>
-    
+
+<div class="menu">
+
+<a class="powrot" href="index.html">← Przedmioty</a>
+
+🌳 Biologia
+
+</div>
+
 <h1>🧬 BIOLOGIA</h1>
 
 <h2>Wybierz dział:</h2>
 
-<a href="evo.html">🧬 Ewolucja człowieka</a>
+<a class="przycisk" href="evo.html">🧬 Ewolucja człowieka</a>
 
-<a href="klasyfikacja.html">🌳 Klasyfikacja organizmów</a>
+<a class="przycisk" href="klasyfikacja.html">🌳 Klasyfikacja organizmów</a>
 
-<a href="ciekawostki.html">🔬 Ciekawostki biologiczne</a>
+<a class="przycisk" href="ciekawostki.html">🔬 Ciekawostki biologiczne</a>
 
-<a href="o_mie.html">ℹ️ O mnie</a>
+<a class="przycisk" href="o_mie.html">ℹ️ O mnie</a>
 
 </body>
 </html>
