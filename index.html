@@ -5,46 +5,144 @@
     <title>Wybierz przedmiot</title>
 
     <style>
-        body {
-            font-family: Arial;
-            text-align: center;
-            background-color: #f2f2f2;
+
+        body{
+            font-family:Arial;
+            text-align:center;
+            background:#f2f2f2;
         }
 
-        h1 {
-            font-size: 40px;
+        h1{
+            font-size:50px;
         }
 
-        .przedmiot {
-            display: block;
-            width: 300px;
-            margin: 20px auto;
-            padding: 20px;
-            font-size: 26px;
-            text-decoration: none;
-            color: black;
-            background-color: white;
-            border: 2px solid black;
-            border-radius: 15px;
+        .przedmiot{
+            display:block;
+            width:350px;
+            margin:20px auto;
+            padding:22px;
+
+            font-size:30px;
+            font-weight:bold;
+
+            text-decoration:none;
+            color:white;
+
+            border-radius:18px;
+
+            transition:0.25s;
         }
 
-        .przedmiot:hover {
-            background-color: lightgray;
+        .przedmiot:hover{
+            transform:scale(1.08);
         }
+
+        /* BIOLOGIA */
+
+        .bio{
+            background:#5fd35f;
+        }
+
+        .bio:hover{
+            background:#38b438;
+        }
+
+        /* FIZYKA */
+
+        .fiz{
+            background:#ff9800;
+        }
+
+        .fiz:hover{
+            background:#dd7f00;
+        }
+
+        /* CHEMIA */
+
+        .chem{
+            background:#18b8b8;
+        }
+
+        .chem:hover{
+            background:#0f9898;
+        }
+
+        /* MATEMATYKA */
+
+        .mat{
+            background:#3d8bfd;
+        }
+
+        .mat:hover{
+            background:#1e6fe0;
+        }
+
+        /* ANGIELSKI */
+
+        .ang{
+            background:#e53935;
+        }
+
+        .ang:hover{
+            background:#c62828;
+        }
+
     </style>
 </head>
 
 <body>
 
-<h1>NAUKA
+<h1>📚 NAUKA</h1>
 
 <h1>Wybierz przedmiot</h1>
 
-<a class="przedmiot" href="biologia.html">Biologia</a>
-<a class="przedmiot" href="fizyka.html">Fizyka</a>
-<a class="przedmiot" href="chemia.html">Chemia</a>
-<a class="przedmiot" href="Matematyka.html">Matematyka</a>
-<a class="przedmiot" href="angielski.html">Angielski</a>
+<a class="przedmiot bio"
+href="biologia.html"
+onmouseenter="zagraj()">
+🌳 Biologia
+</a>
+
+<a class="przedmiot fiz"
+href="fizyka.html"
+onmouseenter="zagraj()">
+⚛️ Fizyka
+</a>
+
+<a class="przedmiot chem"
+href="chemia.html"
+onmouseenter="zagraj()">
+⚗️ Chemia
+</a>
+
+<a class="przedmiot mat"
+href="Matematyka.html"
+onmouseenter="zagraj()">
+📐 Matematyka
+</a>
+
+<a class="przedmiot ang"
+href="angielski.html"
+onmouseenter="zagraj()">
+🇬🇧 Angielski
+</a>
+
+<audio id="hover">
+    <source src="hover.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+
+function zagraj(){
+
+    let dzwiek=document.getElementById("hover");
+
+    dzwiek.currentTime=0;
+
+    dzwiek.play();
+
+}
+
+</script>
 
 </body>
 </html>
