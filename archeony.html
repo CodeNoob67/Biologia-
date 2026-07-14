@@ -1,37 +1,216 @@
 <!DOCTYPE html>
-<html>
+<html lang="pl">
 <head>
+    <meta charset="UTF-8">
     <title>Archeony</title>
 
+    <link rel="icon" type="image/png" href="atom.png">
+
     <style>
+        body{
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            line-height: 1.6;
+            background-color: white;
+            color: #202122;
+        }
+
+        h1{
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 48px;
+            border-bottom: 1px solid #a2a9b1;
+            margin-bottom: 25px;
+        }
+
         p{
-            font-size:24px;
+            font-size: 22px;
+        }
+
+        .powrot{
+            display: inline-block;
+            background-color: red;
+            color: black;
+            text-decoration: none;
+            font-family: Verdana, sans-serif;
+            font-size: 22px;
+            font-weight: bold;
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+        .infobox{
+            float: right;
+            width: 340px;
+            margin-left: 35px;
+            margin-bottom: 25px;
+            border: 1px solid #a2a9b1;
+            background-color: #f8f9fa;
+            font-size: 18px;
+        }
+
+        .infobox h2{
+            background-color: #d8d8aa;
+            text-align: center;
+            margin: 0;
+            padding: 12px;
+            font-family: Georgia, "Times New Roman", serif;
+        }
+
+        .infobox img{
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .podpis{
+            text-align: center;
+            font-size: 16px;
+            padding: 8px;
+            border-bottom: 1px solid #a2a9b1;
+        }
+
+        .sekcja{
+            background-color: #d8d8aa;
+            text-align: center;
+            font-weight: bold;
+            padding: 8px;
+            border-top: 1px solid #a2a9b1;
+            border-bottom: 1px solid #a2a9b1;
+        }
+
+        table{
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        td{
+            padding: 8px;
+            vertical-align: top;
+            border-bottom: 1px solid #eaecf0;
+        }
+
+        td:first-child{
+            width: 40%;
+            color: #3366cc;
+        }
+
+        .glowny-obraz{
+            display: block;
+            width: 600px;
+            max-width: 55%;
+            margin: 30px auto 30px 8%;
+        }
+
+        @media(max-width: 900px){
+            .infobox{
+                float: none;
+                width: 100%;
+                margin: 0 0 25px 0;
+            }
+
+            .glowny-obraz{
+                max-width: 100%;
+                width: 100%;
+                margin: 25px auto;
+            }
         }
     </style>
-
 </head>
 
 <body>
 
+<a class="powrot" href="evo.html#archeony">
+    ⬅ Powrót
+</a>
+
 <h1>Archeony</h1>
 
-<img src="Archeony.png" width="400">
+<div class="infobox">
+
+    <h2>Archeony</h2>
+
+    <img src="Archeony.png" alt="Archeony">
+
+    <div class="podpis">
+        Przykładowe archeony widziane pod mikroskopem
+    </div>
+
+    <div class="sekcja">
+        Klasyfikacja
+    </div>
+
+    <table>
+        <tr>
+            <td>Domena</td>
+            <td>Archeony</td>
+        </tr>
+
+        <tr>
+            <td>Typ komórki</td>
+            <td>Prokariotyczna</td>
+        </tr>
+
+        <tr>
+            <td>Jądro komórkowe</td>
+            <td>Brak</td>
+        </tr>
+
+        <tr>
+            <td>Liczba komórek</td>
+            <td>Jednokomórkowe</td>
+        </tr>
+
+        <tr>
+            <td>Środowisko</td>
+            <td>Wody, gleba, oceany, organizmy żywe i środowiska ekstremalne</td>
+        </tr>
+
+        <tr>
+            <td>Przykładowe grupy</td>
+            <td>Metanogeny, halofile i termofile</td>
+        </tr>
+    </table>
+
+</div>
 
 <p>
-Archeony są jedną z trzech głównych domen życia obok bakterii i eukariontów.
-Przez wiele lat uważano je za bakterie, ponieważ są jednokomórkowe i nie posiadają
-jądra komórkowego. Dopiero badania DNA wykazały, że stanowią zupełnie odrębną grupę.
-
-Większość archeonów żyje w miejscach, w których inne organizmy nie potrafią przetrwać.
-Można je znaleźć w bardzo gorących źródłach, słonych jeziorach, kwaśnych wodach,
-a nawet głęboko pod ziemią. Takie organizmy nazywa się ekstremofilami.
-
-Niektóre archeony żyją również w organizmach zwierząt i ludzi, pomagając
-w procesach trawiennych. Choć są mikroskopijne, odgrywają ogromną rolę
-w obiegu różnych pierwiastków w przyrodzie oraz w funkcjonowaniu ekosystemów.
+Archeony to jedna z trzech głównych domen życia, obok bakterii i eukariontów.
+Są organizmami jednokomórkowymi, których komórki nie posiadają jądra
+komórkowego. Przez wiele lat uważano je za nietypowe bakterie, jednak badania
+materiału genetycznego wykazały, że stanowią zupełnie odrębną linię ewolucyjną.
 </p>
 
-<a href="evo.html#archeony">⬅ Powrót</a>
+<p>
+Archeony różnią się od bakterii między innymi budową błony komórkowej,
+składem ściany komórkowej oraz sposobem działania niektórych enzymów.
+Część procesów zachodzących w ich komórkach przypomina bardziej procesy
+spotykane u eukariontów niż u bakterii.
+</p>
+
+<img class="glowny-obraz" src="Archeony.png" alt="Zdjęcie archeonów">
+
+<p>
+Wiele archeonów potrafi żyć w bardzo trudnych warunkach. Niektóre występują
+w gorących źródłach, inne w bardzo słonych jeziorach, kwaśnych wodach,
+na dnie oceanów albo głęboko pod powierzchnią Ziemi. Organizmy żyjące
+w takich warunkach nazywa się ekstremofilami.
+</p>
+
+<p>
+Nie wszystkie archeony mieszkają jednak w środowiskach ekstremalnych.
+Występują również w zwykłej glebie, wodzie morskiej, osadach oraz w układach
+pokarmowych zwierząt. Metanogeny żyją między innymi w przewodzie pokarmowym
+krów i innych przeżuwaczy, gdzie biorą udział w rozkładaniu pokarmu
+i produkują metan.
+</p>
+
+<p>
+Archeony odgrywają ważną rolę w obiegu węgla, azotu i innych pierwiastków.
+Choć są mikroskopijne, wpływają na funkcjonowanie całych ekosystemów.
+Nie są znane archeony wywołujące choroby u człowieka, co wyraźnie odróżnia
+je od wielu bakterii.
+</p>
 
 </body>
 </html>
