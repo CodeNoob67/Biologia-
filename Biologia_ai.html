@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Biologia AI</title>
+
+    <style>
+
+        *{
+            box-sizing:border-box;
+        }
+
+        body{
+            font-family:Arial, sans-serif;
+            background-color:#eef8f2;
+            margin:0;
+            min-height:100vh;
+        }
+
+        .menu{
+            position:sticky;
+            top:0;
+            z-index:10;
+
+            background:#2e8b57;
+            color:white;
+
+            padding:20px;
+            text-align:center;
+
+            font-size:35px;
+            font-weight:bold;
+
+            box-shadow:0 3px 10px rgba(0,0,0,0.2);
+        }
+
+        .powrot{
+            position:absolute;
+            left:0;
+            top:0;
+            bottom:0;
+
+            display:flex;
+            align-items:center;
+            justify-content:center;
+
+            padding:0 35px;
+
+            background:#ff9800;
+            color:white;
+
+            text-decoration:none;
+            font-size:24px;
+            font-weight:bold;
+
+            border-radius:0 15px 15px 0;
+            transition:0.2s;
+        }
+
+        .powrot:hover{
+            background:#e68900;
+        }
+
+        .powrot:active{
+            background:#cc7700;
+            transform:scale(0.97);
+        }
+
+        .glowny-kontener{
+            width:90%;
+            max-width:900px;
+            margin:40px auto;
+        }
+
+        .opis{
+            text-align:center;
+            margin-bottom:25px;
+        }
+
+        .opis h1{
+            font-size:45px;
+            margin-bottom:10px;
+            color:#1f5f3d;
+        }
+
+        .opis p{
+            font-size:20px;
+            color:#444;
+        }
+
+        .czat{
+            background:white;
+            border-radius:20px;
+            overflow:hidden;
+
+            box-shadow:0 5px 20px rgba(0,0,0,0.18);
+        }
+
+        .naglowek-czatu{
+            background:#20633d;
+            color:white;
+            padding:18px 25px;
+
+            font-size:23px;
+            font-weight:bold;
+        }
+
+        .wiadomosci{
+            height:500px;
+            overflow-y:auto;
+
+            padding:25px;
+
+            display:flex;
+            flex-direction:column;
+            gap:16px;
+
+            background:#f7fbf8;
+        }
+
+        .wiadomosc{
+            max-width:75%;
+            padding:14px 18px;
+
+            border-radius:18px;
+            font-size:19px;
+            line-height:1.5;
+
+            white-space:pre-wrap;
+            overflow-wrap:anywhere;
+        }
+
+        .ai{
+            align-self:flex-start;
+
+            background:#dff3e7;
+            color:#173f2a;
+
+            border-bottom-left-radius:5px;
+        }
+
+        .uzytkownik{
+            align-self:flex-end;
+
+            background:#2e8b57;
+            color:white;
+
+            border-bottom-right-radius:5px;
+        }
+
+        .pisanie{
+            align-self:flex-start;
+            background:#e8e8e8;
+            color:#555;
+            font-style:italic;
+        }
+
+        .dol{
+            display:flex;
+            gap:12px;
+
+            padding:18px;
+            background:white;
+
+            border-top:1px solid #ddd;
+        }
+
+        #poleWiadomosci{
+            flex:1;
+
+            padding:15px 18px;
+
+            border:2px solid #b9d8c5;
+            border-radius:15px;
+
+            font-size:18px;
+            outline:none;
+        }
+
+        #poleWiadomosci:focus{
+            border-color:#2e8b57;
+        }
+
+        #wyslij{
+            min-width:130px;
+
+            border:none;
+            border-radius:15px;
+
+            background:#2e8b57;
+            color:white;
+
+            font-size:19px;
+            font-weight:bold;
+
+            cursor:pointer;
+            transition:0.2s;
+        }
+
+        #wyslij:hover{
+            background:#20633d;
+            transform:scale(1.03);
+        }
+
+        #wyslij:disabled{
+            background:#999;
+            cursor:not-allowed;
+            transform:none;
+        }
+
+        .ostrzezenie{
+            margin-top:18px;
+            text-align:center;
+
+            color:#555;
+            font-size:15px;
+        }
+
+        @media(max-width:700px){
+
+            .menu{
+                font-size:24px;
+                text-align:right;
+                padding-right:20px;
+            }
+
+            .powrot{
+                padding:0 15px;
+                font-size:17px;
+            }
+
+            .opis h1{
+                font-size:34px;
+            }
+
+            .wiadomosci{
+                height:430px;
+                padding:15px;
+            }
+
+            .wiadomosc{
+                max-width:90%;
+                font-size:17px;
+            }
+
+            .dol{
+                flex-direction:column;
+            }
+
+            #wyslij{
+                height:55px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="menu">
+
+        <a class="powrot" href="biologia.html">
+            ← Biologia
+        </a>
+
+        🤖 Biologia AI
+
+    </div>
+
+    <main class="glowny-kontener">
+
+        <section class="opis">
+
+            <h1>Zapytaj biologiczne AI</h1>
+
+            <p>
+                Możesz zadawać pytania o zwierzęta, komórki,
+                ewolucję, anatomię i inne tematy biologiczne.
+            </p>
+
+        </section>
+
+        <section class="czat">
+
+            <div class="naglowek-czatu">
+                🤖 Asystent biologiczny
+            </div>
+
+            <div class="wiadomosci" id="wiadomosci">
+
+                <div class="wiadomosc ai">
+                    Cześć! Jestem biologicznym AI. 🧬
+
+                    Zadaj mi pytanie, na przykład:
+                    „Czym różni się komórka roślinna od zwierzęcej?”
+                </div>
+
+            </div>
+
+            <div class="dol">
+
+                <input
+                    id="poleWiadomosci"
+                    type="text"
+                    placeholder="Napisz pytanie o biologii..."
+                    autocomplete="off"
+                >
+
+                <button id="wyslij">
+                    Wyślij
+                </button>
+
+            </div>
+
+        </section>
+
+        <p class="ostrzezenie">
+            AI może czasami popełnić błąd, dlatego ważne informacje
+            warto sprawdzać również w podręczniku.
+        </p>
+
+    </main>
+
+    <script>
+
+        const poleWiadomosci =
+            document.getElementById("poleWiadomosci");
+
+        const przyciskWyslij =
+            document.getElementById("wyslij");
+
+        const kontenerWiadomosci =
+            document.getElementById("wiadomosci");
+
+
+        function dodajWiadomosc(tresc, autor){
+
+            const nowaWiadomosc =
+                document.createElement("div");
+
+            nowaWiadomosc.classList.add(
+                "wiadomosc",
+                autor
+            );
+
+            nowaWiadomosc.textContent = tresc;
+
+            kontenerWiadomosci.appendChild(
+                nowaWiadomosc
+            );
+
+            kontenerWiadomosci.scrollTop =
+                kontenerWiadomosci.scrollHeight;
+
+            return nowaWiadomosc;
+        }
+
+
+        async function wyslijWiadomosc(){
+
+            const pytanie =
+                poleWiadomosci.value.trim();
+
+            if(pytanie === ""){
+                return;
+            }
+
+            dodajWiadomosc(
+                pytanie,
+                "uzytkownik"
+            );
+
+            poleWiadomosci.value = "";
+            poleWiadomosci.disabled = true;
+            przyciskWyslij.disabled = true;
+
+            const komunikatPisania =
+                dodajWiadomosc(
+                    "AI przygotowuje odpowiedź...",
+                    "pisanie"
+                );
+
+            try{
+
+                const odpowiedz = await fetch(
+                    "http://localhost:3000/api/czat",
+                    {
+                        method:"POST",
+
+                        headers:{
+                            "Content-Type":"application/json"
+                        },
+
+                        body:JSON.stringify({
+                            wiadomosc:pytanie
+                        })
+                    }
+                );
+
+                const dane = await odpowiedz.json();
+
+                komunikatPisania.remove();
+
+                if(!odpowiedz.ok){
+
+                    throw new Error(
+                        dane.blad ||
+                        "Nie udało się uzyskać odpowiedzi."
+                    );
+                }
+
+                dodajWiadomosc(
+                    dane.odpowiedz,
+                    "ai"
+                );
+
+            }
+            catch(blad){
+
+                komunikatPisania.remove();
+
+                dodajWiadomosc(
+                    "Wystąpił błąd: " + blad.message,
+                    "ai"
+                );
+
+                console.error(blad);
+            }
+            finally{
+
+                poleWiadomosci.disabled = false;
+                przyciskWyslij.disabled = false;
+
+                poleWiadomosci.focus();
+            }
+        }
+
+
+        przyciskWyslij.addEventListener(
+            "click",
+            wyslijWiadomosc
+        );
+
+
+        poleWiadomosci.addEventListener(
+            "keydown",
+            function(event){
+
+                if(event.key === "Enter"){
+                    wyslijWiadomosc();
+                }
+
+            }
+        );
+
+    </script>
+
+</body>
+</html>
