@@ -1,0 +1,1592 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biologia AI</title>
+
+    <style>
+        *{ box-sizing:border-box; }
+
+        body{
+            font-family:Arial, sans-serif;
+            background:#eef8f2;
+            margin:0;
+            min-height:100vh;
+        }
+
+        .menu{
+            position:sticky;
+            top:0;
+            z-index:10;
+            background:#2e8b57;
+            color:white;
+            padding:20px;
+            text-align:center;
+            font-size:35px;
+            font-weight:bold;
+            box-shadow:0 3px 10px rgba(0,0,0,.2);
+        }
+
+        .powrot{
+            position:absolute;
+            left:0;
+            top:0;
+            bottom:0;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:0 35px;
+            background:#ff9800;
+            color:white;
+            text-decoration:none;
+            font-size:24px;
+            font-weight:bold;
+            border-radius:0 15px 15px 0;
+            transition:.2s;
+        }
+
+        .powrot:hover{ background:#e68900; }
+        .powrot:active{ background:#cc7700; transform:scale(.97); }
+
+        .glowny-kontener{
+            width:92%;
+            max-width:1000px;
+            margin:25px auto;
+        }
+
+        .opis{
+            text-align:center;
+            margin-bottom:20px;
+        }
+
+        .opis h1{
+            color:#1f5f3d;
+            font-size:42px;
+            margin:10px 0;
+        }
+
+        .opis p{
+            font-size:19px;
+            color:#444;
+        }
+
+        .przyklady{
+            display:flex;
+            flex-wrap:wrap;
+            gap:8px;
+            justify-content:center;
+            margin-bottom:15px;
+        }
+
+        .przyklad{
+            border:none;
+            border-radius:18px;
+            padding:8px 13px;
+            cursor:pointer;
+            background:#dff3e7;
+            color:#17452d;
+            font-size:14px;
+        }
+
+        .przyklad:hover{ background:#c8ead5; }
+
+        .czat{
+            background:white;
+            border-radius:20px;
+            overflow:hidden;
+            box-shadow:0 5px 20px rgba(0,0,0,.18);
+        }
+
+        .naglowek-czatu{
+            background:#20633d;
+            color:white;
+            padding:17px 24px;
+            font-size:22px;
+            font-weight:bold;
+        }
+
+        .wiadomosci{
+            height:520px;
+            overflow-y:auto;
+            padding:25px;
+            display:flex;
+            flex-direction:column;
+            gap:15px;
+            background:#f7fbf8;
+        }
+
+        .wiadomosc{
+            max-width:78%;
+            padding:14px 18px;
+            border-radius:18px;
+            font-size:18px;
+            line-height:1.48;
+            white-space:pre-wrap;
+            overflow-wrap:anywhere;
+        }
+
+        .ai{
+            align-self:flex-start;
+            background:#dff3e7;
+            color:#173f2a;
+            border-bottom-left-radius:5px;
+        }
+
+        .uzytkownik{
+            align-self:flex-end;
+            background:#2e8b57;
+            color:white;
+            border-bottom-right-radius:5px;
+        }
+
+        .pisanie{
+            align-self:flex-start;
+            background:#e7e7e7;
+            color:#555;
+            font-style:italic;
+        }
+
+        .dol{
+            display:flex;
+            gap:12px;
+            padding:18px;
+            background:white;
+            border-top:1px solid #ddd;
+        }
+
+        #poleWiadomosci{
+            flex:1;
+            padding:15px 18px;
+            border:2px solid #b9d8c5;
+            border-radius:15px;
+            font-size:18px;
+            outline:none;
+        }
+
+        #poleWiadomosci:focus{ border-color:#2e8b57; }
+
+        #wyslij{
+            min-width:130px;
+            border:none;
+            border-radius:15px;
+            background:#2e8b57;
+            color:white;
+            font-size:19px;
+            font-weight:bold;
+            cursor:pointer;
+        }
+
+        #wyslij:hover{ background:#20633d; }
+
+        .mala-informacja{
+            text-align:center;
+            color:#555;
+            font-size:14px;
+            margin-top:12px;
+        }
+
+        @media(max-width:700px){
+            .menu{ font-size:23px; text-align:right; }
+            .powrot{ padding:0 14px; font-size:17px; }
+            .opis h1{ font-size:32px; }
+            .wiadomosci{ height:450px; padding:14px; }
+            .wiadomosc{ max-width:92%; font-size:16px; }
+            .dol{ flex-direction:column; }
+            #wyslij{ min-height:52px; }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="menu">
+    <a class="powrot" href="biologia.html">← Biologia</a>
+    🤖 Biologia AI
+</div>
+
+<main class="glowny-kontener">
+
+    <section class="opis">
+        <h1>Zapytaj biologiczne AI</h1>
+        <p>
+            Ta wersja działa całkowicie za darmo i bez API.
+            Rozpoznaje pytania, słowa podobne, literówki i różne sposoby pytania.
+        </p>
+    </section>
+
+    <div class="przyklady">
+        <button class="przyklad">Co to Tiktaalik?</button>
+        <button class="przyklad">Z czego wyewoluował kot?</button>
+        <button class="przyklad">Czym jest kijanka?</button>
+        <button class="przyklad">Jak działa fotosynteza?</button>
+        <button class="przyklad">Czym różni się DNA od RNA?</button>
+        <button class="przyklad">Co to mitochondrium?</button>
+    </div>
+
+    <section class="czat">
+        <div class="naglowek-czatu">🤖 Asystent biologiczny offline</div>
+
+        <div class="wiadomosci" id="wiadomosci">
+            <div class="wiadomosc ai">Cześć! Jestem biologicznym asystentem działającym bez płatnego API. 🧬
+
+Możesz zapytać na przykład:
+• „Co to Tiktaalik?”
+• „Z czego wyewoluował kot?”
+• „Czym jest kijanka?”
+• „Jak działa fotosynteza?”
+• „Co robi mitochondrium?”</div>
+        </div>
+
+        <div class="dol">
+            <input id="poleWiadomosci" type="text"
+                   placeholder="Napisz pytanie o biologii..."
+                   autocomplete="off">
+
+            <button id="wyslij">Wyślij</button>
+        </div>
+    </section>
+
+    <p class="mala-informacja">
+        To nie jest prawdziwy model językowy. Odpowiedzi pochodzą z wbudowanej bazy wiedzy,
+        dlatego czasami asystent może nie rozpoznać pytania.
+    </p>
+</main>
+
+<script>
+/* ============================================================
+   BIOLOGIA AI OFFLINE
+   Bez API, bez Node.js i bez opłat.
+   ============================================================ */
+
+const bazaWiedzy = [
+{
+    id:"tiktaalik",
+    nazwa:"Tiktaalik",
+    slowa:["tiktaalik","tiktalik","tiktaalika","ryba czworonog","forma przejsciowa ryby płazy","ryba z nogami"],
+    odpowiedz:`Tiktaalik był wymarłym zwierzęciem żyjącym około 375 milionów lat temu. Był rybą mięśniopłetwą, ale miał też cechy przypominające pierwsze czworonogi.
+
+Miał płetwy z mocnymi kośćmi, spłaszczoną głowę, ruchomą szyję oraz żebra pomagające podpierać ciało. Prawdopodobnie żył w płytkich rzekach i na bagnach. Nie był bezpośrednim „pierwszym płazem”, lecz bliskim krewnym organizmów stojących na drodze ewolucyjnej od ryb do czworonogów.
+
+Najprościej: Tiktaalik wyglądał jak ryba, ale część jego szkieletu działała trochę jak kończyny zwierzęcia lądowego.`
+},
+{
+    id:"kot_ewolucja",
+    nazwa:"Ewolucja kota",
+    slowa:["z czego wyewoluował kot","od czego pochodzi kot","przodek kota","ewolucja kota","skąd koty","kot wyewoluował"],
+    odpowiedz:`Koty nie wyewoluowały z jednego współczesnego zwierzęcia. Mają wspólnych przodków z innymi drapieżnymi ssakami.
+
+Bardzo uproszczona droga wygląda tak:
+pierwsze ssaki → ssaki łożyskowe → drapieżne → kotokształtne → kotowate → rodzaj Felis → kot domowy.
+
+Wczesne kotowate pojawiły się miliony lat temu. Jednym z dawnych przedstawicieli tej linii był Proailurus, a później Pseudaelurus. Kot domowy pochodzi głównie od kota nubijskiego, czyli afrykańskiego podgatunku żbika.
+
+Kot domowy nie pochodzi od lwa ani tygrysa. Lew, tygrys i kot domowy mają po prostu starszego wspólnego przodka.`
+},
+{
+    id:"kijanka",
+    nazwa:"Kijanka",
+    slowa:["kijanka","kijanki","co to kijanka","czym jest kijanka","larwa żaby","mała żaba z ogonem"],
+    odpowiedz:`Kijanka to larwalna, czyli młodociana postać wielu płazów, na przykład żab i ropuch.
+
+Kijanka zwykle żyje w wodzie. Na początku ma ogon, nie ma nóg i oddycha skrzelami. Z czasem przechodzi przeobrażenie: wyrastają jej tylne i przednie kończyny, rozwijają się płuca, ogon stopniowo zanika, a sposób odżywiania może się zmienić.
+
+Kolejność w dużym uproszczeniu:
+skrzek → kijanka → kijanka z nogami → młoda żaba → dorosła żaba.`
+},
+{
+    id:"dna",
+    nazwa:"DNA",
+    slowa:["dna","kwas deoksyrybonukleinowy","co to dna","czym jest dna","materiał genetyczny"],
+    odpowiedz:`DNA to cząsteczka przechowująca informację genetyczną organizmu. Można ją porównać do bardzo długiej instrukcji budowy i działania ciała.
+
+DNA jest zbudowane z dwóch nici tworzących podwójną helisę. W DNA występują cztery zasady: adenina, tymina, cytozyna i guanina. Ich kolejność tworzy zapis informacji.
+
+Fragment DNA zawierający instrukcję dotyczącą określonej cechy lub produktu komórki nazywamy genem.`
+},
+{
+    id:"rna",
+    nazwa:"RNA",
+    slowa:["rna","kwas rybonukleinowy","co to rna","czym jest rna"],
+    odpowiedz:`RNA to grupa cząsteczek pomagających komórce wykorzystywać informację zapisaną w DNA.
+
+Najbardziej znany jest mRNA, który przenosi kopię informacji z DNA do rybosomu. Rybosom odczytuje tę informację i buduje białko. RNA zwykle jest jednoniciowe i zamiast tyminy zawiera uracyl.
+
+Najprościej: DNA jest jak książka z przepisami, a mRNA jak kartka z przepisanym jednym przepisem.`
+},
+{
+    id:"dna_rna_roznice",
+    nazwa:"DNA a RNA",
+    slowa:["dna od rna","różni dna rna","roznica dna rna","porównaj dna i rna","dna vs rna"],
+    odpowiedz:`Najważniejsze różnice:
+
+DNA:
+• zwykle ma dwie nici,
+• zawiera deoksyrybozę,
+• ma zasadę tyminę,
+• długo przechowuje informację genetyczną.
+
+RNA:
+• zwykle ma jedną nić,
+• zawiera rybozę,
+• zamiast tyminy ma uracyl,
+• pomaga kopiować i wykorzystywać informację z DNA.
+
+DNA można porównać do głównego archiwum, a RNA do roboczej kopii instrukcji.`
+},
+{
+    id:"komorka",
+    nazwa:"Komórka",
+    slowa:["komórka","komorka","co to komórka","czym jest komórka","podstawowa jednostka życia"],
+    odpowiedz:`Komórka to najmniejsza podstawowa jednostka zdolna do wykonywania czynności życiowych.
+
+Niektóre organizmy składają się z jednej komórki, na przykład wiele bakterii. Człowiek, drzewa i zwierzęta są wielokomórkowe. Komórka pobiera substancje, prowadzi reakcje chemiczne, usuwa odpady i może się dzielić.
+
+Komórki mogą być prokariotyczne, bez prawdziwego jądra, albo eukariotyczne, z jądrem komórkowym.`
+},
+{
+    id:"mitochondrium",
+    nazwa:"Mitochondrium",
+    slowa:["mitochondrium","mitochondria","co robi mitochondrium","elektrownia komórki","oddychanie komórkowe"],
+    odpowiedz:`Mitochondrium to organellum, w którym komórka uzyskuje dużą część użytecznej energii.
+
+W mitochondriach zachodzi oddychanie komórkowe. Energia z substancji odżywczych jest przenoszona do ATP, które działa jak mały nośnik energii używany przez komórkę.
+
+Mitochondria mają własne DNA i najprawdopodobniej pochodzą od dawnych bakterii, które zamieszkały wewnątrz przodka komórki eukariotycznej.`
+},
+{
+    id:"rybosom",
+    nazwa:"Rybosom",
+    slowa:["rybosom","rybosomy","co robi rybosom","fabryka białek"],
+    odpowiedz:`Rybosom to struktura komórkowa, która buduje białka.
+
+Odczytuje kolejność informacji zapisanej w mRNA, a następnie łączy odpowiednie aminokwasy. Powstaje łańcuch, który zwija się w białko.
+
+Rybosomy występują zarówno u bakterii, jak i w komórkach roślin, zwierząt, grzybów oraz protistów.`
+},
+{
+    id:"jadro",
+    nazwa:"Jądro komórkowe",
+    slowa:["jądro komórkowe","jadro komorkowe","co robi jądro","centrum sterowania komórki"],
+    odpowiedz:`Jądro komórkowe to organellum występujące u eukariontów. Znajduje się w nim większość DNA komórki.
+
+Jądro jest otoczone podwójną błoną z porami. Kontroluje, które fragmenty DNA są odczytywane, dzięki czemu wpływa na działanie komórki.
+
+Nie każda komórka ma jądro. Bakterie go nie mają, a dojrzałe czerwone krwinki człowieka tracą jądro.`
+},
+{
+    id:"blona",
+    nazwa:"Błona komórkowa",
+    slowa:["błona komórkowa","blona komorkowa","membrana komórkowa","co robi błona"],
+    odpowiedz:`Błona komórkowa oddziela wnętrze komórki od otoczenia.
+
+Jest zbudowana głównie z podwójnej warstwy fosfolipidów oraz białek. Kontroluje, jakie substancje mogą wejść do komórki i z niej wyjść. Bierze też udział w odbieraniu sygnałów.
+
+Można ją porównać do elastycznej granicy z kontrolowanymi bramkami.`
+},
+{
+    id:"cytoplazma",
+    nazwa:"Cytoplazma",
+    slowa:["cytoplazma","co to cytoplazma","wnętrze komórki"],
+    odpowiedz:`Cytoplazma to wnętrze komórki znajdujące się między błoną komórkową a jądrem.
+
+Obejmuje cytozol, czyli płynną część, oraz znajdujące się w nim struktury. W cytoplazmie zachodzi wiele reakcji chemicznych potrzebnych komórce do życia.`
+},
+{
+    id:"chloroplast",
+    nazwa:"Chloroplast",
+    slowa:["chloroplast","chloroplasty","co robi chloroplast","zielone organellum"],
+    odpowiedz:`Chloroplast to organellum obecne między innymi w komórkach roślin i wielu glonów. Zachodzi w nim fotosynteza.
+
+Chloroplasty zawierają chlorofil, czyli zielony barwnik pochłaniający energię światła. Mają też własne DNA i podobnie jak mitochondria najprawdopodobniej pochodzą od dawnych bakterii.`
+},
+{
+    id:"fotosynteza",
+    nazwa:"Fotosynteza",
+    slowa:["fotosynteza","jak działa fotosynteza","na czym polega fotosynteza","roślina robi pokarm","chlorofil"],
+    odpowiedz:`Fotosynteza to proces, w którym rośliny, glony i niektóre bakterie wykorzystują energię światła do wytwarzania związków organicznych.
+
+Roślina pobiera dwutlenek węgla i wodę. Energia światła pomaga przekształcić je w cukry. Produktem ubocznym jest tlen.
+
+W dużym uproszczeniu:
+dwutlenek węgla + woda + energia światła → glukoza + tlen.
+
+Fotosynteza nie jest tym samym co oddychanie. Rośliny również prowadzą oddychanie komórkowe.`
+},
+{
+    id:"oddychanie_komorkowe",
+    nazwa:"Oddychanie komórkowe",
+    slowa:["oddychanie komórkowe","oddychanie komorkowe","jak komórka uzyskuje energię","atp"],
+    odpowiedz:`Oddychanie komórkowe to zespół reakcji, dzięki którym komórka uwalnia energię z substancji odżywczych.
+
+U eukariontów duża część tego procesu zachodzi w mitochondriach. Energia zostaje zgromadzona w ATP. W oddychaniu tlenowym zużywany jest tlen, a powstają między innymi dwutlenek węgla i woda.
+
+Nie chodzi tutaj o samo nabieranie powietrza do płuc. Oddychanie komórkowe zachodzi wewnątrz komórek.`
+},
+{
+    id:"atp",
+    nazwa:"ATP",
+    slowa:["atp","adenozynotrifosforan","energia komórki","nośnik energii"],
+    odpowiedz:`ATP to cząsteczka przenosząca energię potrzebną komórce.
+
+Kiedy komórka potrzebuje energii, może odłączyć jedną grupę fosforanową od ATP. Energia ta napędza między innymi ruch, transport substancji i budowę nowych cząsteczek.
+
+ATP nie jest dużym magazynem na wiele miesięcy. Jest raczej stale odnawianą „walutą energetyczną” komórki.`
+},
+{
+    id:"bialko",
+    nazwa:"Białko",
+    slowa:["białko","bialko","białka","co to białko","protein"],
+    odpowiedz:`Białka to duże cząsteczki zbudowane z aminokwasów.
+
+Mogą działać jako enzymy, elementy budulcowe, receptory, przeciwciała, hormony lub białka transportujące. Ich działanie zależy od kolejności aminokwasów i sposobu zwinięcia.
+
+Nie każde białko służy do budowy mięśni. Białka wykonują w organizmie ogromną liczbę różnych zadań.`
+},
+{
+    id:"aminokwas",
+    nazwa:"Aminokwas",
+    slowa:["aminokwas","aminokwasy","z czego białko","cegiełki białek"],
+    odpowiedz:`Aminokwasy to małe cząsteczki będące podstawowymi elementami budującymi białka.
+
+Rybosom łączy aminokwasy w określonej kolejności. Powstały łańcuch zwija się, tworząc działające białko.
+
+Człowiek wykorzystuje około 20 podstawowych aminokwasów do budowy białek. Część z nich musi otrzymywać z pożywienia.`
+},
+{
+    id:"enzym",
+    nazwa:"Enzym",
+    slowa:["enzym","enzymy","co robi enzym","katalizator biologiczny"],
+    odpowiedz:`Enzym to najczęściej białko, które przyspiesza określoną reakcję chemiczną.
+
+Enzym ma miejsce aktywne, do którego pasuje substrat. Enzym nie jest zwykle zużywany w reakcji i może działać wielokrotnie.
+
+Działanie enzymu zależy między innymi od temperatury, pH i stężenia substratu. Zbyt wysoka temperatura może zniszczyć jego kształt.`
+},
+{
+    id:"wirus",
+    nazwa:"Wirus",
+    slowa:["wirus","wirusy","co to wirus","czy wirus żyje"],
+    odpowiedz:`Wirus to bardzo mała cząstka zbudowana z materiału genetycznego i osłony białkowej, a czasem także błony.
+
+Nie ma własnego metabolizmu i nie rozmnaża się samodzielnie. Musi dostać się do komórki gospodarza i wykorzystać jej mechanizmy.
+
+Dlatego wirusy znajdują się na granicy między materią ożywioną i nieożywioną. Naukowcy różnie odpowiadają na pytanie, czy wirus jest żywy.`
+},
+{
+    id:"bakteria",
+    nazwa:"Bakteria",
+    slowa:["bakteria","bakterie","co to bakteria","prokariont"],
+    odpowiedz:`Bakterie to jednokomórkowe organizmy prokariotyczne, czyli pozbawione prawdziwego jądra komórkowego.
+
+Ich DNA znajduje się w obszarze cytoplazmy zwanym nukleoidem. Bakterie rozmnażają się zwykle przez podział komórki.
+
+Wiele bakterii jest pożytecznych lub obojętnych. Tylko część wywołuje choroby.`
+},
+{
+    id:"archeony",
+    nazwa:"Archeony",
+    slowa:["archeon","archeony","archea","co to archeony"],
+    odpowiedz:`Archeony to jednokomórkowe prokarionty, które z wyglądu mogą przypominać bakterie, ale różnią się od nich budową i historią ewolucyjną.
+
+Niektóre żyją w bardzo trudnych warunkach, lecz archeony występują także w zwykłych środowiskach, na przykład w oceanach i glebie.
+
+Archeony są bliżej spokrewnione z eukariontami niż z bakteriami pod względem części mechanizmów komórkowych.`
+},
+{
+    id:"eukariont",
+    nazwa:"Eukariont",
+    slowa:["eukariont","eukarionty","eukariota","komórka eukariotyczna"],
+    odpowiedz:`Eukarionty to organizmy, których komórki mają prawdziwe jądro komórkowe.
+
+Do eukariontów należą zwierzęta, rośliny, grzyby i protisty. Ich komórki zawierają organella, takie jak mitochondria, aparat Golgiego i siateczka śródplazmatyczna.`
+},
+{
+    id:"prokariont",
+    nazwa:"Prokariont",
+    slowa:["prokariont","prokariota","komórka prokariotyczna","bez jądra"],
+    odpowiedz:`Prokariont to organizm zbudowany z komórki bez prawdziwego jądra komórkowego.
+
+Do prokariontów należą bakterie i archeony. Ich DNA nie jest zamknięte w jądrze, lecz znajduje się w nukleoidzie. Prokarionty są zwykle mniejsze i prostsze od komórek eukariotycznych.`
+},
+{
+    id:"luca",
+    nazwa:"LUCA",
+    slowa:["luca","ostatni uniwersalny wspólny przodek","wspólny przodek życia"],
+    odpowiedz:`LUCA to skrót od Last Universal Common Ancestor, czyli ostatniego uniwersalnego wspólnego przodka wszystkich dzisiejszych organizmów.
+
+LUCA nie był pierwszym życiem. Był populacją bardzo dawnych organizmów, od której pochodzą bakterie, archeony i eukarionty.
+
+Najprawdopodobniej miał DNA, RNA, rybosomy, błonę komórkową i podstawowy metabolizm.`
+},
+{
+    id:"ewolucja",
+    nazwa:"Ewolucja",
+    slowa:["ewolucja","co to ewolucja","jak działa ewolucja","zmiana gatunków"],
+    odpowiedz:`Ewolucja biologiczna to zmiana dziedzicznych cech populacji w kolejnych pokoleniach.
+
+Powodują ją między innymi mutacje, dobór naturalny, dryf genetyczny i przepływ genów. Ewolucja dotyczy populacji, a nie pojedynczego osobnika.
+
+Ewolucja nie ma ustalonego celu. Organizmy nie zmieniają się dlatego, że „chcą”, lecz dlatego, że pewne cechy są dziedziczone i wpływają na przeżycie oraz rozmnażanie.`
+},
+{
+    id:"dobor_naturalny",
+    nazwa:"Dobór naturalny",
+    slowa:["dobór naturalny","dobor naturalny","selekcja naturalna","darwin"],
+    odpowiedz:`Dobór naturalny to mechanizm ewolucji.
+
+W populacji istnieją różnice między osobnikami. Jeśli część różnic jest dziedziczna i pomaga przeżyć lub wydać potomstwo, nosiciele tych cech mogą przekazywać je częściej następnym pokoleniom.
+
+Z czasem korzystna cecha może stać się w populacji częstsza.`
+},
+{
+    id:"mutacja",
+    nazwa:"Mutacja",
+    slowa:["mutacja","mutacje","zmiana dna","błąd dna"],
+    odpowiedz:`Mutacja to trwała zmiana w materiale genetycznym.
+
+Może powstać przypadkowo podczas kopiowania DNA albo pod wpływem czynników zewnętrznych. Mutacje mogą być neutralne, szkodliwe lub korzystne.
+
+Mutacje tworzą nowe warianty genów i są jednym ze źródeł różnorodności potrzebnej ewolucji.`
+},
+{
+    id:"gen",
+    nazwa:"Gen",
+    slowa:["gen","geny","co to gen","fragment dna"],
+    odpowiedz:`Gen to fragment DNA zawierający informację potrzebną do wytworzenia funkcjonalnego produktu, najczęściej RNA lub białka.
+
+Geny wpływają na cechy organizmu, ale wiele cech zależy od wielu genów oraz środowiska. Gen nie zawsze działa w każdej komórce i w każdym momencie.`
+},
+{
+    id:"chromosom",
+    nazwa:"Chromosom",
+    slowa:["chromosom","chromosomy","co to chromosom"],
+    odpowiedz:`Chromosom to uporządkowana struktura zbudowana z DNA i białek.
+
+U człowieka większość komórek ciała ma 46 chromosomów, czyli 23 pary. Jedną kopię każdego zestawu otrzymujemy od matki, a drugą od ojca.
+
+Chromosom nie jest tym samym co gen. Na jednym chromosomie znajduje się wiele genów.`
+},
+{
+    id:"mitoza",
+    nazwa:"Mitoza",
+    slowa:["mitoza","podział komórki","dwie komórki potomne"],
+    odpowiedz:`Mitoza to podział jądra komórkowego prowadzący zwykle do powstania dwóch komórek potomnych o takim samym zestawie chromosomów.
+
+Mitoza umożliwia wzrost, regenerację i wymianę zużytych komórek. Przed mitozą DNA zostaje skopiowane.`
+},
+{
+    id:"mejoza",
+    nazwa:"Mejoza",
+    slowa:["mejoza","podział redukcyjny","komórki rozrodcze","gamety"],
+    odpowiedz:`Mejoza to podział komórkowy prowadzący do powstania komórek z o połowę mniejszą liczbą chromosomów.
+
+U zwierząt dzięki mejozie powstają gamety, czyli komórki rozrodcze. Mejoza zwiększa też różnorodność genetyczną przez losowe rozdzielanie chromosomów i crossing-over.`
+},
+{
+    id:"zaplodnienie",
+    nazwa:"Zapłodnienie",
+    slowa:["zapłodnienie","zaplodnienie","połączenie gamet","plemnik komórka jajowa"],
+    odpowiedz:`Zapłodnienie to połączenie gamety męskiej i żeńskiej.
+
+U człowieka plemnik łączy się z komórką jajową. Powstaje zygota, która ma pełny zestaw chromosomów i rozpoczyna podziały komórkowe.
+
+Zapłodnienie nie oznacza od razu powstania rozwiniętego zarodka. Rozwój odbywa się etapami.`
+},
+{
+    id:"zygote",
+    nazwa:"Zygota",
+    slowa:["zygota","co to zygota","pierwsza komórka organizmu"],
+    odpowiedz:`Zygota to pierwsza komórka nowego organizmu powstała po połączeniu gamet.
+
+Zygota zaczyna się dzielić przez mitozę. Z jej potomnych komórek stopniowo powstają tkanki i narządy rozwijającego się organizmu.`
+},
+{
+    id:"tkanka",
+    nazwa:"Tkanka",
+    slowa:["tkanka","tkanki","co to tkanka"],
+    odpowiedz:`Tkanka to zespół podobnych komórek współpracujących przy wykonywaniu określonego zadania.
+
+U zwierząt wyróżnia się między innymi tkankę nabłonkową, łączną, mięśniową i nerwową. U roślin istnieją na przykład tkanki przewodzące, okrywające i miękiszowe.`
+},
+{
+    id:"narzad",
+    nazwa:"Narząd",
+    slowa:["narząd","narzad","organy ciała","co to narząd"],
+    odpowiedz:`Narząd to część organizmu zbudowana z kilku rodzajów tkanek, które wspólnie wykonują określone zadanie.
+
+Przykładami narządów są serce, płuca, wątroba, liść i korzeń. Kilka współpracujących narządów może tworzyć układ narządów.`
+},
+{
+    id:"serce",
+    nazwa:"Serce",
+    slowa:["serce","jak działa serce","co robi serce","pompa krwi"],
+    odpowiedz:`Serce to mięśniowy narząd pompujący krew przez naczynia krwionośne.
+
+U człowieka ma cztery jamy: dwa przedsionki i dwie komory. Prawa strona kieruje krew do płuc, a lewa pompuje natlenowaną krew do całego ciała.
+
+Zastawki pomagają utrzymać przepływ krwi w jednym kierunku.`
+},
+{
+    id:"krew",
+    nazwa:"Krew",
+    slowa:["krew","co to krew","skład krwi"],
+    odpowiedz:`Krew to płynna tkanka krążąca w naczyniach.
+
+Składa się z osocza, krwinek czerwonych, krwinek białych i płytek krwi. Transportuje tlen, substancje odżywcze, hormony i produkty przemiany materii. Pomaga też zwalczać drobnoustroje i utrzymywać temperaturę ciała.`
+},
+{
+    id:"erytrocyt",
+    nazwa:"Krwinka czerwona",
+    slowa:["erytrocyt","krwinka czerwona","czerwone krwinki","hemoglobina"],
+    odpowiedz:`Krwinki czerwone, czyli erytrocyty, transportują przede wszystkim tlen.
+
+Zawierają hemoglobinę, która wiąże tlen w płucach i oddaje go w tkankach. Dojrzałe erytrocyty człowieka nie mają jądra, dzięki czemu mają więcej miejsca na hemoglobinę.`
+},
+{
+    id:"leukocyt",
+    nazwa:"Krwinka biała",
+    slowa:["leukocyt","krwinka biała","białe krwinki","odporność"],
+    odpowiedz:`Krwinki białe, czyli leukocyty, są częścią układu odpornościowego.
+
+Istnieje wiele typów leukocytów. Jedne pochłaniają drobnoustroje, inne wytwarzają przeciwciała, a jeszcze inne niszczą zakażone komórki.`
+},
+{
+    id:"pluca",
+    nazwa:"Płuca",
+    slowa:["płuca","pluca","jak działają płuca","wymiana gazowa"],
+    odpowiedz:`Płuca są narządami wymiany gazowej.
+
+W pęcherzykach płucnych tlen przechodzi z powietrza do krwi, a dwutlenek węgla z krwi do powietrza. Ruch powietrza umożliwia głównie praca przepony i mięśni międzyżebrowych.`
+},
+{
+    id:"przepona",
+    nazwa:"Przepona",
+    slowa:["przepona","jak oddychamy","mięsień oddechowy"],
+    odpowiedz:`Przepona to duży mięsień oddzielający klatkę piersiową od jamy brzusznej.
+
+Kiedy się kurczy, obniża się i zwiększa objętość klatki piersiowej. Powietrze napływa wtedy do płuc. Gdy się rozluźnia, pomaga w wydechu.`
+},
+{
+    id:"mozg",
+    nazwa:"Mózg",
+    slowa:["mózg","mozg","jak działa mózg","centrum układu nerwowego"],
+    odpowiedz:`Mózg jest główną częścią ośrodkowego układu nerwowego.
+
+Odbiera informacje ze zmysłów, planuje ruchy, steruje wieloma funkcjami ciała i umożliwia uczenie się, pamięć, emocje oraz myślenie.
+
+Różne obszary mózgu mają różne zadania, ale działają jako połączona sieć.`
+},
+{
+    id:"neuron",
+    nazwa:"Neuron",
+    slowa:["neuron","komórka nerwowa","jak działa neuron"],
+    odpowiedz:`Neuron to komórka wyspecjalizowana w odbieraniu i przekazywaniu informacji.
+
+Ma ciało komórki, dendryty oraz akson. Informacje przemieszczają się elektrycznie wzdłuż neuronu, a między neuronami są przekazywane chemicznie przez synapsy.`
+},
+{
+    id:"synapsa",
+    nazwa:"Synapsa",
+    slowa:["synapsa","połączenie neuronów","neuroprzekaźnik"],
+    odpowiedz:`Synapsa to miejsce przekazywania informacji między neuronami albo między neuronem i inną komórką.
+
+W wielu synapsach zakończenie neuronu uwalnia neuroprzekaźnik. Cząsteczki te wiążą się z receptorami następnej komórki i zmieniają jej aktywność.`
+},
+{
+    id:"nerwy",
+    nazwa:"Nerwy",
+    slowa:["nerw","nerwy","co to nerw"],
+    odpowiedz:`Nerw to wiązka wypustek neuronów, głównie aksonów, znajdująca się poza mózgiem i rdzeniem kręgowym.
+
+Nerwy czuciowe niosą informacje do ośrodkowego układu nerwowego, a nerwy ruchowe przekazują polecenia do mięśni.`
+},
+{
+    id:"miesien",
+    nazwa:"Mięsień",
+    slowa:["mięsień","miesien","mięśnie","jak działa mięsień"],
+    odpowiedz:`Mięsień to narząd zdolny do kurczenia się.
+
+Włókna mięśniowe zawierają białka aktynę i miozynę, które przesuwają się względem siebie. Dzięki temu mięsień się skraca i może poruszać kością albo przesuwać substancje w narządach.`
+},
+{
+    id:"kosc",
+    nazwa:"Kość",
+    slowa:["kość","kosc","kości","z czego kość"],
+    odpowiedz:`Kość jest żywą tkanką tworzącą szkielet.
+
+Zawiera komórki, włókna kolagenowe i sole mineralne, głównie związki wapnia. Kości podpierają ciało, chronią narządy, umożliwiają ruch i magazynują minerały. W szpiku powstają komórki krwi.`
+},
+{
+    id:"staw",
+    nazwa:"Staw",
+    slowa:["staw","stawy","połączenie kości"],
+    odpowiedz:`Staw to ruchome lub częściowo ruchome połączenie kości.
+
+Powierzchnie kości są często pokryte chrząstką, która zmniejsza tarcie. Torebka stawowa i więzadła stabilizują staw, a maź stawowa ułatwia ruch.`
+},
+{
+    id:"skora",
+    nazwa:"Skóra",
+    slowa:["skóra","skora","co robi skóra","największy narząd"],
+    odpowiedz:`Skóra chroni ciało przed urazami, utratą wody i drobnoustrojami.
+
+Pomaga regulować temperaturę, odbiera bodźce i uczestniczy w wytwarzaniu witaminy D. Składa się głównie z naskórka, skóry właściwej i tkanki podskórnej.`
+},
+{
+    id:"watroba",
+    nazwa:"Wątroba",
+    slowa:["wątroba","watroba","co robi wątroba"],
+    odpowiedz:`Wątroba wykonuje setki zadań.
+
+Przetwarza substancje odżywcze, magazynuje glikogen, pomaga usuwać toksyny, produkuje żółć i wiele ważnych białek krwi. Ma także dużą zdolność regeneracji, choć nie jest niezniszczalna.`
+},
+{
+    id:"nerka",
+    nazwa:"Nerka",
+    slowa:["nerka","nerki","co robią nerki","mocz"],
+    odpowiedz:`Nerki filtrują krew i pomagają utrzymywać odpowiednią ilość wody, soli oraz właściwe pH.
+
+Usuwają zbędne produkty przemiany materii, tworząc mocz. Wydzielają także hormony wpływające między innymi na ciśnienie krwi i powstawanie krwinek czerwonych.`
+},
+{
+    id:"zoladek",
+    nazwa:"Żołądek",
+    slowa:["żołądek","zoladek","co robi żołądek","trawienie w żołądku"],
+    odpowiedz:`Żołądek to umięśniony narząd układu pokarmowego.
+
+Miesza pokarm z sokiem żołądkowym. Kwas pomaga niszczyć część drobnoustrojów i tworzy warunki dla enzymów trawiących białka. Następnie pokarm trafia do jelita cienkiego.`
+},
+{
+    id:"jelito_cienkie",
+    nazwa:"Jelito cienkie",
+    slowa:["jelito cienkie","wchłanianie pokarmu","kosmki jelitowe"],
+    odpowiedz:`Jelito cienkie jest głównym miejscem trawienia i wchłaniania substancji odżywczych.
+
+Jego ściana ma fałdy i kosmki, które ogromnie zwiększają powierzchnię. Dzięki temu cukry proste, aminokwasy, kwasy tłuszczowe, witaminy i minerały mogą przechodzić do krwi lub limfy.`
+},
+{
+    id:"jelito_grube",
+    nazwa:"Jelito grube",
+    slowa:["jelito grube","okrężnica","co robi jelito grube"],
+    odpowiedz:`Jelito grube wchłania wodę i część soli mineralnych.
+
+Żyje w nim ogromna liczba mikroorganizmów tworzących mikrobiom jelitowy. Z niestrawionych resztek formowany jest kał.`
+},
+{
+    id:"hormon",
+    nazwa:"Hormon",
+    slowa:["hormon","hormony","co to hormon"],
+    odpowiedz:`Hormon to chemiczny sygnał wytwarzany przez określone komórki lub gruczoły.
+
+Hormony są transportowane, często przez krew, i działają na komórki mające odpowiednie receptory. Regulują między innymi wzrost, metabolizm, dojrzewanie i reakcję na stres.`
+},
+{
+    id:"insulina",
+    nazwa:"Insulina",
+    slowa:["insulina","co robi insulina","cukier we krwi"],
+    odpowiedz:`Insulina to hormon produkowany przez komórki beta trzustki.
+
+Pomaga obniżać poziom glukozy we krwi, ułatwiając jej pobieranie przez niektóre komórki i magazynowanie. Brak insuliny lub słaba reakcja komórek na insulinę może prowadzić do cukrzycy.`
+},
+{
+    id:"odpornosc",
+    nazwa:"Układ odpornościowy",
+    slowa:["odporność","odpornosc","układ odpornościowy","jak ciało walczy z chorobą"],
+    odpowiedz:`Układ odpornościowy chroni organizm przed drobnoustrojami i nieprawidłowymi komórkami.
+
+Odporność wrodzona działa szybko i nieswoiście. Odporność nabyta rozpoznaje konkretne antygeny i może tworzyć pamięć immunologiczną.`
+},
+{
+    id:"przeciwcialo",
+    nazwa:"Przeciwciało",
+    slowa:["przeciwciało","przeciwcialo","przeciwciała","antibody"],
+    odpowiedz:`Przeciwciało to białko wytwarzane przez limfocyty B i komórki plazmatyczne.
+
+Rozpoznaje określoną cząsteczkę, czyli antygen. Może blokować drobnoustrój albo oznaczać go do zniszczenia przez inne elementy odporności.`
+},
+{
+    id:"szczepionka",
+    nazwa:"Szczepionka",
+    slowa:["szczepionka","szczepienie","jak działa szczepionka"],
+    odpowiedz:`Szczepionka przygotowuje układ odpornościowy do rozpoznawania określonego patogenu lub jego fragmentu.
+
+Po szczepieniu organizm może wytworzyć komórki pamięci. Dzięki temu przy późniejszym kontakcie z prawdziwym patogenem reakcja jest szybsza i skuteczniejsza.`
+},
+{
+    id:"gatunek",
+    nazwa:"Gatunek",
+    slowa:["gatunek","co to gatunek","definicja gatunku"],
+    odpowiedz:`Gatunek to podstawowa jednostka klasyfikacji organizmów.
+
+W biologicznej definicji gatunku osobniki tego samego gatunku mogą krzyżować się w naturze i wydawać płodne potomstwo. Ta definicja nie działa jednak idealnie dla skamieniałości, bakterii i organizmów rozmnażających się bezpłciowo.`
+},
+{
+    id:"populacja",
+    nazwa:"Populacja",
+    slowa:["populacja","co to populacja","osobniki jednego gatunku"],
+    odpowiedz:`Populacja to grupa osobników tego samego gatunku żyjących na określonym obszarze i w podobnym czasie.
+
+Osobniki populacji mogą się ze sobą rozmnażać. Populacje mają cechy takie jak liczebność, zagęszczenie, struktura wieku i częstość alleli.`
+},
+{
+    id:"ekosystem",
+    nazwa:"Ekosystem",
+    slowa:["ekosystem","co to ekosystem","biocenoza biotop"],
+    odpowiedz:`Ekosystem tworzą organizmy żyjące na danym obszarze oraz nieożywione elementy środowiska.
+
+Przykładem jest las, jezioro albo rafa koralowa. W ekosystemie przepływa energia, a pierwiastki krążą między organizmami i otoczeniem.`
+},
+{
+    id:"lancuch_pokarmowy",
+    nazwa:"Łańcuch pokarmowy",
+    slowa:["łańcuch pokarmowy","lancuch pokarmowy","kto kogo zjada","sieć pokarmowa"],
+    odpowiedz:`Łańcuch pokarmowy pokazuje, jak energia i materia przechodzą między organizmami przez zjadanie.
+
+Zwykle zaczyna się od producenta, na przykład rośliny. Następnie występują konsumenci i destruenci. W prawdziwym ekosystemie istnieje wiele połączonych łańcuchów tworzących sieć pokarmową.`
+},
+{
+    id:"producent",
+    nazwa:"Producent",
+    slowa:["producent biologii","producenci ekosystem","autotrof"],
+    odpowiedz:`Producent to organizm wytwarzający związki organiczne z prostych substancji nieorganicznych.
+
+Większość producentów wykorzystuje fotosyntezę. Należą do nich rośliny, glony i niektóre bakterie. Stanowią podstawę wielu łańcuchów pokarmowych.`
+},
+{
+    id:"konsument",
+    nazwa:"Konsument",
+    slowa:["konsument biologii","konsumenci ekosystem","heterotrof"],
+    odpowiedz:`Konsument to organizm, który uzyskuje energię i materię, zjadając inne organizmy lub ich części.
+
+Roślinożercy są konsumentami pierwszego rzędu. Drapieżniki mogą być konsumentami wyższych rzędów.`
+},
+{
+    id:"destruent",
+    nazwa:"Destruent",
+    slowa:["destruent","reducenci","rozkład materii","grzyby bakterie rozkładają"],
+    odpowiedz:`Destruenci rozkładają martwą materię organiczną i odpady.
+
+Należą do nich głównie bakterie i grzyby. Uwalniają składniki mineralne, które mogą ponownie zostać wykorzystane przez producentów.`
+},
+{
+    id:"symbioza",
+    nazwa:"Symbioza",
+    slowa:["symbioza","mutualizm","współpraca organizmów"],
+    odpowiedz:`Symbioza w szerokim znaczeniu to bliski związek między organizmami różnych gatunków.
+
+Może przynosić korzyść obu stronom, jednej stronie albo być szkodliwa dla jednego z partnerów. Przykładem obustronnie korzystnej relacji są grzyby mikoryzowe i korzenie roślin.`
+},
+{
+    id:"pasozyt",
+    nazwa:"Pasożytnictwo",
+    slowa:["pasożyt","pasozyt","pasożytnictwo","organizm żyje kosztem"],
+    odpowiedz:`Pasożytnictwo to relacja, w której pasożyt odnosi korzyść, a gospodarz ponosi szkodę.
+
+Pasożyt zwykle nie zabija gospodarza natychmiast, ponieważ jest od niego zależny. Przykładami są tasiemce, kleszcze i niektóre pierwotniaki.`
+},
+{
+    id:"drapieznik",
+    nazwa:"Drapieżnictwo",
+    slowa:["drapieżnik","drapieznictwo","ofiara drapieżnik"],
+    odpowiedz:`Drapieżnictwo to relacja, w której jeden organizm poluje na drugi i go zjada.
+
+Drapieżniki wpływają na liczebność ofiar, a ofiary wywierają presję ewolucyjną na drapieżniki. Powstaje swoisty „wyścig zbrojeń” między wykrywaniem, ucieczką i chwytaniem.`
+},
+{
+    id:"roslina",
+    nazwa:"Roślina",
+    slowa:["roślina","roslina","co to roślina","królestwo roślin"],
+    odpowiedz:`Rośliny to eukariotyczne organizmy, które zwykle prowadzą fotosyntezę.
+
+Ich komórki mają ścianę komórkową z celulozy, chloroplasty i dużą wakuolę. Rośliny nie tylko produkują tlen, ale są też podstawą wielu ekosystemów.`
+},
+{
+    id:"korzen",
+    nazwa:"Korzeń",
+    slowa:["korzeń","korzen","co robi korzeń rośliny"],
+    odpowiedz:`Korzeń zakotwicza roślinę w podłożu i pobiera wodę oraz sole mineralne.
+
+Może także magazynować substancje zapasowe. Włośniki zwiększają powierzchnię chłonną korzenia.`
+},
+{
+    id:"lisc",
+    nazwa:"Liść",
+    slowa:["liść","lisc","co robi liść","budowa liścia"],
+    odpowiedz:`Liść jest głównym organem fotosyntezy u wielu roślin.
+
+Zawiera komórki z chloroplastami. Aparaty szparkowe umożliwiają wymianę gazową i regulują utratę wody. Nerwy liścia przewodzą wodę oraz produkty fotosyntezy.`
+},
+{
+    id:"kwiat",
+    nazwa:"Kwiat",
+    slowa:["kwiat","co to kwiat","rozmnażanie roślin"],
+    odpowiedz:`Kwiat jest organem rozmnażania roślin okrytonasiennych.
+
+Może zawierać pręciki produkujące pyłek i słupek zawierający zalążki. Po zapyleniu i zapłodnieniu zalążek może przekształcić się w nasiono, a zalążnia w owoc.`
+},
+{
+    id:"nasiono",
+    nazwa:"Nasiono",
+    slowa:["nasiono","nasiona","co to nasiono"],
+    odpowiedz:`Nasiono zawiera zarodek rośliny, substancje zapasowe i ochronną łupinę.
+
+Może pozostawać w spoczynku, dopóki warunki nie staną się odpowiednie do kiełkowania. Nasiona pomagają roślinom przetrwać i rozprzestrzeniać się.`
+},
+{
+    id:"grzyb",
+    nazwa:"Grzyb",
+    slowa:["grzyb","grzyby","co to grzyb","czy grzyb roślina"],
+    odpowiedz:`Grzyby są osobnym królestwem eukariontów. Nie są roślinami.
+
+Nie prowadzą fotosyntezy. Pobierają substancje odżywcze z otoczenia, wydzielając enzymy i wchłaniając produkty trawienia. Ich ściana komórkowa zawiera chitynę.`
+},
+{
+    id:"protist",
+    nazwa:"Protist",
+    slowa:["protist","protisty","co to protisty"],
+    odpowiedz:`Protisty to bardzo zróżnicowana grupa eukariontów, które nie są zaliczane do zwierząt, roślin ani grzybów.
+
+Należą do nich między innymi ameby, eugleny i wiele glonów. Mogą być jedno- lub wielokomórkowe, samożywne albo cudzożywne.`
+},
+{
+    id:"gabki",
+    nazwa:"Gąbki",
+    slowa:["gąbka zwierzę","gabki","porifera","najprostsze zwierzęta"],
+    odpowiedz:`Gąbki to wodne zwierzęta o bardzo prostej budowie.
+
+Nie mają prawdziwych tkanek i narządów. Przepompowują wodę przez ciało, odfiltrowując z niej drobne cząstki pokarmu. Większość dorosłych gąbek prowadzi osiadły tryb życia.`
+},
+{
+    id:"parzydelkowce",
+    nazwa:"Parzydełkowce",
+    slowa:["parzydełkowce","parzydelkowce","meduzy korale polipy"],
+    odpowiedz:`Parzydełkowce to wodne zwierzęta, do których należą meduzy, korale i ukwiały.
+
+Mają komórki parzydełkowe służące do obrony i chwytania ofiar. Występują w postaci polipa, meduzy albo obu tych form w cyklu życiowym.`
+},
+{
+    id:"meduza",
+    nazwa:"Meduza",
+    slowa:["meduza","co to meduza","jak żyje meduza"],
+    odpowiedz:`Meduza to galaretowata forma ciała niektórych parzydełkowców.
+
+Porusza się dzięki rytmicznym skurczom dzwonu. Ma czułki z komórkami parzydełkowymi. Nie ma mózgu ani serca, ale ma prostą sieć nerwową.`
+},
+{
+    id:"plaziniec",
+    nazwa:"Płaziniec",
+    slowa:["płaziniec","plazince","płazińce","tasiemiec wypławek"],
+    odpowiedz:`Płazińce to zwierzęta o spłaszczonym ciele.
+
+Należą do nich wolno żyjące wypławki oraz pasożytnicze przywry i tasiemce. Płazińce są dwubocznie symetryczne i mają bardziej skoncentrowany układ nerwowy niż parzydełkowce.`
+},
+{
+    id:"mieczak",
+    nazwa:"Mięczak",
+    slowa:["mięczak","mieczaki","ślimak małż ośmiornica"],
+    odpowiedz:`Mięczaki to bardzo różnorodna grupa zwierząt.
+
+Należą do nich ślimaki, małże, ośmiornice i kałamarnice. Typowe mięczaki mają umięśnioną nogę, worek trzewiowy i płaszcz, który u wielu gatunków wytwarza muszlę.`
+},
+{
+    id:"stawonog",
+    nazwa:"Stawonóg",
+    slowa:["stawonóg","stawonogi","owady pajęczaki skorupiaki"],
+    odpowiedz:`Stawonogi mają ciało pokryte zewnętrznym szkieletem, segmentację i członowane odnóża.
+
+Należą do nich owady, pajęczaki, skorupiaki i wije. Są najliczniejszą pod względem liczby opisanych gatunków grupą zwierząt.`
+},
+{
+    id:"owad",
+    nazwa:"Owad",
+    slowa:["owad","owady","co to owad","sześć nóg"],
+    odpowiedz:`Owady to stawonogi mające trzy główne części ciała: głowę, tułów i odwłok.
+
+Dorosły owad ma trzy pary nóg. Wiele gatunków ma skrzydła. Owady oddychają przez system tchawek, a nie przez płuca.`
+},
+{
+    id:"pajak",
+    nazwa:"Pajęczak",
+    slowa:["pająk","pajak","pajęczak","pajęczaki","osiem nóg"],
+    odpowiedz:`Pajęczaki to stawonogi obejmujące pająki, skorpiony, kleszcze i roztocza.
+
+Zwykle mają cztery pary odnóży krocznych i ciało podzielone na głowotułów oraz odwłok. Pająki nie są owadami.`
+},
+{
+    id:"skorupiak",
+    nazwa:"Skorupiak",
+    slowa:["skorupiak","skorupiaki","krab rak krewetka"],
+    odpowiedz:`Skorupiaki to stawonogi, do których należą kraby, raki, krewetki i stonogi lądowe.
+
+Większość żyje w wodzie i oddycha skrzelami. Często mają dwie pary czułków.`
+},
+{
+    id:"strunowiec",
+    nazwa:"Strunowiec",
+    slowa:["strunowiec","strunowce","struna grzbietowa"],
+    odpowiedz:`Strunowce to zwierzęta, które przynajmniej na pewnym etapie rozwoju mają strunę grzbietową, grzbietową cewkę nerwową i szczeliny gardzielowe.
+
+Do strunowców należą kręgowce, osłonice i bezczaszkowce. Człowiek również jest strunowcem.`
+},
+{
+    id:"kregowiec",
+    nazwa:"Kręgowiec",
+    slowa:["kręgowiec","kregowiec","kręgowce","zwierzę z kręgosłupem"],
+    odpowiedz:`Kręgowce to strunowce mające czaszkę i kręgosłup zbudowany z kręgów.
+
+Należą do nich ryby, płazy, gady, ptaki i ssaki. Kręgosłup chroni rdzeń kręgowy i stanowi podporę ciała.`
+},
+{
+    id:"ryba",
+    nazwa:"Ryby",
+    slowa:["ryba","ryby","co to ryba"],
+    odpowiedz:`Ryby to wodne kręgowce oddychające zwykle skrzelami i poruszające się za pomocą płetw.
+
+„Ryby” nie tworzą jednej pełnej grupy obejmującej wszystkich potomków wspólnego przodka, ponieważ z ryb mięśniopłetwych wyewoluowały czworonogi.`
+},
+{
+    id:"miesniopletwe",
+    nazwa:"Mięśniopłetwe",
+    slowa:["mięśniopłetwe","miesniopletwe","sarcopterygii","ryby mięsistopłetwe"],
+    odpowiedz:`Mięśniopłetwe to grupa kręgowców mających płetwy z wewnętrznym szkieletem i umięśnioną nasadą.
+
+Do tej linii należą latimerie, ryby dwudyszne oraz czworonogi. Oznacza to, że człowiek w sensie kladystycznym należy do potomków mięśniopłetwych.`
+},
+{
+    id:"czworonog",
+    nazwa:"Czworonóg",
+    slowa:["czworonóg","czworonogi","tetrapoda","kręgowiec cztery kończyny"],
+    odpowiedz:`Czworonogi to kręgowce wywodzące się od przodków mających cztery kończyny z palcami.
+
+Należą do nich płazy, gady, ptaki i ssaki. Nie wszystkie współczesne czworonogi mają cztery widoczne kończyny, ponieważ niektóre linie, jak węże i wieloryby, wtórnie je zredukowały.`
+},
+{
+    id:"plaz",
+    nazwa:"Płaz",
+    slowa:["płaz","plaz","płazy","żaba salamandra traszka"],
+    odpowiedz:`Płazy to czworonogi, do których należą żaby, ropuchy, salamandry, traszki i marszczelce.
+
+Wiele płazów ma wodne larwy i lądowe lub ziemnowodne postacie dorosłe. Ich skóra jest cienka i przepuszczalna, dlatego są wrażliwe na wysychanie i zanieczyszczenia.`
+},
+{
+    id:"gad",
+    nazwa:"Gad",
+    slowa:["gad","gady","jaszczurka wąż krokodyl"],
+    odpowiedz:`Gady to owodniowce tradycyjnie obejmujące żółwie, jaszczurki, węże i krokodyle.
+
+W nowoczesnej klasyfikacji ptaki są częścią linii gadów, ponieważ pochodzą od dinozaurów. Gady mają skórę pokrytą łuskami lub tarczkami i oddychają płucami.`
+},
+{
+    id:"ptak",
+    nazwa:"Ptak",
+    slowa:["ptak","ptaki","co to ptak","dinozaur z piórami"],
+    odpowiedz:`Ptaki to opierzone kręgowce będące żyjącymi dinozaurami.
+
+Mają pióra, dziób i lekką budowę szkieletu. Większość lata, ale nie wszystkie, na przykład strusie i pingwiny. Ptaki są stałocieplne i składają jaja.`
+},
+{
+    id:"dinozaur",
+    nazwa:"Dinozaur",
+    slowa:["dinozaur","dinozaury","co to dinozaur"],
+    odpowiedz:`Dinozaury to grupa archozaurów, która pojawiła się w triasie.
+
+Nie wszystkie wymarły. Ptaki są żyjącą gałęzią dinozaurów teropodów. Pterozaury i morskie gady mezozoiczne nie były dinozaurami.`
+},
+{
+    id:"ssak",
+    nazwa:"Ssak",
+    slowa:["ssak","ssaki","co to ssak"],
+    odpowiedz:`Ssaki to kręgowce mające włosy oraz gruczoły mlekowe, którymi samice karmią młode.
+
+Mają też trzy kosteczki słuchowe w uchu środkowym. Do ssaków należą stekowce, torbacze i łożyskowce.`
+},
+{
+    id:"synapsyd",
+    nazwa:"Synapsyd",
+    slowa:["synapsyd","synapsydy","przodkowie ssaków"],
+    odpowiedz:`Synapsydy to linia owodniowców obejmująca ssaki i ich wymarłych krewnych.
+
+Charakterystyczny był pojedynczy otwór skroniowy po każdej stronie czaszki. Ssaki wyewoluowały wewnątrz synapsydów, więc wszystkie ssaki są synapsydami.`
+},
+{
+    id:"terapsyd",
+    nazwa:"Terapsyd",
+    slowa:["terapsyd","terapsydy","therapsida"],
+    odpowiedz:`Terapsydy to zaawansowana grupa synapsydów obejmująca ssaki oraz wiele wymarłych form.
+
+U części terapsydów kończyny przesuwały się bardziej pod ciało, a zęby stawały się zróżnicowane. Z jednej z ich gałęzi wyewoluowały cynodonty.`
+},
+{
+    id:"cynodont",
+    nazwa:"Cynodont",
+    slowa:["cynodont","cynodonty","cynodontia"],
+    odpowiedz:`Cynodonty to grupa terapsydów, z której wyewoluowały ssaki.
+
+Miały coraz bardziej ssacze cechy: zróżnicowane zęby, zmiany w szczęce i uchu, bardziej pionowe ustawienie kończyn oraz prawdopodobnie włosy u części gatunków.`
+},
+{
+    id:"lozyskowiec",
+    nazwa:"Łożyskowiec",
+    slowa:["łożyskowiec","lozyskowiec","ssaki łożyskowe"],
+    odpowiedz:`Łożyskowce to grupa ssaków, u których zarodek rozwija się w macicy i jest odżywiany przez łożysko.
+
+Należą do nich między innymi ludzie, koty, psy, wieloryby, nietoperze i słonie.`
+},
+{
+    id:"torbacz",
+    nazwa:"Torbacz",
+    slowa:["torbacz","torbacze","kangur koala"],
+    odpowiedz:`Torbacze to ssaki, których młode rodzą się na bardzo wczesnym etapie rozwoju.
+
+U wielu gatunków dalszy rozwój zachodzi w torbie, gdzie młode przyczepia się do sutka. Przykładami są kangury, koale i oposy.`
+},
+{
+    id:"stekowiec",
+    nazwa:"Stekowiec",
+    slowa:["stekowiec","stekowce","dziobak kolczatka","ssak składa jaja"],
+    odpowiedz:`Stekowce to ssaki składające jaja.
+
+Należą do nich dziobak i kolczatki. Mimo składania jaj mają włosy i produkują mleko, dlatego są ssakami.`
+},
+{
+    id:"naczelny",
+    nazwa:"Naczelny",
+    slowa:["naczelny","naczelne","małpy lemury człowiek"],
+    odpowiedz:`Naczelne to grupa ssaków obejmująca lemury, wyraki, małpy i człowieka.
+
+Często mają chwytne dłonie, paznokcie zamiast pazurów, oczy skierowane do przodu i dobrze rozwinięty mózg.`
+},
+{
+    id:"czlowiek_ewolucja",
+    nazwa:"Ewolucja człowieka",
+    slowa:["ewolucja człowieka","skąd człowiek","z czego wyewoluował człowiek","przodek człowieka"],
+    odpowiedz:`Człowiek nie pochodzi od współczesnych małp. Ludzie i inne małpy człekokształtne mają wspólnych przodków.
+
+Uproszczona linia:
+ssaki → naczelne → małpy człekokształtne → homininy → rodzaj Homo → Homo sapiens.
+
+W ewolucji człowieka nie było jednej prostej drabiny. Istniało wiele równoległych gatunków i gałęzi.`
+},
+{
+    id:"homo_sapiens",
+    nazwa:"Homo sapiens",
+    slowa:["homo sapiens","człowiek rozumny","nasz gatunek"],
+    odpowiedz:`Homo sapiens to naukowa nazwa współczesnego człowieka.
+
+Nasz gatunek powstał w Afryce około 300 tysięcy lat temu. Później ludzie rozprzestrzenili się po świecie i krzyżowali się w ograniczonym stopniu z innymi ludźmi, między innymi neandertalczykami.`
+},
+{
+    id:"neandertalczyk",
+    nazwa:"Neandertalczyk",
+    slowa:["neandertalczyk","neandertalczycy","homo neanderthalensis"],
+    odpowiedz:`Neandertalczycy byli blisko spokrewnioną z nami grupą ludzi żyjącą w Europie i zachodniej Azji.
+
+Mieli duże mózgi, używali narzędzi i ognia, opiekowali się chorymi oraz tworzyli złożone zachowania. Część ich DNA znajduje się w genomach wielu współczesnych ludzi poza Afryką.`
+},
+{
+    id:"wieloryb_ewolucja",
+    nazwa:"Ewolucja wielorybów",
+    slowa:["z czego wyewoluował wieloryb","ewolucja wieloryba","przodek wieloryba","wieloryb chodził"],
+    odpowiedz:`Wieloryby wyewoluowały z lądowych ssaków parzystokopytnych.
+
+Ich dawni krewni stopniowo coraz więcej czasu spędzali w wodzie. Formy takie jak Pakicetus, Ambulocetus i Basilosaurus pokazują etapy tej przemiany.
+
+Najbliższymi żyjącymi krewnymi wielorybów są hipopotamy.`
+},
+{
+    id:"kon_ewolucja",
+    nazwa:"Ewolucja konia",
+    slowa:["z czego wyewoluował koń","ewolucja konia","przodek konia"],
+    odpowiedz:`Konie wyewoluowały z małych ssaków żyjących w lasach.
+
+W kolejnych liniach ewolucyjnych zmieniały się zęby, wielkość ciała i liczba palców. Nie była to jedna prosta drabina. Wiele bocznych gałęzi wymarło, a współczesny koń jest jedną z ocalałych linii.`
+},
+{
+    id:"pies_ewolucja",
+    nazwa:"Pochodzenie psa",
+    slowa:["z czego wyewoluował pies","pochodzenie psa","przodek psa","pies od wilka"],
+    odpowiedz:`Pies domowy pochodzi od dawnej populacji wilków.
+
+Udomowienie zaczęło się co najmniej kilkanaście tysięcy lat temu. Ludzie wybierali osobniki o pożądanych cechach, a później tworzyli rasy przez sztuczną selekcję.
+
+Pies nie pochodzi dokładnie od każdego dzisiejszego wilka. Psy i współczesne wilki mają wspólną dawną populację przodków.`
+},
+{
+    id:"zyrafa_szyja",
+    nazwa:"Szyja żyrafy",
+    slowa:["dlaczego żyrafa ma długą szyję","żyrafa szyja ewolucja","zyrafa długa szyja"],
+    odpowiedz:`Długa szyja żyrafy powstała przez ewolucję, a nie przez rozciąganie szyi w ciągu życia.
+
+Osobniki z nieco dłuższymi szyjami mogły mieć przewagę w zdobywaniu pokarmu albo walce o partnera. Jeśli cecha była dziedziczna, stawała się częstsza przez wiele pokoleń.`
+},
+{
+    id:"kamuflaz",
+    nazwa:"Kamuflaż",
+    slowa:["kamuflaż","kamuflaz","maskowanie zwierząt"],
+    odpowiedz:`Kamuflaż to przystosowanie utrudniające zauważenie organizmu.
+
+Może pomagać ofierze ukryć się przed drapieżnikiem albo drapieżnikowi zbliżyć się do ofiary. Kamuflaż może polegać na kolorze, wzorze, kształcie lub zachowaniu.`
+},
+{
+    id:"mimikra",
+    nazwa:"Mimikra",
+    slowa:["mimikra","udawanie innego gatunku","upodobnienie"],
+    odpowiedz:`Mimikra to upodobnienie jednego organizmu do innego.
+
+Nieszkodliwy gatunek może przypominać niebezpieczny, dzięki czemu drapieżniki go unikają. Czasem kilka niebezpiecznych gatunków upodabnia się do siebie, wzmacniając wspólny sygnał ostrzegawczy.`
+},
+{
+    id:"hibernacja",
+    nazwa:"Hibernacja",
+    slowa:["hibernacja","sen zimowy","jak zwierzę śpi zimą"],
+    odpowiedz:`Hibernacja to stan znacznego obniżenia metabolizmu, temperatury ciała i aktywności.
+
+Pozwala przetrwać okres zimna i braku pokarmu. Nie jest zwykłym snem. Nie wszystkie zwierzęta nazywane potocznie „śpiącymi zimą” przechodzą prawdziwą hibernację.`
+},
+{
+    id:"metamorfoza",
+    nazwa:"Przeobrażenie",
+    slowa:["metamorfoza","przeobrażenie","larwa dorosły owad"],
+    odpowiedz:`Przeobrażenie to duża zmiana budowy organizmu podczas rozwoju.
+
+U motyla występuje przeobrażenie zupełne:
+jajo → gąsienica → poczwarka → dorosły motyl.
+
+U konika polnego występuje przeobrażenie niezupełne:
+jajo → nimfa → postać dorosła.`
+},
+{
+    id:"motyl",
+    nazwa:"Motyl",
+    slowa:["motyl","gąsienica motyl","cykl życia motyla"],
+    odpowiedz:`Motyl jest owadem przechodzącym przeobrażenie zupełne.
+
+Z jaja wykluwa się gąsienica, która intensywnie rośnie. Następnie powstaje poczwarka, w której ciało zostaje przebudowane. Z poczwarki wychodzi dorosły motyl.`
+},
+{
+    id:"zaba",
+    nazwa:"Żaba",
+    slowa:["żaba","zaba","co to żaba","cykl życia żaby"],
+    odpowiedz:`Żaby to płazy bezogonowe.
+
+Ich jaja tworzą skrzek, z którego wykluwają się kijanki. Podczas przeobrażenia kijanka rozwija kończyny i płuca, a jej ogon zanika. Dorosłe żaby zwykle żyją na lądzie i w wodzie.`
+},
+{
+    id:"jajo",
+    nazwa:"Jajo",
+    slowa:["jajo biologii","jajko zarodek","co jest w jaju"],
+    odpowiedz:`Jajo rozrodcze zawiera komórkę jajową lub rozwijający się zarodek oraz substancje ochronne i odżywcze.
+
+U owodniowców błony płodowe pozwalają zarodkowi rozwijać się w środowisku chronionym przed wysychaniem.`
+},
+{
+    id:"owodniowce",
+    nazwa:"Owodniowce",
+    slowa:["owodniowiec","owodniowce","amnion","jajo owodniowe"],
+    odpowiedz:`Owodniowce to czworonogi, których zarodki rozwijają się z błonami płodowymi, w tym owodnią.
+
+Do owodniowców należą ssaki oraz gady, wliczając ptaki. Ta cecha pozwoliła ich przodkom rozmnażać się niezależniej od otwartej wody niż płazy.`
+},
+{
+    id:"homeostaza",
+    nazwa:"Homeostaza",
+    slowa:["homeostaza","stałe warunki organizmu","równowaga wewnętrzna"],
+    odpowiedz:`Homeostaza to utrzymywanie względnie stałych warunków wewnętrznych organizmu.
+
+Dotyczy na przykład temperatury, poziomu glukozy, ilości wody i pH. Organizm wykorzystuje czujniki, ośrodki sterujące i narządy wykonawcze, aby korygować odchylenia.`
+},
+{
+    id:"temperatura_ciala",
+    nazwa:"Regulacja temperatury",
+    slowa:["temperatura ciała","termoregulacja","dlaczego się pocimy","dreszcze"],
+    odpowiedz:`Organizm reguluje temperaturę przez zmianę przepływu krwi w skórze, pocenie się, dreszcze i zachowanie.
+
+Pocenie chłodzi ciało dzięki parowaniu. Dreszcze zwiększają produkcję ciepła przez szybkie skurcze mięśni.`
+},
+{
+    id:"sen",
+    nazwa:"Sen",
+    slowa:["sen","dlaczego śpimy","po co sen"],
+    odpowiedz:`Sen jest aktywnym stanem potrzebnym mózgowi i całemu organizmowi.
+
+Wspiera pamięć, uczenie się, odporność, regulację emocji i regenerację. Niedobór snu pogarsza uwagę, szybkość reakcji i samopoczucie.`
+},
+{
+    id:"woda_organizm",
+    nazwa:"Woda w organizmie",
+    slowa:["woda w organizmie","po co pijemy wodę","odwodnienie"],
+    odpowiedz:`Woda jest rozpuszczalnikiem, środowiskiem reakcji chemicznych i środkiem transportu.
+
+Pomaga regulować temperaturę, utrzymywać objętość krwi i prawidłowe działanie komórek. Organizm traci wodę przez mocz, pot, oddech i kał.`
+}
+];
+
+/* ============================================================
+   NARZĘDZIA TEKSTOWE
+   ============================================================ */
+
+const polskieZnaki = {
+    "ą":"a","ć":"c","ę":"e","ł":"l","ń":"n","ó":"o","ś":"s","ż":"z","ź":"z"
+};
+
+const stopSlowa = new Set([
+    "co","to","jest","czym","kim","jak","jaka","jaki","jakie","dlaczego",
+    "po","na","w","we","z","ze","od","do","i","a","oraz","czy","sie","się",
+    "mi","mnie","prosze","proszę","powiedz","opisz","wyjasnij","wyjaśnij",
+    "oznacza","znaczy","tego","ten","ta","to","o","dla"
+]);
+
+function normalizuj(tekst){
+    return tekst
+        .toLowerCase()
+        .replace(/[ąćęłńóśżź]/g, znak => polskieZnaki[znak] || znak)
+        .replace(/[^a-z0-9\s]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
+function tokeny(tekst){
+    return normalizuj(tekst)
+        .split(" ")
+        .filter(s => s.length > 1 && !stopSlowa.has(s));
+}
+
+function odlegloscLevenshteina(a, b){
+    const macierz = Array.from(
+        {length:a.length + 1},
+        () => Array(b.length + 1).fill(0)
+    );
+
+    for(let i=0; i<=a.length; i++) macierz[i][0] = i;
+    for(let j=0; j<=b.length; j++) macierz[0][j] = j;
+
+    for(let i=1; i<=a.length; i++){
+        for(let j=1; j<=b.length; j++){
+            const koszt = a[i-1] === b[j-1] ? 0 : 1;
+
+            macierz[i][j] = Math.min(
+                macierz[i-1][j] + 1,
+                macierz[i][j-1] + 1,
+                macierz[i-1][j-1] + koszt
+            );
+        }
+    }
+
+    return macierz[a.length][b.length];
+}
+
+function podobienstwoSlow(a, b){
+    if(a === b) return 1;
+    if(a.includes(b) || b.includes(a)) return 0.82;
+
+    const max = Math.max(a.length, b.length);
+    if(max === 0) return 1;
+
+    return 1 - odlegloscLevenshteina(a, b) / max;
+}
+
+function wynikDlaHasla(pytanie, haslo){
+    const pytanieNorm = normalizuj(pytanie);
+    const hasloNorm = normalizuj(haslo);
+
+    if(pytanieNorm === hasloNorm) return 100;
+    if(pytanieNorm.includes(hasloNorm)) return 85 + Math.min(10, hasloNorm.length / 3);
+
+    const pTokeny = tokeny(pytanie);
+    const hTokeny = tokeny(haslo);
+
+    let wynik = 0;
+
+    for(const h of hTokeny){
+        let najlepsze = 0;
+
+        for(const p of pTokeny){
+            najlepsze = Math.max(najlepsze, podobienstwoSlow(p, h));
+        }
+
+        if(najlepsze >= 0.72){
+            wynik += najlepsze * 18;
+        }
+    }
+
+    return wynik;
+}
+
+function znajdzNajlepszaOdpowiedz(pytanie){
+    let najlepszy = null;
+    let najlepszyWynik = 0;
+
+    for(const wpis of bazaWiedzy){
+        let wynikWpisu = 0;
+
+        for(const haslo of wpis.slowa){
+            wynikWpisu = Math.max(
+                wynikWpisu,
+                wynikDlaHasla(pytanie, haslo)
+            );
+        }
+
+        wynikWpisu = Math.max(
+            wynikWpisu,
+            wynikDlaHasla(pytanie, wpis.nazwa)
+        );
+
+        if(wynikWpisu > najlepszyWynik){
+            najlepszyWynik = wynikWpisu;
+            najlepszy = wpis;
+        }
+    }
+
+    return {
+        wpis:najlepszy,
+        wynik:najlepszyWynik
+    };
+}
+
+/* ============================================================
+   ROZPOZNAWANIE PYTAŃ SPECJALNYCH
+   ============================================================ */
+
+function odpowiedzSpecjalna(pytanie){
+    const p = normalizuj(pytanie);
+
+    if(
+        p === "czesc" ||
+        p === "hej" ||
+        p === "hejka" ||
+        p.includes("dzien dobry")
+    ){
+        return `Cześć! 🧬 Zadaj mi pytanie o biologii. Możesz zapytać o komórki, zwierzęta, ewolucję, człowieka, rośliny albo ekologię.`;
+    }
+
+    if(p.includes("dziekuje") || p.includes("dzieki")){
+        return `Nie ma za co! 😊 Możesz zadać następne pytanie biologiczne.`;
+    }
+
+    if(p.includes("kim jestes") || p.includes("co potrafisz")){
+        return `Jestem biologicznym asystentem offline. Nie korzystam z płatnego API. Rozpoznaję pytania dzięki wbudowanej bazie wiedzy, słowom kluczowym i porównywaniu podobnych wyrazów.`;
+    }
+
+    if(p.includes("ile masz odpowiedzi") || p.includes("ile tematow")){
+        return `Mam wbudowaną bazę wielu tematów biologicznych. Jeden temat rozpoznaję na wiele sposobów, dlatego liczba możliwych pytań jest znacznie większa niż liczba zapisanych odpowiedzi.`;
+    }
+
+    if(p.includes("losowa ciekawostka") || p === "ciekawostka"){
+        const ciekawostki = [
+            "Mitochondria mają własne DNA, ponieważ ich przodkowie byli dawniej wolno żyjącymi bakteriami.",
+            "Ptaki są żyjącymi dinozaurami teropodami.",
+            "Człowiek ma wspólnego przodka z innymi małpami człekokształtnymi, ale nie pochodzi od współczesnego szympansa.",
+            "Dojrzałe czerwone krwinki człowieka nie mają jądra komórkowego.",
+            "Ośmiornice mają trzy serca.",
+            "W sensie kladystycznym czworonogi są potomkami ryb mięśniopłetwych.",
+            "Grzyby są bliżej spokrewnione ze zwierzętami niż z roślinami.",
+            "Najbliższymi żyjącymi krewnymi wielorybów są hipopotamy."
+        ];
+
+        return ciekawostki[Math.floor(Math.random() * ciekawostki.length)];
+    }
+
+    return null;
+}
+
+/* ============================================================
+   BUDOWANIE ODPOWIEDZI
+   ============================================================ */
+
+function wygenerujOdpowiedz(pytanie){
+    const specjalna = odpowiedzSpecjalna(pytanie);
+    if(specjalna) return specjalna;
+
+    const znalezione = znajdzNajlepszaOdpowiedz(pytanie);
+
+    if(znalezione.wpis && znalezione.wynik >= 28){
+        return znalezione.wpis.odpowiedz;
+    }
+
+    if(znalezione.wpis && znalezione.wynik >= 18){
+        return `Nie jestem całkowicie pewny, czy dobrze zrozumiałem pytanie. Być może chodzi Ci o temat „${znalezione.wpis.nazwa}”.
+
+${znalezione.wpis.odpowiedz}
+
+Możesz też napisać pytanie krócej, na przykład: „Co to ${znalezione.wpis.nazwa}?”`;
+    }
+
+    const propozycje = bazaWiedzy
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 5)
+        .map(wpis => `• ${wpis.nazwa}`)
+        .join("\n");
+
+    return `Nie znalazłem jeszcze dobrej odpowiedzi na to pytanie. Spróbuj użyć krótszych i najważniejszych słów.
+
+Przykładowe tematy, o które możesz zapytać:
+${propozycje}
+
+Możesz też dopisać nowy temat do tablicy „bazaWiedzy” w kodzie.`;
+}
+
+/* ============================================================
+   OBSŁUGA CZATU
+   ============================================================ */
+
+const poleWiadomosci = document.getElementById("poleWiadomosci");
+const przyciskWyslij = document.getElementById("wyslij");
+const kontenerWiadomosci = document.getElementById("wiadomosci");
+
+function dodajWiadomosc(tresc, autor){
+    const element = document.createElement("div");
+    element.classList.add("wiadomosc", autor);
+    element.textContent = tresc;
+    kontenerWiadomosci.appendChild(element);
+    kontenerWiadomosci.scrollTop = kontenerWiadomosci.scrollHeight;
+    return element;
+}
+
+function wyslijWiadomosc(){
+    const pytanie = poleWiadomosci.value.trim();
+
+    if(pytanie === "") return;
+
+    dodajWiadomosc(pytanie, "uzytkownik");
+    poleWiadomosci.value = "";
+    poleWiadomosci.disabled = true;
+    przyciskWyslij.disabled = true;
+
+    const pisanie = dodajWiadomosc(
+        "Asystent szuka odpowiedzi w bazie wiedzy...",
+        "pisanie"
+    );
+
+    const czas = 350 + Math.floor(Math.random() * 550);
+
+    setTimeout(() => {
+        pisanie.remove();
+
+        const odpowiedz = wygenerujOdpowiedz(pytanie);
+        dodajWiadomosc(odpowiedz, "ai");
+
+        poleWiadomosci.disabled = false;
+        przyciskWyslij.disabled = false;
+        poleWiadomosci.focus();
+    }, czas);
+}
+
+przyciskWyslij.addEventListener("click", wyslijWiadomosc);
+
+poleWiadomosci.addEventListener("keydown", event => {
+    if(event.key === "Enter"){
+        wyslijWiadomosc();
+    }
+});
+
+document.querySelectorAll(".przyklad").forEach(przycisk => {
+    przycisk.addEventListener("click", () => {
+        poleWiadomosci.value = przycisk.textContent;
+        wyslijWiadomosc();
+    });
+});
+</script>
+
+</body>
+</html>
