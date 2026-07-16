@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz biologiczny</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #eef8f2;
+            text-align: center;
+        }
+
+        .menu {
+            position: relative;
+            background-color: #2e8b57;
+            color: white;
+            padding: 20px;
+            font-size: 35px;
+            font-weight: bold;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .powrot {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 0 30px;
+
+            background-color: #ff9800;
+            color: white;
+            text-decoration: none;
+            font-size: 23px;
+            font-weight: bold;
+
+            border-radius: 0 15px 15px 0;
+        }
+
+        .powrot:hover {
+            background-color: #e68900;
+        }
+
+        .quiz {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .numer-pytania {
+            font-size: 24px;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .pytanie {
+            background-color: white;
+            padding: 35px;
+            border-radius: 20px;
+            font-size: 38px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            margin-bottom: 35px;
+        }
+
+        .odpowiedzi {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .odpowiedz {
+            border: none;
+            border-radius: 15px;
+            padding: 35px 20px;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            min-height: 120px;
+        }
+
+        .odpowiedz:hover {
+            transform: scale(1.03);
+            filter: brightness(0.9);
+        }
+
+        .odpowiedz:active {
+            transform: scale(0.97);
+        }
+
+        .czerwona {
+            background-color: #e21b3c;
+        }
+
+        .niebieska {
+            background-color: #1368ce;
+        }
+
+        .zolta {
+            background-color: #d89e00;
+        }
+
+        .zielona {
+            background-color: #26890c;
+        }
+
+        .komunikat {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+
+            width: 350px;
+            padding: 35px;
+
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            border-radius: 20px;
+
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.4);
+            z-index: 10;
+        }
+
+        .wynik {
+            display: none;
+            background-color: white;
+            max-width: 600px;
+            margin: 70px auto;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .wynik h1 {
+            font-size: 50px;
+            color: #2e8b57;
+        }
+
+        .wynik p {
+            font-size: 30px;
+        }
+
+        .ponownie {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 20px 35px;
+            background-color: #2e8b57;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 15px;
+            font-size: 25px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .ponownie:hover {
+            background-color: #20633d;
+        }
+
+        @media (max-width: 700px) {
+            .odpowiedzi {
+                grid-template-columns: 1fr;
+            }
+
+            .pytanie {
+                font-size: 28px;
+            }
+
+            .odpowiedz {
+                font-size: 23px;
+                min-height: 90px;
+            }
+
+            .menu {
+                font-size: 25px;
+                padding-left: 160px;
+            }
+
+            .powrot {
+                font-size: 17px;
+                padding: 0 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="menu">
+        <a class="powrot" href="biologia.html">← Biologia</a>
+        🧬 Quiz biologiczny
+    </div>
+
+    <div class="quiz" id="quiz">
+
+        <div class="numer-pytania" id="numerPytania"></div>
+
+        <div class="pytanie" id="pytanie"></div>
+
+        <div class="odpowiedzi">
+            <button class="odpowiedz czerwona" onclick="sprawdzOdpowiedz(0)" id="odpowiedz0"></button>
+            <button class="odpowiedz niebieska" onclick="sprawdzOdpowiedz(1)" id="odpowiedz1"></button>
+            <button class="odpowiedz zolta" onclick="sprawdzOdpowiedz(2)" id="odpowiedz2"></button>
+            <button class="odpowiedz zielona" onclick="sprawdzOdpowiedz(3)" id="odpowiedz3"></button>
+        </div>
+
+    </div>
+
+    <div class="komunikat" id="komunikat"></div>
+
+    <div class="wynik" id="wynik">
+        <h1>Koniec quizu!</h1>
+        <p id="wynikTekst"></p>
+        <button class="ponownie" onclick="rozpocznijPonownie()">Zagraj ponownie</button>
+    </div>
+
+    <script>
+        const pytania = [
+            {
+                pytanie: "Jaka część komórki zawiera DNA?",
+                odpowiedzi: [
+                    "Błona komórkowa",
+                    "Jądro komórkowe",
+                    "Cytoplazma",
+                    "Rybosom"
+                ],
+                poprawna: 1
+            },
+
+            {
+                pytanie: "Które organizmy przeprowadzają fotosyntezę?",
+                odpowiedzi: [
+                    "Rośliny",
+                    "Wszystkie zwierzęta",
+                    "Grzyby",
+                    "Wirusy"
+                ],
+                poprawna: 0
+            },
+
+            {
+                pytanie: "Jak nazywa się podstawowa jednostka życia?",
+                odpowiedzi: [
+                    "Atom",
+                    "Tkanka",
+                    "Komórka",
+                    "Narząd"
+                ],
+                poprawna: 2
+            },
+
+            {
+                pytanie: "Który narząd pompuje krew?",
+                odpowiedzi: [
+                    "Płuco",
+                    "Żołądek",
+                    "Mózg",
+                    "Serce"
+                ],
+                poprawna: 3
+            },
+
+            {
+                pytanie: "Do jakiej grupy zwierząt należy człowiek?",
+                odpowiedzi: [
+                    "Płazy",
+                    "Ssaki",
+                    "Gady",
+                    "Ryby"
+                ],
+                poprawna: 1
+            }
+        ];
+
+        let aktualnePytanie = 0;
+        let punkty = 0;
+        let moznaKliknac = true;
+
+        function pokazPytanie() {
+            moznaKliknac = true;
+
+            const danePytania = pytania[aktualnePytanie];
+
+            document.getElementById("numerPytania").textContent =
+                "Pytanie " + (aktualnePytanie + 1) + " z " + pytania.length;
+
+            document.getElementById("pytanie").textContent =
+                danePytania.pytanie;
+
+            for (let i = 0; i < 4; i++) {
+                document.getElementById("odpowiedz" + i).textContent =
+                    danePytania.odpowiedzi[i];
+            }
+        }
+
+        function sprawdzOdpowiedz(numerOdpowiedzi) {
+            if (moznaKliknac === false) {
+                return;
+            }
+
+            moznaKliknac = false;
+
+            const poprawnaOdpowiedz =
+                pytania[aktualnePytanie].poprawna;
+
+            const komunikat =
+                document.getElementById("komunikat");
+
+            if (numerOdpowiedzi === poprawnaOdpowiedz) {
+                komunikat.textContent = "Poprawnie!";
+                komunikat.style.backgroundColor = "#26890c";
+                punkty++;
+            } else {
+                komunikat.textContent = "Błąd!";
+                komunikat.style.backgroundColor = "#e21b3c";
+            }
+
+            komunikat.style.display = "block";
+
+            setTimeout(function () {
+                komunikat.style.display = "none";
+                aktualnePytanie++;
+
+                if (aktualnePytanie < pytania.length) {
+                    pokazPytanie();
+                } else {
+                    pokazWynik();
+                }
+            }, 1200);
+        }
+
+        function pokazWynik() {
+            document.getElementById("quiz").style.display = "none";
+            document.getElementById("wynik").style.display = "block";
+
+            document.getElementById("wynikTekst").textContent =
+                "Zdobyłeś " + punkty + " z " + pytania.length + " punktów.";
+        }
+
+        function rozpocznijPonownie() {
+            aktualnePytanie = 0;
+            punkty = 0;
+
+            document.getElementById("wynik").style.display = "none";
+            document.getElementById("quiz").style.display = "block";
+
+            pokazPytanie();
+        }
+
+        pokazPytanie();
+    </script>
+
+</body>
+</html>
