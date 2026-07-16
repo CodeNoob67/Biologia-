@@ -42,30 +42,102 @@
             font-weight: bold;
 
             border-radius: 0 15px 15px 0;
+            transition: 0.2s;
         }
 
         .powrot:hover {
             background-color: #e68900;
         }
 
+        .powrot:active {
+            background-color: #cc7700;
+            transform: scale(0.97);
+        }
+
+        /* EKRAN WYBORU TRUDNOŚCI */
+
+        .wybor-trudnosci {
+            max-width: 700px;
+            margin: 50px auto;
+            padding: 30px;
+        }
+
+        .wybor-trudnosci h1 {
+            font-size: 45px;
+            margin-bottom: 40px;
+        }
+
+        .trudnosc {
+            display: block;
+            width: 500px;
+            max-width: 85%;
+            margin: 20px auto;
+            padding: 20px;
+
+            border: none;
+            border-radius: 15px;
+
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .trudnosc:hover {
+            transform: scale(1.05);
+            filter: brightness(0.9);
+        }
+
+        .bardzo-latwe {
+            background-color: #5cb85c;
+        }
+
+        .latwe {
+            background-color: #2e8b57;
+        }
+
+        .srednie {
+            background-color: #e6a700;
+        }
+
+        .trudne {
+            background-color: #e67e22;
+        }
+
+        .bardzo-trudne {
+            background-color: #c0392b;
+        }
+
+        /* QUIZ */
+
         .quiz {
+            display: none;
             max-width: 1000px;
-            margin: 40px auto;
+            margin: 35px auto;
             padding: 20px;
         }
 
-        .numer-pytania {
-            font-size: 24px;
-            color: #555;
+        .gorny-pasek {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
             margin-bottom: 15px;
+            font-size: 22px;
+            font-weight: bold;
+            color: #444;
         }
 
         .pytanie {
             background-color: white;
             padding: 35px;
             border-radius: 20px;
+
             font-size: 38px;
             font-weight: bold;
+
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
             margin-bottom: 35px;
         }
@@ -80,9 +152,11 @@
             border: none;
             border-radius: 15px;
             padding: 35px 20px;
+
             color: white;
-            font-size: 28px;
+            font-size: 27px;
             font-weight: bold;
+
             cursor: pointer;
             transition: 0.2s;
             min-height: 120px;
@@ -113,60 +187,80 @@
             background-color: #26890c;
         }
 
+        /* KOMUNIKAT */
+
         .komunikat {
             display: none;
+
             position: fixed;
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
 
             width: 350px;
+            max-width: 75%;
             padding: 35px;
 
             color: white;
             font-size: 40px;
             font-weight: bold;
-            border-radius: 20px;
 
+            border-radius: 20px;
             box-shadow: 0 5px 30px rgba(0, 0, 0, 0.4);
+
             z-index: 10;
         }
 
+        /* WYNIK */
+
         .wynik {
             display: none;
+
             background-color: white;
             max-width: 600px;
             margin: 70px auto;
             padding: 40px;
+
             border-radius: 20px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
         }
 
         .wynik h1 {
-            font-size: 50px;
+            font-size: 48px;
             color: #2e8b57;
         }
 
         .wynik p {
-            font-size: 30px;
+            font-size: 28px;
         }
 
-        .ponownie {
+        .przycisk-koniec {
             display: inline-block;
-            margin-top: 20px;
-            padding: 20px 35px;
+            margin: 15px;
+            padding: 18px 30px;
+
             background-color: #2e8b57;
             color: white;
+
             text-decoration: none;
             border: none;
             border-radius: 15px;
-            font-size: 25px;
+
+            font-size: 23px;
             font-weight: bold;
             cursor: pointer;
         }
 
-        .ponownie:hover {
+        .przycisk-koniec:hover {
             background-color: #20633d;
+        }
+
+        .zmien-trudnosc {
+            background-color: #ff9800;
+        }
+
+        .zmien-trudnosc:hover {
+            background-color: #e68900;
         }
 
         @media (max-width: 700px) {
@@ -175,22 +269,26 @@
             }
 
             .pytanie {
-                font-size: 28px;
+                font-size: 27px;
             }
 
             .odpowiedz {
-                font-size: 23px;
+                font-size: 22px;
                 min-height: 90px;
             }
 
             .menu {
-                font-size: 25px;
-                padding-left: 160px;
+                font-size: 24px;
+                padding-left: 150px;
             }
 
             .powrot {
-                font-size: 17px;
+                font-size: 16px;
                 padding: 0 15px;
+            }
+
+            .gorny-pasek {
+                font-size: 17px;
             }
         }
     </style>
@@ -203,98 +301,455 @@
         🧬 Quiz biologiczny
     </div>
 
+    <!-- WYBÓR TRUDNOŚCI -->
+
+    <div class="wybor-trudnosci" id="wyborTrudnosci">
+
+        <h1>Wybierz trudność</h1>
+
+        <button class="trudnosc bardzo-latwe"
+                onclick="wybierzTrudnosc('bardzoLatwe')">
+            Bardzo łatwe
+        </button>
+
+        <button class="trudnosc latwe"
+                onclick="wybierzTrudnosc('latwe')">
+            Łatwe
+        </button>
+
+        <button class="trudnosc srednie"
+                onclick="wybierzTrudnosc('srednie')">
+            Średnie
+        </button>
+
+        <button class="trudnosc trudne"
+                onclick="wybierzTrudnosc('trudne')">
+            Trudne
+        </button>
+
+        <button class="trudnosc bardzo-trudne"
+                onclick="wybierzTrudnosc('bardzoTrudne')">
+            Bardzo trudne
+        </button>
+
+    </div>
+
+    <!-- QUIZ -->
+
     <div class="quiz" id="quiz">
 
-        <div class="numer-pytania" id="numerPytania"></div>
+        <div class="gorny-pasek">
+            <div id="nazwaTrudnosci"></div>
+            <div id="numerPytania"></div>
+            <div id="liczbaPunktow"></div>
+        </div>
 
         <div class="pytanie" id="pytanie"></div>
 
         <div class="odpowiedzi">
-            <button class="odpowiedz czerwona" onclick="sprawdzOdpowiedz(0)" id="odpowiedz0"></button>
-            <button class="odpowiedz niebieska" onclick="sprawdzOdpowiedz(1)" id="odpowiedz1"></button>
-            <button class="odpowiedz zolta" onclick="sprawdzOdpowiedz(2)" id="odpowiedz2"></button>
-            <button class="odpowiedz zielona" onclick="sprawdzOdpowiedz(3)" id="odpowiedz3"></button>
+
+            <button class="odpowiedz czerwona"
+                    onclick="sprawdzOdpowiedz(0)"
+                    id="odpowiedz0">
+            </button>
+
+            <button class="odpowiedz niebieska"
+                    onclick="sprawdzOdpowiedz(1)"
+                    id="odpowiedz1">
+            </button>
+
+            <button class="odpowiedz zolta"
+                    onclick="sprawdzOdpowiedz(2)"
+                    id="odpowiedz2">
+            </button>
+
+            <button class="odpowiedz zielona"
+                    onclick="sprawdzOdpowiedz(3)"
+                    id="odpowiedz3">
+            </button>
+
         </div>
 
     </div>
 
     <div class="komunikat" id="komunikat"></div>
 
+    <!-- EKRAN WYNIKU -->
+
     <div class="wynik" id="wynik">
+
         <h1>Koniec quizu!</h1>
+
+        <p id="wynikTrudnosc"></p>
+
         <p id="wynikTekst"></p>
-        <button class="ponownie" onclick="rozpocznijPonownie()">Zagraj ponownie</button>
+
+        <p id="wynikProcent"></p>
+
+        <button class="przycisk-koniec"
+                onclick="zagrajPonownie()">
+            Zagraj ponownie
+        </button>
+
+        <button class="przycisk-koniec zmien-trudnosc"
+                onclick="wrocDoTrudnosci()">
+            Zmień trudność
+        </button>
+
     </div>
 
     <script>
-        const pytania = [
-            {
-                pytanie: "Jaka część komórki zawiera DNA?",
-                odpowiedzi: [
-                    "Błona komórkowa",
-                    "Jądro komórkowe",
-                    "Cytoplazma",
-                    "Rybosom"
-                ],
-                poprawna: 1
-            },
 
-            {
-                pytanie: "Które organizmy przeprowadzają fotosyntezę?",
-                odpowiedzi: [
-                    "Rośliny",
-                    "Wszystkie zwierzęta",
-                    "Grzyby",
-                    "Wirusy"
-                ],
-                poprawna: 0
-            },
+        const wszystkiePytania = {
 
-            {
-                pytanie: "Jak nazywa się podstawowa jednostka życia?",
-                odpowiedzi: [
-                    "Atom",
-                    "Tkanka",
-                    "Komórka",
-                    "Narząd"
-                ],
-                poprawna: 2
-            },
+            /* BARDZO ŁATWE */
 
-            {
-                pytanie: "Który narząd pompuje krew?",
-                odpowiedzi: [
-                    "Płuco",
-                    "Żołądek",
-                    "Mózg",
-                    "Serce"
-                ],
-                poprawna: 3
-            },
+            bardzoLatwe: [
+                {
+                    pytanie: "Który narząd pompuje krew?",
+                    odpowiedzi: ["Płuco", "Serce", "Żołądek", "Nerka"],
+                    poprawna: 1
+                },
+                {
+                    pytanie: "Czym oddycha człowiek?",
+                    odpowiedzi: ["Płucami", "Skrzelami", "Skórą", "Liśćmi"],
+                    poprawna: 0
+                },
+                {
+                    pytanie: "Które zwierzę jest ssakiem?",
+                    odpowiedzi: ["Żaba", "Karp", "Pies", "Jaszczurka"],
+                    poprawna: 2
+                },
+                {
+                    pytanie: "Która część rośliny znajduje się zwykle pod ziemią?",
+                    odpowiedzi: ["Kwiat", "Liść", "Owoc", "Korzeń"],
+                    poprawna: 3
+                },
+                {
+                    pytanie: "Ile nóg ma typowy owad?",
+                    odpowiedzi: ["Dwie", "Cztery", "Sześć", "Osiem"],
+                    poprawna: 2
+                },
+                {
+                    pytanie: "Które zwierzę żyje w wodzie?",
+                    odpowiedzi: ["Ryba", "Kot", "Kura", "Koń"],
+                    poprawna: 0
+                },
+                {
+                    pytanie: "Który narząd służy do widzenia?",
+                    odpowiedzi: ["Ucho", "Oko", "Nos", "Język"],
+                    poprawna: 1
+                },
+                {
+                    pytanie: "Czego potrzebują rośliny do wzrostu?",
+                    odpowiedzi: ["Plastiku", "Światła", "Metalu", "Szkła"],
+                    poprawna: 1
+                },
+                {
+                    pytanie: "Które zwierzę składa jaja?",
+                    odpowiedzi: ["Kura", "Pies", "Kot", "Koń"],
+                    poprawna: 0
+                },
+                {
+                    pytanie: "Jak nazywa się młode żaby?",
+                    odpowiedzi: ["Pisklę", "Kijanka", "Szczenię", "Cielę"],
+                    poprawna: 1
+                }
+            ],
 
-            {
-                pytanie: "Do jakiej grupy zwierząt należy człowiek?",
-                odpowiedzi: [
-                    "Płazy",
-                    "Ssaki",
-                    "Gady",
-                    "Ryby"
-                ],
-                poprawna: 1
-            }
-        ];
+            /* ŁATWE */
 
+            latwe: [
+                {
+                    pytanie: "Jaka jest podstawowa jednostka życia?",
+                    odpowiedzi: ["Atom", "Komórka", "Tkanka", "Narząd"],
+                    poprawna: 1
+                },
+                {
+                    pytanie: "Która część komórki zawiera DNA?",
+                    odpowiedzi: ["Błona", "Cytoplazma", "Jądro", "Ściana"],
+                    poprawna: 2
+                },
+                {
+                    pytanie: "Które organizmy przeprowadzają fotosyntezę?",
+                    odpowiedzi: ["Rośliny", "Zwierzęta", "Wirusy", "Wszystkie grzyby"],
+                    poprawna: 0
+                },
+                {
+                    pytanie: "Do jakiej grupy należy człowiek?",
+                    odpowiedzi: ["Gady", "Płazy", "Ssaki", "Ryby"],
+                    poprawna: 2
+                },
+                {
+                    pytanie: "Jaki gaz pobiera człowiek podczas oddychania?",
+                    odpowiedzi: ["Azot", "Tlen", "Dwutlenek węgla", "Hel"],
+                    poprawna: 1
+                },
+                {
+                    pytanie: "Który narząd odpowiada głównie za myślenie?",
+                    odpowiedzi: ["Serce", "Mózg", "Wątroba", "Żołądek"],
+                    poprawna: 1
+                },
+                {
+                    pytanie: "Jak nazywa się zielony barwnik roślin?",
+                    odpowiedzi: ["Hemoglobina", "Melanina", "Chlorofil", "Kerotyna"],
+                    poprawna: 2
+                },
+                {
+                    pytanie: "Które zwierzę jest płazem?",
+                    odpowiedzi: ["Żaba", "Wąż", "Gołąb", "Mysz"],
+                    poprawna: 0
+                },
+                {
+                    pytanie: "Jaki narząd oczyszcza krew i wytwarza mocz?",
+                    odpowiedzi: ["Płuca", "Nerki", "Serce", "Jelita"],
+                    poprawna: 1
+                },
+                {
+                    pytanie: "Jak nazywa się proces powstawania nowych organizmów?",
+                    odpowiedzi: ["Oddychanie", "Trawienie", "Rozmnażanie", "Wydalanie"],
+                    poprawna: 2
+                }
+            ],
+
+            /* ŚREDNIE */
+
+            srednie: [
+                {
+                    pytanie: "W którym organellum zachodzi fotosynteza?",
+                    odpowiedzi: ["Mitochondrium", "Chloroplast", "Rybosom", "Lizosom"],
+                    poprawna: 1
+                },
+                {
+                    pytanie: "Jaką funkcję pełnią czerwone krwinki?",
+                    odpowiedzi: [
+                        "Transportują tlen",
+                        "Trawią pokarm",
+                        "Wytwarzają mocz",
+                        "Sterują mięśniami"
+                    ],
+                    poprawna: 0
+                },
+                {
+                    pytanie: "Który układ odpowiada za transport krwi?",
+                    odpowiedzi: [
+                        "Układ pokarmowy",
+                        "Układ krwionośny",
+                        "Układ nerwowy",
+                        "Układ oddechowy"
+                    ],
+                    poprawna: 1
+                },
+                {
+                    pytanie: "Jak nazywa się podział komórki prowadzący do powstania dwóch podobnych komórek?",
+                    odpowiedzi: ["Mejoza", "Mitoza", "Mutacja", "Fotosynteza"],
+                    poprawna: 1
+                },
+                {
+                    pytanie: "Które zwierzę jest bezkręgowcem?",
+                    odpowiedzi: ["Pająk", "Żaba", "Mysz", "Karp"],
+                    poprawna: 0
+                },
+                {
+                    pytanie: "Jak nazywa się nauka o dziedziczeniu?",
+                    odpowiedzi: ["Ekologia", "Genetyka", "Anatomia", "Geologia"],
+                    poprawna: 1
+                },
+                {
+                    pytanie: "Co jest nośnikiem informacji genetycznej?",
+                    odpowiedzi: ["Tłuszcz", "Woda", "DNA", "Glukoza"],
+                    poprawna: 2
+                },
+                {
+                    pytanie: "W której części układu pokarmowego wchłania się większość składników odżywczych?",
+                    odpowiedzi: [
+                        "W żołądku",
+                        "W jelicie cienkim",
+                        "W przełyku",
+                        "W jamie ustnej"
+                    ],
+                    poprawna: 1
+                },
+                {
+                    pytanie: "Jak nazywa się organizm odżywiający się innymi organizmami?",
+                    odpowiedzi: ["Producent", "Konsument", "Minerał", "Pierwiastek"],
+                    poprawna: 1
+                },
+                {
+                    pytanie: "Który organ produkuje żółć?",
+                    odpowiedzi: ["Trzustka", "Wątroba", "Nerka", "Serce"],
+                    poprawna: 1
+                }
+            ],
+
+            /* TRUDNE */
+
+            trudne: [
+                {
+                    pytanie: "Które organellum odpowiada głównie za oddychanie komórkowe?",
+                    odpowiedzi: ["Jądro", "Mitochondrium", "Rybosom", "Wakuola"],
+                    poprawna: 1
+                },
+                {
+                    pytanie: "Jak nazywa się zespół wszystkich genów organizmu?",
+                    odpowiedzi: ["Fenotyp", "Genom", "Tkanka", "Ekosystem"],
+                    poprawna: 1
+                },
+                {
+                    pytanie: "Które naczynia prowadzą krew od serca?",
+                    odpowiedzi: ["Żyły", "Tętnice", "Naczynia limfatyczne", "Kapilary"],
+                    poprawna: 1
+                },
+                {
+                    pytanie: "Jak nazywa się proces tworzenia komórek rozrodczych?",
+                    odpowiedzi: ["Mitoza", "Mejoza", "Mutacja", "Translacja"],
+                    poprawna: 1
+                },
+                {
+                    pytanie: "Która zasada azotowa występuje w RNA zamiast tyminy?",
+                    odpowiedzi: ["Adenina", "Cytozyna", "Uracyl", "Guanina"],
+                    poprawna: 2
+                },
+                {
+                    pytanie: "Jak nazywa się miejsce połączenia dwóch neuronów?",
+                    odpowiedzi: ["Akson", "Synapsa", "Dendryt", "Receptor"],
+                    poprawna: 1
+                },
+                {
+                    pytanie: "Który hormon obniża poziom glukozy we krwi?",
+                    odpowiedzi: ["Adrenalina", "Insulina", "Tyroksyna", "Melatonina"],
+                    poprawna: 1
+                },
+                {
+                    pytanie: "Jak nazywa się utrata wody przez liście?",
+                    odpowiedzi: ["Transpiracja", "Fermentacja", "Dyfuzja", "Mutacja"],
+                    poprawna: 0
+                },
+                {
+                    pytanie: "Która struktura komórkowa produkuje białka?",
+                    odpowiedzi: ["Rybosom", "Lizosom", "Centriola", "Wakuola"],
+                    poprawna: 0
+                },
+                {
+                    pytanie: "Jak nazywa się cecha organizmu wynikająca z genów i środowiska?",
+                    odpowiedzi: ["Genotyp", "Fenotyp", "Chromosom", "Allel"],
+                    poprawna: 1
+                }
+            ],
+
+            /* BARDZO TRUDNE */
+
+            bardzoTrudne: [
+                {
+                    pytanie: "Który enzym rozplata podwójną helisę DNA podczas replikacji?",
+                    odpowiedzi: ["Ligaza", "Helikaza", "Amylaza", "Pepsyna"],
+                    poprawna: 1
+                },
+                {
+                    pytanie: "Jak nazywa się przepisywanie informacji z DNA na RNA?",
+                    odpowiedzi: ["Translacja", "Transkrypcja", "Replikacja", "Fermentacja"],
+                    poprawna: 1
+                },
+                {
+                    pytanie: "W której fazie mitozy chromosomy ustawiają się w płaszczyźnie równikowej?",
+                    odpowiedzi: ["Profaza", "Metafaza", "Anafaza", "Telofaza"],
+                    poprawna: 1
+                },
+                {
+                    pytanie: "Który typ RNA przenosi aminokwasy do rybosomu?",
+                    odpowiedzi: ["mRNA", "tRNA", "rRNA", "DNA"],
+                    poprawna: 1
+                },
+                {
+                    pytanie: "Jak nazywa się wymiana fragmentów chromosomów homologicznych podczas mejozy?",
+                    odpowiedzi: [
+                        "Crossing-over",
+                        "Transkrypcja",
+                        "Mutacja punktowa",
+                        "Replikacja"
+                    ],
+                    poprawna: 0
+                },
+                {
+                    pytanie: "Która część nefronu filtruje krew?",
+                    odpowiedzi: [
+                        "Kłębuszek nerkowy",
+                        "Moczowód",
+                        "Pęcherz moczowy",
+                        "Cewka moczowa"
+                    ],
+                    poprawna: 0
+                },
+                {
+                    pytanie: "Jak nazywa się proces powstawania białka na podstawie mRNA?",
+                    odpowiedzi: ["Transkrypcja", "Translacja", "Replikacja", "Dyfuzja"],
+                    poprawna: 1
+                },
+                {
+                    pytanie: "Który enzym łączy fragmenty Okazaki?",
+                    odpowiedzi: ["Ligaza DNA", "Helikaza", "Katalaza", "Trypsyna"],
+                    poprawna: 0
+                },
+                {
+                    pytanie: "Jak nazywa się śmierć komórki zaprogramowana przez organizm?",
+                    odpowiedzi: ["Nekroza", "Apoptoza", "Mitoza", "Osmoza"],
+                    poprawna: 1
+                },
+                {
+                    pytanie: "Który etap oddychania komórkowego zachodzi w cytozolu?",
+                    odpowiedzi: [
+                        "Cykl Krebsa",
+                        "Glikoliza",
+                        "Łańcuch oddechowy",
+                        "Fosforylacja oksydacyjna"
+                    ],
+                    poprawna: 1
+                }
+            ]
+        };
+
+        let pytania = [];
+        let wybranaTrudnosc = "";
         let aktualnePytanie = 0;
         let punkty = 0;
         let moznaKliknac = true;
+
+        const nazwyTrudnosci = {
+            bardzoLatwe: "Bardzo łatwe",
+            latwe: "Łatwe",
+            srednie: "Średnie",
+            trudne: "Trudne",
+            bardzoTrudne: "Bardzo trudne"
+        };
+
+        function wybierzTrudnosc(trudnosc) {
+            wybranaTrudnosc = trudnosc;
+
+            pytania = wszystkiePytania[trudnosc];
+
+            aktualnePytanie = 0;
+            punkty = 0;
+
+            document.getElementById("wyborTrudnosci").style.display = "none";
+            document.getElementById("wynik").style.display = "none";
+            document.getElementById("quiz").style.display = "block";
+
+            pokazPytanie();
+        }
 
         function pokazPytanie() {
             moznaKliknac = true;
 
             const danePytania = pytania[aktualnePytanie];
 
+            document.getElementById("nazwaTrudnosci").textContent =
+                nazwyTrudnosci[wybranaTrudnosc];
+
             document.getElementById("numerPytania").textContent =
                 "Pytanie " + (aktualnePytanie + 1) + " z " + pytania.length;
+
+            document.getElementById("liczbaPunktow").textContent =
+                "Punkty: " + punkty;
 
             document.getElementById("pytanie").textContent =
                 danePytania.pytanie;
@@ -345,11 +800,19 @@
             document.getElementById("quiz").style.display = "none";
             document.getElementById("wynik").style.display = "block";
 
+            const procent = Math.round((punkty / pytania.length) * 100);
+
+            document.getElementById("wynikTrudnosc").textContent =
+                "Trudność: " + nazwyTrudnosci[wybranaTrudnosc];
+
             document.getElementById("wynikTekst").textContent =
                 "Zdobyłeś " + punkty + " z " + pytania.length + " punktów.";
+
+            document.getElementById("wynikProcent").textContent =
+                "Twój wynik: " + procent + "%";
         }
 
-        function rozpocznijPonownie() {
+        function zagrajPonownie() {
             aktualnePytanie = 0;
             punkty = 0;
 
@@ -359,7 +822,16 @@
             pokazPytanie();
         }
 
-        pokazPytanie();
+        function wrocDoTrudnosci() {
+            aktualnePytanie = 0;
+            punkty = 0;
+            pytania = [];
+
+            document.getElementById("wynik").style.display = "none";
+            document.getElementById("quiz").style.display = "none";
+            document.getElementById("wyborTrudnosci").style.display = "block";
+        }
+
     </script>
 
 </body>
