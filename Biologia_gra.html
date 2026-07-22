@@ -1,0 +1,910 @@
+from pathlib import Path
+
+html = r'''<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="BiologiaNoob67 — biologiczna gra ewolucyjna w stylu Cell to Singularity." />
+  <title>BiologiaNoob67 — Gra ewolucji</title>
+  <link rel="icon" href="DNA.png" />
+  <style>
+    :root{
+      --bg:#07130d;
+      --panel:#0d2116;
+      --panel2:#122d1e;
+      --line:#4d9367;
+      --text:#ecfff2;
+      --muted:#a4c8b0;
+      --green:#42d978;
+      --green2:#1fa956;
+      --gold:#ffd166;
+      --red:#ff6b6b;
+      --shadow:0 12px 36px rgba(0,0,0,.35);
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:Arial, Helvetica, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(45,160,86,.22), transparent 38%),
+        linear-gradient(180deg,#07130d,#030806 75%);
+      overflow-x:hidden;
+    }
+
+    button{font:inherit}
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:50;
+      min-height:74px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+      padding:12px 22px;
+      background:rgba(5,16,10,.94);
+      border-bottom:1px solid rgba(100,220,139,.25);
+      backdrop-filter:blur(12px);
+      box-shadow:0 8px 24px rgba(0,0,0,.25);
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:max-content;
+    }
+
+    .logo{
+      width:48px;
+      height:48px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      font-size:27px;
+      background:linear-gradient(145deg,var(--green),#128440);
+      box-shadow:0 0 25px rgba(66,217,120,.35);
+    }
+
+    .brand h1{
+      margin:0;
+      font-family:Georgia, serif;
+      font-size:clamp(20px,3vw,31px);
+      line-height:1;
+    }
+
+    .brand small{
+      color:var(--muted);
+      display:block;
+      margin-top:5px;
+    }
+
+    .stats{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      gap:8px;
+    }
+
+    .stat{
+      min-width:130px;
+      padding:9px 12px;
+      text-align:center;
+      border:1px solid rgba(120,240,158,.18);
+      border-radius:14px;
+      background:rgba(21,55,35,.72);
+    }
+
+    .stat-label{
+      display:block;
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    .stat-value{
+      display:block;
+      color:var(--gold);
+      font-weight:800;
+      font-size:18px;
+      margin-top:2px;
+    }
+
+    .page{
+      width:min(1500px,100%);
+      margin:auto;
+      display:grid;
+      grid-template-columns:290px minmax(620px,1fr) 310px;
+      gap:15px;
+      padding:15px;
+    }
+
+    .side-panel{
+      align-self:start;
+      position:sticky;
+      top:90px;
+      border:1px solid rgba(120,240,158,.18);
+      background:linear-gradient(180deg,rgba(15,43,27,.96),rgba(8,23,15,.96));
+      border-radius:20px;
+      padding:17px;
+      box-shadow:var(--shadow);
+    }
+
+    .side-panel h2{
+      margin:0 0 12px;
+      font-family:Georgia,serif;
+      font-size:22px;
+    }
+
+    .side-panel p{
+      color:var(--muted);
+      line-height:1.45;
+      font-size:14px;
+    }
+
+    .main-button{
+      width:100%;
+      aspect-ratio:1/1;
+      max-width:225px;
+      display:block;
+      margin:18px auto;
+      border:none;
+      border-radius:50%;
+      cursor:pointer;
+      user-select:none;
+      color:white;
+      font-size:64px;
+      background:
+        radial-gradient(circle at 35% 25%,#9cffbc 0 6%,transparent 7%),
+        radial-gradient(circle at 50% 48%,#44dd7c,#087136 72%);
+      box-shadow:
+        inset 0 -14px 30px rgba(0,0,0,.28),
+        0 0 0 8px rgba(62,217,116,.10),
+        0 0 45px rgba(62,217,116,.35);
+      transition:transform .08s,filter .15s;
+    }
+
+    .main-button:hover{filter:brightness(1.1)}
+    .main-button:active{transform:scale(.94)}
+
+    .click-info{
+      text-align:center;
+      font-size:14px;
+      color:var(--muted);
+    }
+
+    .click-info strong{
+      color:var(--gold);
+      font-size:18px;
+    }
+
+    .mini-upgrades{
+      display:grid;
+      gap:9px;
+      margin-top:17px;
+    }
+
+    .mini-upgrade{
+      width:100%;
+      padding:11px;
+      text-align:left;
+      color:var(--text);
+      cursor:pointer;
+      border-radius:12px;
+      border:1px solid rgba(120,240,158,.18);
+      background:#153722;
+      transition:.15s;
+    }
+
+    .mini-upgrade:hover:not(:disabled){transform:translateY(-2px);background:#1a452b}
+    .mini-upgrade:disabled{opacity:.42;cursor:not-allowed}
+    .mini-upgrade span{display:block;color:var(--muted);font-size:12px;margin-top:4px}
+    .mini-upgrade b{color:var(--gold)}
+
+    .graph-shell{
+      position:relative;
+      min-height:1120px;
+      overflow:auto;
+      border:1px solid rgba(120,240,158,.18);
+      border-radius:22px;
+      background:
+        linear-gradient(rgba(79,164,106,.055) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(79,164,106,.055) 1px,transparent 1px),
+        radial-gradient(circle at 50% 10%,rgba(45,168,89,.13),transparent 42%),
+        #07130d;
+      background-size:42px 42px,42px 42px,auto,auto;
+      box-shadow:var(--shadow);
+    }
+
+    .graph-title{
+      position:sticky;
+      left:0;
+      top:0;
+      z-index:10;
+      width:max-content;
+      margin:14px;
+      padding:9px 14px;
+      border-radius:13px;
+      color:#dffff0;
+      background:rgba(5,19,11,.88);
+      border:1px solid rgba(103,224,142,.22);
+      backdrop-filter:blur(8px);
+    }
+
+    #graph{
+      position:relative;
+      width:950px;
+      min-height:1060px;
+      margin:0 auto;
+    }
+
+    #connections{
+      position:absolute;
+      inset:0;
+      width:950px;
+      height:1060px;
+      pointer-events:none;
+      z-index:1;
+      overflow:visible;
+    }
+
+    .connection{
+      stroke:#335a41;
+      stroke-width:5;
+      stroke-linecap:round;
+      transition:.3s;
+    }
+
+    .connection.unlocked{
+      stroke:var(--green);
+      filter:drop-shadow(0 0 6px rgba(66,217,120,.6));
+    }
+
+    .node{
+      position:absolute;
+      z-index:2;
+      width:170px;
+      min-height:116px;
+      padding:12px;
+      text-align:center;
+      border-radius:18px;
+      border:2px solid #355542;
+      color:#789184;
+      background:linear-gradient(145deg,#101b15,#0b130f);
+      box-shadow:0 10px 25px rgba(0,0,0,.28);
+      transition:transform .15s,border-color .2s,box-shadow .2s,filter .2s;
+    }
+
+    .node.available{
+      color:var(--text);
+      cursor:pointer;
+      border-color:var(--gold);
+      background:linear-gradient(145deg,#3d3215,#241d0d);
+      box-shadow:0 0 22px rgba(255,209,102,.18);
+      animation:pulse 1.8s infinite;
+    }
+
+    .node.available:hover{transform:scale(1.045)}
+
+    .node.unlocked{
+      color:var(--text);
+      border-color:var(--green);
+      background:linear-gradient(145deg,#18472b,#0f2b1c);
+      box-shadow:0 0 24px rgba(66,217,120,.2);
+    }
+
+    .node.maxed{
+      border-color:#81f5a9;
+      box-shadow:0 0 28px rgba(66,217,120,.38);
+    }
+
+    @keyframes pulse{
+      0%,100%{box-shadow:0 0 16px rgba(255,209,102,.12)}
+      50%{box-shadow:0 0 30px rgba(255,209,102,.33)}
+    }
+
+    .node-icon{font-size:30px;line-height:1}
+    .node-name{font-weight:800;font-size:15px;margin-top:6px}
+    .node-desc{font-size:11px;color:var(--muted);margin:5px 0}
+    .node-cost{font-size:12px;color:var(--gold);font-weight:bold}
+    .node-level{font-size:11px;margin-top:5px;color:#bceacb}
+
+    .mission{
+      padding:13px;
+      margin:10px 0;
+      border-radius:13px;
+      background:#112d1c;
+      border:1px solid rgba(117,234,154,.15);
+    }
+
+    .mission.done{opacity:.6;border-color:var(--green)}
+    .mission-title{font-weight:bold}
+    .mission-progress{color:var(--muted);font-size:12px;margin-top:5px}
+
+    .progress-bar{
+      height:8px;
+      overflow:hidden;
+      margin-top:8px;
+      border-radius:999px;
+      background:#061009;
+    }
+
+    .progress-fill{
+      height:100%;
+      width:0;
+      border-radius:999px;
+      background:linear-gradient(90deg,var(--green2),var(--green));
+      transition:width .25s;
+    }
+
+    .action-btn{
+      width:100%;
+      margin-top:8px;
+      padding:10px 12px;
+      border:none;
+      border-radius:11px;
+      cursor:pointer;
+      font-weight:700;
+      color:white;
+      background:#244f32;
+    }
+
+    .action-btn:hover{background:#2d6540}
+    .action-btn.danger{background:#743232}
+    .action-btn.danger:hover{background:#953d3d}
+
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:30px;
+      z-index:100;
+      transform:translate(-50%,130px);
+      padding:13px 19px;
+      border-radius:14px;
+      background:#eafff0;
+      color:#0a2413;
+      font-weight:800;
+      box-shadow:0 12px 30px rgba(0,0,0,.36);
+      transition:.3s;
+    }
+
+    .toast.show{transform:translate(-50%,0)}
+
+    .floating-number{
+      position:fixed;
+      z-index:200;
+      pointer-events:none;
+      color:var(--gold);
+      font-size:20px;
+      font-weight:900;
+      text-shadow:0 2px 6px #000;
+      animation:floatUp .8s forwards;
+    }
+
+    @keyframes floatUp{
+      to{transform:translateY(-75px);opacity:0}
+    }
+
+    .footer-note{
+      color:var(--muted);
+      text-align:center;
+      font-size:12px;
+      margin-top:15px;
+    }
+
+    @media(max-width:1150px){
+      .page{grid-template-columns:260px 1fr}
+      .right-panel{position:static;grid-column:1/-1}
+    }
+
+    @media(max-width:800px){
+      .topbar{position:relative;align-items:flex-start;flex-direction:column}
+      .stats{justify-content:flex-start}
+      .page{display:block;padding:9px}
+      .side-panel{position:static;margin-bottom:10px}
+      .graph-shell{min-height:800px}
+      #graph{transform-origin:top left}
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">🧬</div>
+      <div>
+        <h1>BiologiaNoob67</h1>
+        <small>Gra ewolucji — od cząsteczek do człowieka</small>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <span class="stat-label">Energia życia</span>
+        <span class="stat-value" id="energyValue">0</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Na kliknięcie</span>
+        <span class="stat-value" id="clickValue">1</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Na sekundę</span>
+        <span class="stat-value" id="perSecondValue">0</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+    <aside class="side-panel">
+      <h2>Źródło życia</h2>
+      <p>Klikaj komórkę, zdobywaj energię życia i rozwijaj kolejne etapy biologii.</p>
+
+      <button id="mainClick" class="main-button" aria-label="Zdobądź energię życia">🦠</button>
+
+      <div class="click-info">
+        Kliknięcie daje<br>
+        <strong id="clickGainText">+1 energii</strong>
+      </div>
+
+      <div class="mini-upgrades">
+        <button class="mini-upgrade" id="buyClickUpgrade">
+          Silniejszy impuls
+          <span>+1 do każdego kliknięcia</span>
+          <span>Koszt: <b id="clickUpgradeCost">15</b></span>
+        </button>
+
+        <button class="mini-upgrade" id="buyAutoUpgrade">
+          Samoczynne reakcje
+          <span>+1 energii na sekundę</span>
+          <span>Koszt: <b id="autoUpgradeCost">25</b></span>
+        </button>
+      </div>
+
+      <p class="footer-note">Postęp zapisuje się automatycznie w przeglądarce.</p>
+    </aside>
+
+    <section class="graph-shell">
+      <div class="graph-title">🌳 Graf rozwoju biologicznego</div>
+      <div id="graph">
+        <svg id="connections" viewBox="0 0 950 1060"></svg>
+      </div>
+    </section>
+
+    <aside class="side-panel right-panel">
+      <h2>Misje</h2>
+      <div id="missions"></div>
+
+      <h2 style="margin-top:22px">Sterowanie</h2>
+      <p>
+        🟡 Złoty element — możesz kupić.<br>
+        🟢 Zielony — już odkryty.<br>
+        Każdy etap zwiększa produkcję energii.
+      </p>
+
+      <button class="action-btn" id="saveBtn">💾 Zapisz grę</button>
+      <button class="action-btn" id="exportBtn">📤 Kopiuj zapis</button>
+      <button class="action-btn danger" id="resetBtn">🗑️ Zacznij od nowa</button>
+
+      <a href="biologia.html" style="text-decoration:none">
+        <button class="action-btn">⬅ Powrót do biologii</button>
+      </a>
+    </aside>
+  </main>
+
+  <div id="toast" class="toast">Zapisano!</div>
+
+<script>
+(() => {
+  "use strict";
+
+  const SAVE_KEY = "biologiaNoob67GraSave_v1";
+
+  const nodes = [
+    {
+      id:"molecules", name:"Cząsteczki organiczne", icon:"⚗️",
+      desc:"Proste związki budujące życie.",
+      x:390, y:30, baseCost:10, cps:0.2, maxLevel:5, requires:[]
+    },
+    {
+      id:"amino", name:"Aminokwasy", icon:"🔹",
+      desc:"Podstawowe składniki białek.",
+      x:190, y:180, baseCost:35, cps:0.6, maxLevel:5, requires:["molecules"]
+    },
+    {
+      id:"nucleotides", name:"Nukleotydy", icon:"🧩",
+      desc:"Cegiełki RNA i DNA.",
+      x:590, y:180, baseCost:40, cps:0.7, maxLevel:5, requires:["molecules"]
+    },
+    {
+      id:"proteins", name:"Białka", icon:"🧵",
+      desc:"Wykonują większość zadań w komórce.",
+      x:90, y:340, baseCost:100, cps:1.5, maxLevel:5, requires:["amino"]
+    },
+    {
+      id:"rna", name:"RNA", icon:"〰️",
+      desc:"Przenosi i wykorzystuje informację.",
+      x:390, y:340, baseCost:120, cps:1.8, maxLevel:5, requires:["amino","nucleotides"]
+    },
+    {
+      id:"dna", name:"DNA", icon:"🧬",
+      desc:"Trwały zapis informacji genetycznej.",
+      x:690, y:340, baseCost:150, cps:2.2, maxLevel:5, requires:["nucleotides"]
+    },
+    {
+      id:"prokaryote", name:"Komórka prokariotyczna", icon:"🦠",
+      desc:"Pierwsza prosta komórka bez jądra.",
+      x:240, y:520, baseCost:360, cps:5, maxLevel:5, requires:["proteins","rna"]
+    },
+    {
+      id:"eukaryote", name:"Komórka eukariotyczna", icon:"🔬",
+      desc:"Komórka z jądrem i organellami.",
+      x:540, y:520, baseCost:650, cps:9, maxLevel:5, requires:["rna","dna","prokaryote"]
+    },
+    {
+      id:"multicellular", name:"Wielokomórkowce", icon:"🫧",
+      desc:"Komórki zaczynają współpracować.",
+      x:390, y:690, baseCost:1600, cps:22, maxLevel:5, requires:["eukaryote"]
+    },
+    {
+      id:"vertebrates", name:"Kręgowce", icon:"🐟",
+      desc:"Zwierzęta posiadające kręgosłup.",
+      x:170, y:850, baseCost:4200, cps:55, maxLevel:5, requires:["multicellular"]
+    },
+    {
+      id:"mammals", name:"Ssaki", icon:"🐁",
+      desc:"Stałocieplne kręgowce karmiące mlekiem.",
+      x:390, y:850, baseCost:8500, cps:110, maxLevel:5, requires:["multicellular"]
+    },
+    {
+      id:"human", name:"Homo sapiens", icon:"🧑",
+      desc:"Człowiek rozumny i rozwój nauki.",
+      x:610, y:850, baseCost:18000, cps:260, maxLevel:5, requires:["vertebrates","mammals"]
+    }
+  ];
+
+  const missions = [
+    {id:"energy100", title:"Pierwsze reakcje", text:"Zdobądź 100 energii", type:"total", goal:100, reward:60},
+    {id:"nodes4", title:"Narodziny informacji", text:"Odblokuj 4 etapy", type:"nodes", goal:4, reward:180},
+    {id:"cps20", title:"Życie przyspiesza", text:"Osiągnij 20 energii/s", type:"cps", goal:20, reward:450},
+    {id:"human", title:"Człowiek rozumny", text:"Odblokuj Homo sapiens", type:"specific", goal:"human", reward:2500}
+  ];
+
+  const defaultState = {
+    energy:0,
+    totalEnergy:0,
+    clickPower:1,
+    baseCps:0,
+    clickUpgradeLevel:0,
+    autoUpgradeLevel:0,
+    nodeLevels:{},
+    claimedMissions:[],
+    lastSave:Date.now()
+  };
+
+  let state = loadState();
+
+  const $ = id => document.getElementById(id);
+  const graph = $("graph");
+  const svg = $("connections");
+
+  function loadState(){
+    try{
+      const saved = JSON.parse(localStorage.getItem(SAVE_KEY));
+      if(!saved) return structuredClone(defaultState);
+      return {
+        ...structuredClone(defaultState),
+        ...saved,
+        nodeLevels:{...saved.nodeLevels},
+        claimedMissions:[...(saved.claimedMissions || [])]
+      };
+    }catch{
+      return structuredClone(defaultState);
+    }
+  }
+
+  function saveState(showMessage=false){
+    state.lastSave = Date.now();
+    localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+    if(showMessage) toast("Gra została zapisana!");
+  }
+
+  function formatNumber(value){
+    if(value < 1000) return value.toFixed(value < 10 && value % 1 !== 0 ? 1 : 0);
+    const units = [
+      ["K",1e3],["M",1e6],["B",1e9],["T",1e12],["Qa",1e15],["Qi",1e18]
+    ];
+    for(let i=units.length-1;i>=0;i--){
+      if(value >= units[i][1]) return (value/units[i][1]).toFixed(2).replace(/\.00$/,"") + units[i][0];
+    }
+    return Math.floor(value).toLocaleString("pl-PL");
+  }
+
+  function nodeLevel(id){ return state.nodeLevels[id] || 0; }
+
+  function nodeCost(node){
+    const level = nodeLevel(node.id);
+    return Math.floor(node.baseCost * Math.pow(1.75, level));
+  }
+
+  function requirementsMet(node){
+    return node.requires.every(id => nodeLevel(id) > 0);
+  }
+
+  function getNodeCps(){
+    return nodes.reduce((sum,node) => {
+      const level = nodeLevel(node.id);
+      return sum + node.cps * level * (1 + Math.max(0,level-1)*0.25);
+    },0);
+  }
+
+  function totalCps(){
+    return state.baseCps + getNodeCps();
+  }
+
+  function clickUpgradeCost(){
+    return Math.floor(15 * Math.pow(1.8,state.clickUpgradeLevel));
+  }
+
+  function autoUpgradeCost(){
+    return Math.floor(25 * Math.pow(1.85,state.autoUpgradeLevel));
+  }
+
+  function addEnergy(amount){
+    state.energy += amount;
+    state.totalEnergy += amount;
+  }
+
+  function renderGraph(){
+    svg.innerHTML = "";
+
+    nodes.forEach(node => {
+      node.requires.forEach(reqId => {
+        const from = nodes.find(n => n.id === reqId);
+        const line = document.createElementNS("http://www.w3.org/2000/svg","line");
+        line.setAttribute("x1",from.x + 85);
+        line.setAttribute("y1",from.y + 116);
+        line.setAttribute("x2",node.x + 85);
+        line.setAttribute("y2",node.y);
+        line.setAttribute("class","connection" + (nodeLevel(reqId)>0 ? " unlocked":""));
+        line.dataset.to = node.id;
+        svg.appendChild(line);
+      });
+    });
+
+    nodes.forEach(node => {
+      const el = document.createElement("button");
+      el.className = "node";
+      el.id = "node-" + node.id;
+      el.style.left = node.x + "px";
+      el.style.top = node.y + "px";
+      el.addEventListener("click",() => buyNode(node.id));
+      graph.appendChild(el);
+    });
+
+    updateUI();
+  }
+
+  function buyNode(id){
+    const node = nodes.find(n => n.id === id);
+    const level = nodeLevel(id);
+
+    if(!requirementsMet(node)){
+      toast("Najpierw odblokuj wcześniejsze etapy.");
+      return;
+    }
+    if(level >= node.maxLevel){
+      toast("Ten etap ma już maksymalny poziom.");
+      return;
+    }
+
+    const cost = nodeCost(node);
+    if(state.energy < cost){
+      toast("Za mało energii życia.");
+      return;
+    }
+
+    state.energy -= cost;
+    state.nodeLevels[id] = level + 1;
+    toast(level === 0 ? "Odblokowano: " + node.name : node.name + " — poziom " + (level+1));
+    updateUI();
+    saveState();
+  }
+
+  function updateUI(){
+    const cps = totalCps();
+
+    $("energyValue").textContent = formatNumber(state.energy);
+    $("clickValue").textContent = formatNumber(state.clickPower);
+    $("perSecondValue").textContent = formatNumber(cps);
+    $("clickGainText").textContent = "+" + formatNumber(state.clickPower) + " energii";
+
+    const clickCost = clickUpgradeCost();
+    const autoCost = autoUpgradeCost();
+
+    $("clickUpgradeCost").textContent = formatNumber(clickCost);
+    $("autoUpgradeCost").textContent = formatNumber(autoCost);
+    $("buyClickUpgrade").disabled = state.energy < clickCost;
+    $("buyAutoUpgrade").disabled = state.energy < autoCost;
+
+    nodes.forEach(node => {
+      const el = $("node-" + node.id);
+      if(!el) return;
+
+      const level = nodeLevel(node.id);
+      const available = requirementsMet(node) && level < node.maxLevel;
+      const cost = nodeCost(node);
+
+      el.className = "node";
+      if(level > 0) el.classList.add("unlocked");
+      else if(available) el.classList.add("available");
+      if(level >= node.maxLevel) el.classList.add("maxed");
+
+      el.disabled = !available && level === 0;
+
+      let status;
+      if(level >= node.maxLevel) status = "MAKSYMALNY POZIOM";
+      else if(!requirementsMet(node)) status = "🔒 Wymaga wcześniejszych etapów";
+      else status = "Koszt: " + formatNumber(cost) + " energii";
+
+      el.innerHTML = `
+        <div class="node-icon">${node.icon}</div>
+        <div class="node-name">${node.name}</div>
+        <div class="node-desc">${node.desc}</div>
+        <div class="node-cost">${status}</div>
+        <div class="node-level">Poziom ${level}/${node.maxLevel} • +${formatNumber(node.cps)} /s</div>
+      `;
+    });
+
+    [...svg.querySelectorAll(".connection")].forEach(line => {
+      const target = line.dataset.to;
+      const targetNode = nodes.find(n => n.id === target);
+      const active = targetNode.requires.every(id => nodeLevel(id)>0);
+      line.classList.toggle("unlocked",active);
+    });
+
+    renderMissions();
+  }
+
+  function missionProgress(mission){
+    if(mission.type === "total") return state.totalEnergy;
+    if(mission.type === "nodes") return nodes.filter(n => nodeLevel(n.id)>0).length;
+    if(mission.type === "cps") return totalCps();
+    if(mission.type === "specific") return nodeLevel(mission.goal)>0 ? 1 : 0;
+    return 0;
+  }
+
+  function renderMissions(){
+    const container = $("missions");
+    container.innerHTML = "";
+
+    missions.forEach(m => {
+      const claimed = state.claimedMissions.includes(m.id);
+      const progress = missionProgress(m);
+      const goal = m.type === "specific" ? 1 : m.goal;
+      const done = progress >= goal;
+      const percent = Math.min(100,(progress/goal)*100);
+
+      const div = document.createElement("div");
+      div.className = "mission" + (claimed ? " done":"");
+      div.innerHTML = `
+        <div class="mission-title">${claimed ? "✅":"🎯"} ${m.title}</div>
+        <div class="mission-progress">${m.text}</div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${percent}%"></div></div>
+        <div class="mission-progress">
+          ${formatNumber(Math.min(progress,goal))} / ${formatNumber(goal)}
+          • nagroda ${formatNumber(m.reward)}
+        </div>
+        ${done && !claimed ? `<button class="action-btn" data-claim="${m.id}">Odbierz nagrodę</button>` : ""}
+      `;
+      container.appendChild(div);
+    });
+
+    container.querySelectorAll("[data-claim]").forEach(btn => {
+      btn.addEventListener("click",() => claimMission(btn.dataset.claim));
+    });
+  }
+
+  function claimMission(id){
+    const mission = missions.find(m => m.id === id);
+    if(!mission || state.claimedMissions.includes(id)) return;
+    if(missionProgress(mission) < (mission.type === "specific" ? 1 : mission.goal)) return;
+
+    state.claimedMissions.push(id);
+    addEnergy(mission.reward);
+    toast("Nagroda: +" + formatNumber(mission.reward) + " energii!");
+    updateUI();
+    saveState();
+  }
+
+  function toast(message){
+    const el = $("toast");
+    el.textContent = message;
+    el.classList.add("show");
+    clearTimeout(toast.timer);
+    toast.timer = setTimeout(() => el.classList.remove("show"),1800);
+  }
+
+  $("mainClick").addEventListener("click",event => {
+    addEnergy(state.clickPower);
+    updateUI();
+
+    const floating = document.createElement("div");
+    floating.className = "floating-number";
+    floating.textContent = "+" + formatNumber(state.clickPower);
+    floating.style.left = event.clientX + "px";
+    floating.style.top = event.clientY + "px";
+    document.body.appendChild(floating);
+    setTimeout(() => floating.remove(),850);
+  });
+
+  $("buyClickUpgrade").addEventListener("click",() => {
+    const cost = clickUpgradeCost();
+    if(state.energy < cost) return;
+    state.energy -= cost;
+    state.clickUpgradeLevel++;
+    state.clickPower++;
+    toast("Kliknięcie jest teraz silniejsze!");
+    updateUI();
+    saveState();
+  });
+
+  $("buyAutoUpgrade").addEventListener("click",() => {
+    const cost = autoUpgradeCost();
+    if(state.energy < cost) return;
+    state.energy -= cost;
+    state.autoUpgradeLevel++;
+    state.baseCps++;
+    toast("Produkcja automatyczna zwiększona!");
+    updateUI();
+    saveState();
+  });
+
+  $("saveBtn").addEventListener("click",() => saveState(true));
+
+  $("exportBtn").addEventListener("click",async() => {
+    const data = btoa(unescape(encodeURIComponent(JSON.stringify(state))));
+    try{
+      await navigator.clipboard.writeText(data);
+      toast("Zapis skopiowany do schowka!");
+    }catch{
+      prompt("Skopiuj swój zapis:",data);
+    }
+  });
+
+  $("resetBtn").addEventListener("click",() => {
+    if(!confirm("Na pewno usunąć cały postęp?")) return;
+    localStorage.removeItem(SAVE_KEY);
+    state = structuredClone(defaultState);
+    toast("Gra rozpoczęta od nowa.");
+    updateUI();
+  });
+
+  // Produkcja automatyczna — aktualizacja 10 razy na sekundę.
+  let lastTick = performance.now();
+  setInterval(() => {
+    const now = performance.now();
+    const seconds = (now-lastTick)/1000;
+    lastTick = now;
+    addEnergy(totalCps()*seconds);
+    updateUI();
+  },100);
+
+  // Autosave co 5 sekund.
+  setInterval(() => saveState(false),5000);
+  window.addEventListener("beforeunload",() => saveState(false));
+
+  renderGraph();
+})();
+</script>
+</body>
+</html>
+'''
+
+path = Path("/mnt/data/biologia_gra.html")
+path.write_text(html, encoding="utf-8")
+print(f"Utworzono: {path} ({path.stat().st_size} bajtów)")
