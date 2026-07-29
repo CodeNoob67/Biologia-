@@ -6,232 +6,143 @@
 
     <style>
         body{
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background: #f2f2f2;
-            margin: 0;
-            padding: 20px;
+            font-family:Arial;
+            text-align:center;
+            background:#f2f2f2;
         }
 
         h1{
-            font-size: 50px;
+            font-size:50px;
         }
 
         .przedmiot{
-            display: block;
-            width: 350px;
-            margin: 20px auto;
-            padding: 22px;
-            font-size: 30px;
-            font-weight: bold;
-            text-decoration: none;
-            color: white;
-            border-radius: 18px;
-            transition: 0.25s;
+            display:block;
+            width:350px;
+            margin:20px auto;
+            padding:22px;
+            font-size:30px;
+            font-weight:bold;
+            text-decoration:none;
+            color:white;
+            border-radius:18px;
+            transition:0.25s;
         }
 
         .przedmiot:hover{
-            transform: scale(1.08);
+            transform:scale(1.08);
         }
 
         .bio{
-            background: #5fd35f;
+            background:#5fd35f;
         }
 
         .bio:hover{
-            background: #38b438;
+            background:#38b438;
         }
 
         .fiz{
-            background: #ff9800;
+            background:#ff9800;
         }
 
         .fiz:hover{
-            background: #dd7f00;
+            background:#dd7f00;
         }
 
         .chem{
-            background: #18b8b8;
+            background:#18b8b8;
         }
 
         .chem:hover{
-            background: #0f9898;
+            background:#0f9898;
         }
 
         .mat{
-            background: #3d8bfd;
+            background:#3d8bfd;
         }
 
         .mat:hover{
-            background: #1e6fe0;
+            background:#1e6fe0;
         }
 
         .ang{
-            background: #e53935;
+            background:#e53935;
         }
 
         .ang:hover{
-            background: #c62828;
+            background:#c62828;
         }
 
-        /* Linia nad komentarzami */
-        .linia-komentarzy{
-            width: 90%;
-            height: 4px;
-            background: black;
-            border: none;
-            margin: 80px auto 25px;
+        hr{
+            width:90%;
+            margin-top:80px;
+            border:2px solid black;
         }
 
-        /* Przycisk komentarzy */
-        .przycisk-komentarze{
-            padding: 16px 35px;
-            font-size: 25px;
-            font-weight: bold;
-            color: white;
-            background: black;
-            border: none;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: 0.25s;
+        .mail{
+            display:inline-block;
+            margin:30px;
+            padding:18px 35px;
+            background:#444;
+            color:white;
+            font-size:28px;
+            font-weight:bold;
+            text-decoration:none;
+            border-radius:15px;
+            transition:0.25s;
         }
 
-        .przycisk-komentarze:hover{
-            background: #333333;
-            transform: scale(1.05);
-        }
-
-        /* Cały panel komentarzy */
-        #panelKomentarzy{
-            display: none;
-            width: 750px;
-            max-width: 90%;
-            margin: 30px auto;
-        }
-
-        /* Formularz */
-        .formularz-komentarza{
-            background: white;
-            padding: 25px;
-            border-radius: 18px;
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .formularz-komentarza h2{
-            margin-top: 0;
-        }
-
-        .formularz-komentarza input,
-        .formularz-komentarza textarea{
-            width: calc(100% - 24px);
-            margin: 10px 0;
-            padding: 12px;
-            font-size: 18px;
-            font-family: Arial, sans-serif;
-            border: 2px solid #aaaaaa;
-            border-radius: 10px;
-        }
-
-        .formularz-komentarza textarea{
-            height: 100px;
-            resize: vertical;
-        }
-
-        .dodaj-komentarz{
-            padding: 13px 25px;
-            margin-top: 10px;
-            font-size: 20px;
-            font-weight: bold;
-            color: white;
-            background: #3d8bfd;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-        }
-
-        .dodaj-komentarz:hover{
-            background: #1e6fe0;
-        }
-
-        /* Pojedynczy komentarz */
-        .komentarz{
-            margin-top: 20px;
-            padding: 18px;
-            background: white;
-            border-radius: 15px;
-            text-align: left;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
-        }
-
-        .autor{
-            font-size: 22px;
-            font-weight: bold;
-        }
-
-        .data{
-            margin-top: 4px;
-            color: #777777;
-            font-size: 14px;
-        }
-
-        .tresc{
-            margin-top: 12px;
-            font-size: 19px;
-            white-space: pre-wrap;
-            overflow-wrap: anywhere;
-        }
-
-        .brak-komentarzy{
-            margin-top: 25px;
-            font-size: 19px;
-            color: #666666;
-        }
-
-        @media(max-width: 500px){
-            h1{
-                font-size: 36px;
-            }
-
-            .przedmiot{
-                width: 80%;
-                font-size: 25px;
-            }
+        .mail:hover{
+            background:#222;
+            transform:scale(1.08);
         }
     </style>
 </head>
 
 <body>
 
-    <h1>📚 NAUKA</h1>
+<h1>📚 NAUKA</h1>
 
-    <h1>Wybierz przedmiot</h1>
+<h1>Wybierz przedmiot</h1>
 
-    <a class="przedmiot bio" href="biologia.html" onmouseenter="zagraj()">
-        🌳 Biologia
-    </a>
-
-    <a class="przedmiot fiz" href="fizyka.html" onmouseenter="zagraj()">
-        ⚛️ Fizyka
-    </a>
-
-    <a class="przedmiot chem" href="chemia.html" onmouseenter="zagraj()">
-        ⚗️ Chemia
-    </a>
-
-    <a class="przedmiot mat" href="Matematyka.html" onmouseenter="zagraj()">
-        📐 Matematyka
-    </a>
-
-    <a class="przedmiot ang" href="angielski.html" onmouseenter="zagraj()">
-        🇬🇧 Angielski
-    </a>
-
-    <!-- Czarna linia -->
-    <hr class="linia-komentarzy">
-
-  <a href="mailto:mistrzbiologia@gmail.com?subject=Wiadomość ze strony NAUKA"
-   class="przycisk-mail">
-    ✉️ Napisz do nas
+<a class="przedmiot bio" href="biologia.html" onmouseenter="zagraj()">
+    🌳 Biologia
 </a>
 
-    
+<a class="przedmiot fiz" href="fizyka.html" onmouseenter="zagraj()">
+    ⚛️ Fizyka
+</a>
+
+<a class="przedmiot chem" href="chemia.html" onmouseenter="zagraj()">
+    ⚗️ Chemia
+</a>
+
+<a class="przedmiot mat" href="Matematyka.html" onmouseenter="zagraj()">
+    📐 Matematyka
+</a>
+
+<a class="przedmiot ang" href="angielski.html" onmouseenter="zagraj()">
+    🇬🇧 Angielski
+</a>
+
+<hr>
+
+<a class="mail"
+href="mailto:mistrzbiologia@gmail.com?subject=Wiadomość%20ze%20strony%20NAUKA&body=Cześć!%0A%0ATutaj%20wpisz%20swoją%20wiadomość."
+onmouseenter="zagraj()">
+✉️ Wyślij maila
+</a>
+
+<audio id="hover">
+    <source src="Click.wav" type="audio/wav">
+</audio>
+
+<script>
+    function zagraj(){
+        let dzwiek = document.getElementById("hover");
+        dzwiek.currentTime = 0;
+        dzwiek.play();
+    }
+</script>
+
+</body>
+</html>
