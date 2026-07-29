@@ -6,111 +6,427 @@
 
     <style>
         body{
-            font-family:Arial;
-            text-align:center;
-            background:#f2f2f2;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #f2f2f2;
+            margin: 0;
+            padding: 20px;
         }
 
         h1{
-            font-size:50px;
+            font-size: 50px;
         }
 
         .przedmiot{
-            display:block;
-            width:350px;
-            margin:20px auto;
-            padding:22px;
-            font-size:30px;
-            font-weight:bold;
-            text-decoration:none;
-            color:white;
-            border-radius:18px;
-            transition:0.25s;
+            display: block;
+            width: 350px;
+            margin: 20px auto;
+            padding: 22px;
+            font-size: 30px;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+            border-radius: 18px;
+            transition: 0.25s;
         }
 
         .przedmiot:hover{
-            transform:scale(1.08);
+            transform: scale(1.08);
         }
 
         .bio{
-            background:#5fd35f;
+            background: #5fd35f;
         }
 
         .bio:hover{
-            background:#38b438;
+            background: #38b438;
         }
 
         .fiz{
-            background:#ff9800;
+            background: #ff9800;
         }
 
         .fiz:hover{
-            background:#dd7f00;
+            background: #dd7f00;
         }
 
         .chem{
-            background:#18b8b8;
+            background: #18b8b8;
         }
 
         .chem:hover{
-            background:#0f9898;
+            background: #0f9898;
         }
 
         .mat{
-            background:#3d8bfd;
+            background: #3d8bfd;
         }
 
         .mat:hover{
-            background:#1e6fe0;
+            background: #1e6fe0;
         }
 
         .ang{
-            background:#e53935;
+            background: #e53935;
         }
 
         .ang:hover{
-            background:#c62828;
+            background: #c62828;
+        }
+
+        /* Linia nad komentarzami */
+        .linia-komentarzy{
+            width: 90%;
+            height: 4px;
+            background: black;
+            border: none;
+            margin: 80px auto 25px;
+        }
+
+        /* Przycisk komentarzy */
+        .przycisk-komentarze{
+            padding: 16px 35px;
+            font-size: 25px;
+            font-weight: bold;
+            color: white;
+            background: black;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+
+        .przycisk-komentarze:hover{
+            background: #333333;
+            transform: scale(1.05);
+        }
+
+        /* Cały panel komentarzy */
+        #panelKomentarzy{
+            display: none;
+            width: 750px;
+            max-width: 90%;
+            margin: 30px auto;
+        }
+
+        /* Formularz */
+        .formularz-komentarza{
+            background: white;
+            padding: 25px;
+            border-radius: 18px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .formularz-komentarza h2{
+            margin-top: 0;
+        }
+
+        .formularz-komentarza input,
+        .formularz-komentarza textarea{
+            width: calc(100% - 24px);
+            margin: 10px 0;
+            padding: 12px;
+            font-size: 18px;
+            font-family: Arial, sans-serif;
+            border: 2px solid #aaaaaa;
+            border-radius: 10px;
+        }
+
+        .formularz-komentarza textarea{
+            height: 100px;
+            resize: vertical;
+        }
+
+        .dodaj-komentarz{
+            padding: 13px 25px;
+            margin-top: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+            background: #3d8bfd;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        .dodaj-komentarz:hover{
+            background: #1e6fe0;
+        }
+
+        /* Pojedynczy komentarz */
+        .komentarz{
+            margin-top: 20px;
+            padding: 18px;
+            background: white;
+            border-radius: 15px;
+            text-align: left;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .autor{
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .data{
+            margin-top: 4px;
+            color: #777777;
+            font-size: 14px;
+        }
+
+        .tresc{
+            margin-top: 12px;
+            font-size: 19px;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .brak-komentarzy{
+            margin-top: 25px;
+            font-size: 19px;
+            color: #666666;
+        }
+
+        @media(max-width: 500px){
+            h1{
+                font-size: 36px;
+            }
+
+            .przedmiot{
+                width: 80%;
+                font-size: 25px;
+            }
         }
     </style>
 </head>
 
 <body>
 
-<h1>📚 NAUKA</h1>
+    <h1>📚 NAUKA</h1>
 
-<h1>Wybierz przedmiot</h1>
+    <h1>Wybierz przedmiot</h1>
 
-<a class="przedmiot bio" href="biologia.html" onmouseenter="zagraj()">
-    🌳 Biologia
-</a>
+    <a class="przedmiot bio" href="biologia.html" onmouseenter="zagraj()">
+        🌳 Biologia
+    </a>
 
-<a class="przedmiot fiz" href="fizyka.html" onmouseenter="zagraj()">
-    ⚛️ Fizyka
-</a>
+    <a class="przedmiot fiz" href="fizyka.html" onmouseenter="zagraj()">
+        ⚛️ Fizyka
+    </a>
 
-<a class="przedmiot chem" href="chemia.html" onmouseenter="zagraj()">
-    ⚗️ Chemia
-</a>
+    <a class="przedmiot chem" href="chemia.html" onmouseenter="zagraj()">
+        ⚗️ Chemia
+    </a>
 
-<a class="przedmiot mat" href="Matematyka.html" onmouseenter="zagraj()">
-    📐 Matematyka
-</a>
+    <a class="przedmiot mat" href="Matematyka.html" onmouseenter="zagraj()">
+        📐 Matematyka
+    </a>
 
-<a class="przedmiot ang" href="angielski.html" onmouseenter="zagraj()">
-    🇬🇧 Angielski
-</a>
+    <a class="przedmiot ang" href="angielski.html" onmouseenter="zagraj()">
+        🇬🇧 Angielski
+    </a>
 
-<audio id="hover">
-    <source src="Click.wav" type="audio/wav">
-</audio>
+    <!-- Czarna linia -->
+    <hr class="linia-komentarzy">
 
-<script>
-    function zagraj(){
-        let dzwiek = document.getElementById("hover");
-        dzwiek.currentTime = 0;
-        dzwiek.play();
-    }
-</script>
+    <!-- Przycisk otwierający komentarze -->
+    <button class="przycisk-komentarze" id="przyciskKomentarze">
+        💬 Komentarze
+    </button>
+
+    <!-- Panel komentarzy -->
+    <div id="panelKomentarzy">
+
+        <div class="formularz-komentarza">
+            <h2>Dodaj komentarz</h2>
+
+            <input
+                type="text"
+                id="nazwa"
+                maxlength="30"
+                placeholder="Podaj swoją nazwę"
+            >
+
+            <textarea
+                id="trescKomentarza"
+                maxlength="500"
+                placeholder="Napisz treść komentarza"
+            ></textarea>
+
+            <button class="dodaj-komentarz" id="dodajKomentarz">
+                Wyślij komentarz
+            </button>
+        </div>
+
+        <div id="listaKomentarzy"></div>
+
+    </div>
+
+    <audio id="hover">
+        <source src="Click.wav" type="audio/wav">
+    </audio>
+
+    <script>
+        function zagraj(){
+            const dzwiek = document.getElementById("hover");
+            dzwiek.currentTime = 0;
+
+            dzwiek.play().catch(function(){
+                console.log("Przeglądarka zablokowała automatyczne odtworzenie dźwięku.");
+            });
+        }
+
+        const przyciskKomentarze =
+            document.getElementById("przyciskKomentarze");
+
+        const panelKomentarzy =
+            document.getElementById("panelKomentarzy");
+
+        const przyciskDodaj =
+            document.getElementById("dodajKomentarz");
+
+        const poleNazwa =
+            document.getElementById("nazwa");
+
+        const poleTresc =
+            document.getElementById("trescKomentarza");
+
+        const listaKomentarzy =
+            document.getElementById("listaKomentarzy");
+
+        /* Otwieranie i zamykanie komentarzy */
+        przyciskKomentarze.addEventListener("click", function(){
+
+            if(panelKomentarzy.style.display === "block"){
+                panelKomentarzy.style.display = "none";
+            }else{
+                panelKomentarzy.style.display = "block";
+                poleNazwa.focus();
+            }
+
+        });
+
+        /* Pobieranie komentarzy z pamięci przeglądarki */
+        function pobierzKomentarze(){
+            const zapisaneKomentarze =
+                localStorage.getItem("komentarzeNauka");
+
+            if(zapisaneKomentarze){
+                return JSON.parse(zapisaneKomentarze);
+            }
+
+            return [];
+        }
+
+        /* Zapisywanie komentarzy */
+        function zapiszKomentarze(komentarze){
+            localStorage.setItem(
+                "komentarzeNauka",
+                JSON.stringify(komentarze)
+            );
+        }
+
+        /* Tworzenie daty */
+        function pobierzDate(){
+            const teraz = new Date();
+
+            return teraz.toLocaleString("pl-PL", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit"
+            });
+        }
+
+        /* Pokazywanie zapisanych komentarzy */
+        function pokazKomentarze(){
+            const komentarze = pobierzKomentarze();
+
+            listaKomentarzy.innerHTML = "";
+
+            if(komentarze.length === 0){
+                const brakKomentarzy = document.createElement("div");
+
+                brakKomentarzy.className = "brak-komentarzy";
+                brakKomentarzy.textContent =
+                    "Nie ma jeszcze żadnych komentarzy.";
+
+                listaKomentarzy.appendChild(brakKomentarzy);
+                return;
+            }
+
+            komentarze.forEach(function(komentarz){
+
+                const elementKomentarza =
+                    document.createElement("div");
+
+                elementKomentarza.className = "komentarz";
+
+                const autor =
+                    document.createElement("div");
+
+                autor.className = "autor";
+                autor.textContent = komentarz.nazwa;
+
+                const data =
+                    document.createElement("div");
+
+                data.className = "data";
+                data.textContent = komentarz.data;
+
+                const tresc =
+                    document.createElement("div");
+
+                tresc.className = "tresc";
+                tresc.textContent = komentarz.tresc;
+
+                elementKomentarza.appendChild(autor);
+                elementKomentarza.appendChild(data);
+                elementKomentarza.appendChild(tresc);
+
+                listaKomentarzy.appendChild(elementKomentarza);
+            });
+        }
+
+        /* Dodawanie nowego komentarza */
+        przyciskDodaj.addEventListener("click", function(){
+
+            const nazwa = poleNazwa.value.trim();
+            const tresc = poleTresc.value.trim();
+
+            if(nazwa === ""){
+                alert("Podaj swoją nazwę.");
+                poleNazwa.focus();
+                return;
+            }
+
+            if(tresc === ""){
+                alert("Napisz treść komentarza.");
+                poleTresc.focus();
+                return;
+            }
+
+            const komentarze = pobierzKomentarze();
+
+            const nowyKomentarz = {
+                nazwa: nazwa,
+                tresc: tresc,
+                data: pobierzDate()
+            };
+
+            komentarze.unshift(nowyKomentarz);
+
+            zapiszKomentarze(komentarze);
+
+            poleNazwa.value = "";
+            poleTresc.value = "";
+
+            pokazKomentarze();
+        });
+
+        pokazKomentarze();
+    </script>
 
 </body>
 </html>
