@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Kalkulator HOMA-IR | Kobieta w Harmonii™</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#F4F1EC;
+    color:#5B4A3B;
+}
+
+.container{
+    max-width:700px;
+    margin:50px auto;
+    background:white;
+    padding:40px;
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+h1{
+    text-align:center;
+    color:#6B7A5E;
+    margin-bottom:10px;
+}
+
+h2{
+    color:#6B7A5E;
+}
+
+p{
+    line-height:1.8;
+}
+
+.info{
+    background:#F9F1EC;
+    border-left:6px solid #A2A58A;
+    padding:18px;
+    border-radius:12px;
+    margin:25px 0;
+}
+
+label{
+    display:block;
+    margin-top:20px;
+    margin-bottom:8px;
+    font-weight:bold;
+}
+
+input{
+    width:100%;
+    padding:15px;
+    border-radius:10px;
+    border:1px solid #DCCDBA;
+    font-size:18px;
+    box-sizing:border-box;
+}
+
+button{
+    width:100%;
+    margin-top:30px;
+    padding:16px;
+    background:#A2A58A;
+    color:white;
+    border:none;
+    border-radius:12px;
+    font-size:18px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+button:hover{
+    background:#6B7A5E;
+}
+
+.result{
+    margin-top:30px;
+    padding:20px;
+    background:#F9F1E7;
+    border-radius:15px;
+    text-align:center;
+}
+
+.value{
+    font-size:40px;
+    color:#6B7A5E;
+    font-weight:bold;
+}
+
+.footer{
+    margin-top:35px;
+    font-size:14px;
+    color:#777;
+    line-height:1.6;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Kalkulator HOMA-IR</h1>
+
+<p>
+Wskaźnik <strong>HOMA-IR</strong> pomaga ocenić stopień insulinooporności na podstawie
+stężenia glukozy i insuliny na czczo.
+</p>
+
+<div class="info">
+
+<b>Jak wykonać badanie?</b><br><br>
+
+✔ Glukoza na czczo<br>
+✔ Insulina na czczo<br><br>
+
+Oba badania należy wykonać z tej samej próbki krwi po minimum 8 godzinach na czczo.
+
+</div>
+
+<label>Glukoza na czczo (mg/dl)</label>
+<input type="number" id="glukoza" step="0.1">
+
+<label>Insulina na czczo (µIU/ml)</label>
+<input type="number" id="insulina" step="0.1">
+
+<button onclick="oblicz()">Oblicz HOMA-IR</button>
+
+<div class="result" id="wynik" style="display:none">
+
+<div class="value" id="wartosc"></div>
+
+<p id="opis"></p>
+
+</div>
+
+<div class="footer">
+
+<b>Uwaga:</b><br><br>
+
+Interpretacja wskaźnika HOMA-IR zależy od wieku, masy ciała, stanu zdrowia oraz objawów klinicznych.
+
+Wynik kalkulatora ma charakter edukacyjny i nie stanowi diagnozy medycznej.
+
+W przypadku nieprawidłowego wyniku skonsultuj się z lekarzem lub specjalistą.
+
+</div>
+
+</div>
+
+<script>
+
+function oblicz(){
+
+let glukoza=parseFloat(document.getElementById("glukoza").value);
+
+let insulina=parseFloat(document.getElementById("insulina").value);
+
+if(isNaN(glukoza)||isNaN(insulina)){
+
+alert("Uzupełnij oba pola.");
+
+return;
+
+}
+
+let homa=(glukoza*insulina)/405;
+
+document.getElementById("wynik").style.display="block";
+
+document.getElementById("wartosc").innerHTML=homa.toFixed(2);
+
+let opis="";
+
+if(homa<1){
+
+opis="Bardzo dobra wrażliwość na insulinę.";
+
+}
+
+else if(homa<2){
+
+opis="Wynik prawidłowy.";
+
+}
+
+else if(homa<2.5){
+
+opis="⚠ Wynik może sugerować rozwijającą się insulinooporność. Warto skonsultować go ze specjalistą. Zapraszam na konsultację";
+
+}
+
+else{
+
+opis="⚠ Podwyższony wskaźnik HOMA-IR. Wynik może wskazywać na insulinooporność i wymaga konsultacji z lekarzem.";
+
+}
+
+document.getElementById("opis").innerHTML=opis;
+
+}
+
+</script>
+
+</body>
+</html>
