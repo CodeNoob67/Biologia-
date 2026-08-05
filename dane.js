@@ -70,17 +70,21 @@ const BOHATEROWIE = [
     },
 
     {
-        id: "krolowa",
-        nazwa: "Królowa",
-        ikona: "👸",
-        moc: "Magiczne berło",
-        opis: "Królowa wystrzeliwuje magiczne pociski.",
-        hp: 135,
-        damage: 34,
-        speed: 3.4,
-        range: 240,
-        cooldown: 650,
-        ticketCost: 30
+        {
+    id: "czarodziej",
+    nazwa: "Czarodziej",
+    ikona: "🧙‍♂️",
+    moc: "Magiczna kula",
+    opis:
+        "Mityczny wojownik, który strzela potężnymi kulami magii.",
+
+    hp: 125,
+    damage: 42,
+    speed: 1.55,
+
+    cenaMonety: 3200,
+    cenaBilety: 85
+},
     },
 
     {
