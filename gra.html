@@ -777,11 +777,10 @@
 
             <select id="adminTrophyHero" class="input"></select>
 
-            <select id="adminTrophyMode" class="input">
-                <option value="none">Nie zmieniaj pucharków</option>
-                <option value="add">Dodaj lub odejmij</option>
-                <option value="set">Ustaw dokładną liczbę</option>
-            </select>
+           <select id="adminTrophyMode" class="input">
+    <option value="add">Dodaj lub odejmij</option>
+    <option value="set">Ustaw dokładną liczbę</option>
+</select>
 
             <input
                 id="adminTrophyAmount"
@@ -797,7 +796,7 @@
         </div>
 
         <button class="action" onclick="adminConfirm()">
-            POTWIERDŹ I DODAJ WSZYSTKO
+            POTWIERDŹ
         </button>
 
         <div id="adminMessage" class="message"></div>
@@ -1357,7 +1356,9 @@ function loadAdminForm() {
         saved.trophyHero || "farmer";
 
     byId("adminTrophyMode").value =
-        saved.trophyMode || "none";
+    saved.trophyMode === "set"
+        ? "set"
+        : "add";
 
     byId("adminTrophyAmount").value =
         saved.trophyAmount || "";
@@ -1383,6 +1384,7 @@ function openAdmin() {
     syncCurrentStateToAccount();
 
     loadAdminHeroes();
+    byId("adminTrophyMode").value = "add";
 
     const loaded =
         loadAdminForm();
