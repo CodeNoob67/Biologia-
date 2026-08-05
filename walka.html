@@ -291,6 +291,7 @@
 
 <script src="dane.js"></script>
 <script src="common.js"></script>
+    <script src="pucharki.js"></script>
 
 <script>
 const canvas =
@@ -703,7 +704,52 @@ function startGame() {
 
     fighters.push(player);
 
-    const spawnPositions = [
+   const spawnPositions = [
+    {
+        x: 180,
+        y: 180
+    },
+
+    {
+        x: WORLD_WIDTH / 2,
+        y: 180
+    },
+
+    {
+        x: WORLD_WIDTH - 180,
+        y: 180
+    },
+
+    {
+        x: 180,
+        y: WORLD_HEIGHT / 2
+    },
+
+    {
+        x: WORLD_WIDTH - 180,
+        y: WORLD_HEIGHT / 2
+    },
+
+    {
+        x: 220,
+        y: WORLD_HEIGHT - 220
+    },
+
+    {
+        x: WORLD_WIDTH - 220,
+        y: WORLD_HEIGHT - 220
+    },
+
+    {
+        x: WORLD_WIDTH / 2 - 480,
+        y: WORLD_HEIGHT / 2
+    },
+
+    {
+        x: WORLD_WIDTH / 2 + 480,
+        y: WORLD_HEIGHT / 2
+    }
+];
         { x: 180, y: 180 },
 
         {
@@ -737,7 +783,7 @@ function startGame() {
         }
     ];
 
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 9; i++) {
         const randomHero =
             randomItem(BOHATEROWIE);
 
@@ -1441,10 +1487,23 @@ function damageFighter(target, damage, attacker) {
     if (target.hp <= 0) {
         target.hp = 0;
         target.alive = false;
+if (target === player) {
+    const aliveAfterDeath =
+        fighters.filter(
+            function(fighter) {
+                return fighter.alive;
+            }
+        ).length;
 
-        if (target === player) {
-            showDeathScreen(false);
-        }
+    const playerPlace =
+        aliveAfterDeath + 1;
+
+    awardTrophiesForPlace(
+        playerPlace
+    );
+
+    showDeathScreen(false);
+}
     }
 
     checkWinner();
@@ -1591,6 +1650,8 @@ function checkWinner() {
     matchFinished = true;
 
     if (winner === player) {
+        awardTrophiesForPlace(1);
+        
         const state =
             getState();
 
