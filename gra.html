@@ -5,73 +5,604 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Medieval Arena</title>
     <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            background:
+                radial-gradient(circle at center, #25d8ff 0%, #079fe0 55%, #0876bd 100%);
+            color: white;
+        }
+
+        .game-lobby {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .background-pattern {
+            position: absolute;
+            inset: 0;
+            opacity: 0.08;
+            background-image:
+                radial-gradient(circle, white 3px, transparent 4px);
+            background-size: 70px 70px;
+        }
+
+        .top-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 75px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 8px 14px;
+
+            background: linear-gradient(#2f3b53, #182238);
+            border-bottom: 4px solid #101725;
+
+            box-shadow: 0 5px 0 #00000055;
+            z-index: 5;
+        }
+
+        .profile-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            min-width: 250px;
+        }
+
+        .profile-icon {
+            width: 55px;
+            height: 55px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #1d95e8;
+            border: 4px solid #111827;
+            border-radius: 10px;
+
+            font-size: 30px;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .player-name {
+            font-size: 16px;
+            font-weight: 900;
+        }
+
+        .trophy-line {
+            margin-top: 5px;
+            padding: 5px 8px;
+
+            background: #253044;
+            border: 3px solid #101724;
+            border-radius: 8px;
+
+            font-weight: 900;
+        }
+
+        .top-currencies {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .currency-box {
+            min-width: 80px;
+            padding: 9px 12px;
+
+            background: #263248;
+            border: 3px solid #111827;
+            border-radius: 10px;
+
+            text-align: center;
+            font-weight: 900;
+            font-size: 18px;
+        }
+
+        .menu-button {
+            width: 50px;
+            height: 50px;
+
+            border: 3px solid #111827;
+            border-radius: 9px;
+
+            background: #46566e;
+            color: white;
+
+            font-size: 26px;
+            cursor: pointer;
+        }
+
+        .rank-box {
+            position: absolute;
+            top: 90px;
+            left: 50%;
+
+            transform: translateX(-50%);
+
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            z-index: 3;
+        }
+
+        .rank-part {
+            padding: 7px 12px;
+
+            background: #283349;
+            border: 3px solid #101724;
+            border-radius: 9px;
+
+            font-weight: 900;
+        }
+
+        .side-menu {
+            position: absolute;
+            top: 130px;
+
+            display: flex;
+            flex-direction: column;
+            gap: 13px;
+
+            z-index: 4;
+        }
+
+        .side-menu.left {
+            left: 12px;
+        }
+
+        .side-menu.right {
+            right: 12px;
+        }
+
+        .side-button {
+            width: 85px;
+            min-height: 55px;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            padding: 5px;
+
+            color: white;
+            text-decoration: none;
+            font-weight: 900;
+            font-size: 12px;
+
+            background: linear-gradient(#435670, #202d42);
+            border: 3px solid #101724;
+            border-radius: 9px;
+
+            box-shadow: 0 4px 0 #00000066;
+        }
+
+        .side-icon {
+            font-size: 24px;
+            margin-bottom: 2px;
+        }
+
+        .notification {
+            position: absolute;
+            top: -7px;
+            right: -7px;
+
+            width: 23px;
+            height: 23px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: red;
+            border: 2px solid white;
+            border-radius: 50%;
+
+            font-size: 12px;
+        }
+
+        .relative {
+            position: relative;
+        }
+
+        .character-area {
+            position: absolute;
+            left: 50%;
+            top: 53%;
+
+            transform: translate(-50%, -50%);
+
+            width: 340px;
+            height: 430px;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+
+            z-index: 2;
+        }
+
+        .character-shadow {
+            position: absolute;
+            bottom: 30px;
+
+            width: 230px;
+            height: 45px;
+
+            background: #004a7277;
+            border-radius: 50%;
+
+            filter: blur(3px);
+        }
+
+        .character {
+            position: relative;
+            z-index: 2;
+
+            font-size: 190px;
+
+            filter: drop-shadow(0 15px 6px #00466e88);
+            animation: characterIdle 2.2s ease-in-out infinite;
+        }
+
+        @keyframes characterIdle {
+            0%, 100% {
+                transform: translateY(0) rotate(-1deg);
+            }
+
+            50% {
+                transform: translateY(-12px) rotate(1deg);
+            }
+        }
+
+        .character-title {
+            margin-top: -5px;
+
+            padding: 7px 15px;
+
+            background: #28344b;
+            border: 3px solid #111827;
+            border-radius: 10px;
+
+            font-size: 20px;
+            font-weight: 900;
+            z-index: 3;
+        }
+
+        .character-power {
+            margin-top: 6px;
+            font-weight: 900;
+            color: #fff080;
+            text-shadow: 2px 2px #000;
+        }
+
+        .bottom-left {
+            position: absolute;
+            left: 15px;
+            bottom: 20px;
+
+            width: 260px;
+            z-index: 4;
+        }
+
+        .pass-box {
+            padding: 12px;
+
+            background: linear-gradient(90deg, #f0c900, #f79e00);
+            border: 4px solid #111827;
+            border-radius: 12px;
+
+            color: #111827;
+            font-weight: 900;
+
+            box-shadow: 0 6px 0 #00000066;
+        }
+
+        .pass-title {
+            font-size: 22px;
+        }
+
+        .progress-background {
+            height: 22px;
+            margin-top: 8px;
+
+            background: #553e00;
+            border: 3px solid #111827;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            width: 45%;
+            height: 100%;
+            background: #f6df3c;
+        }
+
+        .bottom-center {
+            position: absolute;
+            left: 50%;
+            bottom: 18px;
+
+            transform: translateX(-50%);
+
+            width: 370px;
+            z-index: 4;
+        }
+
+        .event-box {
+            padding: 11px 15px;
+
+            background: linear-gradient(#222c3d, #111827);
+            border: 4px solid #090e17;
+            border-radius: 12px;
+
+            text-align: center;
+            font-weight: 900;
+
+            box-shadow: 0 6px 0 #00000066;
+        }
+
+        .event-title {
+            font-size: 20px;
+        }
+
+        .event-map {
+            color: #5cff73;
+            margin-top: 3px;
+        }
+
+        .bottom-right {
+            position: absolute;
+            right: 17px;
+            bottom: 18px;
+
+            width: 280px;
+            z-index: 4;
+        }
+
+        .play-button {
+            width: 100%;
+            padding: 22px;
+
+            background: linear-gradient(#ffd934, #f0a900);
+            border: 5px solid #111827;
+            border-radius: 13px;
+
+            color: #111827;
+            font-size: 34px;
+            font-weight: 1000;
+
+            cursor: pointer;
+            box-shadow: 0 7px 0 #00000066;
+        }
+
+        .play-button:active {
+            transform: translateY(4px);
+            box-shadow: 0 3px 0 #00000066;
+        }
+
+        @media (max-width: 900px) {
+            .side-button {
+                width: 66px;
+                font-size: 10px;
+            }
+
+            .character {
+                font-size: 145px;
+            }
+
+            .character-area {
+                top: 48%;
+            }
+
+            .bottom-left {
+                width: 190px;
+            }
+
+            .bottom-center {
+                width: 280px;
+            }
+
+            .bottom-right {
+                width: 210px;
+            }
+
+            .play-button {
+                font-size: 26px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<header class="topbar">
-    <div class="logo">⚔️ MEDIEVAL ARENA</div>
+<div class="game-lobby">
 
-    <div class="currency">
-        <div class="pill">🎟️ <span data-tickets>0</span></div>
-        <div class="pill">🪙 <span data-coins>0</span></div>
-        <div class="pill">🏆 <span data-wins>0</span></div>
-    </div>
-</header>
+    <div class="background-pattern"></div>
 
-<main class="screen">
+    <header class="top-bar">
 
-    <div class="hero">
+        <div class="profile-box">
 
-        <section class="card selected-hero">
-            <div id="heroIcon" class="character-icon"></div>
-            <div id="heroName" class="character-name"></div>
-            <div id="heroPower" class="power"></div>
-            <p id="heroDesc"></p>
-        </section>
+            <div class="profile-icon">👑</div>
 
-        <section>
+            <div class="profile-info">
 
-            <div class="menu-grid">
+                <div class="player-name">
+                    MedievalPlayer
+                </div>
 
-                <a class="btn btn-blue menu-tile" href="postacie.html">
-                    🧙
-                    <span>POSTACIE</span>
-                </a>
-
-                <a class="btn btn-gold menu-tile" href="sklep.html">
-                    🛒
-                    <span>SKLEP</span>
-                </a>
-
-                <button class="btn btn-dark menu-tile" onclick="dailyReward()">
-                    🎁
-                    <span>DZIENNA NAGRODA</span>
-                </button>
-
-                <button class="btn btn-dark menu-tile" onclick="resetGame()">
-                    ♻️
-                    <span>RESET ZAPISU</span>
-                </button>
+                <div class="trophy-line">
+                    🏆 <span data-wins>0</span>
+                </div>
 
             </div>
 
-            <a class="btn btn-green big-play" href="walka.html">
-                ⚔️ GRAJ
-            </a>
+        </div>
 
-        </section>
+        <div class="top-currencies">
+
+            <div class="currency-box">
+                🪙 <span data-coins>0</span>
+            </div>
+
+            <div class="currency-box">
+                🎟️ <span data-tickets>0</span>
+            </div>
+
+            <button class="menu-button">
+                ☰
+            </button>
+
+        </div>
+
+    </header>
+
+    <div class="rank-box">
+
+        <div class="rank-part">
+            RANGA 1
+        </div>
+
+        <div class="rank-part">
+            🏆 <span data-wins>0</span>
+        </div>
+
+        <div class="rank-part">
+            🛡️ 1
+        </div>
 
     </div>
 
-</main>
+    <div class="side-menu left">
 
-<nav class="bottom-nav">
-    <a class="active" href="gra.html">🏰<br>Lobby</a>
-    <a href="postacie.html">🧙<br>Postacie</a>
-    <a href="sklep.html">🛒<br>Sklep</a>
-    <a href="walka.html">⚔️<br>Gra</a>
-</nav>
+        <a href="sklep.html" class="side-button">
+            <span class="side-icon">🛒</span>
+            SKLEP
+        </a>
+
+        <a href="postacie.html" class="side-button relative">
+
+            <span class="notification">1</span>
+
+            <span class="side-icon">🧙</span>
+            POSTACIE
+        </a>
+
+        <button class="side-button relative" onclick="dailyReward()">
+
+            <span class="notification">2</span>
+
+            <span class="side-icon">🎁</span>
+            NAGRODY
+        </button>
+
+        <button class="side-button">
+            <span class="side-icon">📜</span>
+            WIEŚCI
+        </button>
+
+    </div>
+
+    <div class="side-menu right">
+
+        <button class="side-button">
+            <span class="side-icon">🤝</span>
+            ZNAJOMI
+        </button>
+
+        <button class="side-button">
+            <span class="side-icon">🛡️</span>
+            KLAN
+        </button>
+
+        <button class="side-button">
+            <span class="side-icon">💬</span>
+            CZAT
+        </button>
+
+    </div>
+
+    <main class="character-area">
+
+        <div class="character-shadow"></div>
+
+        <div id="heroIcon" class="character">
+            🧑‍🌾
+        </div>
+
+        <div id="heroName" class="character-title">
+            Farmer
+        </div>
+
+        <div id="heroPower" class="character-power">
+            Moc: Rzut widłami
+        </div>
+
+    </main>
+
+    <section class="bottom-left">
+
+        <div class="pass-box">
+
+            <div class="pass-title">
+                🎫 KRÓLEWSKA DROGA
+            </div>
+
+            <div>
+                45 / 100
+            </div>
+
+            <div class="progress-background">
+                <div class="progress-fill"></div>
+            </div>
+
+        </div>
+
+    </section>
+
+    <section class="bottom-center">
+
+        <div class="event-box">
+
+            <div class="event-title">
+                ⚔️ BITWA KRÓLESTW
+            </div>
+
+            <div class="event-map">
+                Zielona Dolina
+            </div>
+
+        </div>
+
+    </section>
+
+    <section class="bottom-right">
+
+        <button class="play-button" onclick="location.href='walka.html'">
+            GRAJ
+        </button>
+
+    </section>
+
+</div>
 
 <script src="dane.js"></script>
 <script src="common.js"></script>
@@ -83,8 +614,10 @@ function renderLobby() {
 
     document.getElementById("heroIcon").textContent = hero.ikona;
     document.getElementById("heroName").textContent = hero.nazwa;
-    document.getElementById("heroPower").textContent = "Moc: " + hero.moc;
-    document.getElementById("heroDesc").textContent = hero.opis;
+    document.getElementById("heroPower").textContent =
+        "Moc: " + hero.moc;
+
+    updateTopbar();
 }
 
 function dailyReward() {
@@ -103,16 +636,7 @@ function dailyReward() {
     saveState(state);
     updateTopbar();
 
-    alert("Otrzymujesz 3 bilety i 50 monet!");
-}
-
-function resetGame() {
-    const confirmation = confirm("Czy na pewno chcesz usunąć zapis gry?");
-
-    if (confirmation) {
-        localStorage.removeItem("medievalArenaState");
-        location.reload();
-    }
+    alert("Dostajesz 3 bilety i 50 monet!");
 }
 
 renderLobby();
