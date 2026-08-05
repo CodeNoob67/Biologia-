@@ -580,20 +580,24 @@
 
     <section class="bottom-center">
 
-        <div class="event-box">
+    <button class="event-box map-select-button" onclick="openMapMenu()">
 
-            <div class="event-title">
-                ⚔️ BITWA KRÓLESTW
-            </div>
-
-            <div class="event-map">
-                Zielona Dolina
-            </div>
-
+        <div class="event-title">
+            ⚔️ BITWA KRÓLESTW
         </div>
 
-    </section>
+        <div id="selectedMapName" class="event-map">
+            Zielona Dolina
+        </div>
 
+        <div class="change-map-text">
+            Kliknij, aby zmienić mapę
+        </div>
+
+    </button>
+
+</section>
+    
     <section class="bottom-right">
 
         <button class="play-button" onclick="location.href='walka.html'">
@@ -601,6 +605,60 @@
         </button>
 
     </section>
+
+    <div id="mapMenu" class="map-menu">
+
+    <div class="map-window">
+
+        <button class="close-map-menu" onclick="closeMapMenu()">
+            ✖
+        </button>
+
+        <h2>WYBIERZ MAPĘ</h2>
+
+        <div class="map-list">
+
+            <button class="map-card green-map" onclick="selectMap('green')">
+                <div class="map-preview">
+                    🌳
+                </div>
+
+                <strong>Zielona Dolina</strong>
+
+                <span>
+                    Trawiasta mapa
+                </span>
+            </button>
+
+            <button class="map-card red-map" onclick="selectMap('red')">
+                <div class="map-preview">
+                    🌋
+                </div>
+
+                <strong>Czerwona Twierdza</strong>
+
+                <span>
+                    Ognista mapa
+                </span>
+            </button>
+
+            <button class="map-card yellow-map" onclick="selectMap('yellow')">
+                <div class="map-preview">
+                    🏜️
+                </div>
+
+                <strong>Złota Pustynia</strong>
+
+                <span>
+                    Pustynna mapa
+                </span>
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
 
 </div>
 
