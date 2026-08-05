@@ -1,6 +1,4 @@
-from pathlib import Path
-
-html = """<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
@@ -69,9 +67,33 @@ button,input{font:inherit}.lobby{position:relative;width:100vw;height:100vh;over
 const ACCOUNTS_KEY="medievalArenaAccounts_v1",CURRENT_KEY="medievalArenaCurrentAccount_v1";
 const MAPS={green:"Zielona Dolina",red:"Czerwona Twierdza",yellow:"Złota Pustynia"};
 let pendingAvatar="";
+const $ = id => document.getElementById(id);
+
+const topAvatar = $("topAvatar");
+const topName = $("topName");
+const heroIcon = $("heroIcon");
+const heroName = $("heroName");
+const heroPower = $("heroPower");
+const mapName = $("mapName");
+
+const mapOverlay = $("mapOverlay");
+const profileOverlay = $("profileOverlay");
+const adminOverlay = $("adminOverlay");
+
+const profileName = $("profileName");
+const profilePreview = $("profilePreview");
+const profileMsg = $("profileMsg");
+const avatarFile = $("avatarFile");
+
+const targetName = $("targetName");
+const coinsInput = $("coinsInput");
+const ticketsInput = $("ticketsInput");
+const heroChecks = $("heroChecks");
+const adminMsg = $("adminMsg");
+
 
 function parse(v,f){try{return v?JSON.parse(v):f}catch{return f}}
-function norm(n){return String(n||"").trim().replace(/\\s+/g," ").toLowerCase()}
+function norm(n){return String(n||"").trim().replace(/\s+/g," ").toLowerCase()}
 function copyState(s){return{tickets:Number(s.tickets)||0,coins:Number(s.coins)||0,selected:s.selected||"farmer",unlocked:Array.isArray(s.unlocked)?[...new Set(s.unlocked)]:["farmer"],wins:Number(s.wins)||0,lastReward:s.lastReward||null}}
 function accounts(){return parse(localStorage.getItem(ACCOUNTS_KEY),{})}
 function saveAccounts(a){localStorage.setItem(ACCOUNTS_KEY,JSON.stringify(a))}
@@ -99,8 +121,8 @@ function closeProfile(){profileOverlay.classList.remove("show")}
 function removeAvatar(){pendingAvatar="";avatar(profilePreview,"");avatarFile.value=""}
 avatarFile.addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;if(f.size>8*1024*1024)return msg(profileMsg,"Zdjęcie jest za duże.",1);const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement("canvas"),x=c.getContext("2d"),size=256,m=Math.min(im.width,im.height);c.width=c.height=size;x.drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,size,size);pendingAvatar=c.toDataURL("image/jpeg",.82);avatar(profilePreview,pendingAvatar)};im.src=r.result};r.readAsDataURL(f)});
 function saveProfileData(){
- const name=profileName.value.trim().replace(/\\s+/g," ");
- if(name.length<3||name.length>20||!^[\\p{L}\\p{N}_ -]+$/u.test(name))return msg(profileMsg,"Niepoprawna nazwa.",1);
+ const name=profileName.value.trim().replace(/\s+/g," ");
+ if(name.length<3||name.length>20||!/^[\p{L}\p{N}_ -]+$/u.test(name))return msg(profileMsg,"Niepoprawna nazwa.",1);
  sync();const a=accounts(),old=ensureAccount(),key=norm(name);
  if(key!==old&&a[key])return msg(profileMsg,"Ta nazwa jest już zajęta.",1);
  const obj={...a[old],name,avatar:pendingAvatar,state:copyState(getState())};if(key!==old)delete a[old];a[key]=obj;
@@ -127,8 +149,4 @@ window.addEventListener("beforeunload",sync);
 ensureAccount();loadMap();render();
 </script>
 </body>
-</html>"""
-
-path = Path("/mnt/data/gra.html")
-path.write_text(html, encoding="utf-8")
-print("Utworzono:", path)
+</html>
