@@ -642,14 +642,11 @@ const canvas =
 const ctx =
     canvas.getContext("2d");
 
-const WORLD_WIDTH = 2700;
-const WORLD_HEIGHT = 2700;
+const WORLD_WIDTH = 5000;
+const WORLD_HEIGHT = 5000;
 
-const CAMERA_WIDTH =
-    canvas.width;
-
-const CAMERA_HEIGHT =
-    canvas.height;
+const CAMERA_WIDTH = canvas.width;
+const CAMERA_HEIGHT = canvas.height;
 
 const TOTAL_PLAYERS = 10;
 
@@ -732,7 +729,6 @@ const HERO_STATS = {
         projectileLife: 1100,
 
         melee: false,
-
         farmerThirdAttack: true
     },
 
@@ -873,7 +869,6 @@ const HERO_STATS = {
         cooldown: 4000,
 
         melee: false,
-
         vampire: true,
 
         transformationDuration: 1200,
@@ -913,349 +908,331 @@ const HERO_STATS = {
     }
 };
 
-const walls = [
-    {
-        x: 0,
-        y: 0,
-        w: WORLD_WIDTH,
-        h: 70
-    },
+const walls = [];
+const bushes = [];
+const waterPools = [];
+const spawnPoints = [];
 
-    {
-        x: 0,
-        y: WORLD_HEIGHT - 70,
-        w: WORLD_WIDTH,
-        h: 70
-    },
+function addRectangle(array, x, y, w, h) {
+    array.push({
+        x: x,
+        y: y,
+        w: w,
+        h: h
+    });
+}
 
-    {
-        x: 0,
-        y: 0,
-        w: 70,
-        h: WORLD_HEIGHT
-    },
+function addFourWaySymmetry(
+    array,
+    x,
+    y,
+    w,
+    h
+) {
+    addRectangle(
+        array,
+        x,
+        y,
+        w,
+        h
+    );
 
-    {
-        x: WORLD_WIDTH - 70,
-        y: 0,
-        w: 70,
-        h: WORLD_HEIGHT
-    },
+    addRectangle(
+        array,
+        WORLD_WIDTH - x - w,
+        y,
+        w,
+        h
+    );
 
-    {
-        x: 330,
-        y: 260,
-        w: 500,
-        h: 75
-    },
+    addRectangle(
+        array,
+        x,
+        WORLD_HEIGHT - y - h,
+        w,
+        h
+    );
 
-    {
-        x: 2370,
-        y: 260,
-        w: 500,
-        h: 75
-    },
+    addRectangle(
+        array,
+        WORLD_WIDTH - x - w,
+        WORLD_HEIGHT - y - h,
+        w,
+        h
+    );
+}
 
-    {
-        x: 330,
-        y: 1465,
-        w: 500,
-        h: 75
-    },
+function buildArenaMap() {
+    walls.length = 0;
+    bushes.length = 0;
+    waterPools.length = 0;
+    spawnPoints.length = 0;
 
-    {
-        x: 2370,
-        y: 1465,
-        w: 500,
-        h: 75
-    },
+    const border = 100;
 
-    {
-        x: 260,
-        y: 500,
-        w: 75,
-        h: 360
-    },
+    addRectangle(
+        walls,
+        0,
+        0,
+        WORLD_WIDTH,
+        border
+    );
 
-    {
-        x: 2865,
-        y: 500,
-        w: 75,
-        h: 360
-    },
+    addRectangle(
+        walls,
+        0,
+        WORLD_HEIGHT - border,
+        WORLD_WIDTH,
+        border
+    );
 
-    {
-        x: 260,
-        y: 940,
-        w: 75,
-        h: 360
-    },
+    addRectangle(
+        walls,
+        0,
+        0,
+        border,
+        WORLD_HEIGHT
+    );
 
-    {
-        x: 2865,
-        y: 940,
-        w: 75,
-        h: 360
-    },
+    addRectangle(
+        walls,
+        WORLD_WIDTH - border,
+        0,
+        border,
+        WORLD_HEIGHT
+    );
 
-    {
-        x: 730,
-        y: 540,
-        w: 390,
-        h: 75
-    },
+    addFourWaySymmetry(
+        walls,
+        420,
+        420,
+        620,
+        90
+    );
 
-    {
-        x: 2080,
-        y: 540,
-        w: 390,
-        h: 75
-    },
+    addFourWaySymmetry(
+        walls,
+        420,
+        780,
+        90,
+        560
+    );
 
-    {
-        x: 730,
-        y: 1185,
-        w: 390,
-        h: 75
-    },
+    addFourWaySymmetry(
+        walls,
+        1100,
+        850,
+        500,
+        90
+    );
 
-    {
-        x: 2080,
-        y: 1185,
-        w: 390,
-        h: 75
-    },
+    addFourWaySymmetry(
+        walls,
+        850,
+        1500,
+        90,
+        500
+    );
 
-    {
-        x: 1040,
-        y: 760,
-        w: 430,
-        h: 70
-    },
+    addFourWaySymmetry(
+        walls,
+        1450,
+        1450,
+        520,
+        90
+    );
 
-    {
-        x: 1730,
-        y: 760,
-        w: 430,
-        h: 70
-    },
+    addRectangle(
+        walls,
+        2180,
+        1800,
+        640,
+        90
+    );
 
-    {
-        x: 1040,
-        y: 970,
-        w: 430,
-        h: 70
-    },
+    addRectangle(
+        walls,
+        2180,
+        3110,
+        640,
+        90
+    );
 
-    {
-        x: 1730,
-        y: 970,
-        w: 430,
-        h: 70
-    },
+    addRectangle(
+        walls,
+        1800,
+        2180,
+        90,
+        640
+    );
 
-    {
-        x: 1530,
-        y: 650,
-        w: 140,
-        h: 500
-    },
+    addRectangle(
+        walls,
+        3110,
+        2180,
+        90,
+        640
+    );
 
-    {
-        x: 470,
-        y: 780,
-        w: 300,
-        h: 70
-    },
+    addRectangle(
+        walls,
+        2320,
+        2320,
+        360,
+        360
+    );
 
-    {
-        x: 2430,
-        y: 780,
-        w: 300,
-        h: 70
-    },
+    addFourWaySymmetry(
+        waterPools,
+        650,
+        1450,
+        380,
+        500
+    );
 
-    {
-        x: 470,
-        y: 950,
-        w: 300,
-        h: 70
-    },
+    addFourWaySymmetry(
+        waterPools,
+        1550,
+        500,
+        520,
+        260
+    );
 
-    {
-        x: 2430,
-        y: 950,
-        w: 300,
-        h: 70
-    }
-];
+    addRectangle(
+        waterPools,
+        2050,
+        1100,
+        900,
+        280
+    );
 
-const bushes = [
-    {
-        x: 120,
-        y: 120,
-        w: 470,
-        h: 100
-    },
+    addRectangle(
+        waterPools,
+        2050,
+        3620,
+        900,
+        280
+    );
 
-    {
-        x: 2610,
-        y: 120,
-        w: 470,
-        h: 100
-    },
+    addFourWaySymmetry(
+        bushes,
+        180,
+        180,
+        600,
+        150
+    );
 
-    {
-        x: 120,
-        y: 1580,
-        w: 470,
-        h: 100
-    },
+    addFourWaySymmetry(
+        bushes,
+        500,
+        550,
+        520,
+        120
+    );
 
-    {
-        x: 2610,
-        y: 1580,
-        w: 470,
-        h: 100
-    },
+    addFourWaySymmetry(
+        bushes,
+        600,
+        1000,
+        130,
+        600
+    );
 
-    {
-        x: 360,
-        y: 350,
-        w: 500,
-        h: 90
-    },
+    addFourWaySymmetry(
+        bushes,
+        1150,
+        1050,
+        620,
+        120
+    );
 
-    {
-        x: 2340,
-        y: 350,
-        w: 500,
-        h: 90
-    },
+    addFourWaySymmetry(
+        bushes,
+        1250,
+        1750,
+        480,
+        120
+    );
 
-    {
-        x: 360,
-        y: 1360,
-        w: 500,
-        h: 90
-    },
+    addRectangle(
+        bushes,
+        1970,
+        1650,
+        1060,
+        120
+    );
 
-    {
-        x: 2340,
-        y: 1360,
-        w: 500,
-        h: 90
-    },
+    addRectangle(
+        bushes,
+        1970,
+        3230,
+        1060,
+        120
+    );
 
-    {
-        x: 650,
-        y: 650,
-        w: 390,
-        h: 80
-    },
+    addRectangle(
+        bushes,
+        1650,
+        1970,
+        120,
+        1060
+    );
 
-    {
-        x: 2160,
-        y: 650,
-        w: 390,
-        h: 80
-    },
+    addRectangle(
+        bushes,
+        3230,
+        1970,
+        120,
+        1060
+    );
 
-    {
-        x: 650,
-        y: 1070,
-        w: 390,
-        h: 80
-    },
+    addRectangle(
+        bushes,
+        2120,
+        2120,
+        760,
+        120
+    );
 
-    {
-        x: 2160,
-        y: 1070,
-        w: 390,
-        h: 80
-    },
+    addRectangle(
+        bushes,
+        2120,
+        2760,
+        760,
+        120
+    );
 
-    {
-        x: 1120,
-        y: 520,
-        w: 390,
-        h: 70
-    },
+    spawnPoints.push(
+        { x: 280, y: 280 },
+        { x: 1250, y: 300 },
+        { x: 2500, y: 300 },
+        { x: 3750, y: 300 },
+        { x: 4720, y: 280 },
 
-    {
-        x: 1690,
-        y: 520,
-        w: 390,
-        h: 70
-    },
+        { x: 280, y: 1250 },
+        { x: 4720, y: 1250 },
 
-    {
-        x: 1120,
-        y: 1210,
-        w: 390,
-        h: 70
-    },
+        { x: 280, y: 2500 },
+        { x: 4720, y: 2500 },
 
-    {
-        x: 1690,
-        y: 1210,
-        w: 390,
-        h: 70
-    },
+        { x: 280, y: 3750 },
+        { x: 4720, y: 3750 },
 
-    {
-        x: 1340,
-        y: 850,
-        w: 520,
-        h: 100
-    }
-];
+        { x: 280, y: 4720 },
+        { x: 1250, y: 4700 },
+        { x: 2500, y: 4700 },
+        { x: 3750, y: 4700 },
+        { x: 4720, y: 4720 },
 
-const waterPools = [
-    {
-        x: 1280,
-        y: 150,
-        w: 640,
-        h: 150
-    },
+        { x: 1150, y: 2500 },
+        { x: 3850, y: 2500 },
 
-    {
-        x: 1280,
-        y: 1500,
-        w: 640,
-        h: 150
-    },
+        { x: 2500, y: 1150 },
+        { x: 2500, y: 3850 }
+    );
+}
 
-    {
-        x: 500,
-        y: 640,
-        w: 190,
-        h: 220
-    },
-
-    {
-        x: 2510,
-        y: 640,
-        w: 190,
-        h: 220
-    },
-
-    {
-        x: 500,
-        y: 940,
-        w: 190,
-        h: 220
-    },
-
-    {
-        x: 2510,
-        y: 940,
-        w: 190,
-        h: 220
-    }
-];
-
-const spawnPoints = [
+buildArenaMap();
     {
         x: 180,
         y: 180
