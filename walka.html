@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Walka</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="topbar">
+    <div class="logo">⚔️ ARENA</div>
+
+    <div class="currency">
+        <div class="pill">🎟️ <span data-tickets>0</span></div>
+        <div class="pill">🏆 <span data-wins>0</span></div>
+    </div>
+</header>
+
+<main class="screen">
+
+    <div class="hud">
+
+        <div class="pill" id="heroHud"></div>
+
+        <div class="pill">
+            Ruch: WASD lub strzałki | Atak: spacja
+        </div>
+
+        <button class="btn btn-red" onclick="startGame()">
+            NOWA WALKA
+        </button>
+
+    </div>
+
+    <div class="arena-wrap">
+        <canvas id="game" width="900" height="540"></canvas>
+    </div>
+
+    <div class="mobile-controls">
+        <button data-key="arrowup">⬆️</button>
+        <button class="attack-mobile" data-key=" ">⚔️</button>
+        <button data-key="arrowleft">⬅️</button>
+        <button data-key="arrowdown">⬇️</button>
+        <button data-key="arrowright">➡️</button>
+    </div>
+
+</main>
+
+<nav class="bottom-nav">
+    <a href="gra.html">🏰<br>Lobby</a>
+    <a href="postacie.html">🧙<br>Postacie</a>
+    <a href="sklep.html">🛒<br>Sklep</a>
+    <a class="active" href="walka.html">⚔️<br>Gra</a>
+</nav>
+
+<script src="dane.js"></script>
+<script src="common.js"></script>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+const keys = {};
+
+let player;
+let enemy;
+let projectiles = [];
+let enemyProjectiles = [];
+
+let gameOver = false;
+let lastAttack = 0;
+let lastEnemyAttack = 0;
+
+window.addEventListener("keydown", function(event) {
+    const key = event.key.toLowerCase();
+
+    keys[key] = true;
+
+    if (
+        key === " " ||
+        key === "arrowup" ||
+        key === "arrowdown" ||
+        key === "arrowleft" ||
+        key === "arrowright"
+    ) {
+        event.preventDefault();
+    }
+});
+
+window.addEventListener("keyup", function(event) {
+    keys[event.key.toLowerCase()] = false;
+});
+
+document.querySelectorAll("[data-key]").forEach(function(button) {
+    const key = button.dataset.key;
+
+    button.addEventListener("pointerdown", function() {
+        keys[key] = true;
+    });
+
+    button.addEventListener("pointerup", function() {
+        keys[key] = false;
+    });
+
+    button.addEventListener("pointerleave", function() {
+        keys[key] = false;
+    });
+});
+
+function startGame() {
+    const state = getState();
+    const hero = getHero(state.selected);
+
+    document.getElementById("heroHud").textContent =
+        hero.ikona + " " + hero.nazwa + " — " + hero.moc;
+
+    player = {
+        x: 130,
+        y: 270,
+        radius: 23,
+        hp: hero.hp,
+        maxHp: hero.hp,
+        speed: hero.speed,
+        damage: hero.damage,
+        range: hero.range,
+        cooldown: hero.cooldown,
+        icon: hero.ikona,
+        id: hero.id
+    };
+
+    enemy = {
+        x: 760,
+        y: 270,
+        radius: 25,
+        hp: 170,
+        maxHp: 170,
+        speed: 2.2,
+        damage: 13,
+        icon: "👹"
+    };
+
+    projectiles = [];
+    enemyProjectiles = [];
+
+    gameOver = false;
+    lastAttack = 0;
+    lastEnemyAttack = 0;
+}
+
+function clamp(value, minimum, maximum) {
+    return Math.max(minimum, Math.min(maximum, value));
+}
+
+function update() {
+    if (gameOver) {
+        return;
+    }
+
+    let dx = 0;
+    let dy = 0;
+
+    if (keys["w"] || keys["arrowup"]) {
+        dy -= 1;
+    }
+
+    if (keys["s"] || keys["arrowdown"]) {
+        dy += 1;
+    }
+
+    if (keys["a"] || keys["arrowleft"]) {
+        dx -= 1;
+    }
+
+    if (keys["d"] || keys["arrowright"]) {
+        dx += 1;
+    }
+
+    if (dx !== 0 || dy !== 0) {
+        const length = Math.hypot(dx, dy);
+
+        player.x += dx / length * player.speed;
+        player.y += dy / length * player.speed;
+    }
+
+    player.x = clamp(player.x, 35, canvas.width - 35);
+    player.y = clamp(player.y, 35, canvas.height - 35);
+
+    const currentTime = performance.now();
+
+    if (keys[" "] && currentTime - lastAttack > player.cooldown) {
+        attack(currentTime);
+    }
+
+    moveEnemy(currentTime);
+
+    moveProjectiles(projectiles, enemy);
+    moveProjectiles(enemyProjectiles, player);
+
+    if (player.hp <= 0) {
+        endGame(false);
+    }
+
+    if (enemy.hp <= 0) {
+        endGame(true);
+    }
+}
+
+function moveEnemy(currentTime) {
+    const dx = player.x - enemy.x;
+    const dy = player.y - enemy.y;
+
+    const distance = Math.hypot(dx, dy) || 1;
+
+    if (distance > 120) {
+        enemy.x += dx / distance * enemy.speed;
+        enemy.y += dy / distance * enemy.speed;
+    }
+
+    if (currentTime - lastEnemyAttack > 900) {
+        lastEnemyAttack = currentTime;
+
+        enemyProjectiles.push({
+            x: enemy.x,
+            y: enemy.y,
+            vx: dx / distance * 4.2,
+            vy: dy / distance * 4.2,
+            radius: 8,
+            damage: enemy.damage
+        });
+    }
+}
+
+function attack(currentTime) {
+    lastAttack = currentTime;
+
+    const dx = enemy.x - player.x;
+    const dy = enemy.y - player.y;
+
+    const distance = Math.hypot(dx, dy) || 1;
+
+    if (player.id === "rycerz" || player.id === "berserker") {
+
+        if (distance <= player.range + enemy.radius) {
+            enemy.hp -= player.damage;
+
+            if (player.id === "rycerz") {
+                enemy.x += dx / distance * 45;
+                enemy.y += dy / distance * 45;
+            }
+        }
+
+    } else {
+
+        let projectileSpeed = 8;
+        let projectileRadius = 7;
+
+        if (player.id === "mag") {
+            projectileSpeed = 6;
+            projectileRadius = 13;
+        }
+
+        projectiles.push({
+            x: player.x,
+            y: player.y,
+            vx: dx / distance * projectileSpeed,
+            vy: dy / distance * projectileSpeed,
+            radius: projectileRadius,
+            damage: player.damage
+        });
+    }
+}
+
+function moveProjectiles(array, target) {
+    for (let i = array.length - 1; i >= 0; i--) {
+        const projectile = array[i];
+
+        projectile.x += projectile.vx;
+        projectile.y += projectile.vy;
+
+        const distance = Math.hypot(
+            projectile.x - target.x,
+            projectile.y - target.y
+        );
+
+        if (distance < projectile.radius + target.radius) {
+            target.hp -= projectile.damage;
+            array.splice(i, 1);
+            continue;
+        }
+
+        if (
+            projectile.x < 0 ||
+            projectile.y < 0 ||
+            projectile.x > canvas.width ||
+            projectile.y > canvas.height
+        ) {
+            array.splice(i, 1);
+        }
+    }
+}
+
+function endGame(win) {
+    gameOver = true;
+
+    if (win) {
+        const state = getState();
+
+        state.tickets += 2;
+        state.coins += 25;
+        state.wins += 1;
+
+        saveState(state);
+        updateTopbar();
+
+        setTimeout(function() {
+            alert("Zwycięstwo! Otrzymujesz 2 bilety i 25 monet.");
+        }, 50);
+
+    } else {
+
+        setTimeout(function() {
+            alert("Przegrana. Spróbuj ponownie!");
+        }, 50);
+    }
+}
+
+function drawHealthBar(x, y, width, height, value, maximum, color) {
+    ctx.fillStyle = "#251f25";
+    ctx.fillRect(x, y, width, height);
+
+    ctx.fillStyle = color;
+    ctx.fillRect(
+        x,
+        y,
+        width * Math.max(0, value / maximum),
+        height
+    );
+
+    ctx.strokeStyle = "white";
+    ctx.strokeRect(x, y, width, height);
+}
+
+function drawArena() {
+    ctx.fillStyle = "#6f874b";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    for (let x = 40; x < canvas.width; x += 100) {
+        for (let y = 45; y < canvas.height; y += 95) {
+            ctx.fillStyle = "#789153";
+            ctx.fillRect(x, y, 46, 28);
+        }
+    }
+
+    ctx.fillStyle = "#9a7a4e";
+    ctx.fillRect(420, 80, 60, 150);
+    ctx.fillRect(420, 315, 60, 150);
+}
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    drawArena();
+
+    drawHealthBar(
+        25,
+        20,
+        300,
+        22,
+        player.hp,
+        player.maxHp,
+        "#45d45b"
+    );
+
+    drawHealthBar(
+        canvas.width - 325,
+        20,
+        300,
+        22,
+        enemy.hp,
+        enemy.maxHp,
+        "#e54b4b"
+    );
+
+    ctx.font = "42px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    ctx.fillText(player.icon, player.x, player.y);
+    ctx.fillText(enemy.icon, enemy.x, enemy.y);
+
+    projectiles.forEach(function(projectile) {
+        ctx.beginPath();
+
+        ctx.arc(
+            projectile.x,
+            projectile.y,
+            projectile.radius,
+            0,
+            Math.PI * 2
+        );
+
+        if (player.id === "mag") {
+            ctx.fillStyle = "#ff8b2d";
+        } else {
+            ctx.fillStyle = "#f5e1a4";
+        }
+
+        ctx.fill();
+    });
+
+    enemyProjectiles.forEach(function(projectile) {
+        ctx.beginPath();
+
+        ctx.arc(
+            projectile.x,
+            projectile.y,
+            projectile.radius,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fillStyle = "#8a2be2";
+        ctx.fill();
+    });
+
+    if (gameOver) {
+        ctx.fillStyle = "#00000099";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = "white";
+        ctx.font = "bold 48px Arial";
+
+        if (player.hp > 0) {
+            ctx.fillText(
+                "ZWYCIĘSTWO!",
+                canvas.width / 2,
+                canvas.height / 2
+            );
+        } else {
+            ctx.fillText(
+                "PRZEGRANA",
+                canvas.width / 2,
+                canvas.height / 2
+            );
+        }
+    }
+}
+
+function gameLoop() {
+    update();
+    draw();
+
+    requestAnimationFrame(gameLoop);
+}
+
+startGame();
+gameLoop();
+</script>
+
+</body>
+</html>
