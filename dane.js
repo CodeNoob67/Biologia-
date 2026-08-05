@@ -70,21 +70,17 @@ const BOHATEROWIE = [
     },
 
     {
-        {
-    id: "czarodziej",
-    nazwa: "Czarodziej",
-    ikona: "🧙‍♂️",
-    moc: "Magiczna kula",
-    opis:
-        "Mityczny wojownik, który strzela potężnymi kulami magii.",
-
-    hp: 125,
-    damage: 42,
-    speed: 1.55,
-
-    cenaMonety: 3200,
-    cenaBilety: 85
-},
+        id: "czarodziej",
+        nazwa: "Czarodziej",
+        ikona: "🧙‍♂️",
+        moc: "Magiczna kula",
+        opis: "Mityczny wojownik, który strzela potężnymi kulami magii.",
+        hp: 125,
+        damage: 42,
+        speed: 1.55,
+        range: 240,
+        cooldown: 700,
+        ticketCost: 32
     },
 
     {
