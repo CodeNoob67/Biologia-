@@ -1813,7 +1813,7 @@ function createProjectile(
         attacker.heroId ===
         "wiedzma"
     ) {
-        color = "FFFFC5";
+        color = "#000000";
     }
 
     projectiles.push({
@@ -2997,12 +2997,16 @@ function drawProjectiles() {
                 projectile.color;
 
             ctx.fill();
+            
+if (projectile.owner.heroId === "wiedzma") {
+    ctx.strokeStyle = "#000000";   // kolor obramowania
+    ctx.lineWidth = 4;             // grubość
+} else {
+    ctx.strokeStyle = "#111827";
+    ctx.lineWidth = 2;
+}
 
-            ctx.strokeStyle =
-                "#111827";
-
-            ctx.lineWidth = 2;
-            ctx.stroke();
+ctx.stroke();
 
             
         }
