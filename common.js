@@ -8,8 +8,8 @@ function getState() {
     const newState = {
         tickets: 12,
         coins: 150,
-        selected: "rycerz",
-        unlocked: ["rycerz"],
+ selected: "farmer",
+unlocked: ["farmer"],
         wins: 0,
         lastReward: null
     };
