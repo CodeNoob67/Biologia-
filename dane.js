@@ -144,13 +144,13 @@ const BOHATEROWIE = [
     },
 
        {
-        id: "tesla",
-        nazwa: "Tesla",
-        ikona: "⚡",
+        id: "Muzyk",
+        nazwa: "Muzyk",
+        ikona: "🎵",
         rzadkosc: "mityczny",
-        moc: "Elektryczne Ultra",
+        moc: "Muzyczne Ultra",
         opis:
-            "Tesla strzela szerokimi falami elektryczności, które rozszerzają się wraz z odległością. Co piąty atak jest żółtym Ultra, które porusza się szybciej i zatrzymuje trafionych wrogów na 1 sekundę.",
+            "Muzyk strzela szerokimi falami elektryczności, które rozszerzają się wraz z odległością. Co piąty atak jest żółtym Ultra, które porusza się szybciej i zatrzymuje trafionych wrogów na 1 sekundę.",
         hp: 150,
         damage: 27,
         speed: 3.4,
