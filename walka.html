@@ -2,6 +2,7 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
+
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
@@ -385,14 +386,18 @@ let camera = {
 };
 
 let selectedMap;
+
 let fighters = [];
 let projectiles = [];
 let effects = [];
 
 let player = null;
 let winner = null;
+
 let matchFinished = false;
 let trophiesAwarded = false;
+
+let summonNumber = 0;
 
 const MAPS = {
     green: {
@@ -433,9 +438,11 @@ const HERO_STATS = {
         speed: 1.7,
         range: 330,
         cooldown: 650,
+
         projectileSpeed: 7,
         projectileWidth: 9,
         projectileLife: 1050,
+
         melee: false,
         farmerThirdAttack: true
     },
@@ -446,10 +453,13 @@ const HERO_STATS = {
         speed: 1.4,
         range: 88,
         cooldown: 650,
+
         projectileSpeed: 0,
         projectileWidth: 0,
         projectileLife: 0,
+
         melee: true,
+
         lowHpShield: true,
         shieldThreshold: 0.3,
         shieldReduction: 0.3
@@ -461,12 +471,33 @@ const HERO_STATS = {
         speed: 1.7,
         range: 720,
         cooldown: 750,
+
         projectileSpeed: 10,
         projectileWidth: 7,
         projectileLife: 1650,
+
         melee: false,
+
         fastThirdArrow: true,
         fastArrowMultiplier: 2.8
+    },
+
+    ksiadz: {
+        hp: 185,
+        damage: 25,
+        speed: 1.7,
+        range: 300,
+        cooldown: 700,
+
+        projectileSpeed: 7,
+        projectileWidth: 9,
+        projectileLife: 1000,
+
+        melee: false,
+
+        summonsGhosts: true,
+        summonCooldown: 3000,
+        maximumSummons: 5
     },
 
     goblin: {
@@ -475,10 +506,13 @@ const HERO_STATS = {
         speed: 2.2,
         range: 76,
         cooldown: 480,
+
         projectileSpeed: 0,
         projectileWidth: 0,
         projectileLife: 0,
+
         melee: true,
+
         lowHpDamageBonus: true,
         damageBonusThreshold: 0.5,
         damageBonusMultiplier: 1.25
@@ -490,13 +524,31 @@ const HERO_STATS = {
         speed: 1.05,
         range: 350,
         cooldown: 950,
+
         projectileSpeed: 5,
         projectileWidth: 15,
         projectileLife: 1050,
+
         melee: false,
+
         shockwaveEvery: 5,
         attackShockwaveRadius: 190,
         attackShockwaveDamage: 30
+    },
+
+    duch: {
+        hp: 90,
+        damage: 40,
+        speed: 2.25,
+        range: 78,
+        cooldown: 520,
+
+        projectileSpeed: 0,
+        projectileWidth: 0,
+        projectileLife: 0,
+
+        melee: true,
+        canPassWalls: true
     },
 
     czarodziej: {
@@ -505,10 +557,13 @@ const HERO_STATS = {
         speed: 1.7,
         range: 690,
         cooldown: 820,
+
         projectileSpeed: 8.5,
         projectileWidth: 12,
         projectileLife: 1500,
+
         melee: false,
+
         curseEvery: 4,
         curseDuration: 3000,
         curseMultiplier: 1.2
@@ -520,25 +575,28 @@ const HERO_STATS = {
         speed: 1.5,
         range: 580,
         cooldown: 850,
+
         projectileSpeed: 8,
         projectileWidth: 10,
         projectileLife: 1450,
+
         melee: false,
         tripleShot: true
     },
 
- wiedzma: {
-    hp: 105,
-    damage: 7,
-    speed: 2,
-    range: 750,
-    cooldown: 100,
-    projectileSpeed: 15,
-    projectileWidth: 20,
-    projectileLife: 700,
-    melee: false
-}
-    
+    wiedzma: {
+        hp: 105,
+        damage: 7,
+        speed: 2,
+        range: 750,
+        cooldown: 50,
+
+        projectileSpeed: 28,
+        projectileWidth: 3,
+        projectileLife: 700,
+
+        melee: false
+    }
 };
 
 const walls = [
@@ -601,14 +659,36 @@ const bushes = [
 
 const spawnPositions = [
     { x: 180, y: 180 },
-    { x: WORLD_WIDTH / 2, y: 180 },
-    { x: WORLD_WIDTH - 180, y: 180 },
 
-    { x: 180, y: WORLD_HEIGHT / 2 },
-    { x: WORLD_WIDTH - 180, y: WORLD_HEIGHT / 2 },
+    {
+        x: WORLD_WIDTH / 2,
+        y: 180
+    },
 
-    { x: 220, y: WORLD_HEIGHT - 220 },
-    { x: WORLD_WIDTH - 220, y: WORLD_HEIGHT - 220 },
+    {
+        x: WORLD_WIDTH - 180,
+        y: 180
+    },
+
+    {
+        x: 180,
+        y: WORLD_HEIGHT / 2
+    },
+
+    {
+        x: WORLD_WIDTH - 180,
+        y: WORLD_HEIGHT / 2
+    },
+
+    {
+        x: 220,
+        y: WORLD_HEIGHT - 220
+    },
+
+    {
+        x: WORLD_WIDTH - 220,
+        y: WORLD_HEIGHT - 220
+    },
 
     {
         x: WORLD_WIDTH / 2 - 480,
@@ -698,7 +778,10 @@ canvas.addEventListener(
     }
 );
 
-function randomNumber(minimum, maximum) {
+function randomNumber(
+    minimum,
+    maximum
+) {
     return (
         Math.random() *
         (
@@ -718,7 +801,10 @@ function randomItem(array) {
     ];
 }
 
-function distance(first, second) {
+function distance(
+    first,
+    second
+) {
     return Math.hypot(
         first.x - second.x,
         first.y - second.y
@@ -754,10 +840,23 @@ function rotateDirection(
     };
 }
 
-function getCharacterStats(heroId) {
+function getCharacterStats(
+    heroId
+) {
     return (
         HERO_STATS[heroId] ||
         HERO_STATS.farmer
+    );
+}
+
+function getAliveContestants() {
+    return fighters.filter(
+        function(fighter) {
+            return (
+                fighter.alive &&
+                !fighter.isSummon
+            );
+        }
     );
 }
 
@@ -813,8 +912,15 @@ function createFighter(
         melee:
             Boolean(stats.melee),
 
+        canPassWalls:
+            Boolean(
+                stats.canPassWalls
+            ),
+
         tripleShot:
-            Boolean(stats.tripleShot),
+            Boolean(
+                stats.tripleShot
+            ),
 
         farmerThirdAttack:
             Boolean(
@@ -869,12 +975,31 @@ function createFighter(
         curseMultiplier:
             stats.curseMultiplier || 1,
 
+        summonsGhosts:
+            Boolean(
+                stats.summonsGhosts
+            ),
+
+        summonCooldown:
+            stats.summonCooldown || 0,
+
+        maximumSummons:
+            stats.maximumSummons || 0,
+
+        lastSummon:
+            performance.now(),
+
         attackCounter: 0,
 
         cursedUntil: 0,
+
         receivedDamageMultiplier: 1,
 
         isPlayer: isPlayer,
+        isSummon: false,
+
+        summoner: null,
+
         alive: true,
         hidden: false,
 
@@ -891,7 +1016,10 @@ function createFighter(
 
         nextDecision:
             performance.now() +
-            randomNumber(700, 2200),
+            randomNumber(
+                700,
+                2200
+            ),
 
         color:
             isPlayer
@@ -902,6 +1030,147 @@ function createFighter(
                     55%
                 )`
     };
+}
+
+function createSummonedGhost(
+    priest
+) {
+    summonNumber++;
+
+    const angle =
+        Math.random() *
+        Math.PI *
+        2;
+
+    const summonDistance = 60;
+
+    const ghost = {
+        id:
+            "summon-" +
+            summonNumber,
+
+        name:
+            "DUCH",
+
+        heroId:
+            "summoned-ghost",
+
+        heroName:
+            "Przywołany Duch",
+
+        icon:
+            "👻",
+
+        x:
+            priest.x +
+            Math.cos(angle) *
+            summonDistance,
+
+        y:
+            priest.y +
+            Math.sin(angle) *
+            summonDistance,
+
+        radius: 20,
+
+        hp: 18,
+        maxHp: 18,
+
+        damage: 8,
+        speed: 1.8,
+        range: 65,
+        cooldown: 650,
+
+        projectileSpeed: 0,
+        projectileWidth: 0,
+        projectileLife: 0,
+
+        melee: true,
+        canPassWalls: true,
+
+        tripleShot: false,
+        farmerThirdAttack: false,
+        lowHpShield: false,
+        fastThirdArrow: false,
+        lowHpDamageBonus: false,
+
+        shockwaveEvery: 0,
+        curseEvery: 0,
+
+        summonsGhosts: false,
+
+        attackCounter: 0,
+
+        cursedUntil: 0,
+        receivedDamageMultiplier: 1,
+
+        isPlayer: false,
+        isSummon: true,
+
+        summoner: priest,
+
+        alive: true,
+        hidden: false,
+
+        lastAttack: 0,
+
+        target: null,
+        behavior: "attack",
+
+        directionX: 0,
+        directionY: 0,
+
+        nextDecision: 0,
+
+        color: "#9cecff"
+    };
+
+    ghost.x =
+        Math.max(
+            ghost.radius,
+            Math.min(
+                WORLD_WIDTH -
+                ghost.radius,
+                ghost.x
+            )
+        );
+
+    ghost.y =
+        Math.max(
+            ghost.radius,
+            Math.min(
+                WORLD_HEIGHT -
+                ghost.radius,
+                ghost.y
+            )
+        );
+
+    fighters.push(ghost);
+
+    createTextEffect(
+        priest.x,
+        priest.y - 60,
+        "PRZYWOŁANIE!",
+        "#c9f7ff"
+    );
+
+    effects.push({
+        type: "circle",
+
+        x: ghost.x,
+        y: ghost.y,
+
+        radius: 10,
+        maximumRadius: 65,
+
+        color: "#a9efff",
+
+        born:
+            performance.now(),
+
+        life: 450,
+        lineWidth: 8
+    });
 }
 
 function startGame() {
@@ -915,7 +1184,9 @@ function startGame() {
         MAPS.green;
 
     document
-        .getElementById("mapName")
+        .getElementById(
+            "mapName"
+        )
         .textContent =
         selectedMap.name;
 
@@ -923,7 +1194,9 @@ function startGame() {
         getState();
 
     let selectedHero =
-        getHero(state.selected);
+        getHero(
+            state.selected
+        );
 
     if (
         !selectedHero ||
@@ -947,6 +1220,8 @@ function startGame() {
     winner = null;
     matchFinished = false;
     trophiesAwarded = false;
+
+    summonNumber = 0;
 
     mouse.down = false;
 
@@ -1006,11 +1281,8 @@ function startGame() {
 
 function updateInformation() {
     const alive =
-        fighters.filter(
-            function(fighter) {
-                return fighter.alive;
-            }
-        ).length;
+        getAliveContestants()
+            .length;
 
     document
         .getElementById(
@@ -1032,18 +1304,50 @@ function updateInformation() {
             player.maxHp *
             player.shieldThreshold
     ) {
-        extra += " | 🛡️ TARCZA";
+        extra +=
+            " | 🛡️ TARCZA";
     }
 
     if (
         player.cursedUntil >
         performance.now()
     ) {
-        extra += " | 🔮 KLĄTWA";
+        extra +=
+            " | 🔮 KLĄTWA";
     }
 
     if (player.hidden) {
-        extra += " | 🌿 UKRYTY";
+        extra +=
+            " | 🌿 UKRYTY";
+    }
+
+    if (
+        player.summonsGhosts
+    ) {
+        const summons =
+            fighters.filter(
+                function(fighter) {
+                    return (
+                        fighter.alive &&
+                        fighter.isSummon &&
+                        fighter.summoner ===
+                            player
+                    );
+                }
+            ).length;
+
+        extra +=
+            " | 👻 " +
+            summons +
+            "/" +
+            player.maximumSummons;
+    }
+
+    if (
+        player.canPassWalls
+    ) {
+        extra +=
+            " | 🧱 PRZENIKANIE";
     }
 
     document
@@ -1057,7 +1361,9 @@ function updateInformation() {
         " | ❤️ " +
         Math.max(
             0,
-            Math.ceil(player.hp)
+            Math.ceil(
+                player.hp
+            )
         ) +
         extra;
 }
@@ -1168,6 +1474,7 @@ function moveFighter(
         );
 
     if (
+        fighter.canPassWalls ||
         !collidesWithWall(
             nextX,
             fighter.y,
@@ -1189,6 +1496,7 @@ function moveFighter(
         );
 
     if (
+        fighter.canPassWalls ||
         !collidesWithWall(
             fighter.x,
             nextY,
@@ -1251,6 +1559,45 @@ function canSeeFighter(
     );
 }
 
+function isEnemy(
+    observer,
+    target
+) {
+    if (
+        !target.alive ||
+        target === observer
+    ) {
+        return false;
+    }
+
+    if (
+        observer.isSummon &&
+        target ===
+            observer.summoner
+    ) {
+        return false;
+    }
+
+    if (
+        target.isSummon &&
+        target.summoner ===
+            observer
+    ) {
+        return false;
+    }
+
+    if (
+        observer.isSummon &&
+        target.isSummon &&
+        observer.summoner ===
+            target.summoner
+    ) {
+        return false;
+    }
+
+    return true;
+}
+
 function movePlayer() {
     if (
         !player ||
@@ -1296,7 +1643,10 @@ function movePlayer() {
         dy !== 0
     ) {
         const direction =
-            normalize(dx, dy);
+            normalize(
+                dx,
+                dy
+            );
 
         moveFighter(
             player,
@@ -1310,8 +1660,11 @@ function movePlayer() {
     if (mouse.down) {
         attackTowards(
             player,
-            mouse.x + camera.x,
-            mouse.y + camera.y
+            mouse.x +
+            camera.x,
+
+            mouse.y +
+            camera.y
         );
     }
 }
@@ -1322,8 +1675,10 @@ function getPossibleTargets(
     return fighters.filter(
         function(other) {
             return (
-                other.alive &&
-                other !== fighter &&
+                isEnemy(
+                    fighter,
+                    other
+                ) &&
                 canSeeFighter(
                     fighter,
                     other
@@ -1333,25 +1688,63 @@ function getPossibleTargets(
     );
 }
 
+function getNearestTarget(
+    fighter
+) {
+    const targets =
+        getPossibleTargets(
+            fighter
+        );
+
+    if (
+        targets.length === 0
+    ) {
+        return null;
+    }
+
+    targets.sort(
+        function(first, second) {
+            return (
+                distance(
+                    fighter,
+                    first
+                ) -
+                distance(
+                    fighter,
+                    second
+                )
+            );
+        }
+    );
+
+    return targets[0];
+}
+
 function chooseBotDecision(bot) {
     const targets =
-        getPossibleTargets(bot);
+        getPossibleTargets(
+            bot
+        );
 
     if (
         targets.length === 0
     ) {
         bot.target = null;
-        bot.behavior = "wander";
+        bot.behavior =
+            "wander";
     } else {
         bot.target =
-            randomItem(targets);
+            randomItem(
+                targets
+            );
 
         const roll =
             Math.random();
 
         if (
             bot.hp <
-            bot.maxHp * 0.3
+            bot.maxHp *
+            0.3
         ) {
             bot.behavior =
                 Math.random() <
@@ -1375,10 +1768,16 @@ function chooseBotDecision(bot) {
     }
 
     bot.directionX =
-        randomNumber(-1, 1);
+        randomNumber(
+            -1,
+            1
+        );
 
     bot.directionY =
-        randomNumber(-1, 1);
+        randomNumber(
+            -1,
+            1
+        );
 
     bot.nextDecision =
         performance.now() +
@@ -1394,7 +1793,8 @@ function updateBot(
 ) {
     if (
         !bot.alive ||
-        matchFinished
+        matchFinished ||
+        bot.isSummon
     ) {
         return;
     }
@@ -1404,12 +1804,18 @@ function updateBot(
             bot.nextDecision ||
         !bot.target ||
         !bot.target.alive ||
+        !isEnemy(
+            bot,
+            bot.target
+        ) ||
         !canSeeFighter(
             bot,
             bot.target
         )
     ) {
-        chooseBotDecision(bot);
+        chooseBotDecision(
+            bot
+        );
     }
 
     if (
@@ -1424,6 +1830,7 @@ function updateBot(
 
         moveFighter(
             bot,
+
             direction.x *
             bot.speed *
             0.58,
@@ -1438,10 +1845,16 @@ function updateBot(
             0.015
         ) {
             bot.directionX =
-                randomNumber(-1, 1);
+                randomNumber(
+                    -1,
+                    1
+                );
 
             bot.directionY =
-                randomNumber(-1, 1);
+                randomNumber(
+                    -1,
+                    1
+                );
         }
 
         return;
@@ -1467,10 +1880,12 @@ function updateBot(
         );
 
     if (
-        bot.behavior === "flee"
+        bot.behavior ===
+        "flee"
     ) {
         moveFighter(
             bot,
+
             -direction.x *
             bot.speed,
 
@@ -1494,9 +1909,11 @@ function updateBot(
 
     const preferredDistance =
         bot.melee
-            ? bot.range * 0.7
+            ? bot.range *
+                0.7
             : Math.min(
-                bot.range * 0.58,
+                bot.range *
+                0.58,
                 500
             );
 
@@ -1506,6 +1923,7 @@ function updateBot(
     ) {
         moveFighter(
             bot,
+
             direction.x *
             bot.speed *
             0.78,
@@ -1519,6 +1937,7 @@ function updateBot(
     ) {
         moveFighter(
             bot,
+
             -direction.x *
             bot.speed *
             0.24,
@@ -1536,6 +1955,160 @@ function updateBot(
     );
 }
 
+function updateSummon(
+    summon
+) {
+    if (
+        !summon.alive ||
+        matchFinished
+    ) {
+        return;
+    }
+
+    if (
+        !summon.summoner ||
+        !summon.summoner.alive
+    ) {
+        summon.alive =
+            false;
+
+        return;
+    }
+
+    if (
+        !summon.target ||
+        !summon.target.alive ||
+        !isEnemy(
+            summon,
+            summon.target
+        )
+    ) {
+        summon.target =
+            getNearestTarget(
+                summon
+            );
+    }
+
+    if (!summon.target) {
+        const direction =
+            normalize(
+                summon.summoner.x -
+                summon.x,
+
+                summon.summoner.y -
+                summon.y
+            );
+
+        if (
+            distance(
+                summon,
+                summon.summoner
+            ) > 80
+        ) {
+            moveFighter(
+                summon,
+
+                direction.x *
+                summon.speed,
+
+                direction.y *
+                summon.speed
+            );
+        }
+
+        return;
+    }
+
+    const direction =
+        normalize(
+            summon.target.x -
+            summon.x,
+
+            summon.target.y -
+            summon.y
+        );
+
+    const targetDistance =
+        distance(
+            summon,
+            summon.target
+        );
+
+    if (
+        targetDistance >
+        summon.range *
+        0.72
+    ) {
+        moveFighter(
+            summon,
+
+            direction.x *
+            summon.speed,
+
+            direction.y *
+            summon.speed
+        );
+    }
+
+    attackTowards(
+        summon,
+        summon.target.x,
+        summon.target.y
+    );
+}
+
+function updatePriestSummons(
+    currentTime
+) {
+    fighters
+        .slice()
+        .forEach(
+            function(fighter) {
+                if (
+                    !fighter.alive ||
+                    fighter.isSummon ||
+                    !fighter.summonsGhosts
+                ) {
+                    return;
+                }
+
+                const summons =
+                    fighters.filter(
+                        function(other) {
+                            return (
+                                other.alive &&
+                                other.isSummon &&
+                                other.summoner ===
+                                    fighter
+                            );
+                        }
+                    );
+
+                if (
+                    summons.length >=
+                    fighter.maximumSummons
+                ) {
+                    return;
+                }
+
+                if (
+                    currentTime -
+                    fighter.lastSummon <
+                    fighter.summonCooldown
+                ) {
+                    return;
+                }
+
+                fighter.lastSummon =
+                    currentTime;
+
+                createSummonedGhost(
+                    fighter
+                );
+            }
+        );
+}
+
 function findTargetNearPoint(
     attacker,
     targetX,
@@ -1545,9 +2118,10 @@ function findTargetNearPoint(
         fighters.filter(
             function(fighter) {
                 return (
-                    fighter.alive &&
-                    fighter !==
-                        attacker &&
+                    isEnemy(
+                        attacker,
+                        fighter
+                    ) &&
                     canSeeFighter(
                         attacker,
                         fighter
@@ -1577,7 +2151,10 @@ function findTargetNearPoint(
         }
     );
 
-    return targets[0] || null;
+    return (
+        targets[0] ||
+        null
+    );
 }
 
 function attackTowards(
@@ -1615,19 +2192,21 @@ function attackTowards(
     attacker.lastAttack =
         currentTime;
 
-    attacker.hidden = false;
+    attacker.hidden =
+        false;
+
     attacker.attackCounter++;
 
     let attackDamage =
         attacker.damage;
 
     if (
-        attacker
-            .farmerThirdAttack &&
+        attacker.farmerThirdAttack &&
         attacker.attackCounter %
             3 === 0
     ) {
-        attackDamage *= 1.5;
+        attackDamage *=
+            1.5;
 
         createTextEffect(
             attacker.x,
@@ -1638,8 +2217,7 @@ function attackTowards(
     }
 
     if (
-        attacker
-            .lowHpDamageBonus &&
+        attacker.lowHpDamageBonus &&
         attacker.hp <
             attacker.maxHp *
             attacker
@@ -1655,7 +2233,9 @@ function attackTowards(
             attackDamage
         );
 
-    if (attacker.melee) {
+    if (
+        attacker.melee
+    ) {
         const target =
             findTargetNearPoint(
                 attacker,
@@ -1668,7 +2248,8 @@ function attackTowards(
             distance(
                 attacker,
                 target
-            ) <= attacker.range
+            ) <=
+                attacker.range
         ) {
             damageFighter(
                 target,
@@ -1747,22 +2328,26 @@ function createProjectile(
     let color =
         "#f9eda2";
 
-    let speedMultiplier = 1;
+    let speedMultiplier =
+        1;
 
-    let appliesCurse = false;
+    let appliesCurse =
+        false;
 
     if (
         attacker.heroId ===
         "farmer"
     ) {
-        color = "#6b4327";
+        color =
+            "#6b4327";
     }
 
     if (
         attacker.heroId ===
         "lucznik"
     ) {
-        color = "#f3e6a2";
+        color =
+            "#f3e6a2";
 
         if (
             attacker.fastThirdArrow &&
@@ -1773,22 +2358,33 @@ function createProjectile(
                 attacker
                     .fastArrowMultiplier;
 
-            color = "#ffffff";
+            color =
+                "#ffffff";
         }
+    }
+
+    if (
+        attacker.heroId ===
+        "ksiadz"
+    ) {
+        color =
+            "#e9f4ff";
     }
 
     if (
         attacker.heroId ===
         "golem"
     ) {
-        color = "#8b7566";
+        color =
+            "#8b7566";
     }
 
     if (
         attacker.heroId ===
         "czarodziej"
     ) {
-        color = "#d851ff";
+        color =
+            "#d851ff";
 
         if (
             attacker.curseEvery >
@@ -1797,8 +2393,11 @@ function createProjectile(
                 attacker.curseEvery ===
                 0
         ) {
-            appliesCurse = true;
-            color = "#741cff";
+            appliesCurse =
+                true;
+
+            color =
+                "#741cff";
         }
     }
 
@@ -1806,24 +2405,28 @@ function createProjectile(
         attacker.heroId ===
         "krol"
     ) {
-        color = "#ffd638";
+        color =
+            "#ffd638";
     }
 
     if (
         attacker.heroId ===
         "wiedzma"
     ) {
-        color = "#000000";
+        color =
+            "#FFCC33";
     }
 
     projectiles.push({
         x:
             attacker.x +
-            rotated.x * 34,
+            rotated.x *
+            34,
 
         y:
             attacker.y +
-            rotated.y * 34,
+            rotated.y *
+            34,
 
         vx:
             rotated.x *
@@ -1873,17 +2476,25 @@ function createMeleeEffect(
 
         x:
             attacker.x +
-            direction.x * 38,
+            direction.x *
+            38,
 
         y:
             attacker.y +
-            direction.y * 38,
+            direction.y *
+            38,
 
         radius: 25,
+
         maximumRadius:
             attacker.range,
 
-        color: "#ffffff",
+        color:
+            attacker.isSummon ||
+            attacker.heroId ===
+                "duch"
+                ? "#bdefff"
+                : "#ffffff",
 
         born:
             performance.now(),
@@ -1899,8 +2510,10 @@ function createGolemShockwave(
     fighters.forEach(
         function(target) {
             if (
-                target === attacker ||
-                !target.alive
+                !isEnemy(
+                    attacker,
+                    target
+                )
             ) {
                 return;
             }
@@ -1915,8 +2528,10 @@ function createGolemShockwave(
             ) {
                 damageFighter(
                     target,
+
                     attacker
                         .attackShockwaveDamage,
+
                     attacker
                 );
             }
@@ -1935,7 +2550,8 @@ function createGolemShockwave(
             attacker
                 .attackShockwaveRadius,
 
-        color: "#d3c0a0",
+        color:
+            "#d3c0a0",
 
         born:
             performance.now(),
@@ -1953,14 +2569,36 @@ function createTextEffect(
 ) {
     effects.push({
         type: "text",
+
         x: x,
         y: y,
+
         text: text,
         color: color,
+
         born:
             performance.now(),
+
         life: 700
     });
+}
+
+function removeSummonsOf(
+    summoner
+) {
+    fighters.forEach(
+        function(fighter) {
+            if (
+                fighter.alive &&
+                fighter.isSummon &&
+                fighter.summoner ===
+                    summoner
+            ) {
+                fighter.alive =
+                    false;
+            }
+        }
+    );
 }
 
 function damageFighter(
@@ -2010,7 +2648,8 @@ function damageFighter(
     target.hp -=
         finalDamage;
 
-    target.hidden = false;
+    target.hidden =
+        false;
 
     createTextEffect(
         target.x,
@@ -2019,23 +2658,35 @@ function damageFighter(
         "#ff6464"
     );
 
-    if (target.hp <= 0) {
+    if (
+        target.hp <= 0
+    ) {
         target.hp = 0;
         target.alive = false;
 
-        if (target === player) {
+        if (
+            target.summonsGhosts
+        ) {
+            removeSummonsOf(
+                target
+            );
+        }
+
+        if (
+            target === player
+        ) {
             const aliveAfterDeath =
-                fighters.filter(
-                    function(fighter) {
-                        return fighter.alive;
-                    }
-                ).length;
+                getAliveContestants()
+                    .length;
 
             awardTrophies(
-                aliveAfterDeath + 1
+                aliveAfterDeath +
+                1
             );
 
-            showDeathScreen(false);
+            showDeathScreen(
+                false
+            );
         }
     }
 
@@ -2063,7 +2714,8 @@ function updateProjectiles(
 ) {
     for (
         let i =
-            projectiles.length - 1;
+            projectiles.length -
+            1;
 
         i >= 0;
 
@@ -2078,7 +2730,8 @@ function updateProjectiles(
         projectile.y +=
             projectile.vy;
 
-        let remove = false;
+        let remove =
+            false;
 
         if (
             currentTime -
@@ -2114,9 +2767,10 @@ function updateProjectiles(
                 of fighters
             ) {
                 if (
-                    !fighter.alive ||
-                    fighter ===
-                        projectile.owner
+                    !isEnemy(
+                        projectile.owner,
+                        fighter
+                    )
                 ) {
                     continue;
                 }
@@ -2165,6 +2819,7 @@ function updateProjectiles(
                 }
 
                 remove = true;
+
                 break;
             }
         }
@@ -2216,7 +2871,9 @@ function updateEffects(
                 );
         }
 
-        if (progress >= 1) {
+        if (
+            progress >= 1
+        ) {
             effects.splice(
                 i,
                 1
@@ -2225,7 +2882,9 @@ function updateEffects(
     }
 }
 
-function awardTrophies(place) {
+function awardTrophies(
+    place
+) {
     if (
         trophiesAwarded ||
         !player
@@ -2233,14 +2892,17 @@ function awardTrophies(place) {
         return;
     }
 
-    trophiesAwarded = true;
+    trophiesAwarded =
+        true;
 
     const safePlace =
         Math.max(
             1,
             Math.min(
                 10,
-                Math.floor(place)
+                Math.floor(
+                    place
+                )
             )
         );
 
@@ -2257,7 +2919,8 @@ function awardTrophies(place) {
         typeof state.heroTrophies !==
             "object"
     ) {
-        state.heroTrophies = {};
+        state.heroTrophies =
+            {};
     }
 
     const before =
@@ -2273,17 +2936,21 @@ function awardTrophies(place) {
     const after =
         Math.max(
             0,
-            before + reward
+            before +
+            reward
         );
 
     const realChange =
-        after - before;
+        after -
+        before;
 
     state.heroTrophies[
         player.heroId
     ] = after;
 
-    saveState(state);
+    saveState(
+        state
+    );
 
     const sign =
         realChange > 0
@@ -2310,11 +2977,7 @@ function awardTrophies(place) {
 
 function checkWinner() {
     const alive =
-        fighters.filter(
-            function(fighter) {
-                return fighter.alive;
-            }
-        );
+        getAliveContestants();
 
     if (
         alive.length !== 1 ||
@@ -2323,10 +2986,15 @@ function checkWinner() {
         return;
     }
 
-    winner = alive[0];
-    matchFinished = true;
+    winner =
+        alive[0];
 
-    if (winner === player) {
+    matchFinished =
+        true;
+
+    if (
+        winner === player
+    ) {
         awardTrophies(1);
 
         const state =
@@ -2353,13 +3021,19 @@ function checkWinner() {
                 ) || 0
             ) + 1;
 
-        saveState(state);
+        saveState(
+            state
+        );
 
-        showDeathScreen(true);
+        showDeathScreen(
+            true
+        );
     } else if (
         !player.alive
     ) {
-        showDeathScreen(false);
+        showDeathScreen(
+            false
+        );
     }
 }
 
@@ -2385,7 +3059,9 @@ function showDeathScreen(
 }
 
 function update() {
-    if (matchFinished) {
+    if (
+        matchFinished
+    ) {
         return;
     }
 
@@ -2394,17 +3070,29 @@ function update() {
     const currentTime =
         performance.now();
 
-    fighters.forEach(
-        function(fighter) {
-            if (
-                !fighter.isPlayer
-            ) {
-                updateBot(
-                    fighter,
-                    currentTime
-                );
+    fighters
+        .slice()
+        .forEach(
+            function(fighter) {
+                if (
+                    fighter.isSummon
+                ) {
+                    updateSummon(
+                        fighter
+                    );
+                } else if (
+                    !fighter.isPlayer
+                ) {
+                    updateBot(
+                        fighter,
+                        currentTime
+                    );
+                }
             }
-        }
+        );
+
+    updatePriestSummons(
+        currentTime
     );
 
     updateBushStatus();
@@ -2423,11 +3111,17 @@ function update() {
 }
 
 function worldToScreenX(x) {
-    return x - camera.x;
+    return (
+        x -
+        camera.x
+    );
 }
 
 function worldToScreenY(y) {
-    return y - camera.y;
+    return (
+        y -
+        camera.y
+    );
 }
 
 function objectVisible(
@@ -2461,7 +3155,8 @@ function drawMap() {
         canvas.height
     );
 
-    const tileSize = 100;
+    const tileSize =
+        100;
 
     const startColumn =
         Math.floor(
@@ -2506,7 +3201,8 @@ function drawMap() {
             let row =
                 startRow;
 
-            row <= endRow;
+            row <=
+                endRow;
 
             row++
         ) {
@@ -2539,7 +3235,8 @@ function drawMap() {
     ctx.strokeStyle =
         "#111827";
 
-    ctx.lineWidth = 10;
+    ctx.lineWidth =
+        10;
 
     ctx.strokeRect(
         -camera.x,
@@ -2638,7 +3335,8 @@ function drawBushes() {
             ctx.strokeStyle =
                 "#183c22";
 
-            ctx.lineWidth = 4;
+            ctx.lineWidth =
+                4;
 
             ctx.strokeRect(
                 x,
@@ -2711,7 +3409,8 @@ function drawWalls() {
             ctx.strokeStyle =
                 "#32271e";
 
-            ctx.lineWidth = 4;
+            ctx.lineWidth =
+                4;
 
             ctx.strokeRect(
                 x,
@@ -2728,8 +3427,15 @@ function drawHealthBar(
     screenX,
     screenY
 ) {
-    const width = 62;
-    const height = 9;
+    const width =
+        fighter.isSummon
+            ? 42
+            : 62;
+
+    const height =
+        fighter.isSummon
+            ? 6
+            : 9;
 
     const x =
         screenX -
@@ -2753,7 +3459,9 @@ function drawHealthBar(
     ctx.fillStyle =
         fighter.isPlayer
             ? "#42de63"
-            : "#ef4d4d";
+            : fighter.isSummon
+                ? "#6fe6ff"
+                : "#ef4d4d";
 
     ctx.fillRect(
         x,
@@ -2772,7 +3480,8 @@ function drawHealthBar(
     ctx.strokeStyle =
         "#111827";
 
-    ctx.lineWidth = 2;
+    ctx.lineWidth =
+        2;
 
     ctx.strokeRect(
         x,
@@ -2782,8 +3491,12 @@ function drawHealthBar(
     );
 }
 
-function drawFighter(fighter) {
-    if (!fighter.alive) {
+function drawFighter(
+    fighter
+) {
+    if (
+        !fighter.alive
+    ) {
         return;
     }
 
@@ -2801,9 +3514,11 @@ function drawFighter(fighter) {
         screenX < -80 ||
         screenY < -80 ||
         screenX >
-            canvas.width + 80 ||
+            canvas.width +
+            80 ||
         screenY >
-            canvas.height + 80
+            canvas.height +
+            80
     ) {
         return;
     }
@@ -2819,7 +3534,9 @@ function drawFighter(fighter) {
             ) < 170
         );
 
-    if (!visibleToPlayer) {
+    if (
+        !visibleToPlayer
+    ) {
         return;
     }
 
@@ -2841,6 +3558,15 @@ function drawFighter(fighter) {
             0.65;
     }
 
+    if (
+        fighter.heroId ===
+            "duch" ||
+        fighter.isSummon
+    ) {
+        ctx.globalAlpha *=
+            0.78;
+    }
+
     ctx.beginPath();
 
     ctx.arc(
@@ -2859,7 +3585,9 @@ function drawFighter(fighter) {
     ctx.strokeStyle =
         fighter.isPlayer
             ? "white"
-            : "#111827";
+            : fighter.isSummon
+                ? "#c9f6ff"
+                : "#111827";
 
     ctx.lineWidth =
         fighter.isPlayer
@@ -2879,7 +3607,8 @@ function drawFighter(fighter) {
         ctx.arc(
             screenX,
             screenY,
-            fighter.radius + 13,
+            fighter.radius +
+            13,
             0,
             Math.PI * 2
         );
@@ -2887,7 +3616,9 @@ function drawFighter(fighter) {
         ctx.strokeStyle =
             "#63d8ff";
 
-        ctx.lineWidth = 5;
+        ctx.lineWidth =
+            5;
+
         ctx.stroke();
     }
 
@@ -2900,7 +3631,8 @@ function drawFighter(fighter) {
         ctx.arc(
             screenX,
             screenY,
-            fighter.radius + 17,
+            fighter.radius +
+            17,
             0,
             Math.PI * 2
         );
@@ -2908,12 +3640,16 @@ function drawFighter(fighter) {
         ctx.strokeStyle =
             "#b14cff";
 
-        ctx.lineWidth = 4;
+        ctx.lineWidth =
+            4;
+
         ctx.stroke();
     }
 
     ctx.font =
-        "43px Arial";
+        fighter.isSummon
+            ? "31px Arial"
+            : "43px Arial";
 
     ctx.textAlign =
         "center";
@@ -2928,17 +3664,22 @@ function drawFighter(fighter) {
     );
 
     ctx.font =
-        "bold 13px Arial";
+        fighter.isSummon
+            ? "bold 10px Arial"
+            : "bold 13px Arial";
 
     ctx.strokeStyle =
         "black";
 
-    ctx.lineWidth = 4;
+    ctx.lineWidth =
+        4;
 
     ctx.strokeText(
         fighter.name,
         screenX,
-        screenY + 49
+        screenY +
+        fighter.radius +
+        21
     );
 
     ctx.fillStyle =
@@ -2947,7 +3688,9 @@ function drawFighter(fighter) {
     ctx.fillText(
         fighter.name,
         screenX,
-        screenY + 49
+        screenY +
+        fighter.radius +
+        21
     );
 
     drawHealthBar(
@@ -2955,6 +3698,19 @@ function drawFighter(fighter) {
         screenX,
         screenY
     );
+
+    if (
+        fighter.canPassWalls
+    ) {
+        ctx.font =
+            "16px Arial";
+
+        ctx.fillText(
+            "✨",
+            screenX + 25,
+            screenY - 25
+        );
+    }
 
     ctx.restore();
 }
@@ -2976,9 +3732,11 @@ function drawProjectiles() {
                 screenX < -50 ||
                 screenY < -50 ||
                 screenX >
-                    canvas.width + 50 ||
+                    canvas.width +
+                    50 ||
                 screenY >
-                    canvas.height + 50
+                    canvas.height +
+                    50
             ) {
                 return;
             }
@@ -2993,25 +3751,29 @@ function drawProjectiles() {
                 Math.PI * 2
             );
 
-           if (projectile.owner.heroId === "wiedzma") {
-    ctx.fillStyle = "#FFFFFF";
-} else {
-    ctx.fillStyle = projectile.color;
-}
+            ctx.fillStyle =
+                projectile.color;
 
-ctx.fill();
-            
-if (projectile.owner.heroId === "wiedzma") {
-    ctx.strokeStyle = "#000000";   // kolor obramowania
-    ctx.lineWidth = 4;             // grubość
-} else {
-    ctx.strokeStyle = "#111827";
-    ctx.lineWidth = 2;
-}
+            ctx.fill();
 
-ctx.stroke();
+            if (
+                projectile.owner.heroId ===
+                "wiedzma"
+            ) {
+                ctx.strokeStyle =
+                    "#9a7415";
 
-            
+                ctx.lineWidth =
+                    1;
+            } else {
+                ctx.strokeStyle =
+                    "#111827";
+
+                ctx.lineWidth =
+                    2;
+            }
+
+            ctx.stroke();
         }
     );
 }
@@ -3035,7 +3797,8 @@ function drawEffects() {
             const alpha =
                 Math.max(
                     0,
-                    1 - progress
+                    1 -
+                    progress
                 );
 
             const screenX =
@@ -3049,6 +3812,7 @@ function drawEffects() {
                 );
 
             ctx.save();
+
             ctx.globalAlpha =
                 alpha;
 
@@ -3091,11 +3855,13 @@ function drawEffects() {
                 ctx.strokeStyle =
                     "black";
 
-                ctx.lineWidth = 4;
+                ctx.lineWidth =
+                    4;
 
                 const y =
                     screenY -
-                    progress * 35;
+                    progress *
+                    35;
 
                 ctx.strokeText(
                     effect.text,
@@ -3116,15 +3882,19 @@ function drawEffects() {
 }
 
 function drawMiniMap() {
-    const width = 155;
-    const height = 155;
+    const width =
+        155;
+
+    const height =
+        155;
 
     const x =
         canvas.width -
         width -
         16;
 
-    const y = 16;
+    const y =
+        16;
 
     ctx.fillStyle =
         "#111827cc";
@@ -3148,7 +3918,9 @@ function drawMiniMap() {
 
     fighters.forEach(
         function(fighter) {
-            if (!fighter.alive) {
+            if (
+                !fighter.alive
+            ) {
                 return;
             }
 
@@ -3169,9 +3941,13 @@ function drawMiniMap() {
             ctx.arc(
                 dotX,
                 dotY,
+
                 fighter.isPlayer
                     ? 5
-                    : 3,
+                    : fighter.isSummon
+                        ? 2
+                        : 3,
+
                 0,
                 Math.PI * 2
             );
@@ -3179,7 +3955,9 @@ function drawMiniMap() {
             ctx.fillStyle =
                 fighter.isPlayer
                     ? "#36a9ff"
-                    : "#ef4d4d";
+                    : fighter.isSummon
+                        ? "#8ceaff"
+                        : "#ef4d4d";
 
             ctx.fill();
         }
@@ -3188,7 +3966,8 @@ function drawMiniMap() {
     ctx.strokeStyle =
         "white";
 
-    ctx.lineWidth = 2;
+    ctx.lineWidth =
+        2;
 
     ctx.strokeRect(
         x,
@@ -3218,9 +3997,11 @@ function drawCrosshair() {
     );
 
     ctx.strokeStyle =
-        "#FFFFFF";
+        "#ffffffcc";
 
-    ctx.lineWidth = 2;
+    ctx.lineWidth =
+        2;
+
     ctx.stroke();
 
     ctx.beginPath();
