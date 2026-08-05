@@ -2,12 +2,7 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bitwa Królestw</title>
 
     <style>
@@ -19,29 +14,19 @@
             margin: 0;
             min-height: 100vh;
             overflow: hidden;
-
             color: white;
             font-family: Arial, sans-serif;
             text-align: center;
-
-            background:
-                radial-gradient(
-                    circle at top,
-                    #34405a,
-                    #101621
-                );
+            background: radial-gradient(circle at top, #34405a, #101621);
         }
 
         .topbar {
             height: 72px;
-
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-
             padding: 10px 18px;
-
             background: #111827;
             border-bottom: 4px solid #050912;
         }
@@ -60,17 +45,13 @@
         button,
         .back-button {
             padding: 10px 15px;
-
             color: white;
             font-family: inherit;
             font-weight: 900;
             text-decoration: none;
-
             background: #35445e;
-
             border: 3px solid #080d16;
             border-radius: 10px;
-
             cursor: pointer;
         }
 
@@ -80,60 +61,39 @@
 
         .game-info {
             min-height: 58px;
-
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
             flex-wrap: wrap;
-
             padding: 7px;
         }
 
         .info-box {
             padding: 7px 13px;
-
             background: #26344b;
-
             border: 3px solid #101722;
             border-radius: 10px;
-
             font-weight: 900;
         }
 
         .game-container {
             position: relative;
-
-            width: min(
-                calc(100vh - 155px),
-                96vw
-            );
-
-            height: min(
-                calc(100vh - 155px),
-                96vw
-            );
-
+            width: min(calc(100vh - 155px), 96vw);
+            height: min(calc(100vh - 155px), 96vw);
             max-width: 900px;
             max-height: 900px;
-
             margin: 0 auto;
         }
 
         canvas {
             width: 100%;
             height: 100%;
-
             display: block;
-
             background: #58ad58;
-
             border: 7px solid #111827;
             border-radius: 12px;
-
-            box-shadow:
-                0 15px 40px #00000099;
-
+            box-shadow: 0 15px 40px #00000099;
             cursor: crosshair;
         }
 
@@ -141,15 +101,12 @@
             position: absolute;
             inset: 7px;
             z-index: 10;
-
             display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             gap: 16px;
-
             padding: 20px;
-
             background: #000000bb;
             border-radius: 6px;
         }
@@ -161,58 +118,38 @@
         .death-title {
             font-size: 54px;
             font-weight: 1000;
-
-            text-shadow:
-                4px 4px black;
+            text-shadow: 4px 4px black;
         }
 
         .match-result {
             padding: 13px 22px;
-
             font-size: 20px;
             font-weight: 900;
             line-height: 1.5;
-
             background: #111827dd;
-
             border: 4px solid #050912;
             border-radius: 12px;
         }
 
         .return-button {
             min-width: 230px;
-
             padding: 18px 30px;
-
             color: #111827;
             font-size: 28px;
             font-weight: 1000;
-
-            background:
-                linear-gradient(
-                    #ffd93d,
-                    #f0a500
-                );
-
+            background: linear-gradient(#ffd93d, #f0a500);
             border: 5px solid #111827;
             border-radius: 14px;
-
-            box-shadow:
-                0 7px 0 #00000077;
-
-            cursor: pointer;
+            box-shadow: 0 7px 0 #00000077;
         }
 
         .controls {
             position: fixed;
             left: 15px;
             bottom: 12px;
-
             padding: 8px 12px;
-
             color: #d1d5db;
             font-size: 13px;
-
             background: #111827cc;
             border-radius: 8px;
         }
@@ -250,80 +187,31 @@
 <body>
 
 <header class="topbar">
-
-    <div class="logo">
-        ⚔️ BITWA KRÓLESTW
-    </div>
+    <div class="logo">⚔️ BITWA KRÓLESTW</div>
 
     <div class="top-buttons">
-
-        <button
-            class="restart-button"
-            onclick="startGame()"
-        >
+        <button class="restart-button" onclick="startGame()">
             NOWA GRA
         </button>
 
-        <a
-            class="back-button"
-            href="gra.html"
-        >
+        <a class="back-button" href="gra.html">
             LOBBY
         </a>
-
     </div>
-
 </header>
 
 <div class="game-info">
-
-    <div
-        id="mapName"
-        class="info-box"
-    >
-        Mapa
-    </div>
-
-    <div
-        id="aliveCounter"
-        class="info-box"
-    >
-        Pozostało: 10
-    </div>
-
-    <div
-        id="playerInfo"
-        class="info-box"
-    >
-        Gracz
-    </div>
-
+    <div id="mapName" class="info-box">Mapa</div>
+    <div id="aliveCounter" class="info-box">Pozostało: 10</div>
+    <div id="playerInfo" class="info-box">Gracz</div>
 </div>
 
 <div class="game-container">
+    <canvas id="gameCanvas" width="900" height="900"></canvas>
 
-    <canvas
-        id="gameCanvas"
-        width="900"
-        height="900"
-    ></canvas>
-
-    <div
-        id="deathScreen"
-        class="death-screen"
-    >
-
-        <div
-            id="deathTitle"
-            class="death-title"
-        >
-            POKONANY
-        </div>
-
-        <div
-            id="matchResult"
-            class="match-result"
-        ></div>
+    <div id="deathScreen" class="death-screen">
+        <div id="deathTitle" class="death-title">POKONANY</div>
+        <div id="matchResult" class="match-result"></div>
 
         <button
             class="return-button"
@@ -331,15 +219,11 @@
         >
             POWRÓT
         </button>
-
     </div>
-
 </div>
 
 <div class="controls">
-    WASD lub strzałki — ruch |
-    LPM — atak |
-    krzaki — ukrycie
+    WASD lub strzałki — ruch | LPM — atak | krzaki — ukrycie
 </div>
 
 <script src="dane.js"></script>
@@ -348,13 +232,8 @@
 <script>
 "use strict";
 
-const canvas =
-    document.getElementById(
-        "gameCanvas"
-    );
-
-const ctx =
-    canvas.getContext("2d");
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
 
 const WORLD_WIDTH = 2700;
 const WORLD_HEIGHT = 2700;
@@ -372,6 +251,180 @@ const TROPHY_REWARDS = {
     10: -6
 };
 
+const MAPS = {
+    green: {
+        name: "Zielona Dolina",
+        ground: "#64b85e",
+        groundDark: "#59aa54",
+        wall: "#8b6647",
+        wallTop: "#b58a61",
+        brickLine: "#5e432f",
+        bush: "#177d2c",
+        bushLight: "#25a43d",
+        water: "#2baee8",
+        waterLight: "#56cef5"
+    },
+
+    red: {
+        name: "Czerwona Twierdza",
+        ground: "#c85b4e",
+        groundDark: "#b94e45",
+        wall: "#69383b",
+        wallTop: "#985256",
+        brickLine: "#48252a",
+        bush: "#722431",
+        bushLight: "#9b3544",
+        water: "#3c7fd3",
+        waterLight: "#65a8f1"
+    },
+
+    yellow: {
+        name: "Złota Pustynia",
+        ground: "#e6bd5a",
+        groundDark: "#d8aa45",
+        wall: "#8e6438",
+        wallTop: "#bc8950",
+        brickLine: "#644427",
+        bush: "#77872e",
+        bushLight: "#9cac3d",
+        water: "#25a8d9",
+        waterLight: "#56d1ed"
+    }
+};
+
+const HERO_STATS = {
+    farmer: {
+        hp: 115,
+        damage: 18,
+        speed: 1.7,
+        range: 330,
+        cooldown: 650,
+        projectileSpeed: 7,
+        projectileWidth: 9,
+        projectileLife: 1050,
+        melee: false,
+        farmerThirdAttack: true
+    },
+
+    rycerz: {
+        hp: 205,
+        damage: 31,
+        speed: 1.4,
+        range: 88,
+        cooldown: 650,
+        melee: true,
+        lowHpShield: true,
+        shieldThreshold: 0.3,
+        shieldReduction: 0.3
+    },
+
+    lucznik: {
+        hp: 145,
+        damage: 30,
+        speed: 1.7,
+        range: 720,
+        cooldown: 750,
+        projectileSpeed: 10,
+        projectileWidth: 7,
+        projectileLife: 1650,
+        melee: false,
+        fastThirdArrow: true,
+        fastArrowMultiplier: 2.8
+    },
+
+    ksiadz: {
+        hp: 185,
+        damage: 25,
+        speed: 1.7,
+        range: 300,
+        cooldown: 700,
+        projectileSpeed: 7,
+        projectileWidth: 9,
+        projectileLife: 1000,
+        melee: false,
+        summonsGhosts: true,
+        summonCooldown: 3000,
+        maximumSummons: 5
+    },
+
+    goblin: {
+        hp: 105,
+        damage: 28,
+        speed: 2.2,
+        range: 76,
+        cooldown: 480,
+        melee: true,
+        lowHpDamageBonus: true,
+        damageBonusThreshold: 0.5,
+        damageBonusMultiplier: 1.25
+    },
+
+    golem: {
+        hp: 330,
+        damage: 38,
+        speed: 1.05,
+        range: 350,
+        cooldown: 950,
+        projectileSpeed: 5,
+        projectileWidth: 15,
+        projectileLife: 1050,
+        melee: false,
+        shockwaveEvery: 5,
+        attackShockwaveRadius: 190,
+        attackShockwaveDamage: 30
+    },
+
+    duch: {
+        hp: 90,
+        damage: 40,
+        speed: 2.25,
+        range: 78,
+        cooldown: 520,
+        melee: true,
+        canPassWalls: true
+    },
+
+    czarodziej: {
+        hp: 145,
+        damage: 39,
+        speed: 1.7,
+        range: 690,
+        cooldown: 820,
+        projectileSpeed: 8.5,
+        projectileWidth: 12,
+        projectileLife: 1500,
+        melee: false,
+        curseEvery: 4,
+        curseDuration: 3000,
+        curseMultiplier: 1.2
+    },
+
+    krol: {
+        hp: 155,
+        damage: 32,
+        speed: 1.5,
+        range: 580,
+        cooldown: 850,
+        projectileSpeed: 8,
+        projectileWidth: 10,
+        projectileLife: 1450,
+        melee: false,
+        tripleShot: true
+    },
+
+    wiedzma: {
+        hp: 105,
+        damage: 7,
+        speed: 2,
+        range: 750,
+        cooldown: 50,
+        projectileSpeed: 28,
+        projectileWidth: 3,
+        projectileLife: 700,
+        melee: false
+    }
+};
+
 const keys = {};
 
 let mouse = {
@@ -385,426 +438,216 @@ let camera = {
     y: 0
 };
 
-let selectedMap;
-
+let selectedMap = MAPS.green;
 let fighters = [];
 let projectiles = [];
 let effects = [];
 
 let player = null;
 let winner = null;
-
 let matchFinished = false;
 let trophiesAwarded = false;
-
 let summonNumber = 0;
 
-const MAPS = {
-    green: {
-        name: "Zielona Dolina",
-        ground: "#5cab5d",
-        groundDark: "#4e9a50",
-        wall: "#776046",
-        wallTop: "#9c805d",
-        bush: "#247a36",
-        bushLight: "#319645"
-    },
+const borderWalls = [
+    { x: 110, y: 110, w: 1080, h: 70 },
+    { x: 1510, y: 110, w: 1080, h: 70 },
 
-    red: {
-        name: "Czerwona Twierdza",
-        ground: "#bd5148",
-        groundDark: "#a8423d",
-        wall: "#612d32",
-        wallTop: "#85434a",
-        bush: "#6e2630",
-        bushLight: "#8d3540"
-    },
+    { x: 110, y: 2520, w: 1080, h: 70 },
+    { x: 1510, y: 2520, w: 1080, h: 70 },
 
-    yellow: {
-        name: "Złota Pustynia",
-        ground: "#d9b64e",
-        groundDark: "#c79f39",
-        wall: "#8b6834",
-        wallTop: "#ad8447",
-        bush: "#7d8a31",
-        bushLight: "#9aa640"
-    }
-};
+    { x: 110, y: 110, w: 70, h: 1080 },
+    { x: 110, y: 1510, w: 70, h: 1080 },
 
-const HERO_STATS = {
-    farmer: {
-        hp: 115,
-        damage: 18,
-        speed: 1.7,
-        range: 330,
-        cooldown: 650,
+    { x: 2520, y: 110, w: 70, h: 1080 },
+    { x: 2520, y: 1510, w: 70, h: 1080 },
 
-        projectileSpeed: 7,
-        projectileWidth: 9,
-        projectileLife: 1050,
+    { x: 1100, y: 110, w: 170, h: 130 },
+    { x: 1430, y: 110, w: 170, h: 130 },
 
-        melee: false,
-        farmerThirdAttack: true
-    },
+    { x: 1100, y: 2460, w: 170, h: 130 },
+    { x: 1430, y: 2460, w: 170, h: 130 },
 
-    rycerz: {
-        hp: 205,
-        damage: 31,
-        speed: 1.4,
-        range: 88,
-        cooldown: 650,
+    { x: 110, y: 1100, w: 130, h: 170 },
+    { x: 110, y: 1430, w: 130, h: 170 },
 
-        projectileSpeed: 0,
-        projectileWidth: 0,
-        projectileLife: 0,
+    { x: 2460, y: 1100, w: 130, h: 170 },
+    { x: 2460, y: 1430, w: 130, h: 170 }
+];
 
-        melee: true,
+const innerWalls = [
+    { x: 500, y: 470, w: 260, h: 70 },
+    { x: 1940, y: 470, w: 260, h: 70 },
 
-        lowHpShield: true,
-        shieldThreshold: 0.3,
-        shieldReduction: 0.3
-    },
+    { x: 500, y: 2160, w: 260, h: 70 },
+    { x: 1940, y: 2160, w: 260, h: 70 },
 
-    lucznik: {
-        hp: 145,
-        damage: 30,
-        speed: 1.7,
-        range: 720,
-        cooldown: 750,
+    { x: 420, y: 630, w: 70, h: 250 },
+    { x: 2210, y: 630, w: 70, h: 250 },
 
-        projectileSpeed: 10,
-        projectileWidth: 7,
-        projectileLife: 1650,
+    { x: 420, y: 1820, w: 70, h: 250 },
+    { x: 2210, y: 1820, w: 70, h: 250 },
 
-        melee: false,
+    { x: 830, y: 890, w: 290, h: 75 },
+    { x: 1580, y: 890, w: 290, h: 75 },
 
-        fastThirdArrow: true,
-        fastArrowMultiplier: 2.8
-    },
+    { x: 830, y: 1735, w: 290, h: 75 },
+    { x: 1580, y: 1735, w: 290, h: 75 },
 
-    ksiadz: {
-        hp: 185,
-        damage: 25,
-        speed: 1.7,
-        range: 300,
-        cooldown: 700,
+    { x: 730, y: 1020, w: 70, h: 250 },
+    { x: 1900, y: 1020, w: 70, h: 250 },
 
-        projectileSpeed: 7,
-        projectileWidth: 9,
-        projectileLife: 1000,
+    { x: 730, y: 1430, w: 70, h: 250 },
+    { x: 1900, y: 1430, w: 70, h: 250 },
 
-        melee: false,
+    { x: 1110, y: 570, w: 480, h: 65 },
+    { x: 1110, y: 2065, w: 480, h: 65 },
 
-        summonsGhosts: true,
-        summonCooldown: 3000,
-        maximumSummons: 5
-    },
+    { x: 1070, y: 1150, w: 180, h: 65 },
+    { x: 1450, y: 1150, w: 180, h: 65 },
 
-    goblin: {
-        hp: 105,
-        damage: 28,
-        speed: 2.2,
-        range: 76,
-        cooldown: 480,
+    { x: 1070, y: 1485, w: 180, h: 65 },
+    { x: 1450, y: 1485, w: 180, h: 65 },
 
-        projectileSpeed: 0,
-        projectileWidth: 0,
-        projectileLife: 0,
+    { x: 1280, y: 1265, w: 140, h: 170 }
+];
 
-        melee: true,
+const waterPools = [
+    { x: 1250, y: 250, w: 200, h: 100 },
+    { x: 1250, y: 2350, w: 200, h: 100 },
 
-        lowHpDamageBonus: true,
-        damageBonusThreshold: 0.5,
-        damageBonusMultiplier: 1.25
-    },
+    { x: 770, y: 570, w: 180, h: 160 },
+    { x: 1750, y: 570, w: 180, h: 160 },
 
-    golem: {
-        hp: 330,
-        damage: 38,
-        speed: 1.05,
-        range: 350,
-        cooldown: 950,
+    { x: 770, y: 1970, w: 180, h: 160 },
+    { x: 1750, y: 1970, w: 180, h: 160 },
 
-        projectileSpeed: 5,
-        projectileWidth: 15,
-        projectileLife: 1050,
-
-        melee: false,
-
-        shockwaveEvery: 5,
-        attackShockwaveRadius: 190,
-        attackShockwaveDamage: 30
-    },
-
-    duch: {
-        hp: 90,
-        damage: 40,
-        speed: 2.25,
-        range: 78,
-        cooldown: 520,
-
-        projectileSpeed: 0,
-        projectileWidth: 0,
-        projectileLife: 0,
-
-        melee: true,
-        canPassWalls: true
-    },
-
-    czarodziej: {
-        hp: 145,
-        damage: 39,
-        speed: 1.7,
-        range: 690,
-        cooldown: 820,
-
-        projectileSpeed: 8.5,
-        projectileWidth: 12,
-        projectileLife: 1500,
-
-        melee: false,
-
-        curseEvery: 4,
-        curseDuration: 3000,
-        curseMultiplier: 1.2
-    },
-
-    krol: {
-        hp: 155,
-        damage: 32,
-        speed: 1.5,
-        range: 580,
-        cooldown: 850,
-
-        projectileSpeed: 8,
-        projectileWidth: 10,
-        projectileLife: 1450,
-
-        melee: false,
-        tripleShot: true
-    },
-
-    wiedzma: {
-        hp: 105,
-        damage: 7,
-        speed: 2,
-        range: 750,
-        cooldown: 50,
-
-        projectileSpeed: 28,
-        projectileWidth: 3,
-        projectileLife: 700,
-
-        melee: false
-    }
-};
-
-const walls = [
-    { x: 400, y: 380, w: 420, h: 90 },
-    { x: 1880, y: 380, w: 420, h: 90 },
-
-    { x: 400, y: 2230, w: 420, h: 90 },
-    { x: 1880, y: 2230, w: 420, h: 90 },
-
-    { x: 380, y: 700, w: 90, h: 420 },
-    { x: 2230, y: 700, w: 90, h: 420 },
-
-    { x: 380, y: 1580, w: 90, h: 420 },
-    { x: 2230, y: 1580, w: 90, h: 420 },
-
-    { x: 850, y: 800, w: 340, h: 90 },
-    { x: 1510, y: 800, w: 340, h: 90 },
-
-    { x: 850, y: 1810, w: 340, h: 90 },
-    { x: 1510, y: 1810, w: 340, h: 90 },
-
-    { x: 800, y: 1050, w: 90, h: 300 },
-    { x: 1810, y: 1050, w: 90, h: 300 },
-
-    { x: 800, y: 1350, w: 90, h: 300 },
-    { x: 1810, y: 1350, w: 90, h: 300 },
-
-    { x: 1140, y: 1150, w: 420, h: 85 },
-    { x: 1140, y: 1465, w: 420, h: 85 },
-
-    { x: 1260, y: 1235, w: 80, h: 230 },
-    { x: 1360, y: 1235, w: 80, h: 230 }
+    { x: 1180, y: 790, w: 340, h: 90 },
+    { x: 1180, y: 1820, w: 340, h: 90 }
 ];
 
 const bushes = [
-    { x: 120, y: 220, w: 300, h: 260 },
-    { x: 2280, y: 220, w: 300, h: 260 },
+    { x: 260, y: 260, w: 230, h: 150 },
+    { x: 2210, y: 260, w: 230, h: 150 },
 
-    { x: 120, y: 2220, w: 300, h: 260 },
-    { x: 2280, y: 2220, w: 300, h: 260 },
+    { x: 260, y: 2290, w: 230, h: 150 },
+    { x: 2210, y: 2290, w: 230, h: 150 },
 
-    { x: 540, y: 520, w: 300, h: 150 },
-    { x: 1860, y: 520, w: 300, h: 150 },
+    { x: 440, y: 420, w: 320, h: 70 },
+    { x: 1940, y: 420, w: 320, h: 70 },
 
-    { x: 540, y: 2030, w: 300, h: 150 },
-    { x: 1860, y: 2030, w: 300, h: 150 },
+    { x: 440, y: 2210, w: 320, h: 70 },
+    { x: 1940, y: 2210, w: 320, h: 70 },
 
-    { x: 1030, y: 650, w: 250, h: 170 },
-    { x: 1420, y: 650, w: 250, h: 170 },
+    { x: 360, y: 650, w: 100, h: 260 },
+    { x: 2240, y: 650, w: 100, h: 260 },
 
-    { x: 1030, y: 1880, w: 250, h: 170 },
-    { x: 1420, y: 1880, w: 250, h: 170 },
+    { x: 360, y: 1790, w: 100, h: 260 },
+    { x: 2240, y: 1790, w: 100, h: 260 },
 
-    { x: 560, y: 1160, w: 180, h: 380 },
-    { x: 1960, y: 1160, w: 180, h: 380 },
+    { x: 770, y: 820, w: 360, h: 70 },
+    { x: 1570, y: 820, w: 360, h: 70 },
 
-    { x: 1000, y: 1250, w: 150, h: 200 },
-    { x: 1550, y: 1250, w: 150, h: 200 }
+    { x: 770, y: 1810, w: 360, h: 70 },
+    { x: 1570, y: 1810, w: 360, h: 70 },
+
+    { x: 680, y: 1050, w: 90, h: 240 },
+    { x: 1930, y: 1050, w: 90, h: 240 },
+
+    { x: 680, y: 1410, w: 90, h: 240 },
+    { x: 1930, y: 1410, w: 90, h: 240 },
+
+    { x: 1030, y: 1090, w: 220, h: 70 },
+    { x: 1450, y: 1090, w: 220, h: 70 },
+
+    { x: 1030, y: 1540, w: 220, h: 70 },
+    { x: 1450, y: 1540, w: 220, h: 70 },
+
+    { x: 1150, y: 500, w: 400, h: 60 },
+    { x: 1150, y: 2140, w: 400, h: 60 },
+
+    { x: 1240, y: 1200, w: 220, h: 70 },
+    { x: 1240, y: 1430, w: 220, h: 70 }
+];
+
+const walls = [
+    ...borderWalls,
+    ...innerWalls
 ];
 
 const spawnPositions = [
-    { x: 180, y: 180 },
+    { x: 350, y: 350 },
+    { x: 1350, y: 420 },
+    { x: 2350, y: 350 },
 
-    {
-        x: WORLD_WIDTH / 2,
-        y: 180
-    },
+    { x: 330, y: 1350 },
+    { x: 2370, y: 1350 },
 
-    {
-        x: WORLD_WIDTH - 180,
-        y: 180
-    },
+    { x: 330, y: 2050 },
+    { x: 2370, y: 2050 },
 
-    {
-        x: 180,
-        y: WORLD_HEIGHT / 2
-    },
-
-    {
-        x: WORLD_WIDTH - 180,
-        y: WORLD_HEIGHT / 2
-    },
-
-    {
-        x: 220,
-        y: WORLD_HEIGHT - 220
-    },
-
-    {
-        x: WORLD_WIDTH - 220,
-        y: WORLD_HEIGHT - 220
-    },
-
-    {
-        x: WORLD_WIDTH / 2 - 480,
-        y: WORLD_HEIGHT / 2
-    },
-
-    {
-        x: WORLD_WIDTH / 2 + 480,
-        y: WORLD_HEIGHT / 2
-    }
+    { x: 350, y: 2350 },
+    { x: 1350, y: 2280 },
+    { x: 2350, y: 2350 }
 ];
 
-window.addEventListener(
-    "keydown",
-    function(event) {
-        const key =
-            event.key.toLowerCase();
+window.addEventListener("keydown", function(event) {
+    const key = event.key.toLowerCase();
+    keys[key] = true;
 
-        keys[key] = true;
-
-        if (
-            key === "arrowup" ||
-            key === "arrowdown" ||
-            key === "arrowleft" ||
-            key === "arrowright"
-        ) {
-            event.preventDefault();
-        }
-    }
-);
-
-window.addEventListener(
-    "keyup",
-    function(event) {
-        keys[
-            event.key.toLowerCase()
-        ] = false;
-    }
-);
-
-canvas.addEventListener(
-    "mousemove",
-    function(event) {
-        const rectangle =
-            canvas.getBoundingClientRect();
-
-        mouse.x =
-            (
-                event.clientX -
-                rectangle.left
-            ) *
-            canvas.width /
-            rectangle.width;
-
-        mouse.y =
-            (
-                event.clientY -
-                rectangle.top
-            ) *
-            canvas.height /
-            rectangle.height;
-    }
-);
-
-canvas.addEventListener(
-    "mousedown",
-    function(event) {
-        if (event.button === 0) {
-            mouse.down = true;
-        }
-    }
-);
-
-window.addEventListener(
-    "mouseup",
-    function(event) {
-        if (event.button === 0) {
-            mouse.down = false;
-        }
-    }
-);
-
-canvas.addEventListener(
-    "contextmenu",
-    function(event) {
+    if (
+        key === "arrowup" ||
+        key === "arrowdown" ||
+        key === "arrowleft" ||
+        key === "arrowright"
+    ) {
         event.preventDefault();
     }
-);
+});
 
-function randomNumber(
-    minimum,
-    maximum
-) {
-    return (
-        Math.random() *
-        (
-            maximum -
-            minimum
-        ) +
-        minimum
-    );
+window.addEventListener("keyup", function(event) {
+    keys[event.key.toLowerCase()] = false;
+});
+
+canvas.addEventListener("mousemove", function(event) {
+    const rectangle = canvas.getBoundingClientRect();
+
+    mouse.x =
+        (event.clientX - rectangle.left) *
+        canvas.width /
+        rectangle.width;
+
+    mouse.y =
+        (event.clientY - rectangle.top) *
+        canvas.height /
+        rectangle.height;
+});
+
+canvas.addEventListener("mousedown", function(event) {
+    if (event.button === 0) {
+        mouse.down = true;
+    }
+});
+
+window.addEventListener("mouseup", function(event) {
+    if (event.button === 0) {
+        mouse.down = false;
+    }
+});
+
+canvas.addEventListener("contextmenu", function(event) {
+    event.preventDefault();
+});
+
+function randomNumber(minimum, maximum) {
+    return Math.random() * (maximum - minimum) + minimum;
 }
 
 function randomItem(array) {
-    return array[
-        Math.floor(
-            Math.random() *
-            array.length
-        )
-    ];
+    return array[Math.floor(Math.random() * array.length)];
 }
 
-function distance(
-    first,
-    second
-) {
+function distance(first, second) {
     return Math.hypot(
         first.x - second.x,
         first.y - second.y
@@ -812,8 +655,7 @@ function distance(
 }
 
 function normalize(dx, dy) {
-    const length =
-        Math.hypot(dx, dy) || 1;
+    const length = Math.hypot(dx, dy) || 1;
 
     return {
         x: dx / length,
@@ -821,74 +663,117 @@ function normalize(dx, dy) {
     };
 }
 
-function rotateDirection(
-    direction,
-    angle
-) {
+function rotateDirection(direction, angle) {
     return {
         x:
-            direction.x *
-            Math.cos(angle) -
-            direction.y *
-            Math.sin(angle),
+            direction.x * Math.cos(angle) -
+            direction.y * Math.sin(angle),
 
         y:
-            direction.x *
-            Math.sin(angle) +
-            direction.y *
-            Math.cos(angle)
+            direction.x * Math.sin(angle) +
+            direction.y * Math.cos(angle)
     };
 }
 
-function getCharacterStats(
-    heroId
-) {
-    return (
-        HERO_STATS[heroId] ||
-        HERO_STATS.farmer
+function rectangleCollision(x, y, radius, rectangle) {
+    const closestX = Math.max(
+        rectangle.x,
+        Math.min(x, rectangle.x + rectangle.w)
     );
+
+    const closestY = Math.max(
+        rectangle.y,
+        Math.min(y, rectangle.y + rectangle.h)
+    );
+
+    const dx = x - closestX;
+    const dy = y - closestY;
+
+    return dx * dx + dy * dy < radius * radius;
+}
+
+function collidesWithWall(x, y, radius) {
+    return walls.some(function(wall) {
+        return rectangleCollision(x, y, radius, wall);
+    });
+}
+
+function collidesWithWater(x, y, radius) {
+    return waterPools.some(function(water) {
+        return rectangleCollision(x, y, radius, water);
+    });
+}
+
+function isBlocked(x, y, radius) {
+    return (
+        collidesWithWall(x, y, radius) ||
+        collidesWithWater(x, y, radius)
+    );
+}
+
+function isSafeSpawn(x, y, radius = 35) {
+    if (
+        x < radius ||
+        y < radius ||
+        x > WORLD_WIDTH - radius ||
+        y > WORLD_HEIGHT - radius
+    ) {
+        return false;
+    }
+
+    return !isBlocked(x, y, radius);
+}
+
+function getSafeSpawn(position) {
+    if (isSafeSpawn(position.x, position.y)) {
+        return position;
+    }
+
+    for (let radius = 60; radius <= 600; radius += 50) {
+        for (let angle = 0; angle < Math.PI * 2; angle += 0.35) {
+            const x =
+                position.x +
+                Math.cos(angle) * radius;
+
+            const y =
+                position.y +
+                Math.sin(angle) * radius;
+
+            if (isSafeSpawn(x, y)) {
+                return { x, y };
+            }
+        }
+    }
+
+    return {
+        x: WORLD_WIDTH / 2,
+        y: WORLD_HEIGHT / 2
+    };
+}
+
+function getCharacterStats(heroId) {
+    return HERO_STATS[heroId] || HERO_STATS.farmer;
 }
 
 function getAliveContestants() {
-    return fighters.filter(
-        function(fighter) {
-            return (
-                fighter.alive &&
-                !fighter.isSummon
-            );
-        }
-    );
+    return fighters.filter(function(fighter) {
+        return fighter.alive && !fighter.isSummon;
+    });
 }
 
-function createFighter(
-    hero,
-    x,
-    y,
-    isPlayer,
-    number
-) {
-    const stats =
-        getCharacterStats(
-            hero.id
-        );
+function createFighter(hero, x, y, isPlayer, number) {
+    const stats = getCharacterStats(hero.id);
 
     return {
-        id:
-            isPlayer
-                ? "player"
-                : "bot-" + number,
-
-        name:
-            isPlayer
-                ? "TY"
-                : "BOT " + number,
+        id: isPlayer ? "player" : "bot-" + number,
+        name: isPlayer ? "TY" : "BOT " + number,
 
         heroId: hero.id,
         heroName: hero.nazwa,
         icon: hero.ikona,
 
-        x: x,
-        y: y,
+        x,
+        y,
 
         radius: 28,
 
@@ -900,104 +785,46 @@ function createFighter(
         range: stats.range,
         cooldown: stats.cooldown,
 
-        projectileSpeed:
-            stats.projectileSpeed || 0,
+        projectileSpeed: stats.projectileSpeed || 0,
+        projectileWidth: stats.projectileWidth || 0,
+        projectileLife: stats.projectileLife || 0,
 
-        projectileWidth:
-            stats.projectileWidth || 0,
+        melee: Boolean(stats.melee),
+        canPassWalls: Boolean(stats.canPassWalls),
+        tripleShot: Boolean(stats.tripleShot),
 
-        projectileLife:
-            stats.projectileLife || 0,
+        farmerThirdAttack: Boolean(stats.farmerThirdAttack),
 
-        melee:
-            Boolean(stats.melee),
+        lowHpShield: Boolean(stats.lowHpShield),
+        shieldThreshold: stats.shieldThreshold || 0,
+        shieldReduction: stats.shieldReduction || 0,
 
-        canPassWalls:
-            Boolean(
-                stats.canPassWalls
-            ),
+        fastThirdArrow: Boolean(stats.fastThirdArrow),
+        fastArrowMultiplier: stats.fastArrowMultiplier || 1,
 
-        tripleShot:
-            Boolean(
-                stats.tripleShot
-            ),
+        lowHpDamageBonus: Boolean(stats.lowHpDamageBonus),
+        damageBonusThreshold: stats.damageBonusThreshold || 0,
+        damageBonusMultiplier: stats.damageBonusMultiplier || 1,
 
-        farmerThirdAttack:
-            Boolean(
-                stats.farmerThirdAttack
-            ),
+        shockwaveEvery: stats.shockwaveEvery || 0,
+        attackShockwaveRadius: stats.attackShockwaveRadius || 0,
+        attackShockwaveDamage: stats.attackShockwaveDamage || 0,
 
-        lowHpShield:
-            Boolean(
-                stats.lowHpShield
-            ),
+        curseEvery: stats.curseEvery || 0,
+        curseDuration: stats.curseDuration || 0,
+        curseMultiplier: stats.curseMultiplier || 1,
 
-        shieldThreshold:
-            stats.shieldThreshold || 0,
-
-        shieldReduction:
-            stats.shieldReduction || 0,
-
-        fastThirdArrow:
-            Boolean(
-                stats.fastThirdArrow
-            ),
-
-        fastArrowMultiplier:
-            stats.fastArrowMultiplier || 1,
-
-        lowHpDamageBonus:
-            Boolean(
-                stats.lowHpDamageBonus
-            ),
-
-        damageBonusThreshold:
-            stats.damageBonusThreshold || 0,
-
-        damageBonusMultiplier:
-            stats.damageBonusMultiplier || 1,
-
-        shockwaveEvery:
-            stats.shockwaveEvery || 0,
-
-        attackShockwaveRadius:
-            stats.attackShockwaveRadius || 0,
-
-        attackShockwaveDamage:
-            stats.attackShockwaveDamage || 0,
-
-        curseEvery:
-            stats.curseEvery || 0,
-
-        curseDuration:
-            stats.curseDuration || 0,
-
-        curseMultiplier:
-            stats.curseMultiplier || 1,
-
-        summonsGhosts:
-            Boolean(
-                stats.summonsGhosts
-            ),
-
-        summonCooldown:
-            stats.summonCooldown || 0,
-
-        maximumSummons:
-            stats.maximumSummons || 0,
-
-        lastSummon:
-            performance.now(),
+        summonsGhosts: Boolean(stats.summonsGhosts),
+        summonCooldown: stats.summonCooldown || 0,
+        maximumSummons: stats.maximumSummons || 0,
+        lastSummon: performance.now(),
 
         attackCounter: 0,
-
         cursedUntil: 0,
-
         receivedDamageMultiplier: 1,
 
-        isPlayer: isPlayer,
+        isPlayer,
         isSummon: false,
-
         summoner: null,
 
         alive: true,
@@ -1008,68 +835,38 @@ function createFighter(
         target: null,
         behavior: "wander",
 
-        directionX:
-            randomNumber(-1, 1),
-
-        directionY:
-            randomNumber(-1, 1),
+        directionX: randomNumber(-1, 1),
+        directionY: randomNumber(-1, 1),
 
         nextDecision:
             performance.now() +
-            randomNumber(
-                700,
-                2200
-            ),
+            randomNumber(700, 2200),
 
         color:
             isPlayer
                 ? "#36a9ff"
-                : `hsl(
-                    ${Math.random() * 360},
-                    70%,
-                    55%
-                )`
+                : `hsl(${Math.random() * 360}, 70%, 55%)`
     };
 }
 
-function createSummonedGhost(
-    priest
-) {
+function createSummonedGhost(priest) {
     summonNumber++;
 
-    const angle =
-        Math.random() *
-        Math.PI *
-        2;
-
-    const summonDistance = 60;
+    const position = getSafeSpawn({
+        x: priest.x + randomNumber(-80, 80),
+        y: priest.y + randomNumber(-80, 80)
+    });
 
     const ghost = {
-        id:
-            "summon-" +
-            summonNumber,
+        id: "summon-" + summonNumber,
+        name: "DUCH",
 
-        name:
-            "DUCH",
+        heroId: "summoned-ghost",
+        heroName: "Przywołany Duch",
+        icon: "👻",
 
-        heroId:
-            "summoned-ghost",
-
-        heroName:
-            "Przywołany Duch",
-
-        icon:
-            "👻",
-
-        x:
-            priest.x +
-            Math.cos(angle) *
-            summonDistance,
-
-        y:
-            priest.y +
-            Math.sin(angle) *
-            summonDistance,
+        x: position.x,
+        y: position.y,
 
         radius: 20,
 
@@ -1087,8 +884,8 @@ function createSummonedGhost(
 
         melee: true,
         canPassWalls: true,
-
         tripleShot: false,
+
         farmerThirdAttack: false,
         lowHpShield: false,
         fastThirdArrow: false,
@@ -1100,13 +897,11 @@ function createSummonedGhost(
         summonsGhosts: false,
 
         attackCounter: 0,
-
         cursedUntil: 0,
         receivedDamageMultiplier: 1,
 
         isPlayer: false,
         isSummon: true,
-
         summoner: priest,
 
         alive: true,
@@ -1119,31 +914,10 @@ function createSummonedGhost(
 
         directionX: 0,
         directionY: 0,
-
         nextDecision: 0,
 
         color: "#9cecff"
     };
-
-    ghost.x =
-        Math.max(
-            ghost.radius,
-            Math.min(
-                WORLD_WIDTH -
-                ghost.radius,
-                ghost.x
-            )
-        );
-
-    ghost.y =
-        Math.max(
-            ghost.radius,
-            Math.min(
-                WORLD_HEIGHT -
-                ghost.radius,
-                ghost.y
-            )
-        );
 
     fighters.push(ghost);
 
@@ -1156,18 +930,12 @@ function createSummonedGhost(
 
     effects.push({
         type: "circle",
-
         x: ghost.x,
         y: ghost.y,
-
         radius: 10,
         maximumRadius: 65,
-
         color: "#a9efff",
-
-        born:
-            performance.now(),
-
+        born: performance.now(),
         life: 450,
         lineWidth: 8
     });
@@ -1175,42 +943,27 @@ function createSummonedGhost(
 
 function startGame() {
     const mapId =
-        localStorage.getItem(
-            "selectedMap"
-        ) || "green";
+        localStorage.getItem("selectedMap") ||
+        "green";
 
     selectedMap =
         MAPS[mapId] ||
         MAPS.green;
 
-    document
-        .getElementById(
-            "mapName"
-        )
-        .textContent =
+    document.getElementById("mapName").textContent =
         selectedMap.name;
 
-    const state =
-        getState();
+    const state = getState();
 
-    let selectedHero =
-        getHero(
-            state.selected
-        );
+    let selectedHero = getHero(state.selected);
 
     if (
         !selectedHero ||
-        !BOHATEROWIE.some(
-            function(hero) {
-                return (
-                    hero.id ===
-                    selectedHero.id
-                );
-            }
-        )
+        !BOHATEROWIE.some(function(hero) {
+            return hero.id === selectedHero.id;
+        })
     ) {
-        selectedHero =
-            BOHATEROWIE[0];
+        selectedHero = BOHATEROWIE[0];
     }
 
     fighters = [];
@@ -1220,54 +973,41 @@ function startGame() {
     winner = null;
     matchFinished = false;
     trophiesAwarded = false;
-
     summonNumber = 0;
 
     mouse.down = false;
 
     document
-        .getElementById(
-            "deathScreen"
-        )
-        .classList.remove(
-            "visible"
-        );
+        .getElementById("deathScreen")
+        .classList.remove("visible");
 
-    document
-        .getElementById(
-            "matchResult"
-        )
-        .innerHTML = "";
+    document.getElementById("matchResult").innerHTML = "";
 
-    player =
-        createFighter(
-            selectedHero,
-            WORLD_WIDTH / 2,
-            WORLD_HEIGHT - 220,
-            true,
-            0
-        );
+    const playerSpawn = getSafeSpawn(spawnPositions[8]);
+
+    player = createFighter(
+        selectedHero,
+        playerSpawn.x,
+        playerSpawn.y,
+        true,
+        0
+    );
 
     fighters.push(player);
 
-    for (
-        let i = 0;
-        i < 9;
-        i++
-    ) {
-        const randomHero =
-            randomItem(
-                BOHATEROWIE
-            );
+    const botSpawns = spawnPositions.filter(function(_, index) {
+        return index !== 8;
+    });
 
-        const position =
-            spawnPositions[i];
+    for (let i = 0; i < 9; i++) {
+        const randomHero = randomItem(BOHATEROWIE);
+        const safePosition = getSafeSpawn(botSpawns[i]);
 
         fighters.push(
             createFighter(
                 randomHero,
-                position.x,
-                position.y,
+                safePosition.x,
+                safePosition.y,
                 false,
                 i + 1
             )
@@ -1280,17 +1020,10 @@ function startGame() {
 }
 
 function updateInformation() {
-    const alive =
-        getAliveContestants()
-            .length;
+    const alive = getAliveContestants().length;
 
-    document
-        .getElementById(
-            "aliveCounter"
-        )
-        .textContent =
-        "Pozostało: " +
-        alive;
+    document.getElementById("aliveCounter").textContent =
+        "Pozostało: " + alive;
 
     if (!player) {
         return;
@@ -1304,37 +1037,25 @@ function updateInformation() {
             player.maxHp *
             player.shieldThreshold
     ) {
-        extra +=
-            " | 🛡️ TARCZA";
+        extra += " | 🛡️ TARCZA";
     }
 
-    if (
-        player.cursedUntil >
-        performance.now()
-    ) {
-        extra +=
-            " | 🔮 KLĄTWA";
+    if (player.cursedUntil > performance.now()) {
+        extra += " | 🔮 KLĄTWA";
     }
 
     if (player.hidden) {
-        extra +=
-            " | 🌿 UKRYTY";
+        extra += " | 🌿 UKRYTY";
     }
 
-    if (
-        player.summonsGhosts
-    ) {
-        const summons =
-            fighters.filter(
-                function(fighter) {
-                    return (
-                        fighter.alive &&
-                        fighter.isSummon &&
-                        fighter.summoner ===
-                            player
-                    );
-                }
-            ).length;
+    if (player.summonsGhosts) {
+        const summons = fighters.filter(function(fighter) {
+            return (
+                fighter.alive &&
+                fighter.isSummon &&
+                fighter.summoner === player
+            );
+        }).length;
 
         extra +=
             " | 👻 " +
@@ -1343,28 +1064,16 @@ function updateInformation() {
             player.maximumSummons;
     }
 
-    if (
-        player.canPassWalls
-    ) {
-        extra +=
-            " | 🧱 PRZENIKANIE";
+    if (player.canPassWalls) {
+        extra += " | 🧱 PRZENIKANIE";
     }
 
-    document
-        .getElementById(
-            "playerInfo"
-        )
-        .textContent =
+    document.getElementById("playerInfo").textContent =
         player.icon +
         " " +
         player.heroName +
         " | ❤️ " +
-        Math.max(
-            0,
-            Math.ceil(
-                player.hp
-            )
-        ) +
+        Math.max(0, Math.ceil(player.hp)) +
         extra;
 }
 
@@ -1381,188 +1090,95 @@ function updateCamera() {
         player.y -
         canvas.height / 2;
 
-    camera.x =
-        Math.max(
-            0,
-            Math.min(
-                WORLD_WIDTH -
-                canvas.width,
-                camera.x
-            )
-        );
+    camera.x = Math.max(
+        0,
+        Math.min(
+            WORLD_WIDTH - canvas.width,
+            camera.x
+        )
+    );
 
-    camera.y =
-        Math.max(
-            0,
-            Math.min(
-                WORLD_HEIGHT -
-                canvas.height,
-                camera.y
-            )
-        );
-}
-
-function rectangleCollision(
-    x,
-    y,
-    radius,
-    rectangle
-) {
-    const closestX =
-        Math.max(
-            rectangle.x,
-            Math.min(
-                x,
-                rectangle.x +
-                rectangle.w
-            )
-        );
-
-    const closestY =
-        Math.max(
-            rectangle.y,
-            Math.min(
-                y,
-                rectangle.y +
-                rectangle.h
-            )
-        );
-
-    const dx =
-        x - closestX;
-
-    const dy =
-        y - closestY;
-
-    return (
-        dx * dx +
-        dy * dy <
-        radius * radius
+    camera.y = Math.max(
+        0,
+        Math.min(
+            WORLD_HEIGHT - canvas.height,
+            camera.y
+        )
     );
 }
 
-function collidesWithWall(
-    x,
-    y,
-    radius
-) {
-    return walls.some(
-        function(wall) {
-            return rectangleCollision(
-                x,
-                y,
-                radius,
-                wall
-            );
-        }
+function moveFighter(fighter, dx, dy) {
+    const nextX = Math.max(
+        fighter.radius,
+        Math.min(
+            WORLD_WIDTH - fighter.radius,
+            fighter.x + dx
+        )
     );
-}
-
-function moveFighter(
-    fighter,
-    dx,
-    dy
-) {
-    const nextX =
-        Math.max(
-            fighter.radius,
-            Math.min(
-                WORLD_WIDTH -
-                fighter.radius,
-                fighter.x + dx
-            )
-        );
 
     if (
         fighter.canPassWalls ||
-        !collidesWithWall(
+        !isBlocked(
             nextX,
             fighter.y,
             fighter.radius
         )
     ) {
-        fighter.x =
-            nextX;
+        fighter.x = nextX;
     }
 
-    const nextY =
-        Math.max(
-            fighter.radius,
-            Math.min(
-                WORLD_HEIGHT -
-                fighter.radius,
-                fighter.y + dy
-            )
-        );
+    const nextY = Math.max(
+        fighter.radius,
+        Math.min(
+            WORLD_HEIGHT - fighter.radius,
+            fighter.y + dy
+        )
+    );
 
     if (
         fighter.canPassWalls ||
-        !collidesWithWall(
+        !isBlocked(
             fighter.x,
             nextY,
             fighter.radius
         )
     ) {
-        fighter.y =
-            nextY;
+        fighter.y = nextY;
     }
 }
 
-function pointInsideRectangle(
-    x,
-    y,
-    rectangle
-) {
+function pointInsideRectangle(x, y, rectangle) {
     return (
         x >= rectangle.x &&
-        x <=
-            rectangle.x +
-            rectangle.w &&
+        x <= rectangle.x + rectangle.w &&
         y >= rectangle.y &&
-        y <=
-            rectangle.y +
-            rectangle.h
+        y <= rectangle.y + rectangle.h
     );
 }
 
 function updateBushStatus() {
-    fighters.forEach(
-        function(fighter) {
-            fighter.hidden =
-                fighter.alive &&
-                bushes.some(
-                    function(bush) {
-                        return pointInsideRectangle(
-                            fighter.x,
-                            fighter.y,
-                            bush
-                        );
-                    }
+    fighters.forEach(function(fighter) {
+        fighter.hidden =
+            fighter.alive &&
+            bushes.some(function(bush) {
+                return pointInsideRectangle(
+                    fighter.x,
+                    fighter.y,
+                    bush
                 );
-        }
-    );
+            });
+    });
 }
 
-function canSeeFighter(
-    observer,
-    target
-) {
+function canSeeFighter(observer, target) {
     if (!target.hidden) {
         return true;
     }
 
-    return (
-        distance(
-            observer,
-            target
-        ) < 170
-    );
+    return distance(observer, target) < 170;
 }
 
-function isEnemy(
-    observer,
-    target
-) {
+function isEnemy(observer, target) {
     if (
         !target.alive ||
         target === observer
@@ -1572,16 +1188,14 @@ function isEnemy(
 
     if (
         observer.isSummon &&
-        target ===
-            observer.summoner
+        target === observer.summoner
     ) {
         return false;
     }
 
     if (
         target.isSummon &&
-        target.summoner ===
-            observer
+        target.summoner === observer
     ) {
         return false;
     }
@@ -1589,8 +1203,7 @@ function isEnemy(
     if (
         observer.isSummon &&
         target.isSummon &&
-        observer.summoner ===
-            target.summoner
+        observer.summoner === target.summoner
     ) {
         return false;
     }
@@ -1610,187 +1223,101 @@ function movePlayer() {
     let dx = 0;
     let dy = 0;
 
-    if (
-        keys["w"] ||
-        keys["arrowup"]
-    ) {
+    if (keys["w"] || keys["arrowup"]) {
         dy -= 1;
     }
 
-    if (
-        keys["s"] ||
-        keys["arrowdown"]
-    ) {
+    if (keys["s"] || keys["arrowdown"]) {
         dy += 1;
     }
 
-    if (
-        keys["a"] ||
-        keys["arrowleft"]
-    ) {
+    if (keys["a"] || keys["arrowleft"]) {
         dx -= 1;
     }
 
-    if (
-        keys["d"] ||
-        keys["arrowright"]
-    ) {
+    if (keys["d"] || keys["arrowright"]) {
         dx += 1;
     }
 
-    if (
-        dx !== 0 ||
-        dy !== 0
-    ) {
-        const direction =
-            normalize(
-                dx,
-                dy
-            );
+    if (dx !== 0 || dy !== 0) {
+        const direction = normalize(dx, dy);
 
         moveFighter(
             player,
-            direction.x *
-            player.speed,
-            direction.y *
-            player.speed
+            direction.x * player.speed,
+            direction.y * player.speed
         );
     }
 
     if (mouse.down) {
         attackTowards(
             player,
-            mouse.x +
-            camera.x,
-
-            mouse.y +
-            camera.y
+            mouse.x + camera.x,
+            mouse.y + camera.y
         );
     }
 }
 
-function getPossibleTargets(
-    fighter
-) {
-    return fighters.filter(
-        function(other) {
-            return (
-                isEnemy(
-                    fighter,
-                    other
-                ) &&
-                canSeeFighter(
-                    fighter,
-                    other
-                )
-            );
-        }
-    );
+function getPossibleTargets(fighter) {
+    return fighters.filter(function(other) {
+        return (
+            isEnemy(fighter, other) &&
+            canSeeFighter(fighter, other)
+        );
+    });
 }
 
-function getNearestTarget(
-    fighter
-) {
-    const targets =
-        getPossibleTargets(
-            fighter
-        );
+function getNearestTarget(fighter) {
+    const targets = getPossibleTargets(fighter);
 
-    if (
-        targets.length === 0
-    ) {
+    if (targets.length === 0) {
         return null;
     }
 
-    targets.sort(
-        function(first, second) {
-            return (
-                distance(
-                    fighter,
-                    first
-                ) -
-                distance(
-                    fighter,
-                    second
-                )
-            );
-        }
-    );
+    targets.sort(function(first, second) {
+        return (
+            distance(fighter, first) -
+            distance(fighter, second)
+        );
+    });
 
     return targets[0];
 }
 
 function chooseBotDecision(bot) {
-    const targets =
-        getPossibleTargets(
-            bot
-        );
+    const targets = getPossibleTargets(bot);
 
-    if (
-        targets.length === 0
-    ) {
+    if (targets.length === 0) {
         bot.target = null;
-        bot.behavior =
-            "wander";
+        bot.behavior = "wander";
     } else {
-        bot.target =
-            randomItem(
-                targets
-            );
+        bot.target = randomItem(targets);
 
-        const roll =
-            Math.random();
+        const roll = Math.random();
 
-        if (
-            bot.hp <
-            bot.maxHp *
-            0.3
-        ) {
+        if (bot.hp < bot.maxHp * 0.3) {
             bot.behavior =
-                Math.random() <
-                0.72
+                Math.random() < 0.72
                     ? "flee"
                     : "attack";
-        } else if (
-            roll < 0.62
-        ) {
-            bot.behavior =
-                "attack";
-        } else if (
-            roll < 0.84
-        ) {
-            bot.behavior =
-                "wander";
+        } else if (roll < 0.62) {
+            bot.behavior = "attack";
+        } else if (roll < 0.84) {
+            bot.behavior = "wander";
         } else {
-            bot.behavior =
-                "flee";
+            bot.behavior = "flee";
         }
     }
 
-    bot.directionX =
-        randomNumber(
-            -1,
-            1
-        );
-
-    bot.directionY =
-        randomNumber(
-            -1,
-            1
-        );
+    bot.directionX = randomNumber(-1, 1);
+    bot.directionY = randomNumber(-1, 1);
 
     bot.nextDecision =
         performance.now() +
-        randomNumber(
-            700,
-            2200
-        );
+        randomNumber(700, 2200);
 }
 
-function updateBot(
-    bot,
-    currentTime
-) {
+function updateBot(bot, currentTime) {
     if (
         !bot.alive ||
         matchFinished ||
@@ -1800,61 +1327,30 @@ function updateBot(
     }
 
     if (
-        currentTime >=
-            bot.nextDecision ||
+        currentTime >= bot.nextDecision ||
         !bot.target ||
         !bot.target.alive ||
-        !isEnemy(
-            bot,
-            bot.target
-        ) ||
-        !canSeeFighter(
-            bot,
-            bot.target
-        )
+        !isEnemy(bot, bot.target) ||
+        !canSeeFighter(bot, bot.target)
     ) {
-        chooseBotDecision(
-            bot
-        );
+        chooseBotDecision(bot);
     }
 
-    if (
-        bot.behavior ===
-        "wander"
-    ) {
-        const direction =
-            normalize(
-                bot.directionX,
-                bot.directionY
-            );
+    if (bot.behavior === "wander") {
+        const direction = normalize(
+            bot.directionX,
+            bot.directionY
+        );
 
         moveFighter(
             bot,
-
-            direction.x *
-            bot.speed *
-            0.58,
-
-            direction.y *
-            bot.speed *
-            0.58
+            direction.x * bot.speed * 0.58,
+            direction.y * bot.speed * 0.58
         );
 
-        if (
-            Math.random() <
-            0.015
-        ) {
-            bot.directionX =
-                randomNumber(
-                    -1,
-                    1
-                );
-
-            bot.directionY =
-                randomNumber(
-                    -1,
-                    1
-                );
+        if (Math.random() < 0.015) {
+            bot.directionX = randomNumber(-1, 1);
+            bot.directionY = randomNumber(-1, 1);
         }
 
         return;
@@ -1864,39 +1360,21 @@ function updateBot(
         return;
     }
 
-    const direction =
-        normalize(
-            bot.target.x -
-            bot.x,
+    const direction = normalize(
+        bot.target.x - bot.x,
+        bot.target.y - bot.y
+    );
 
-            bot.target.y -
-            bot.y
-        );
+    const targetDistance = distance(bot, bot.target);
 
-    const targetDistance =
-        distance(
-            bot,
-            bot.target
-        );
-
-    if (
-        bot.behavior ===
-        "flee"
-    ) {
+    if (bot.behavior === "flee") {
         moveFighter(
             bot,
-
-            -direction.x *
-            bot.speed,
-
-            -direction.y *
-            bot.speed
+            -direction.x * bot.speed,
+            -direction.y * bot.speed
         );
 
-        if (
-            Math.random() <
-            0.035
-        ) {
+        if (Math.random() < 0.035) {
             attackTowards(
                 bot,
                 bot.target.x,
@@ -1909,42 +1387,20 @@ function updateBot(
 
     const preferredDistance =
         bot.melee
-            ? bot.range *
-                0.7
-            : Math.min(
-                bot.range *
-                0.58,
-                500
-            );
+            ? bot.range * 0.7
+            : Math.min(bot.range * 0.58, 500);
 
-    if (
-        targetDistance >
-        preferredDistance
-    ) {
+    if (targetDistance > preferredDistance) {
         moveFighter(
             bot,
-
-            direction.x *
-            bot.speed *
-            0.78,
-
-            direction.y *
-            bot.speed *
-            0.78
+            direction.x * bot.speed * 0.78,
+            direction.y * bot.speed * 0.78
         );
-    } else if (
-        !bot.melee
-    ) {
+    } else if (!bot.melee) {
         moveFighter(
             bot,
-
-            -direction.x *
-            bot.speed *
-            0.24,
-
-            -direction.y *
-            bot.speed *
-            0.24
+            -direction.x * bot.speed * 0.24,
+            -direction.y * bot.speed * 0.24
         );
     }
 
@@ -1955,9 +1411,7 @@ function updateBot(
     );
 }
 
-function updateSummon(
-    summon
-) {
+function updateSummon(summon) {
     if (
         !summon.alive ||
         matchFinished
@@ -1969,84 +1423,37 @@ function updateSummon(
         !summon.summoner ||
         !summon.summoner.alive
     ) {
-        summon.alive =
-            false;
-
+        summon.alive = false;
         return;
     }
 
     if (
         !summon.target ||
         !summon.target.alive ||
-        !isEnemy(
-            summon,
-            summon.target
-        )
+        !isEnemy(summon, summon.target)
     ) {
-        summon.target =
-            getNearestTarget(
-                summon
-            );
+        summon.target = getNearestTarget(summon);
     }
 
     if (!summon.target) {
-        const direction =
-            normalize(
-                summon.summoner.x -
-                summon.x,
-
-                summon.summoner.y -
-                summon.y
-            );
-
-        if (
-            distance(
-                summon,
-                summon.summoner
-            ) > 80
-        ) {
-            moveFighter(
-                summon,
-
-                direction.x *
-                summon.speed,
-
-                direction.y *
-                summon.speed
-            );
-        }
-
         return;
     }
 
-    const direction =
-        normalize(
-            summon.target.x -
-            summon.x,
+    const direction = normalize(
+        summon.target.x - summon.x,
+        summon.target.y - summon.y
+    );
 
-            summon.target.y -
-            summon.y
-        );
+    const targetDistance = distance(
+        summon,
+        summon.target
+    );
 
-    const targetDistance =
-        distance(
-            summon,
-            summon.target
-        );
-
-    if (
-        targetDistance >
-        summon.range *
-        0.72
-    ) {
+    if (targetDistance > summon.range * 0.72) {
         moveFighter(
             summon,
-
-            direction.x *
-            summon.speed,
-
-            direction.y *
-            summon.speed
+            direction.x * summon.speed,
+            direction.y * summon.speed
         );
     }
 
@@ -2057,56 +1464,42 @@ function updateSummon(
     );
 }
 
-function updatePriestSummons(
-    currentTime
-) {
-    fighters
-        .slice()
-        .forEach(
-            function(fighter) {
-                if (
-                    !fighter.alive ||
-                    fighter.isSummon ||
-                    !fighter.summonsGhosts
-                ) {
-                    return;
-                }
+function updatePriestSummons(currentTime) {
+    fighters.slice().forEach(function(fighter) {
+        if (
+            !fighter.alive ||
+            fighter.isSummon ||
+            !fighter.summonsGhosts
+        ) {
+            return;
+        }
 
-                const summons =
-                    fighters.filter(
-                        function(other) {
-                            return (
-                                other.alive &&
-                                other.isSummon &&
-                                other.summoner ===
-                                    fighter
-                            );
-                        }
-                    );
+        const summons = fighters.filter(function(other) {
+            return (
+                other.alive &&
+                other.isSummon &&
+                other.summoner === fighter
+            );
+        });
 
-                if (
-                    summons.length >=
-                    fighter.maximumSummons
-                ) {
-                    return;
-                }
+        if (
+            summons.length >=
+            fighter.maximumSummons
+        ) {
+            return;
+        }
 
-                if (
-                    currentTime -
-                    fighter.lastSummon <
-                    fighter.summonCooldown
-                ) {
-                    return;
-                }
+        if (
+            currentTime -
+            fighter.lastSummon <
+            fighter.summonCooldown
+        ) {
+            return;
+        }
 
-                fighter.lastSummon =
-                    currentTime;
-
-                createSummonedGhost(
-                    fighter
-                );
-            }
-        );
+        fighter.lastSummon = currentTime;
+        createSummonedGhost(fighter);
+    });
 }
 
 function findTargetNearPoint(
@@ -2114,47 +1507,27 @@ function findTargetNearPoint(
     targetX,
     targetY
 ) {
-    const targets =
-        fighters.filter(
-            function(fighter) {
-                return (
-                    isEnemy(
-                        attacker,
-                        fighter
-                    ) &&
-                    canSeeFighter(
-                        attacker,
-                        fighter
-                    )
-                );
-            }
+    const targets = fighters.filter(function(fighter) {
+        return (
+            isEnemy(attacker, fighter) &&
+            canSeeFighter(attacker, fighter)
         );
+    });
 
-    targets.sort(
-        function(first, second) {
-            return (
-                Math.hypot(
-                    first.x -
-                    targetX,
+    targets.sort(function(first, second) {
+        return (
+            Math.hypot(
+                first.x - targetX,
+                first.y - targetY
+            ) -
+            Math.hypot(
+                second.x - targetX,
+                second.y - targetY
+            )
+        );
+    });
 
-                    first.y -
-                    targetY
-                ) -
-                Math.hypot(
-                    second.x -
-                    targetX,
-
-                    second.y -
-                    targetY
-                )
-            );
-        }
-    );
-
-    return (
-        targets[0] ||
-        null
-    );
+    return targets[0] || null;
 }
 
 function attackTowards(
@@ -2169,8 +1542,7 @@ function attackTowards(
         return;
     }
 
-    const currentTime =
-        performance.now();
+    const currentTime = performance.now();
 
     if (
         currentTime -
@@ -2180,33 +1552,22 @@ function attackTowards(
         return;
     }
 
-    const direction =
-        normalize(
-            targetX -
-            attacker.x,
+    const direction = normalize(
+        targetX - attacker.x,
+        targetY - attacker.y
+    );
 
-            targetY -
-            attacker.y
-        );
-
-    attacker.lastAttack =
-        currentTime;
-
-    attacker.hidden =
-        false;
-
+    attacker.lastAttack = currentTime;
+    attacker.hidden = false;
     attacker.attackCounter++;
 
-    let attackDamage =
-        attacker.damage;
+    let attackDamage = attacker.damage;
 
     if (
         attacker.farmerThirdAttack &&
-        attacker.attackCounter %
-            3 === 0
+        attacker.attackCounter % 3 === 0
     ) {
-        attackDamage *=
-            1.5;
+        attackDamage *= 1.5;
 
         createTextEffect(
             attacker.x,
@@ -2220,36 +1581,24 @@ function attackTowards(
         attacker.lowHpDamageBonus &&
         attacker.hp <
             attacker.maxHp *
-            attacker
-                .damageBonusThreshold
+            attacker.damageBonusThreshold
     ) {
         attackDamage *=
-            attacker
-                .damageBonusMultiplier;
+            attacker.damageBonusMultiplier;
     }
 
-    attackDamage =
-        Math.round(
-            attackDamage
-        );
+    attackDamage = Math.round(attackDamage);
 
-    if (
-        attacker.melee
-    ) {
-        const target =
-            findTargetNearPoint(
-                attacker,
-                targetX,
-                targetY
-            );
+    if (attacker.melee) {
+        const target = findTargetNearPoint(
+            attacker,
+            targetX,
+            targetY
+        );
 
         if (
             target &&
-            distance(
-                attacker,
-                target
-            ) <=
-                attacker.range
+            distance(attacker, target) <= attacker.range
         ) {
             damageFighter(
                 target,
@@ -2267,20 +1616,15 @@ function attackTowards(
     }
 
     if (
-        attacker.shockwaveEvery >
-            0 &&
+        attacker.shockwaveEvery > 0 &&
         attacker.attackCounter %
             attacker.shockwaveEvery ===
             0
     ) {
-        createGolemShockwave(
-            attacker
-        );
+        createGolemShockwave(attacker);
     }
 
-    if (
-        attacker.tripleShot
-    ) {
+    if (attacker.tripleShot) {
         createProjectile(
             attacker,
             direction,
@@ -2319,114 +1663,71 @@ function createProjectile(
     angle,
     attackDamage
 ) {
-    const rotated =
-        rotateDirection(
-            direction,
-            angle
-        );
+    const rotated = rotateDirection(
+        direction,
+        angle
+    );
 
-    let color =
-        "#f9eda2";
+    let color = "#f9eda2";
+    let speedMultiplier = 1;
+    let appliesCurse = false;
 
-    let speedMultiplier =
-        1;
-
-    let appliesCurse =
-        false;
-
-    if (
-        attacker.heroId ===
-        "farmer"
-    ) {
-        color =
-            "#6b4327";
+    if (attacker.heroId === "farmer") {
+        color = "#6b4327";
     }
 
-    if (
-        attacker.heroId ===
-        "lucznik"
-    ) {
-        color =
-            "#f3e6a2";
+    if (attacker.heroId === "lucznik") {
+        color = "#f3e6a2";
 
         if (
             attacker.fastThirdArrow &&
-            attacker.attackCounter %
-                3 === 0
+            attacker.attackCounter % 3 === 0
         ) {
             speedMultiplier =
-                attacker
-                    .fastArrowMultiplier;
+                attacker.fastArrowMultiplier;
 
-            color =
-                "#ffffff";
+            color = "#ffffff";
         }
     }
 
-    if (
-        attacker.heroId ===
-        "ksiadz"
-    ) {
-        color =
-            "#e9f4ff";
+    if (attacker.heroId === "ksiadz") {
+        color = "#e9f4ff";
     }
 
-    if (
-        attacker.heroId ===
-        "golem"
-    ) {
-        color =
-            "#8b7566";
+    if (attacker.heroId === "golem") {
+        color = "#8b7566";
     }
 
-    if (
-        attacker.heroId ===
-        "czarodziej"
-    ) {
-        color =
-            "#d851ff";
+    if (attacker.heroId === "czarodziej") {
+        color = "#d851ff";
 
         if (
-            attacker.curseEvery >
-                0 &&
+            attacker.curseEvery > 0 &&
             attacker.attackCounter %
                 attacker.curseEvery ===
                 0
         ) {
-            appliesCurse =
-                true;
-
-            color =
-                "#741cff";
+            appliesCurse = true;
+            color = "#741cff";
         }
     }
 
-    if (
-        attacker.heroId ===
-        "krol"
-    ) {
-        color =
-            "#ffd638";
+    if (attacker.heroId === "krol") {
+        color = "#ffd638";
     }
 
-    if (
-        attacker.heroId ===
-        "wiedzma"
-    ) {
-        color =
-            "#FFCC33";
+    if (attacker.heroId === "wiedzma") {
+        color = "#FFCC33";
     }
 
     projectiles.push({
         x:
             attacker.x +
-            rotated.x *
-            34,
+            rotated.x * 34,
 
         y:
             attacker.y +
-            rotated.y *
-            34,
+            rotated.y * 34,
 
         vx:
             rotated.x *
@@ -2438,192 +1739,117 @@ function createProjectile(
             attacker.projectileSpeed *
             speedMultiplier,
 
-        radius:
-            attacker.projectileWidth,
+        radius: attacker.projectileWidth,
+        damage: attackDamage,
+        owner: attacker,
+        color,
 
-        damage:
-            attackDamage,
+        born: performance.now(),
+        life: attacker.projectileLife,
 
-        owner:
-            attacker,
-
-        color:
-            color,
-
-        born:
-            performance.now(),
-
-        life:
-            attacker.projectileLife,
-
-        appliesCurse:
-            appliesCurse,
-
-        curseDuration:
-            attacker.curseDuration,
-
-        curseMultiplier:
-            attacker.curseMultiplier
+        appliesCurse,
+        curseDuration: attacker.curseDuration,
+        curseMultiplier: attacker.curseMultiplier
     });
 }
 
-function createMeleeEffect(
-    attacker,
-    direction
-) {
+function createMeleeEffect(attacker, direction) {
     effects.push({
         type: "circle",
 
         x:
             attacker.x +
-            direction.x *
-            38,
+            direction.x * 38,
 
         y:
             attacker.y +
-            direction.y *
-            38,
+            direction.y * 38,
 
         radius: 25,
-
-        maximumRadius:
-            attacker.range,
+        maximumRadius: attacker.range,
 
         color:
             attacker.isSummon ||
-            attacker.heroId ===
-                "duch"
+            attacker.heroId === "duch"
                 ? "#bdefff"
                 : "#ffffff",
 
-        born:
-            performance.now(),
-
+        born: performance.now(),
         life: 180,
         lineWidth: 12
     });
 }
 
-function createGolemShockwave(
-    attacker
-) {
-    fighters.forEach(
-        function(target) {
-            if (
-                !isEnemy(
-                    attacker,
-                    target
-                )
-            ) {
-                return;
-            }
-
-            if (
-                distance(
-                    attacker,
-                    target
-                ) <=
-                attacker
-                    .attackShockwaveRadius
-            ) {
-                damageFighter(
-                    target,
-
-                    attacker
-                        .attackShockwaveDamage,
-
-                    attacker
-                );
-            }
+function createGolemShockwave(attacker) {
+    fighters.forEach(function(target) {
+        if (!isEnemy(attacker, target)) {
+            return;
         }
-    );
+
+        if (
+            distance(attacker, target) <=
+            attacker.attackShockwaveRadius
+        ) {
+            damageFighter(
+                target,
+                attacker.attackShockwaveDamage,
+                attacker
+            );
+        }
+    });
 
     effects.push({
         type: "circle",
-
         x: attacker.x,
         y: attacker.y,
-
         radius: 20,
-
-        maximumRadius:
-            attacker
-                .attackShockwaveRadius,
-
-        color:
-            "#d3c0a0",
-
-        born:
-            performance.now(),
-
+        maximumRadius: attacker.attackShockwaveRadius,
+        color: "#d3c0a0",
+        born: performance.now(),
         life: 550,
         lineWidth: 18
     });
 }
 
-function createTextEffect(
-    x,
-    y,
-    text,
-    color
-) {
+function createTextEffect(x, y, text, color) {
     effects.push({
         type: "text",
-
-        x: x,
-        y: y,
-
-        text: text,
-        color: color,
-
-        born:
-            performance.now(),
-
+        x,
+        y,
+        text,
+        color,
+        born: performance.now(),
         life: 700
     });
 }
 
-function removeSummonsOf(
-    summoner
-) {
-    fighters.forEach(
-        function(fighter) {
-            if (
-                fighter.alive &&
-                fighter.isSummon &&
-                fighter.summoner ===
-                    summoner
-            ) {
-                fighter.alive =
-                    false;
-            }
+function removeSummonsOf(summoner) {
+    fighters.forEach(function(fighter) {
+        if (
+            fighter.alive &&
+            fighter.isSummon &&
+            fighter.summoner === summoner
+        ) {
+            fighter.alive = false;
         }
-    );
+    });
 }
 
-function damageFighter(
-    target,
-    damage,
-    attacker
-) {
+function damageFighter(target, damage, attacker) {
     if (!target.alive) {
         return;
     }
 
-    let finalDamage =
-        Number(damage) || 0;
+    let finalDamage = Number(damage) || 0;
 
     if (
         target.cursedUntil >
         performance.now()
     ) {
         finalDamage *=
-            target
-                .receivedDamageMultiplier;
+            target.receivedDamageMultiplier;
     } else {
-        target
-            .receivedDamageMultiplier =
-            1;
+        target.receivedDamageMultiplier = 1;
     }
 
     if (
@@ -2633,23 +1859,16 @@ function damageFighter(
             target.shieldThreshold
     ) {
         finalDamage *=
-            1 -
-            target.shieldReduction;
+            1 - target.shieldReduction;
     }
 
-    finalDamage =
-        Math.max(
-            1,
-            Math.round(
-                finalDamage
-            )
-        );
+    finalDamage = Math.max(
+        1,
+        Math.round(finalDamage)
+    );
 
-    target.hp -=
-        finalDamage;
-
-    target.hidden =
-        false;
+    target.hp -= finalDamage;
+    target.hidden = false;
 
     createTextEffect(
         target.x,
@@ -2658,35 +1877,23 @@ function damageFighter(
         "#ff6464"
     );
 
-    if (
-        target.hp <= 0
-    ) {
+    if (target.hp <= 0) {
         target.hp = 0;
         target.alive = false;
 
-        if (
-            target.summonsGhosts
-        ) {
-            removeSummonsOf(
-                target
-            );
+        if (target.summonsGhosts) {
+            removeSummonsOf(target);
         }
 
-        if (
-            target === player
-        ) {
+        if (target === player) {
             const aliveAfterDeath =
-                getAliveContestants()
-                    .length;
+                getAliveContestants().length;
 
             awardTrophies(
-                aliveAfterDeath +
-                1
+                aliveAfterDeath + 1
             );
 
-            showDeathScreen(
-                false
-            );
+            showDeathScreen(false);
         }
     }
 
@@ -2694,44 +1901,39 @@ function damageFighter(
     updateInformation();
 }
 
-function projectileHitsWall(
-    projectile
-) {
-    return walls.some(
-        function(wall) {
+function projectileHitsWall(projectile) {
+    return (
+        walls.some(function(wall) {
             return rectangleCollision(
                 projectile.x,
                 projectile.y,
                 projectile.radius,
                 wall
             );
-        }
+        }) ||
+        waterPools.some(function(water) {
+            return rectangleCollision(
+                projectile.x,
+                projectile.y,
+                projectile.radius,
+                water
+            );
+        })
     );
 }
 
-function updateProjectiles(
-    currentTime
-) {
+function updateProjectiles(currentTime) {
     for (
-        let i =
-            projectiles.length -
-            1;
-
+        let i = projectiles.length - 1;
         i >= 0;
-
         i--
     ) {
-        const projectile =
-            projectiles[i];
+        const projectile = projectiles[i];
 
-        projectile.x +=
-            projectile.vx;
+        projectile.x += projectile.vx;
+        projectile.y += projectile.vy;
 
-        projectile.y +=
-            projectile.vy;
-
-        let remove =
-            false;
+        let remove = false;
 
         if (
             currentTime -
@@ -2744,28 +1946,21 @@ function updateProjectiles(
         if (
             projectile.x < 0 ||
             projectile.y < 0 ||
-            projectile.x >
-                WORLD_WIDTH ||
-            projectile.y >
-                WORLD_HEIGHT
+            projectile.x > WORLD_WIDTH ||
+            projectile.y > WORLD_HEIGHT
         ) {
             remove = true;
         }
 
         if (
             !remove &&
-            projectileHitsWall(
-                projectile
-            )
+            projectileHitsWall(projectile)
         ) {
             remove = true;
         }
 
         if (!remove) {
-            for (
-                const fighter
-                of fighters
-            ) {
+            for (const fighter of fighters) {
                 if (
                     !isEnemy(
                         projectile.owner,
@@ -2777,11 +1972,8 @@ function updateProjectiles(
 
                 const hit =
                     Math.hypot(
-                        projectile.x -
-                        fighter.x,
-
-                        projectile.y -
-                        fighter.y
+                        projectile.x - fighter.x,
+                        projectile.y - fighter.y
                     ) <
                     projectile.radius +
                     fighter.radius;
@@ -2796,19 +1988,13 @@ function updateProjectiles(
                     projectile.owner
                 );
 
-                if (
-                    projectile
-                        .appliesCurse
-                ) {
+                if (projectile.appliesCurse) {
                     fighter.cursedUntil =
                         performance.now() +
-                        projectile
-                            .curseDuration;
+                        projectile.curseDuration;
 
-                    fighter
-                        .receivedDamageMultiplier =
-                        projectile
-                            .curseMultiplier;
+                    fighter.receivedDamageMultiplier =
+                        projectile.curseMultiplier;
 
                     createTextEffect(
                         fighter.x,
@@ -2819,72 +2005,45 @@ function updateProjectiles(
                 }
 
                 remove = true;
-
                 break;
             }
         }
 
         if (remove) {
-            projectiles.splice(
-                i,
-                1
-            );
+            projectiles.splice(i, 1);
         }
     }
 }
 
-function updateEffects(
-    currentTime
-) {
+function updateEffects(currentTime) {
     for (
-        let i =
-            effects.length - 1;
-
+        let i = effects.length - 1;
         i >= 0;
-
         i--
     ) {
-        const effect =
-            effects[i];
+        const effect = effects[i];
 
         const progress =
-            (
-                currentTime -
-                effect.born
-            ) /
+            (currentTime - effect.born) /
             effect.life;
 
-        if (
-            effect.type ===
-            "circle"
-        ) {
+        if (effect.type === "circle") {
             effect.radius =
                 20 +
                 (
-                    effect
-                        .maximumRadius -
+                    effect.maximumRadius -
                     20
                 ) *
-                Math.min(
-                    1,
-                    progress
-                );
+                Math.min(1, progress);
         }
 
-        if (
-            progress >= 1
-        ) {
-            effects.splice(
-                i,
-                1
-            );
+        if (progress >= 1) {
+            effects.splice(i, 1);
         }
     }
 }
 
-function awardTrophies(
-    place
-) {
+function awardTrophies(place) {
     if (
         trophiesAwarded ||
         !player
@@ -2892,76 +2051,55 @@ function awardTrophies(
         return;
     }
 
-    trophiesAwarded =
-        true;
+    trophiesAwarded = true;
 
-    const safePlace =
-        Math.max(
-            1,
-            Math.min(
-                10,
-                Math.floor(
-                    place
-                )
-            )
-        );
+    const safePlace = Math.max(
+        1,
+        Math.min(
+            10,
+            Math.floor(place)
+        )
+    );
 
     const reward =
-        TROPHY_REWARDS[
-            safePlace
-        ] || 0;
+        TROPHY_REWARDS[safePlace] || 0;
 
-    const state =
-        getState();
+    const state = getState();
 
     if (
         !state.heroTrophies ||
-        typeof state.heroTrophies !==
-            "object"
+        typeof state.heroTrophies !== "object"
     ) {
-        state.heroTrophies =
-            {};
+        state.heroTrophies = {};
     }
 
-    const before =
-        Math.max(
-            0,
-            Number(
-                state.heroTrophies[
-                    player.heroId
-                ]
-            ) || 0
-        );
-
-    const after =
-        Math.max(
-            0,
-            before +
-            reward
-        );
-
-    const realChange =
-        after -
-        before;
-
-    state.heroTrophies[
-        player.heroId
-    ] = after;
-
-    saveState(
-        state
+    const before = Math.max(
+        0,
+        Number(
+            state.heroTrophies[
+                player.heroId
+            ]
+        ) || 0
     );
+
+    const after = Math.max(
+        0,
+        before + reward
+    );
+
+    const realChange = after - before;
+
+    state.heroTrophies[player.heroId] =
+        after;
+
+    saveState(state);
 
     const sign =
         realChange > 0
             ? "+"
             : "";
 
-    document
-        .getElementById(
-            "matchResult"
-        )
-        .innerHTML =
+    document.getElementById("matchResult").innerHTML =
         "Miejsce: <b>" +
         safePlace +
         "</b><br>" +
@@ -2976,8 +2114,7 @@ function awardTrophies(
 }
 
 function checkWinner() {
-    const alive =
-        getAliveContestants();
+    const alive = getAliveContestants();
 
     if (
         alive.length !== 1 ||
@@ -2986,167 +2123,89 @@ function checkWinner() {
         return;
     }
 
-    winner =
-        alive[0];
+    winner = alive[0];
+    matchFinished = true;
 
-    matchFinished =
-        true;
-
-    if (
-        winner === player
-    ) {
+    if (winner === player) {
         awardTrophies(1);
 
-        const state =
-            getState();
+        const state = getState();
 
         state.tickets =
-            (
-                Number(
-                    state.tickets
-                ) || 0
-            ) + 4;
+            (Number(state.tickets) || 0) +
+            4;
 
         state.coins =
-            (
-                Number(
-                    state.coins
-                ) || 0
-            ) + 50;
+            (Number(state.coins) || 0) +
+            50;
 
         state.wins =
-            (
-                Number(
-                    state.wins
-                ) || 0
-            ) + 1;
+            (Number(state.wins) || 0) +
+            1;
 
-        saveState(
-            state
-        );
-
-        showDeathScreen(
-            true
-        );
-    } else if (
-        !player.alive
-    ) {
-        showDeathScreen(
-            false
-        );
+        saveState(state);
+        showDeathScreen(true);
+    } else if (!player.alive) {
+        showDeathScreen(false);
     }
 }
 
-function showDeathScreen(
-    playerWon
-) {
-    document
-        .getElementById(
-            "deathTitle"
-        )
-        .textContent =
+function showDeathScreen(playerWon) {
+    document.getElementById("deathTitle").textContent =
         playerWon
             ? "ZWYCIĘSTWO!"
             : "POKONANY";
 
     document
-        .getElementById(
-            "deathScreen"
-        )
-        .classList.add(
-            "visible"
-        );
+        .getElementById("deathScreen")
+        .classList.add("visible");
 }
 
 function update() {
-    if (
-        matchFinished
-    ) {
+    if (matchFinished) {
         return;
     }
 
     movePlayer();
 
-    const currentTime =
-        performance.now();
+    const currentTime = performance.now();
 
-    fighters
-        .slice()
-        .forEach(
-            function(fighter) {
-                if (
-                    fighter.isSummon
-                ) {
-                    updateSummon(
-                        fighter
-                    );
-                } else if (
-                    !fighter.isPlayer
-                ) {
-                    updateBot(
-                        fighter,
-                        currentTime
-                    );
-                }
-            }
-        );
+    fighters.slice().forEach(function(fighter) {
+        if (fighter.isSummon) {
+            updateSummon(fighter);
+        } else if (!fighter.isPlayer) {
+            updateBot(fighter, currentTime);
+        }
+    });
 
-    updatePriestSummons(
-        currentTime
-    );
-
+    updatePriestSummons(currentTime);
     updateBushStatus();
-
-    updateProjectiles(
-        currentTime
-    );
-
-    updateEffects(
-        currentTime
-    );
-
+    updateProjectiles(currentTime);
+    updateEffects(currentTime);
     updateCamera();
     updateInformation();
     checkWinner();
 }
 
 function worldToScreenX(x) {
-    return (
-        x -
-        camera.x
-    );
+    return x - camera.x;
 }
 
 function worldToScreenY(y) {
-    return (
-        y -
-        camera.y
-    );
+    return y - camera.y;
 }
 
-function objectVisible(
-    x,
-    y,
-    width,
-    height
-) {
+function objectVisible(x, y, width, height) {
     return (
-        x + width >=
-            camera.x &&
-        x <=
-            camera.x +
-            canvas.width &&
-        y + height >=
-            camera.y &&
-        y <=
-            camera.y +
-            canvas.height
+        x + width >= camera.x &&
+        x <= camera.x + canvas.width &&
+        y + height >= camera.y &&
+        y <= camera.y + canvas.height
     );
 }
 
 function drawMap() {
-    ctx.fillStyle =
-        selectedMap.ground;
+    ctx.fillStyle = selectedMap.ground;
 
     ctx.fillRect(
         0,
@@ -3155,74 +2214,45 @@ function drawMap() {
         canvas.height
     );
 
-    const tileSize =
-        100;
+    const tileSize = 80;
 
-    const startColumn =
-        Math.floor(
-            camera.x /
-            tileSize
-        );
+    const startColumn = Math.floor(
+        camera.x / tileSize
+    );
 
-    const endColumn =
-        Math.ceil(
-            (
-                camera.x +
-                canvas.width
-            ) /
-            tileSize
-        );
+    const endColumn = Math.ceil(
+        (camera.x + canvas.width) /
+        tileSize
+    );
 
-    const startRow =
-        Math.floor(
-            camera.y /
-            tileSize
-        );
+    const startRow = Math.floor(
+        camera.y / tileSize
+    );
 
-    const endRow =
-        Math.ceil(
-            (
-                camera.y +
-                canvas.height
-            ) /
-            tileSize
-        );
+    const endRow = Math.ceil(
+        (camera.y + canvas.height) /
+        tileSize
+    );
 
     for (
-        let column =
-            startColumn;
-
-        column <=
-            endColumn;
-
+        let column = startColumn;
+        column <= endColumn;
         column++
     ) {
         for (
-            let row =
-                startRow;
-
-            row <=
-                endRow;
-
+            let row = startRow;
+            row <= endRow;
             row++
         ) {
-            if (
-                (
-                    column +
-                    row
-                ) % 2 === 0
-            ) {
+            if ((column + row) % 2 === 0) {
                 ctx.fillStyle =
-                    selectedMap
-                        .groundDark;
+                    selectedMap.groundDark;
 
                 ctx.fillRect(
-                    column *
-                    tileSize -
+                    column * tileSize -
                     camera.x,
 
-                    row *
-                    tileSize -
+                    row * tileSize -
                     camera.y,
 
                     tileSize,
@@ -3231,202 +2261,246 @@ function drawMap() {
             }
         }
     }
+}
 
-    ctx.strokeStyle =
-        "#111827";
+function drawWater() {
+    waterPools.forEach(function(water) {
+        if (
+            !objectVisible(
+                water.x,
+                water.y,
+                water.w,
+                water.h
+            )
+        ) {
+            return;
+        }
 
-    ctx.lineWidth =
-        10;
+        const x = worldToScreenX(water.x);
+        const y = worldToScreenY(water.y);
 
-    ctx.strokeRect(
-        -camera.x,
-        -camera.y,
-        WORLD_WIDTH,
-        WORLD_HEIGHT
-    );
+        ctx.fillStyle = "#153e68";
+
+        ctx.fillRect(
+            x - 6,
+            y - 6,
+            water.w + 12,
+            water.h + 12
+        );
+
+        ctx.fillStyle = selectedMap.water;
+
+        ctx.fillRect(
+            x,
+            y,
+            water.w,
+            water.h
+        );
+
+        ctx.fillStyle =
+            selectedMap.waterLight;
+
+        for (
+            let waveX = 15;
+            waveX < water.w;
+            waveX += 45
+        ) {
+            ctx.fillRect(
+                x + waveX,
+                y + 17,
+                24,
+                5
+            );
+        }
+
+        ctx.strokeStyle = "#0f3558";
+        ctx.lineWidth = 4;
+
+        ctx.strokeRect(
+            x,
+            y,
+            water.w,
+            water.h
+        );
+    });
 }
 
 function drawBushes() {
-    bushes.forEach(
-        function(bush) {
-            if (
-                !objectVisible(
-                    bush.x,
-                    bush.y,
-                    bush.w,
-                    bush.h
-                )
-            ) {
-                return;
-            }
-
-            const x =
-                worldToScreenX(
-                    bush.x
-                );
-
-            const y =
-                worldToScreenY(
-                    bush.y
-                );
-
-            ctx.fillStyle =
-                selectedMap.bush;
-
-            ctx.fillRect(
-                x,
-                y,
+    bushes.forEach(function(bush) {
+        if (
+            !objectVisible(
+                bush.x,
+                bush.y,
                 bush.w,
                 bush.h
-            );
-
-            ctx.fillStyle =
-                selectedMap
-                    .bushLight;
-
-            for (
-                let leafX = 10;
-                leafX <
-                    bush.w;
-
-                leafX += 34
-            ) {
-                for (
-                    let leafY = 10;
-                    leafY <
-                        bush.h;
-
-                    leafY += 34
-                ) {
-                    ctx.beginPath();
-
-                    ctx.arc(
-                        x +
-                        leafX +
-                        Math.sin(
-                            (
-                                bush.x +
-                                leafX
-                            ) *
-                            12.345
-                        ) *
-                        4,
-
-                        y +
-                        leafY +
-                        Math.sin(
-                            (
-                                bush.y +
-                                leafY
-                            ) *
-                            12.345
-                        ) *
-                        4,
-
-                        16,
-                        0,
-                        Math.PI * 2
-                    );
-
-                    ctx.fill();
-                }
-            }
-
-            ctx.strokeStyle =
-                "#183c22";
-
-            ctx.lineWidth =
-                4;
-
-            ctx.strokeRect(
-                x,
-                y,
-                bush.w,
-                bush.h
-            );
+            )
+        ) {
+            return;
         }
-    );
+
+        const x = worldToScreenX(bush.x);
+        const y = worldToScreenY(bush.y);
+
+        ctx.fillStyle = selectedMap.bush;
+
+        ctx.fillRect(
+            x,
+            y,
+            bush.w,
+            bush.h
+        );
+
+        ctx.fillStyle =
+            selectedMap.bushLight;
+
+        for (
+            let leafX = 10;
+            leafX < bush.w;
+            leafX += 32
+        ) {
+            for (
+                let leafY = 10;
+                leafY < bush.h;
+                leafY += 32
+            ) {
+                ctx.beginPath();
+
+                ctx.arc(
+                    x +
+                    leafX +
+                    Math.sin(
+                        (bush.x + leafX) *
+                        12.345
+                    ) *
+                    4,
+
+                    y +
+                    leafY +
+                    Math.sin(
+                        (bush.y + leafY) *
+                        12.345
+                    ) *
+                    4,
+
+                    15,
+                    0,
+                    Math.PI * 2
+                );
+
+                ctx.fill();
+            }
+        }
+
+        ctx.strokeStyle = "#173b21";
+        ctx.lineWidth = 4;
+
+        ctx.strokeRect(
+            x,
+            y,
+            bush.w,
+            bush.h
+        );
+    });
 }
 
 function drawWalls() {
-    walls.forEach(
-        function(wall) {
-            if (
-                !objectVisible(
-                    wall.x,
-                    wall.y,
-                    wall.w,
-                    wall.h
-                )
-            ) {
-                return;
-            }
-
-            const x =
-                worldToScreenX(
-                    wall.x
-                );
-
-            const y =
-                worldToScreenY(
-                    wall.y
-                );
-
-            ctx.fillStyle =
-                "#00000044";
-
-            ctx.fillRect(
-                x + 8,
-                y + 10,
+    walls.forEach(function(wall) {
+        if (
+            !objectVisible(
+                wall.x,
+                wall.y,
                 wall.w,
                 wall.h
-            );
-
-            ctx.fillStyle =
-                selectedMap.wall;
-
-            ctx.fillRect(
-                x,
-                y,
-                wall.w,
-                wall.h
-            );
-
-            ctx.fillStyle =
-                selectedMap
-                    .wallTop;
-
-            ctx.fillRect(
-                x,
-                y,
-                wall.w,
-                Math.min(
-                    24,
-                    wall.h
-                )
-            );
-
-            ctx.strokeStyle =
-                "#32271e";
-
-            ctx.lineWidth =
-                4;
-
-            ctx.strokeRect(
-                x,
-                y,
-                wall.w,
-                wall.h
-            );
+            )
+        ) {
+            return;
         }
-    );
+
+        const x = worldToScreenX(wall.x);
+        const y = worldToScreenY(wall.y);
+
+        ctx.fillStyle = "#00000044";
+
+        ctx.fillRect(
+            x + 9,
+            y + 11,
+            wall.w,
+            wall.h
+        );
+
+        ctx.fillStyle = selectedMap.wall;
+
+        ctx.fillRect(
+            x,
+            y,
+            wall.w,
+            wall.h
+        );
+
+        ctx.fillStyle = selectedMap.wallTop;
+
+        ctx.fillRect(
+            x,
+            y,
+            wall.w,
+            Math.min(22, wall.h)
+        );
+
+        ctx.strokeStyle =
+            selectedMap.brickLine;
+
+        ctx.lineWidth = 4;
+
+        ctx.strokeRect(
+            x,
+            y,
+            wall.w,
+            wall.h
+        );
+
+        for (
+            let brickX = 25;
+            brickX < wall.w;
+            brickX += 50
+        ) {
+            ctx.beginPath();
+
+            ctx.moveTo(
+                x + brickX,
+                y
+            );
+
+            ctx.lineTo(
+                x + brickX,
+                y + Math.min(22, wall.h)
+            );
+
+            ctx.stroke();
+        }
+
+        for (
+            let brickY = 45;
+            brickY < wall.h;
+            brickY += 45
+        ) {
+            ctx.beginPath();
+
+            ctx.moveTo(
+                x,
+                y + brickY
+            );
+
+            ctx.lineTo(
+                x + wall.w,
+                y + brickY
+            );
+
+            ctx.stroke();
+        }
+    });
 }
 
-function drawHealthBar(
-    fighter,
-    screenX,
-    screenY
-) {
+function drawHealthBar(fighter, screenX, screenY) {
     const width =
         fighter.isSummon
             ? 42
@@ -3446,8 +2520,7 @@ function drawHealthBar(
         fighter.radius -
         27;
 
-    ctx.fillStyle =
-        "#281b20";
+    ctx.fillStyle = "#281b20";
 
     ctx.fillRect(
         x,
@@ -3477,11 +2550,8 @@ function drawHealthBar(
         height
     );
 
-    ctx.strokeStyle =
-        "#111827";
-
-    ctx.lineWidth =
-        2;
+    ctx.strokeStyle = "#111827";
+    ctx.lineWidth = 2;
 
     ctx.strokeRect(
         x,
@@ -3491,34 +2561,19 @@ function drawHealthBar(
     );
 }
 
-function drawFighter(
-    fighter
-) {
-    if (
-        !fighter.alive
-    ) {
+function drawFighter(fighter) {
+    if (!fighter.alive) {
         return;
     }
 
-    const screenX =
-        worldToScreenX(
-            fighter.x
-        );
-
-    const screenY =
-        worldToScreenY(
-            fighter.y
-        );
+    const screenX = worldToScreenX(fighter.x);
+    const screenY = worldToScreenY(fighter.y);
 
     if (
         screenX < -80 ||
         screenY < -80 ||
-        screenX >
-            canvas.width +
-            80 ||
-        screenY >
-            canvas.height +
-            80
+        screenX > canvas.width + 80 ||
+        screenY > canvas.height + 80
     ) {
         return;
     }
@@ -3528,43 +2583,27 @@ function drawFighter(
         !fighter.hidden ||
         (
             player.alive &&
-            distance(
-                player,
-                fighter
-            ) < 170
+            distance(player, fighter) < 170
         );
 
-    if (
-        !visibleToPlayer
-    ) {
+    if (!visibleToPlayer) {
         return;
     }
 
     ctx.save();
 
-    if (
-        fighter.hidden &&
-        fighter !== player
-    ) {
+    if (fighter.hidden) {
         ctx.globalAlpha =
-            0.4;
+            fighter === player
+                ? 0.65
+                : 0.4;
     }
 
     if (
-        fighter.hidden &&
-        fighter === player
-    ) {
-        ctx.globalAlpha =
-            0.65;
-    }
-
-    if (
-        fighter.heroId ===
-            "duch" ||
+        fighter.heroId === "duch" ||
         fighter.isSummon
     ) {
-        ctx.globalAlpha *=
-            0.78;
+        ctx.globalAlpha *= 0.78;
     }
 
     ctx.beginPath();
@@ -3577,9 +2616,7 @@ function drawFighter(
         Math.PI * 2
     );
 
-    ctx.fillStyle =
-        fighter.color;
-
+    ctx.fillStyle = fighter.color;
     ctx.fill();
 
     ctx.strokeStyle =
@@ -3607,18 +2644,13 @@ function drawFighter(
         ctx.arc(
             screenX,
             screenY,
-            fighter.radius +
-            13,
+            fighter.radius + 13,
             0,
             Math.PI * 2
         );
 
-        ctx.strokeStyle =
-            "#63d8ff";
-
-        ctx.lineWidth =
-            5;
-
+        ctx.strokeStyle = "#63d8ff";
+        ctx.lineWidth = 5;
         ctx.stroke();
     }
 
@@ -3631,18 +2663,13 @@ function drawFighter(
         ctx.arc(
             screenX,
             screenY,
-            fighter.radius +
-            17,
+            fighter.radius + 17,
             0,
             Math.PI * 2
         );
 
-        ctx.strokeStyle =
-            "#b14cff";
-
-        ctx.lineWidth =
-            4;
-
+        ctx.strokeStyle = "#b14cff";
+        ctx.lineWidth = 4;
         ctx.stroke();
     }
 
@@ -3651,11 +2678,8 @@ function drawFighter(
             ? "31px Arial"
             : "43px Arial";
 
-    ctx.textAlign =
-        "center";
-
-    ctx.textBaseline =
-        "middle";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
 
     ctx.fillText(
         fighter.icon,
@@ -3668,11 +2692,8 @@ function drawFighter(
             ? "bold 10px Arial"
             : "bold 13px Arial";
 
-    ctx.strokeStyle =
-        "black";
-
-    ctx.lineWidth =
-        4;
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 4;
 
     ctx.strokeText(
         fighter.name,
@@ -3682,8 +2703,7 @@ function drawFighter(
         21
     );
 
-    ctx.fillStyle =
-        "white";
+    ctx.fillStyle = "white";
 
     ctx.fillText(
         fighter.name,
@@ -3699,205 +2719,133 @@ function drawFighter(
         screenY
     );
 
-    if (
-        fighter.canPassWalls
-    ) {
-        ctx.font =
-            "16px Arial";
-
-        ctx.fillText(
-            "✨",
-            screenX + 25,
-            screenY - 25
-        );
-    }
-
     ctx.restore();
 }
 
 function drawProjectiles() {
-    projectiles.forEach(
-        function(projectile) {
-            const screenX =
-                worldToScreenX(
-                    projectile.x
-                );
+    projectiles.forEach(function(projectile) {
+        const screenX = worldToScreenX(
+            projectile.x
+        );
 
-            const screenY =
-                worldToScreenY(
-                    projectile.y
-                );
+        const screenY = worldToScreenY(
+            projectile.y
+        );
 
-            if (
-                screenX < -50 ||
-                screenY < -50 ||
-                screenX >
-                    canvas.width +
-                    50 ||
-                screenY >
-                    canvas.height +
-                    50
-            ) {
-                return;
-            }
+        if (
+            screenX < -50 ||
+            screenY < -50 ||
+            screenX > canvas.width + 50 ||
+            screenY > canvas.height + 50
+        ) {
+            return;
+        }
 
+        ctx.beginPath();
+
+        ctx.arc(
+            screenX,
+            screenY,
+            projectile.radius,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fillStyle = projectile.color;
+        ctx.fill();
+
+        if (
+            projectile.owner.heroId ===
+            "wiedzma"
+        ) {
+            ctx.strokeStyle = "#9a7415";
+            ctx.lineWidth = 1;
+        } else {
+            ctx.strokeStyle = "#111827";
+            ctx.lineWidth = 2;
+        }
+
+        ctx.stroke();
+    });
+}
+
+function drawEffects() {
+    const now = performance.now();
+
+    effects.forEach(function(effect) {
+        const progress = Math.min(
+            1,
+            (now - effect.born) /
+            effect.life
+        );
+
+        const alpha = Math.max(
+            0,
+            1 - progress
+        );
+
+        const screenX = worldToScreenX(effect.x);
+        const screenY = worldToScreenY(effect.y);
+
+        ctx.save();
+        ctx.globalAlpha = alpha;
+
+        if (effect.type === "circle") {
             ctx.beginPath();
 
             ctx.arc(
                 screenX,
                 screenY,
-                projectile.radius,
+                effect.radius,
                 0,
                 Math.PI * 2
             );
 
-            ctx.fillStyle =
-                projectile.color;
-
-            ctx.fill();
-
-            if (
-                projectile.owner.heroId ===
-                "wiedzma"
-            ) {
-                ctx.strokeStyle =
-                    "#9a7415";
-
-                ctx.lineWidth =
-                    1;
-            } else {
-                ctx.strokeStyle =
-                    "#111827";
-
-                ctx.lineWidth =
-                    2;
-            }
-
+            ctx.strokeStyle = effect.color;
+            ctx.lineWidth = effect.lineWidth;
             ctx.stroke();
         }
-    );
-}
 
-function drawEffects() {
-    const now =
-        performance.now();
+        if (effect.type === "text") {
+            ctx.font = "bold 19px Arial";
+            ctx.textAlign = "center";
+            ctx.fillStyle = effect.color;
+            ctx.strokeStyle = "black";
+            ctx.lineWidth = 4;
 
-    effects.forEach(
-        function(effect) {
-            const progress =
-                Math.min(
-                    1,
-                    (
-                        now -
-                        effect.born
-                    ) /
-                    effect.life
-                );
+            const y =
+                screenY -
+                progress * 35;
 
-            const alpha =
-                Math.max(
-                    0,
-                    1 -
-                    progress
-                );
+            ctx.strokeText(
+                effect.text,
+                screenX,
+                y
+            );
 
-            const screenX =
-                worldToScreenX(
-                    effect.x
-                );
-
-            const screenY =
-                worldToScreenY(
-                    effect.y
-                );
-
-            ctx.save();
-
-            ctx.globalAlpha =
-                alpha;
-
-            if (
-                effect.type ===
-                "circle"
-            ) {
-                ctx.beginPath();
-
-                ctx.arc(
-                    screenX,
-                    screenY,
-                    effect.radius,
-                    0,
-                    Math.PI * 2
-                );
-
-                ctx.strokeStyle =
-                    effect.color;
-
-                ctx.lineWidth =
-                    effect.lineWidth;
-
-                ctx.stroke();
-            }
-
-            if (
-                effect.type ===
-                "text"
-            ) {
-                ctx.font =
-                    "bold 19px Arial";
-
-                ctx.textAlign =
-                    "center";
-
-                ctx.fillStyle =
-                    effect.color;
-
-                ctx.strokeStyle =
-                    "black";
-
-                ctx.lineWidth =
-                    4;
-
-                const y =
-                    screenY -
-                    progress *
-                    35;
-
-                ctx.strokeText(
-                    effect.text,
-                    screenX,
-                    y
-                );
-
-                ctx.fillText(
-                    effect.text,
-                    screenX,
-                    y
-                );
-            }
-
-            ctx.restore();
+            ctx.fillText(
+                effect.text,
+                screenX,
+                y
+            );
         }
-    );
+
+        ctx.restore();
+    });
 }
 
 function drawMiniMap() {
-    const width =
-        155;
-
-    const height =
-        155;
+    const width = 155;
+    const height = 155;
 
     const x =
         canvas.width -
         width -
         16;
 
-    const y =
-        16;
+    const y = 16;
 
-    ctx.fillStyle =
-        "#111827cc";
+    ctx.fillStyle = "#111827dd";
 
     ctx.fillRect(
         x,
@@ -3906,8 +2854,7 @@ function drawMiniMap() {
         height
     );
 
-    ctx.fillStyle =
-        selectedMap.ground;
+    ctx.fillStyle = selectedMap.ground;
 
     ctx.fillRect(
         x + 5,
@@ -3916,58 +2863,109 @@ function drawMiniMap() {
         height - 10
     );
 
-    fighters.forEach(
-        function(fighter) {
-            if (
-                !fighter.alive
-            ) {
-                return;
-            }
+    walls.forEach(function(wall) {
+        ctx.fillStyle = selectedMap.wall;
 
-            const dotX =
-                x + 5 +
-                fighter.x /
+        ctx.fillRect(
+            x + 5 +
+            wall.x /
+            WORLD_WIDTH *
+            (width - 10),
+
+            y + 5 +
+            wall.y /
+            WORLD_HEIGHT *
+            (height - 10),
+
+            Math.max(
+                2,
+                wall.w /
                 WORLD_WIDTH *
-                (width - 10);
+                (width - 10)
+            ),
 
-            const dotY =
-                y + 5 +
-                fighter.y /
+            Math.max(
+                2,
+                wall.h /
                 WORLD_HEIGHT *
-                (height - 10);
+                (height - 10)
+            )
+        );
+    });
 
-            ctx.beginPath();
+    waterPools.forEach(function(water) {
+        ctx.fillStyle = selectedMap.water;
 
-            ctx.arc(
-                dotX,
-                dotY,
+        ctx.fillRect(
+            x + 5 +
+            water.x /
+            WORLD_WIDTH *
+            (width - 10),
 
-                fighter.isPlayer
-                    ? 5
-                    : fighter.isSummon
-                        ? 2
-                        : 3,
+            y + 5 +
+            water.y /
+            WORLD_HEIGHT *
+            (height - 10),
 
-                0,
-                Math.PI * 2
-            );
+            Math.max(
+                2,
+                water.w /
+                WORLD_WIDTH *
+                (width - 10)
+            ),
 
-            ctx.fillStyle =
-                fighter.isPlayer
-                    ? "#36a9ff"
-                    : fighter.isSummon
-                        ? "#8ceaff"
-                        : "#ef4d4d";
+            Math.max(
+                2,
+                water.h /
+                WORLD_HEIGHT *
+                (height - 10)
+            )
+        );
+    });
 
-            ctx.fill();
+    fighters.forEach(function(fighter) {
+        if (!fighter.alive) {
+            return;
         }
-    );
 
-    ctx.strokeStyle =
-        "white";
+        const dotX =
+            x + 5 +
+            fighter.x /
+            WORLD_WIDTH *
+            (width - 10);
 
-    ctx.lineWidth =
-        2;
+        const dotY =
+            y + 5 +
+            fighter.y /
+            WORLD_HEIGHT *
+            (height - 10);
+
+        ctx.beginPath();
+
+        ctx.arc(
+            dotX,
+            dotY,
+            fighter.isPlayer
+                ? 5
+                : fighter.isSummon
+                    ? 2
+                    : 3,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fillStyle =
+            fighter.isPlayer
+                ? "#36a9ff"
+                : fighter.isSummon
+                    ? "#8ceaff"
+                    : "#ef4d4d";
+
+        ctx.fill();
+    });
+
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 2;
 
     ctx.strokeRect(
         x,
@@ -3996,12 +2994,8 @@ function drawCrosshair() {
         Math.PI * 2
     );
 
-    ctx.strokeStyle =
-        "#ffffffcc";
-
-    ctx.lineWidth =
-        2;
-
+    ctx.strokeStyle = "#ffffffcc";
+    ctx.lineWidth = 2;
     ctx.stroke();
 
     ctx.beginPath();
@@ -4038,12 +3032,11 @@ function draw() {
     );
 
     drawMap();
+    drawWater();
     drawBushes();
     drawWalls();
 
-    fighters.forEach(
-        drawFighter
-    );
+    fighters.forEach(drawFighter);
 
     drawProjectiles();
     drawEffects();
@@ -4055,9 +3048,7 @@ function gameLoop() {
     update();
     draw();
 
-    requestAnimationFrame(
-        gameLoop
-    );
+    requestAnimationFrame(gameLoop);
 }
 
 startGame();
