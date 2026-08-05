@@ -2,437 +2,1440 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Walka</title>
-    <link rel="stylesheet" href="style.css">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Bitwa Królestw</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+
+            background:
+                radial-gradient(
+                    circle at top,
+                    #34405a,
+                    #111722
+                );
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+
+            padding: 10px 18px;
+
+            background: #111827;
+            border-bottom: 4px solid #050912;
+        }
+
+        .logo {
+            color: #ffd43b;
+            font-size: 25px;
+            font-weight: 900;
+        }
+
+        .top-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        button,
+        .back-button {
+            padding: 10px 15px;
+
+            color: white;
+            font-weight: 900;
+            text-decoration: none;
+
+            background: #35445e;
+
+            border: 3px solid #080d16;
+            border-radius: 10px;
+
+            cursor: pointer;
+        }
+
+        .restart-button {
+            background: #d34242;
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+
+            margin: 12px;
+        }
+
+        .info-box {
+            padding: 8px 13px;
+
+            background: #26344b;
+
+            border: 3px solid #101722;
+            border-radius: 10px;
+
+            font-weight: 900;
+        }
+
+        canvas {
+            width: min(82vh, 94vw);
+            height: min(82vh, 94vw);
+
+            max-width: 850px;
+            max-height: 850px;
+
+            border: 7px solid #111827;
+            border-radius: 12px;
+
+            box-shadow: 0 15px 40px #00000099;
+        }
+
+        .controls {
+            margin: 10px;
+            color: #d1d5db;
+        }
+
+        .mobile-controls {
+            display: none;
+
+            width: 280px;
+            margin: 15px auto;
+
+            grid-template-columns:
+                repeat(3, 75px);
+
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .mobile-controls button {
+            height: 65px;
+            font-size: 25px;
+        }
+
+        .attack-button {
+            grid-column: 3;
+            grid-row: 1 / 3;
+
+            height: 138px !important;
+
+            background: #d34242 !important;
+        }
+
+        @media (max-width: 800px) {
+            .mobile-controls {
+                display: grid;
+            }
+
+            canvas {
+                width: 96vw;
+                height: 96vw;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
 <header class="topbar">
-    <div class="logo">⚔️ ARENA</div>
 
-    <div class="currency">
-        <div class="pill">🎟️ <span data-tickets>0</span></div>
-        <div class="pill">🏆 <span data-wins>0</span></div>
+    <div class="logo">
+        ⚔️ BITWA KRÓLESTW
     </div>
-</header>
 
-<main class="screen">
+    <div class="top-buttons">
 
-    <div class="hud">
-
-        <div class="pill" id="heroHud"></div>
-
-        <div class="pill">
-            Ruch: WASD lub strzałki | Atak: spacja
-        </div>
-
-        <button class="btn btn-red" onclick="startGame()">
-            NOWA WALKA
+        <button
+            class="restart-button"
+            onclick="startGame()"
+        >
+            NOWA GRA
         </button>
 
+        <a
+            class="back-button"
+            href="gra.html"
+        >
+            LOBBY
+        </a>
+
     </div>
 
-    <div class="arena-wrap">
-        <canvas id="game" width="900" height="540"></canvas>
+</header>
+
+<div class="game-info">
+
+    <div
+        id="mapName"
+        class="info-box"
+    >
+        Mapa
     </div>
 
-    <div class="mobile-controls">
-        <button data-key="arrowup">⬆️</button>
-        <button class="attack-mobile" data-key=" ">⚔️</button>
-        <button data-key="arrowleft">⬅️</button>
-        <button data-key="arrowdown">⬇️</button>
-        <button data-key="arrowright">➡️</button>
+    <div
+        id="aliveCounter"
+        class="info-box"
+    >
+        Pozostało: 8
     </div>
 
-</main>
+    <div
+        id="playerInfo"
+        class="info-box"
+    >
+        Gracz
+    </div>
 
-<nav class="bottom-nav">
-    <a href="gra.html">🏰<br>Lobby</a>
-    <a href="postacie.html">🧙<br>Postacie</a>
-    <a href="sklep.html">🛒<br>Sklep</a>
-    <a class="active" href="walka.html">⚔️<br>Gra</a>
-</nav>
+</div>
+
+<canvas
+    id="gameCanvas"
+    width="850"
+    height="850"
+></canvas>
+
+<div class="controls">
+    WASD lub strzałki — ruch |
+    Spacja — atak
+</div>
+
+<div class="mobile-controls">
+
+    <button data-key="arrowup">
+        ⬆️
+    </button>
+
+    <button
+        class="attack-button"
+        data-key=" "
+    >
+        ⚔️
+    </button>
+
+    <button data-key="arrowleft">
+        ⬅️
+    </button>
+
+    <button data-key="arrowdown">
+        ⬇️
+    </button>
+
+    <button data-key="arrowright">
+        ➡️
+    </button>
+
+</div>
 
 <script src="dane.js"></script>
 <script src="common.js"></script>
 
 <script>
-const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
+const canvas =
+    document.getElementById("gameCanvas");
+
+const ctx =
+    canvas.getContext("2d");
 
 const keys = {};
 
-let player;
-let enemy;
-let projectiles = [];
-let enemyProjectiles = [];
+const MAPS = {
+    green: {
+        name: "Zielona Dolina",
+        ground: "#58ad58",
+        groundDark: "#459348",
+        decoration: "🌳"
+    },
 
-let gameOver = false;
-let lastAttack = 0;
-let lastEnemyAttack = 0;
+    red: {
+        name: "Czerwona Twierdza",
+        ground: "#bd4b43",
+        groundDark: "#9b3936",
+        decoration: "🔥"
+    },
 
-window.addEventListener("keydown", function(event) {
-    const key = event.key.toLowerCase();
-
-    keys[key] = true;
-
-    if (
-        key === " " ||
-        key === "arrowup" ||
-        key === "arrowdown" ||
-        key === "arrowleft" ||
-        key === "arrowright"
-    ) {
-        event.preventDefault();
+    yellow: {
+        name: "Złota Pustynia",
+        ground: "#deb84e",
+        groundDark: "#c79b35",
+        decoration: "🌵"
     }
-});
+};
 
-window.addEventListener("keyup", function(event) {
-    keys[event.key.toLowerCase()] = false;
-});
+let selectedMap;
 
-document.querySelectorAll("[data-key]").forEach(function(button) {
-    const key = button.dataset.key;
+let fighters = [];
+let projectiles = [];
 
-    button.addEventListener("pointerdown", function() {
+let player;
+let winner = null;
+
+window.addEventListener(
+    "keydown",
+    function(event) {
+        const key =
+            event.key.toLowerCase();
+
         keys[key] = true;
+
+        if (
+            key === " " ||
+            key === "arrowup" ||
+            key === "arrowdown" ||
+            key === "arrowleft" ||
+            key === "arrowright"
+        ) {
+            event.preventDefault();
+        }
+    }
+);
+
+window.addEventListener(
+    "keyup",
+    function(event) {
+        keys[event.key.toLowerCase()] =
+            false;
+    }
+);
+
+document
+    .querySelectorAll("[data-key]")
+    .forEach(function(button) {
+        const key =
+            button.dataset.key;
+
+        button.addEventListener(
+            "pointerdown",
+            function() {
+                keys[key] = true;
+            }
+        );
+
+        button.addEventListener(
+            "pointerup",
+            function() {
+                keys[key] = false;
+            }
+        );
+
+        button.addEventListener(
+            "pointerleave",
+            function() {
+                keys[key] = false;
+            }
+        );
     });
 
-    button.addEventListener("pointerup", function() {
-        keys[key] = false;
-    });
+function randomNumber(minimum, maximum) {
+    return (
+        Math.random() *
+        (maximum - minimum) +
+        minimum
+    );
+}
 
-    button.addEventListener("pointerleave", function() {
-        keys[key] = false;
-    });
-});
+function randomItem(array) {
+    return array[
+        Math.floor(
+            Math.random() *
+            array.length
+        )
+    ];
+}
 
-function startGame() {
-    const state = getState();
-    const hero = getHero(state.selected);
+function distance(first, second) {
+    return Math.hypot(
+        first.x - second.x,
+        first.y - second.y
+    );
+}
 
-    document.getElementById("heroHud").textContent =
-        hero.ikona + " " + hero.nazwa + " — " + hero.moc;
+function normalize(dx, dy) {
+    const length =
+        Math.hypot(dx, dy) || 1;
 
-    player = {
-        x: 130,
-        y: 270,
-        radius: 23,
+    return {
+        x: dx / length,
+        y: dy / length
+    };
+}
+
+function createFighter(
+    hero,
+    x,
+    y,
+    isPlayer,
+    number
+) {
+    return {
+        id:
+            isPlayer
+                ? "player"
+                : "bot-" + number,
+
+        name:
+            isPlayer
+                ? "TY"
+                : "BOT " + number,
+
+        heroId: hero.id,
+        heroName: hero.nazwa,
+        icon: hero.ikona,
+
+        x: x,
+        y: y,
+
+        radius: 24,
+
         hp: hero.hp,
         maxHp: hero.hp,
-        speed: hero.speed,
+
         damage: hero.damage,
+        speed: hero.speed,
         range: hero.range,
         cooldown: hero.cooldown,
-        icon: hero.ikona,
-        id: hero.id
-    };
 
-    enemy = {
-        x: 760,
-        y: 270,
-        radius: 25,
-        hp: 170,
-        maxHp: 170,
-        speed: 2.2,
-        damage: 13,
-        icon: "👹"
-    };
+        isPlayer: isPlayer,
+        alive: true,
 
+        lastAttack: 0,
+
+        target: null,
+        behavior: "wander",
+
+        directionX:
+            randomNumber(-1, 1),
+
+        directionY:
+            randomNumber(-1, 1),
+
+        nextDecision:
+            performance.now() +
+            randomNumber(700, 2000),
+
+        color:
+            isPlayer
+                ? "#44aaff"
+                : `hsl(
+                    ${Math.random() * 360},
+                    70%,
+                    55%
+                )`
+    };
+}
+
+function startGame() {
+    const mapId =
+        localStorage.getItem(
+            "selectedMap"
+        ) || "green";
+
+    selectedMap =
+        MAPS[mapId];
+
+    document
+        .getElementById("mapName")
+        .textContent =
+        selectedMap.name;
+
+    const state =
+        getState();
+
+    const selectedHero =
+        getHero(state.selected);
+
+    fighters = [];
     projectiles = [];
-    enemyProjectiles = [];
 
-    gameOver = false;
-    lastAttack = 0;
-    lastEnemyAttack = 0;
+    winner = null;
+
+    player =
+        createFighter(
+            selectedHero,
+            425,
+            730,
+            true,
+            0
+        );
+
+    fighters.push(player);
+
+    const spawnPositions = [
+        {
+            x: 100,
+            y: 100
+        },
+
+        {
+            x: 425,
+            y: 100
+        },
+
+        {
+            x: 750,
+            y: 100
+        },
+
+        {
+            x: 100,
+            y: 425
+        },
+
+        {
+            x: 750,
+            y: 425
+        },
+
+        {
+            x: 170,
+            y: 730
+        },
+
+        {
+            x: 680,
+            y: 730
+        }
+    ];
+
+    for (
+        let i = 0;
+        i < 7;
+        i++
+    ) {
+        const randomHero =
+            randomItem(BOHATEROWIE);
+
+        const position =
+            spawnPositions[i];
+
+        const bot =
+            createFighter(
+                randomHero,
+                position.x,
+                position.y,
+                false,
+                i + 1
+            );
+
+        fighters.push(bot);
+    }
+
+    updateInformation();
 }
 
-function clamp(value, minimum, maximum) {
-    return Math.max(minimum, Math.min(maximum, value));
+function updateInformation() {
+    const alive =
+        fighters.filter(
+            function(fighter) {
+                return fighter.alive;
+            }
+        ).length;
+
+    document
+        .getElementById(
+            "aliveCounter"
+        )
+        .textContent =
+        "Pozostało: " + alive;
+
+    document
+        .getElementById(
+            "playerInfo"
+        )
+        .textContent =
+        player.icon +
+        " " +
+        player.heroName +
+        " | ❤️ " +
+        Math.max(
+            0,
+            Math.ceil(player.hp)
+        );
 }
 
-function update() {
-    if (gameOver) {
+function keepInsideArena(fighter) {
+    fighter.x =
+        Math.max(
+            fighter.radius,
+            Math.min(
+                canvas.width -
+                fighter.radius,
+                fighter.x
+            )
+        );
+
+    fighter.y =
+        Math.max(
+            fighter.radius,
+            Math.min(
+                canvas.height -
+                fighter.radius,
+                fighter.y
+            )
+        );
+}
+
+function movePlayer() {
+    if (
+        !player.alive ||
+        winner
+    ) {
         return;
     }
 
     let dx = 0;
     let dy = 0;
 
-    if (keys["w"] || keys["arrowup"]) {
+    if (
+        keys["w"] ||
+        keys["arrowup"]
+    ) {
         dy -= 1;
     }
 
-    if (keys["s"] || keys["arrowdown"]) {
+    if (
+        keys["s"] ||
+        keys["arrowdown"]
+    ) {
         dy += 1;
     }
 
-    if (keys["a"] || keys["arrowleft"]) {
+    if (
+        keys["a"] ||
+        keys["arrowleft"]
+    ) {
         dx -= 1;
     }
 
-    if (keys["d"] || keys["arrowright"]) {
+    if (
+        keys["d"] ||
+        keys["arrowright"]
+    ) {
         dx += 1;
     }
 
-    if (dx !== 0 || dy !== 0) {
-        const length = Math.hypot(dx, dy);
+    if (
+        dx !== 0 ||
+        dy !== 0
+    ) {
+        const direction =
+            normalize(dx, dy);
 
-        player.x += dx / length * player.speed;
-        player.y += dy / length * player.speed;
+        player.x +=
+            direction.x *
+            player.speed;
+
+        player.y +=
+            direction.y *
+            player.speed;
     }
 
-    player.x = clamp(player.x, 35, canvas.width - 35);
-    player.y = clamp(player.y, 35, canvas.height - 35);
+    keepInsideArena(player);
 
-    const currentTime = performance.now();
+    if (keys[" "]) {
+        const target =
+            findClosestEnemy(player);
 
-    if (keys[" "] && currentTime - lastAttack > player.cooldown) {
-        attack(currentTime);
-    }
-
-    moveEnemy(currentTime);
-
-    moveProjectiles(projectiles, enemy);
-    moveProjectiles(enemyProjectiles, player);
-
-    if (player.hp <= 0) {
-        endGame(false);
-    }
-
-    if (enemy.hp <= 0) {
-        endGame(true);
-    }
-}
-
-function moveEnemy(currentTime) {
-    const dx = player.x - enemy.x;
-    const dy = player.y - enemy.y;
-
-    const distance = Math.hypot(dx, dy) || 1;
-
-    if (distance > 120) {
-        enemy.x += dx / distance * enemy.speed;
-        enemy.y += dy / distance * enemy.speed;
-    }
-
-    if (currentTime - lastEnemyAttack > 900) {
-        lastEnemyAttack = currentTime;
-
-        enemyProjectiles.push({
-            x: enemy.x,
-            y: enemy.y,
-            vx: dx / distance * 4.2,
-            vy: dy / distance * 4.2,
-            radius: 8,
-            damage: enemy.damage
-        });
+        if (target) {
+            attack(
+                player,
+                target
+            );
+        }
     }
 }
 
-function attack(currentTime) {
-    lastAttack = currentTime;
-
-    const dx = enemy.x - player.x;
-    const dy = enemy.y - player.y;
-
-    const distance = Math.hypot(dx, dy) || 1;
-
-    if (player.id === "rycerz" || player.id === "berserker") {
-
-        if (distance <= player.range + enemy.radius) {
-            enemy.hp -= player.damage;
-
-            if (player.id === "rycerz") {
-                enemy.x += dx / distance * 45;
-                enemy.y += dy / distance * 45;
+function findClosestEnemy(fighter) {
+    const enemies =
+        fighters.filter(
+            function(other) {
+                return (
+                    other.alive &&
+                    other !== fighter
+                );
             }
-        }
-
-    } else {
-
-        let projectileSpeed = 8;
-        let projectileRadius = 7;
-
-        if (player.id === "mag") {
-            projectileSpeed = 6;
-            projectileRadius = 13;
-        }
-
-        projectiles.push({
-            x: player.x,
-            y: player.y,
-            vx: dx / distance * projectileSpeed,
-            vy: dy / distance * projectileSpeed,
-            radius: projectileRadius,
-            damage: player.damage
-        });
-    }
-}
-
-function moveProjectiles(array, target) {
-    for (let i = array.length - 1; i >= 0; i--) {
-        const projectile = array[i];
-
-        projectile.x += projectile.vx;
-        projectile.y += projectile.vy;
-
-        const distance = Math.hypot(
-            projectile.x - target.x,
-            projectile.y - target.y
         );
 
-        if (distance < projectile.radius + target.radius) {
-            target.hp -= projectile.damage;
-            array.splice(i, 1);
-            continue;
+    if (
+        enemies.length === 0
+    ) {
+        return null;
+    }
+
+    enemies.sort(
+        function(first, second) {
+            return (
+                distance(
+                    fighter,
+                    first
+                ) -
+                distance(
+                    fighter,
+                    second
+                )
+            );
+        }
+    );
+
+    return enemies[0];
+}
+
+function chooseBotDecision(bot) {
+    const possibleTargets =
+        fighters.filter(
+            function(other) {
+                return (
+                    other.alive &&
+                    other !== bot
+                );
+            }
+        );
+
+    if (
+        possibleTargets.length === 0
+    ) {
+        bot.target = null;
+        return;
+    }
+
+    bot.target =
+        randomItem(
+            possibleTargets
+        );
+
+    const roll =
+        Math.random();
+
+    if (
+        bot.hp <
+        bot.maxHp * 0.3
+    ) {
+        if (
+            Math.random() < 0.75
+        ) {
+            bot.behavior = "flee";
+        } else {
+            bot.behavior = "attack";
+        }
+    } else if (roll < 0.55) {
+        bot.behavior = "attack";
+    } else if (roll < 0.8) {
+        bot.behavior = "wander";
+    } else {
+        bot.behavior = "flee";
+    }
+
+    bot.directionX =
+        randomNumber(-1, 1);
+
+    bot.directionY =
+        randomNumber(-1, 1);
+
+    bot.nextDecision =
+        performance.now() +
+        randomNumber(700, 2200);
+}
+
+function updateBot(
+    bot,
+    currentTime
+) {
+    if (
+        !bot.alive ||
+        winner
+    ) {
+        return;
+    }
+
+    if (
+        currentTime >=
+            bot.nextDecision ||
+        !bot.target ||
+        !bot.target.alive
+    ) {
+        chooseBotDecision(bot);
+    }
+
+    if (!bot.target) {
+        return;
+    }
+
+    const dx =
+        bot.target.x - bot.x;
+
+    const dy =
+        bot.target.y - bot.y;
+
+    const direction =
+        normalize(dx, dy);
+
+    const targetDistance =
+        distance(
+            bot,
+            bot.target
+        );
+
+    if (
+        bot.behavior === "attack"
+    ) {
+        if (
+            targetDistance >
+            Math.min(
+                bot.range * 0.75,
+                150
+            )
+        ) {
+            bot.x +=
+                direction.x *
+                bot.speed *
+                0.75;
+
+            bot.y +=
+                direction.y *
+                bot.speed *
+                0.75;
+        } else {
+            bot.x -=
+                direction.x *
+                bot.speed *
+                0.15;
+
+            bot.y -=
+                direction.y *
+                bot.speed *
+                0.15;
+        }
+
+        attack(
+            bot,
+            bot.target
+        );
+    }
+
+    if (
+        bot.behavior === "flee"
+    ) {
+        bot.x -=
+            direction.x *
+            bot.speed;
+
+        bot.y -=
+            direction.y *
+            bot.speed;
+
+        if (
+            Math.random() <
+            0.025
+        ) {
+            attack(
+                bot,
+                bot.target
+            );
+        }
+    }
+
+    if (
+        bot.behavior === "wander"
+    ) {
+        const wanderDirection =
+            normalize(
+                bot.directionX,
+                bot.directionY
+            );
+
+        bot.x +=
+            wanderDirection.x *
+            bot.speed *
+            0.55;
+
+        bot.y +=
+            wanderDirection.y *
+            bot.speed *
+            0.55;
+
+        if (
+            Math.random() <
+            0.015
+        ) {
+            bot.directionX =
+                randomNumber(-1, 1);
+
+            bot.directionY =
+                randomNumber(-1, 1);
         }
 
         if (
+            targetDistance <
+                bot.range &&
+            Math.random() <
+                0.04
+        ) {
+            attack(
+                bot,
+                bot.target
+            );
+        }
+    }
+
+    keepInsideArena(bot);
+}
+
+function isMeleeCharacter(heroId) {
+    return (
+        heroId === "rycerz" ||
+        heroId === "goblin" ||
+        heroId === "golem" ||
+        heroId === "krol"
+    );
+}
+
+function attack(
+    attacker,
+    target
+) {
+    if (
+        !attacker.alive ||
+        !target ||
+        !target.alive
+    ) {
+        return;
+    }
+
+    const currentTime =
+        performance.now();
+
+    if (
+        currentTime -
+        attacker.lastAttack <
+        attacker.cooldown
+    ) {
+        return;
+    }
+
+    attacker.lastAttack =
+        currentTime;
+
+    const targetDistance =
+        distance(
+            attacker,
+            target
+        );
+
+    if (
+        isMeleeCharacter(
+            attacker.heroId
+        )
+    ) {
+        if (
+            targetDistance <=
+            Math.max(
+                attacker.range,
+                80
+            )
+        ) {
+            damageFighter(
+                target,
+                attacker.damage
+            );
+        }
+
+        return;
+    }
+
+    const dx =
+        target.x -
+        attacker.x;
+
+    const dy =
+        target.y -
+        attacker.y;
+
+    const direction =
+        normalize(dx, dy);
+
+    let projectileColor =
+        "#fff0a1";
+
+    let projectileRadius =
+        8;
+
+    if (
+        attacker.heroId ===
+        "krolowa"
+    ) {
+        projectileColor =
+            "#d55cff";
+
+        projectileRadius =
+            12;
+    }
+
+    if (
+        attacker.heroId ===
+        "farmer"
+    ) {
+        projectileColor =
+            "#8b5a2b";
+    }
+
+    projectiles.push({
+        x: attacker.x,
+        y: attacker.y,
+
+        vx:
+            direction.x * 7,
+
+        vy:
+            direction.y * 7,
+
+        radius:
+            projectileRadius,
+
+        damage:
+            attacker.damage,
+
+        owner:
+            attacker,
+
+        color:
+            projectileColor
+    });
+}
+
+function damageFighter(
+    target,
+    damage
+) {
+    if (!target.alive) {
+        return;
+    }
+
+    target.hp -= damage;
+
+    if (target.hp <= 0) {
+        target.hp = 0;
+        target.alive = false;
+    }
+
+    updateInformation();
+    checkWinner();
+}
+
+function updateProjectiles() {
+    for (
+        let i =
+            projectiles.length - 1;
+
+        i >= 0;
+
+        i--
+    ) {
+        const projectile =
+            projectiles[i];
+
+        projectile.x +=
+            projectile.vx;
+
+        projectile.y +=
+            projectile.vy;
+
+        let hit = false;
+
+        for (
+            const fighter
+            of fighters
+        ) {
+            if (
+                !fighter.alive ||
+                fighter ===
+                    projectile.owner
+            ) {
+                continue;
+            }
+
+            const projectileDistance =
+                Math.hypot(
+                    projectile.x -
+                        fighter.x,
+
+                    projectile.y -
+                        fighter.y
+                );
+
+            if (
+                projectileDistance <
+                projectile.radius +
+                fighter.radius
+            ) {
+                damageFighter(
+                    fighter,
+                    projectile.damage
+                );
+
+                hit = true;
+                break;
+            }
+        }
+
+        if (
+            hit ||
             projectile.x < 0 ||
             projectile.y < 0 ||
-            projectile.x > canvas.width ||
-            projectile.y > canvas.height
+            projectile.x >
+                canvas.width ||
+            projectile.y >
+                canvas.height
         ) {
-            array.splice(i, 1);
+            projectiles.splice(
+                i,
+                1
+            );
         }
     }
 }
 
-function endGame(win) {
-    gameOver = true;
+function checkWinner() {
+    const alive =
+        fighters.filter(
+            function(fighter) {
+                return fighter.alive;
+            }
+        );
 
-    if (win) {
-        const state = getState();
+    if (
+        alive.length !== 1 ||
+        winner
+    ) {
+        return;
+    }
 
-        state.tickets += 2;
-        state.coins += 25;
+    winner = alive[0];
+
+    if (winner === player) {
+        const state =
+            getState();
+
+        state.tickets += 4;
+        state.coins += 50;
         state.wins += 1;
 
         saveState(state);
-        updateTopbar();
 
-        setTimeout(function() {
-            alert("Zwycięstwo! Otrzymujesz 2 bilety i 25 monet.");
-        }, 50);
-
-    } else {
-
-        setTimeout(function() {
-            alert("Przegrana. Spróbuj ponownie!");
-        }, 50);
+        setTimeout(
+            function() {
+                alert(
+                    "ZWYCIĘSTWO! Dostajesz 4 bilety i 50 monet."
+                );
+            },
+            100
+        );
     }
 }
 
-function drawHealthBar(x, y, width, height, value, maximum, color) {
-    ctx.fillStyle = "#251f25";
-    ctx.fillRect(x, y, width, height);
+function update() {
+    if (winner) {
+        return;
+    }
 
-    ctx.fillStyle = color;
+    movePlayer();
+
+    const currentTime =
+        performance.now();
+
+    fighters.forEach(
+        function(fighter) {
+            if (
+                !fighter.isPlayer
+            ) {
+                updateBot(
+                    fighter,
+                    currentTime
+                );
+            }
+        }
+    );
+
+    updateProjectiles();
+    updateInformation();
+    checkWinner();
+}
+
+function drawMap() {
+    ctx.fillStyle =
+        selectedMap.ground;
+
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    const tileSize = 85;
+
+    for (
+        let x = 0;
+        x < canvas.width;
+        x += tileSize
+    ) {
+        for (
+            let y = 0;
+            y < canvas.height;
+            y += tileSize
+        ) {
+            const column =
+                x / tileSize;
+
+            const row =
+                y / tileSize;
+
+            if (
+                (column + row) %
+                2 ===
+                0
+            ) {
+                ctx.fillStyle =
+                    selectedMap
+                        .groundDark;
+
+                ctx.fillRect(
+                    x,
+                    y,
+                    tileSize,
+                    tileSize
+                );
+            }
+        }
+    }
+
+    ctx.font =
+        "35px Arial";
+
+    ctx.textAlign =
+        "center";
+
+    ctx.textBaseline =
+        "middle";
+
+    const decorations = [
+        [80, 210],
+        [220, 80],
+        [640, 100],
+        [770, 260],
+        [100, 650],
+        [720, 680],
+        [425, 425]
+    ];
+
+    decorations.forEach(
+        function(position) {
+            ctx.fillText(
+                selectedMap
+                    .decoration,
+
+                position[0],
+                position[1]
+            );
+        }
+    );
+}
+
+function drawHealthBar(fighter) {
+    const width = 55;
+    const height = 8;
+
+    const x =
+        fighter.x -
+        width / 2;
+
+    const y =
+        fighter.y -
+        fighter.radius -
+        23;
+
+    ctx.fillStyle =
+        "#311f25";
+
     ctx.fillRect(
         x,
         y,
-        width * Math.max(0, value / maximum),
+        width,
         height
     );
 
-    ctx.strokeStyle = "white";
-    ctx.strokeRect(x, y, width, height);
+    ctx.fillStyle =
+        fighter.isPlayer
+            ? "#48df68"
+            : "#ef4d4d";
+
+    ctx.fillRect(
+        x,
+        y,
+
+        width *
+        Math.max(
+            0,
+            fighter.hp /
+            fighter.maxHp
+        ),
+
+        height
+    );
+
+    ctx.strokeStyle =
+        "#111827";
+
+    ctx.lineWidth = 2;
+
+    ctx.strokeRect(
+        x,
+        y,
+        width,
+        height
+    );
 }
 
-function drawArena() {
-    ctx.fillStyle = "#6f874b";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    for (let x = 40; x < canvas.width; x += 100) {
-        for (let y = 45; y < canvas.height; y += 95) {
-            ctx.fillStyle = "#789153";
-            ctx.fillRect(x, y, 46, 28);
-        }
+function drawFighter(fighter) {
+    if (!fighter.alive) {
+        return;
     }
 
-    ctx.fillStyle = "#9a7a4e";
-    ctx.fillRect(420, 80, 60, 150);
-    ctx.fillRect(420, 315, 60, 150);
+    ctx.beginPath();
+
+    ctx.arc(
+        fighter.x,
+        fighter.y,
+        fighter.radius + 6,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fillStyle =
+        fighter.color;
+
+    ctx.fill();
+
+    ctx.strokeStyle =
+        fighter.isPlayer
+            ? "white"
+            : "#111827";
+
+    ctx.lineWidth =
+        fighter.isPlayer
+            ? 5
+            : 3;
+
+    ctx.stroke();
+
+    ctx.font =
+        "40px Arial";
+
+    ctx.textAlign =
+        "center";
+
+    ctx.textBaseline =
+        "middle";
+
+    ctx.fillText(
+        fighter.icon,
+        fighter.x,
+        fighter.y
+    );
+
+    ctx.font =
+        "bold 13px Arial";
+
+    ctx.strokeStyle =
+        "black";
+
+    ctx.lineWidth = 4;
+
+    ctx.strokeText(
+        fighter.name,
+        fighter.x,
+        fighter.y + 43
+    );
+
+    ctx.fillStyle =
+        "white";
+
+    ctx.fillText(
+        fighter.name,
+        fighter.x,
+        fighter.y + 43
+    );
+
+    drawHealthBar(fighter);
 }
 
-function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+function drawProjectiles() {
+    projectiles.forEach(
+        function(projectile) {
+            ctx.beginPath();
 
-    drawArena();
+            ctx.arc(
+                projectile.x,
+                projectile.y,
+                projectile.radius,
+                0,
+                Math.PI * 2
+            );
 
-    drawHealthBar(
-        25,
-        20,
-        300,
-        22,
-        player.hp,
-        player.maxHp,
-        "#45d45b"
-    );
+            ctx.fillStyle =
+                projectile.color;
 
-    drawHealthBar(
-        canvas.width - 325,
-        20,
-        300,
-        22,
-        enemy.hp,
-        enemy.maxHp,
-        "#e54b4b"
-    );
+            ctx.fill();
 
-    ctx.font = "42px Arial";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
+            ctx.strokeStyle =
+                "#111827";
 
-    ctx.fillText(player.icon, player.x, player.y);
-    ctx.fillText(enemy.icon, enemy.x, enemy.y);
+            ctx.lineWidth = 2;
 
-    projectiles.forEach(function(projectile) {
-        ctx.beginPath();
-
-        ctx.arc(
-            projectile.x,
-            projectile.y,
-            projectile.radius,
-            0,
-            Math.PI * 2
-        );
-
-        if (player.id === "mag") {
-            ctx.fillStyle = "#ff8b2d";
-        } else {
-            ctx.fillStyle = "#f5e1a4";
+            ctx.stroke();
         }
+    );
+}
 
-        ctx.fill();
-    });
+function drawMessage() {
+    if (winner) {
+        ctx.fillStyle =
+            "#000000aa";
 
-    enemyProjectiles.forEach(function(projectile) {
-        ctx.beginPath();
-
-        ctx.arc(
-            projectile.x,
-            projectile.y,
-            projectile.radius,
+        ctx.fillRect(
             0,
-            Math.PI * 2
+            0,
+            canvas.width,
+            canvas.height
         );
 
-        ctx.fillStyle = "#8a2be2";
-        ctx.fill();
-    });
+        ctx.fillStyle =
+            "white";
 
-    if (gameOver) {
-        ctx.fillStyle = "#00000099";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.textAlign =
+            "center";
 
-        ctx.fillStyle = "white";
-        ctx.font = "bold 48px Arial";
+        ctx.font =
+            "bold 60px Arial";
 
-        if (player.hp > 0) {
+        if (
+            winner === player
+        ) {
             ctx.fillText(
                 "ZWYCIĘSTWO!",
                 canvas.width / 2,
@@ -440,19 +1443,84 @@ function draw() {
             );
         } else {
             ctx.fillText(
-                "PRZEGRANA",
+                winner.name +
+                " WYGRYWA!",
+
                 canvas.width / 2,
                 canvas.height / 2
             );
+
+            ctx.font =
+                "bold 35px Arial";
+
+            ctx.fillText(
+                winner.icon +
+                " " +
+                winner.heroName,
+
+                canvas.width / 2,
+                canvas.height / 2 +
+                65
+            );
         }
+
+        return;
     }
+
+    if (!player.alive) {
+        ctx.fillStyle =
+            "#00000055";
+
+        ctx.fillRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+        ctx.fillStyle =
+            "white";
+
+        ctx.font =
+            "bold 36px Arial";
+
+        ctx.textAlign =
+            "center";
+
+        ctx.fillText(
+            "POKONANY — OBSERWUJ WALKĘ",
+
+            canvas.width / 2,
+            65
+        );
+    }
+}
+
+function draw() {
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    drawMap();
+
+    fighters.forEach(
+        drawFighter
+    );
+
+    drawProjectiles();
+    drawMessage();
 }
 
 function gameLoop() {
     update();
     draw();
 
-    requestAnimationFrame(gameLoop);
+    requestAnimationFrame(
+        gameLoop
+    );
 }
 
 startGame();
