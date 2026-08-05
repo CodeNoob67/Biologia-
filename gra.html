@@ -3,249 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gra 2D</title>
-
-    <style>
-        body {
-            margin: 0;
-            background: #20242b;
-            color: white;
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
-
-        h1 {
-            margin: 15px 0 5px;
-        }
-
-        p {
-            margin: 5px;
-        }
-
-        canvas {
-            margin-top: 10px;
-            background: #77c66e;
-            border: 5px solid white;
-            border-radius: 10px;
-        }
-    </style>
+    <title>Medieval Arena</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<h1>Monetowa Przygoda</h1>
-<p>Poruszanie: WASD lub strzałki</p>
-<p id="wynik">Monety: 0</p>
+<header class="topbar">
+    <div class="logo">⚔️ MEDIEVAL ARENA</div>
 
-<canvas id="gra" width="800" height="500"></canvas>
+    <div class="currency">
+        <div class="pill">🎟️ <span data-tickets>0</span></div>
+        <div class="pill">🪙 <span data-coins>0</span></div>
+        <div class="pill">🏆 <span data-wins>0</span></div>
+    </div>
+</header>
+
+<main class="screen">
+
+    <div class="hero">
+
+        <section class="card selected-hero">
+            <div id="heroIcon" class="character-icon"></div>
+            <div id="heroName" class="character-name"></div>
+            <div id="heroPower" class="power"></div>
+            <p id="heroDesc"></p>
+        </section>
+
+        <section>
+
+            <div class="menu-grid">
+
+                <a class="btn btn-blue menu-tile" href="postacie.html">
+                    🧙
+                    <span>POSTACIE</span>
+                </a>
+
+                <a class="btn btn-gold menu-tile" href="sklep.html">
+                    🛒
+                    <span>SKLEP</span>
+                </a>
+
+                <button class="btn btn-dark menu-tile" onclick="dailyReward()">
+                    🎁
+                    <span>DZIENNA NAGRODA</span>
+                </button>
+
+                <button class="btn btn-dark menu-tile" onclick="resetGame()">
+                    ♻️
+                    <span>RESET ZAPISU</span>
+                </button>
+
+            </div>
+
+            <a class="btn btn-green big-play" href="walka.html">
+                ⚔️ GRAJ
+            </a>
+
+        </section>
+
+    </div>
+
+</main>
+
+<nav class="bottom-nav">
+    <a class="active" href="gra.html">🏰<br>Lobby</a>
+    <a href="postacie.html">🧙<br>Postacie</a>
+    <a href="sklep.html">🛒<br>Sklep</a>
+    <a href="walka.html">⚔️<br>Gra</a>
+</nav>
+
+<script src="dane.js"></script>
+<script src="common.js"></script>
 
 <script>
-    const canvas = document.getElementById("gra");
-    const ctx = canvas.getContext("2d");
-    const wynikTekst = document.getElementById("wynik");
+function renderLobby() {
+    const state = getState();
+    const hero = getHero(state.selected);
 
-    const gracz = {
-        x: 100,
-        y: 100,
-        szerokosc: 40,
-        wysokosc: 40,
-        predkosc: 5
-    };
+    document.getElementById("heroIcon").textContent = hero.ikona;
+    document.getElementById("heroName").textContent = hero.nazwa;
+    document.getElementById("heroPower").textContent = "Moc: " + hero.moc;
+    document.getElementById("heroDesc").textContent = hero.opis;
+}
 
-    const moneta = {
-        x: 500,
-        y: 250,
-        promien: 15
-    };
+function dailyReward() {
+    const state = getState();
+    const today = new Date().toDateString();
 
-    const przeciwnik = {
-        x: 300,
-        y: 200,
-        szerokosc: 45,
-        wysokosc: 45,
-        predkoscX: 3
-    };
-
-    let monety = 0;
-    let klawisze = {};
-
-    document.addEventListener("keydown", function(event) {
-        klawisze[event.key.toLowerCase()] = true;
-    });
-
-    document.addEventListener("keyup", function(event) {
-        klawisze[event.key.toLowerCase()] = false;
-    });
-
-    function poruszGraczem() {
-        if (klawisze["w"] || klawisze["arrowup"]) {
-            gracz.y -= gracz.predkosc;
-        }
-
-        if (klawisze["s"] || klawisze["arrowdown"]) {
-            gracz.y += gracz.predkosc;
-        }
-
-        if (klawisze["a"] || klawisze["arrowleft"]) {
-            gracz.x -= gracz.predkosc;
-        }
-
-        if (klawisze["d"] || klawisze["arrowright"]) {
-            gracz.x += gracz.predkosc;
-        }
-
-        if (gracz.x < 0) {
-            gracz.x = 0;
-        }
-
-        if (gracz.y < 0) {
-            gracz.y = 0;
-        }
-
-        if (gracz.x + gracz.szerokosc > canvas.width) {
-            gracz.x = canvas.width - gracz.szerokosc;
-        }
-
-        if (gracz.y + gracz.wysokosc > canvas.height) {
-            gracz.y = canvas.height - gracz.wysokosc;
-        }
+    if (state.lastReward === today) {
+        alert("Dzisiejsza nagroda została już odebrana.");
+        return;
     }
 
-    function poruszPrzeciwnikiem() {
-        przeciwnik.x += przeciwnik.predkoscX;
+    state.lastReward = today;
+    state.tickets += 3;
+    state.coins += 50;
 
-        if (
-            przeciwnik.x <= 0 ||
-            przeciwnik.x + przeciwnik.szerokosc >= canvas.width
-        ) {
-            przeciwnik.predkoscX *= -1;
-        }
+    saveState(state);
+    updateTopbar();
+
+    alert("Otrzymujesz 3 bilety i 50 monet!");
+}
+
+function resetGame() {
+    const confirmation = confirm("Czy na pewno chcesz usunąć zapis gry?");
+
+    if (confirmation) {
+        localStorage.removeItem("medievalArenaState");
+        location.reload();
     }
+}
 
-    function czyDotykaMonety() {
-        const srodekGraczaX = gracz.x + gracz.szerokosc / 2;
-        const srodekGraczaY = gracz.y + gracz.wysokosc / 2;
-
-        const odlegloscX = srodekGraczaX - moneta.x;
-        const odlegloscY = srodekGraczaY - moneta.y;
-
-        const odleglosc = Math.sqrt(
-            odlegloscX * odlegloscX +
-            odlegloscY * odlegloscY
-        );
-
-        if (odleglosc < moneta.promien + gracz.szerokosc / 2) {
-            monety++;
-
-            wynikTekst.textContent = "Monety: " + monety;
-
-            moneta.x = Math.random() * (canvas.width - 40) + 20;
-            moneta.y = Math.random() * (canvas.height - 40) + 20;
-        }
-    }
-
-    function czyDotykaPrzeciwnika() {
-        if (
-            gracz.x < przeciwnik.x + przeciwnik.szerokosc &&
-            gracz.x + gracz.szerokosc > przeciwnik.x &&
-            gracz.y < przeciwnik.y + przeciwnik.wysokosc &&
-            gracz.y + gracz.wysokosc > przeciwnik.y
-        ) {
-            gracz.x = 100;
-            gracz.y = 100;
-            monety = 0;
-
-            wynikTekst.textContent = "Monety: 0";
-        }
-    }
-
-    function rysujTlo() {
-        ctx.fillStyle = "#77c66e";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        ctx.fillStyle = "#5aaa52";
-
-        for (let x = 0; x < canvas.width; x += 80) {
-            for (let y = 0; y < canvas.height; y += 80) {
-                ctx.fillRect(x, y, 40, 40);
-            }
-        }
-    }
-
-    function rysujGracza() {
-        ctx.fillStyle = "#2684ff";
-        ctx.fillRect(
-            gracz.x,
-            gracz.y,
-            gracz.szerokosc,
-            gracz.wysokosc
-        );
-
-        ctx.fillStyle = "white";
-        ctx.fillRect(gracz.x + 7, gracz.y + 8, 8, 8);
-        ctx.fillRect(gracz.x + 25, gracz.y + 8, 8, 8);
-
-        ctx.fillStyle = "black";
-        ctx.fillRect(gracz.x + 10, gracz.y + 10, 4, 4);
-        ctx.fillRect(gracz.x + 28, gracz.y + 10, 4, 4);
-
-        ctx.fillRect(gracz.x + 12, gracz.y + 28, 16, 4);
-    }
-
-    function rysujMonete() {
-        ctx.beginPath();
-        ctx.arc(
-            moneta.x,
-            moneta.y,
-            moneta.promien,
-            0,
-            Math.PI * 2
-        );
-
-        ctx.fillStyle = "gold";
-        ctx.fill();
-
-        ctx.strokeStyle = "orange";
-        ctx.lineWidth = 4;
-        ctx.stroke();
-    }
-
-    function rysujPrzeciwnika() {
-        ctx.fillStyle = "#e53935";
-        ctx.fillRect(
-            przeciwnik.x,
-            przeciwnik.y,
-            przeciwnik.szerokosc,
-            przeciwnik.wysokosc
-        );
-
-        ctx.fillStyle = "white";
-        ctx.fillRect(przeciwnik.x + 7, przeciwnik.y + 8, 9, 9);
-        ctx.fillRect(przeciwnik.x + 29, przeciwnik.y + 8, 9, 9);
-
-        ctx.fillStyle = "black";
-        ctx.fillRect(przeciwnik.x + 10, przeciwnik.y + 11, 4, 4);
-        ctx.fillRect(przeciwnik.x + 32, przeciwnik.y + 11, 4, 4);
-
-        ctx.fillRect(przeciwnik.x + 12, przeciwnik.y + 30, 22, 5);
-    }
-
-    function petlaGry() {
-        poruszGraczem();
-        poruszPrzeciwnikiem();
-
-        czyDotykaMonety();
-        czyDotykaPrzeciwnika();
-
-        rysujTlo();
-        rysujMonete();
-        rysujPrzeciwnika();
-        rysujGracza();
-
-        requestAnimationFrame(petlaGry);
-    }
-
-    petlaGry();
+renderLobby();
 </script>
 
 </body>
