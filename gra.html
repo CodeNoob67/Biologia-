@@ -1,8 +1,9 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Medieval Arena</title>
 
     <style>
@@ -13,9 +14,17 @@
         body {
             margin: 0;
             overflow: hidden;
+
             font-family: Arial, sans-serif;
             color: white;
-            background: radial-gradient(circle, #25d8ff, #079fe0 55%, #0876bd);
+
+            background:
+                radial-gradient(
+                    circle at center,
+                    #25d8ff 0%,
+                    #079fe0 55%,
+                    #0876bd 100%
+                );
         }
 
         button,
@@ -26,16 +35,26 @@
 
         .lobby {
             position: relative;
+
             width: 100vw;
             height: 100vh;
+
             overflow: hidden;
         }
 
         .pattern {
             position: absolute;
             inset: 0;
+
             opacity: 0.08;
-            background-image: radial-gradient(circle, white 3px, transparent 4px);
+
+            background-image:
+                radial-gradient(
+                    circle,
+                    white 3px,
+                    transparent 4px
+                );
+
             background-size: 70px 70px;
         }
 
@@ -45,26 +64,44 @@
             left: 0;
             right: 0;
             z-index: 5;
+
             height: 75px;
+
             display: flex;
             align-items: center;
             justify-content: space-between;
+
             padding: 8px 14px;
-            background: linear-gradient(#2f3b53, #182238);
-            border-bottom: 4px solid #101725;
+
+            background:
+                linear-gradient(
+                    #2f3b53,
+                    #182238
+                );
+
+            border-bottom:
+                4px solid #101725;
+
+            box-shadow:
+                0 5px 0 #00000055;
         }
 
         .profile {
             display: flex;
             align-items: center;
             gap: 10px;
+
             min-width: 250px;
+
             padding: 3px 8px 3px 3px;
+
             color: white;
             text-align: left;
+
             background: transparent;
             border: 0;
             border-radius: 12px;
+
             cursor: pointer;
         }
 
@@ -76,16 +113,23 @@
         .profile-preview {
             display: grid;
             place-items: center;
+
             overflow: hidden;
+
             background: #1d95e8;
-            border: 4px solid #111827;
+
+            border:
+                4px solid #111827;
+
             border-radius: 10px;
         }
 
         .avatar {
             width: 55px;
             height: 55px;
+
             flex: 0 0 55px;
+
             font-size: 30px;
         }
 
@@ -93,12 +137,15 @@
         .profile-preview img {
             width: 100%;
             height: 100%;
+
             object-fit: cover;
         }
 
         .player-name {
             max-width: 180px;
+
             overflow: hidden;
+
             font-weight: 900;
             white-space: nowrap;
             text-overflow: ellipsis;
@@ -113,9 +160,14 @@
         .profile-wins {
             margin-top: 4px;
             padding: 4px 8px;
+
             background: #253044;
-            border: 3px solid #101724;
+
+            border:
+                3px solid #101724;
+
             border-radius: 8px;
+
             font-weight: 900;
         }
 
@@ -127,23 +179,39 @@
 
         .currency {
             min-width: 80px;
+
             padding: 9px 12px;
+
             text-align: center;
             font-size: 18px;
             font-weight: 900;
+
             background: #263248;
-            border: 3px solid #111827;
+
+            border:
+                3px solid #111827;
+
             border-radius: 10px;
         }
 
         .admin-button {
             width: 52px;
             height: 52px;
+
             color: white;
             font-size: 29px;
-            background: linear-gradient(#60718e, #34445e);
-            border: 3px solid #111827;
+
+            background:
+                linear-gradient(
+                    #60718e,
+                    #34445e
+                );
+
+            border:
+                3px solid #111827;
+
             border-radius: 9px;
+
             cursor: pointer;
         }
 
@@ -152,16 +220,24 @@
             top: 90px;
             left: 50%;
             z-index: 3;
-            transform: translateX(-50%);
+
+            transform:
+                translateX(-50%);
+
             display: flex;
             gap: 8px;
         }
 
         .rank-box {
             padding: 7px 12px;
+
             background: #283349;
-            border: 3px solid #101724;
+
+            border:
+                3px solid #101724;
+
             border-radius: 9px;
+
             font-weight: 900;
         }
 
@@ -169,6 +245,7 @@
             position: absolute;
             top: 130px;
             z-index: 4;
+
             display: flex;
             flex-direction: column;
             gap: 13px;
@@ -186,18 +263,32 @@
         .side button {
             width: 85px;
             min-height: 58px;
+
             display: grid;
             place-items: center;
+
             padding: 5px;
+
             color: white;
             text-align: center;
             text-decoration: none;
             font-size: 12px;
             font-weight: 900;
-            background: linear-gradient(#435670, #202d42);
-            border: 3px solid #101724;
+
+            background:
+                linear-gradient(
+                    #435670,
+                    #202d42
+                );
+
+            border:
+                3px solid #101724;
+
             border-radius: 9px;
-            box-shadow: 0 4px 0 #00000066;
+
+            box-shadow:
+                0 4px 0 #00000066;
+
             cursor: pointer;
         }
 
@@ -206,9 +297,13 @@
             left: 50%;
             top: 53%;
             z-index: 2;
-            transform: translate(-50%, -50%);
-            width: 340px;
-            height: 470px;
+
+            transform:
+                translate(-50%, -50%);
+
+            width: 370px;
+            height: 500px;
+
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -216,110 +311,286 @@
         }
 
         .hero-trophies {
+            position: relative;
             z-index: 3;
-            min-width: 130px;
+
+            min-width: 245px;
+
             margin-bottom: 8px;
-            padding: 8px 15px;
+            padding: 9px 14px 11px;
+
             text-align: center;
-            border: 4px solid #111827;
-            border-radius: 13px;
-            box-shadow: 0 5px 0 #00000066, inset 0 2px 0 #ffffff55;
-            text-shadow: 2px 2px black;
+
+            border:
+                4px solid #111827;
+
+            border-radius: 14px;
+
+            box-shadow:
+                0 5px 0 #00000066,
+                inset 0 2px 0 #ffffff55;
+
+            text-shadow:
+                2px 2px black;
         }
 
         .hero-tier-name {
             display: block;
-            font-size: 13px;
+
+            color: white;
+            font-size: 17px;
             font-weight: 1000;
+        }
+
+        .tier-progress-bar {
+            position: relative;
+
+            width: 210px;
+            max-width: 100%;
+            height: 17px;
+
+            margin: 8px auto 0;
+
+            overflow: hidden;
+
+            background:
+                linear-gradient(
+                    #5f4825,
+                    #3d2d17
+                );
+
+            border:
+                3px solid #111827;
+
+            border-radius: 999px;
+
+            box-shadow:
+                inset 0 2px 4px #00000088;
+        }
+
+        .tier-progress-fill {
+            position: relative;
+
+            width: 0%;
+            height: 100%;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #ff8a00,
+                    #ffc928
+                );
+
+            border-radius:
+                999px 0 0 999px;
+
+            transition:
+                width 0.35s ease;
+        }
+
+        .tier-progress-fill::after {
+            content: "";
+
+            position: absolute;
+            top: -2px;
+            right: -3px;
+
+            width: 7px;
+            height: calc(100% + 4px);
+
+            background: white;
+
+            border-radius: 999px;
+
+            box-shadow:
+                0 0 5px white,
+                0 0 11px white,
+                0 0 17px #fff2a8;
+        }
+
+        .tier-progress-fill.empty::after {
+            display: none;
+        }
+
+        .tier-progress-text {
+            margin-top: 4px;
+
+            color: white;
+            font-size: 11px;
+            font-weight: 900;
+
+            text-shadow:
+                1px 1px 2px black;
         }
 
         .hero-trophy-number {
             display: block;
-            margin-top: 2px;
+
+            margin-top: 4px;
+
+            color: white;
             font-size: 21px;
             font-weight: 1000;
         }
 
         .tier-1 {
-            background: linear-gradient(#f0a42d, #b85816);
+            background:
+                linear-gradient(
+                    #f0a42d,
+                    #b85816
+                );
         }
 
         .tier-5 {
-            background: linear-gradient(#d2d5df, #736d88);
+            background:
+                linear-gradient(
+                    #d2d5df,
+                    #736d88
+                );
         }
 
         .tier-10 {
-            background: linear-gradient(#ffd84c, #e28a13);
+            background:
+                linear-gradient(
+                    #ffd84c,
+                    #e28a13
+                );
         }
 
         .tier-15 {
-            background: linear-gradient(#30e6f2, #0786ad);
+            background:
+                linear-gradient(
+                    #30e6f2,
+                    #0786ad
+                );
         }
 
         .tier-20 {
-            background: linear-gradient(#f94be7, #9833a9);
+            background:
+                linear-gradient(
+                    #f94be7,
+                    #9833a9
+                );
         }
 
         .tier-25 {
-            background: linear-gradient(#43ed79, #15934e);
+            background:
+                linear-gradient(
+                    #43ed79,
+                    #15934e
+                );
         }
 
         .tier-30 {
-            background: linear-gradient(#ff5353, #a51f2f);
+            background:
+                linear-gradient(
+                    #ff5353,
+                    #a51f2f
+                );
         }
 
         .tier-35 {
-            background: linear-gradient(#8262c9, #30254f);
+            background:
+                linear-gradient(
+                    #8262c9,
+                    #30254f
+                );
         }
 
         .tier-40 {
             color: #182238;
-            background: linear-gradient(#e8ffff, #74cce6);
+
+            background:
+                linear-gradient(
+                    #e8ffff,
+                    #74cce6
+                );
+
             text-shadow: none;
         }
 
         .tier-45 {
-            background: linear-gradient(#90f3ee, #8653cd);
+            background:
+                linear-gradient(
+                    #90f3ee,
+                    #8653cd
+                );
         }
 
         .tier-50 {
-            background: linear-gradient(135deg, #46e6f0, #f5f5f5, #e454f4);
+            background:
+                linear-gradient(
+                    135deg,
+                    #46e6f0,
+                    #f5f5f5,
+                    #e454f4
+                );
         }
 
         .tier-max {
-            background: linear-gradient(135deg, #3be6ef, white, #f348e2, #ffca38);
-            box-shadow: 0 0 22px #ffffffaa, 0 5px 0 #00000066;
+            background:
+                linear-gradient(
+                    135deg,
+                    #3be6ef,
+                    white,
+                    #f348e2,
+                    #ffca38
+                );
+
+            box-shadow:
+                0 0 22px #ffffffaa,
+                0 5px 0 #00000066;
         }
 
         .hero-icon {
             z-index: 2;
-            font-size: 190px;
-            filter: drop-shadow(0 15px 6px #00466e88);
-            animation: heroIdle 2.2s ease-in-out infinite;
+
+            font-size: 180px;
+
+            filter:
+                drop-shadow(
+                    0 15px 6px #00466e88
+                );
+
+            animation:
+                heroIdle 2.2s
+                ease-in-out infinite;
         }
 
         @keyframes heroIdle {
             50% {
-                transform: translateY(-12px);
+                transform:
+                    translateY(-12px);
             }
         }
 
         .hero-name {
             z-index: 3;
+
             padding: 7px 15px;
+
             background: #28344b;
-            border: 3px solid #111827;
+
+            border:
+                3px solid #111827;
+
             border-radius: 10px;
+
             font-size: 20px;
             font-weight: 900;
         }
 
         .hero-power {
             z-index: 3;
+
             margin-top: 6px;
+
             color: #fff080;
+
             font-weight: 900;
-            text-shadow: 2px 2px black;
+
+            text-shadow:
+                2px 2px black;
         }
 
         .bottom-left,
@@ -338,7 +609,9 @@
         .bottom-center {
             left: 50%;
             width: 370px;
-            transform: translateX(-50%);
+
+            transform:
+                translateX(-50%);
         }
 
         .bottom-right {
@@ -350,30 +623,57 @@
         .event,
         .play {
             width: 100%;
-            border: 4px solid #111827;
+
+            border:
+                4px solid #111827;
+
             border-radius: 12px;
-            box-shadow: 0 6px 0 #00000066;
+
+            box-shadow:
+                0 6px 0 #00000066;
+
             font-weight: 900;
         }
 
         .pass {
             padding: 12px;
+
             color: #111827;
-            background: linear-gradient(90deg, #f0c900, #f79e00);
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #f0c900,
+                    #f79e00
+                );
         }
 
         .event {
             padding: 11px 15px;
+
             color: white;
-            background: linear-gradient(#222c3d, #111827);
+
+            background:
+                linear-gradient(
+                    #222c3d,
+                    #111827
+                );
+
             cursor: pointer;
         }
 
         .play {
             padding: 22px;
+
             color: #111827;
             font-size: 34px;
-            background: linear-gradient(#ffd934, #f0a900);
+
+            background:
+                linear-gradient(
+                    #ffd934,
+                    #f0a900
+                );
+
             cursor: pointer;
         }
 
@@ -381,10 +681,13 @@
             position: fixed;
             inset: 0;
             z-index: 100;
+
             display: none;
             align-items: center;
             justify-content: center;
+
             padding: 20px;
+
             background: #000000bb;
         }
 
@@ -394,18 +697,31 @@
 
         .window {
             position: relative;
+
             width: min(700px, 95%);
             max-height: 92vh;
+
             overflow-y: auto;
+
             padding: 28px;
+
             text-align: center;
-            background: linear-gradient(#374762, #1b263a);
-            border: 5px solid #111827;
+
+            background:
+                linear-gradient(
+                    #374762,
+                    #1b263a
+                );
+
+            border:
+                5px solid #111827;
+
             border-radius: 20px;
         }
 
         .window h2 {
             margin-top: 0;
+
             color: #ffd83d;
         }
 
@@ -413,29 +729,43 @@
             position: absolute;
             top: 10px;
             right: 12px;
+
             width: 45px;
             height: 45px;
+
             color: white;
             font-size: 22px;
+
             background: #d83c3c;
-            border: 3px solid #111827;
+
+            border:
+                3px solid #111827;
+
             border-radius: 10px;
+
             cursor: pointer;
         }
 
         .maps {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns:
+                repeat(3, 1fr);
+
             gap: 15px;
         }
 
         .map-button {
             padding: 15px;
+
             color: white;
             font-size: 18px;
             font-weight: 900;
-            border: 4px solid #111827;
+
+            border:
+                4px solid #111827;
+
             border-radius: 14px;
+
             cursor: pointer;
         }
 
@@ -454,26 +784,39 @@
         .section {
             margin: 15px 0;
             padding: 15px;
+
             text-align: left;
+
             background: #202c42;
-            border: 3px solid #101827;
+
+            border:
+                3px solid #101827;
+
             border-radius: 14px;
         }
 
         .section-title {
             display: block;
+
             margin-bottom: 9px;
+
             font-weight: 900;
         }
 
         .input {
             width: 100%;
+
             padding: 12px;
+
             color: #111827;
             font-size: 17px;
             font-weight: 800;
+
             background: white;
-            border: 3px solid #111827;
+
+            border:
+                3px solid #111827;
+
             border-radius: 10px;
         }
 
@@ -483,6 +826,7 @@
 
         .help {
             margin-top: 7px;
+
             color: #cad7e8;
             font-size: 12px;
         }
@@ -490,13 +834,18 @@
         .profile-preview {
             width: 130px;
             height: 130px;
-            margin: 0 auto 15px;
+
+            margin:
+                0 auto 15px;
+
             font-size: 64px;
         }
 
         .hero-checks {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns:
+                repeat(2, 1fr);
+
             gap: 8px;
         }
 
@@ -504,10 +853,16 @@
             display: flex;
             align-items: center;
             gap: 8px;
+
             padding: 9px;
+
             background: #111827;
-            border: 2px solid #46536a;
+
+            border:
+                2px solid #46536a;
+
             border-radius: 9px;
+
             cursor: pointer;
         }
 
@@ -519,28 +874,44 @@
         .action,
         .secondary {
             width: 100%;
+
             padding: 13px;
+
             font-weight: 1000;
-            border: 4px solid #111827;
+
+            border:
+                4px solid #111827;
+
             border-radius: 12px;
+
             cursor: pointer;
         }
 
         .action {
             color: #111827;
-            background: linear-gradient(#ffd93d, #eca500);
+
+            background:
+                linear-gradient(
+                    #ffd93d,
+                    #eca500
+                );
         }
 
         .secondary {
             margin-top: 8px;
+
             color: white;
+
             background: #435670;
         }
 
         .message {
             min-height: 28px;
+
             margin-top: 12px;
+
             color: #7dff95;
+
             font-weight: 900;
         }
 
@@ -562,6 +933,10 @@
             .hero-icon {
                 font-size: 135px;
             }
+
+            .hero-trophies {
+                min-width: 220px;
+            }
         }
     </style>
 </head>
@@ -569,131 +944,317 @@
 <body>
 
 <div class="lobby">
+
     <div class="pattern"></div>
 
     <header class="top">
-        <button class="profile" onclick="openProfile()">
-            <div id="topAvatar" class="avatar">👑</div>
+
+        <button
+            class="profile"
+            onclick="openProfile()"
+        >
+
+            <div
+                id="topAvatar"
+                class="avatar"
+            >
+                👑
+            </div>
 
             <div>
-                <div id="topName" class="player-name">MedievalPlayer</div>
-                <div class="profile-edit">Kliknij, aby edytować profil</div>
+
+                <div
+                    id="topName"
+                    class="player-name"
+                >
+                    MedievalPlayer
+                </div>
+
+                <div class="profile-edit">
+                    Kliknij, aby edytować profil
+                </div>
 
                 <div class="profile-wins">
-                    Wygrane: <span data-wins>0</span>
+                    Wygrane:
+                    <span data-wins>0</span>
                 </div>
+
             </div>
+
         </button>
 
         <div class="currencies">
+
             <div class="currency">
-                🪙 <span data-coins>0</span>
+                🪙
+                <span data-coins>0</span>
             </div>
 
             <div class="currency">
-                🎟️ <span data-tickets>0</span>
+                🎟️
+                <span data-tickets>0</span>
             </div>
 
-            <button class="admin-button" onclick="openAdmin()">☰</button>
+            <button
+                class="admin-button"
+                onclick="openAdmin()"
+            >
+                ☰
+            </button>
+
         </div>
+
     </header>
 
     <div class="rank">
-        <div class="rank-box">RANGA 1</div>
 
         <div class="rank-box">
-            🏆 <span id="totalTrophies">0</span>
+            RANGA 1
         </div>
 
         <div class="rank-box">
-            ZWYCIĘSTWA: <span data-wins>0</span>
+            🏆
+            <span id="totalTrophies">0</span>
         </div>
+
+        <div class="rank-box">
+            ZWYCIĘSTWA:
+            <span data-wins>0</span>
+        </div>
+
     </div>
 
     <div class="side left">
-        <a href="sklep.html">🛒<br>SKLEP</a>
-        <a href="postacie.html">🧙<br>POSTACIE</a>
-        <button onclick="dailyReward()">🎁<br>NAGRODY</button>
-        <button>📜<br>WIEŚCI</button>
+
+        <a href="sklep.html">
+            🛒<br>
+            SKLEP
+        </a>
+
+        <a href="postacie.html">
+            🧙<br>
+            POSTACIE
+        </a>
+
+        <button onclick="dailyReward()">
+            🎁<br>
+            NAGRODY
+        </button>
+
+        <button>
+            📜<br>
+            WIEŚCI
+        </button>
+
     </div>
 
     <div class="side right">
-        <button>🤝<br>ZNAJOMI</button>
-        <button>🛡️<br>KLAN</button>
-        <button>💬<br>CZAT</button>
+
+        <button>
+            🤝<br>
+            ZNAJOMI
+        </button>
+
+        <button>
+            🛡️<br>
+            KLAN
+        </button>
+
+        <button>
+            💬<br>
+            CZAT
+        </button>
+
     </div>
 
     <main class="hero-area">
-        <div id="heroTrophyBadge" class="hero-trophies tier-1">
-            <span id="heroTierName" class="hero-tier-name">TIER 1</span>
+
+        <div
+            id="heroTrophyBadge"
+            class="hero-trophies tier-1"
+        >
+
+            <span
+                id="heroTierName"
+                class="hero-tier-name"
+            >
+                TIER 1
+            </span>
+
+            <div class="tier-progress-bar">
+
+                <div
+                    id="tierProgressFill"
+                    class="tier-progress-fill empty"
+                ></div>
+
+            </div>
+
+            <div
+                id="tierProgressText"
+                class="tier-progress-text"
+            >
+                0 / 20 • brakuje 20
+            </div>
 
             <span class="hero-trophy-number">
-                🏆 <span id="selectedHeroTrophies">0</span>
+                🏆
+                <span id="selectedHeroTrophies">
+                    0
+                </span>
             </span>
+
         </div>
 
-        <div id="heroIcon" class="hero-icon">🧑‍🌾</div>
-        <div id="heroName" class="hero-name">Farmer</div>
-        <div id="heroPower" class="hero-power">Moc: Rzut widłami</div>
+        <div
+            id="heroIcon"
+            class="hero-icon"
+        >
+            🧑‍🌾
+        </div>
+
+        <div
+            id="heroName"
+            class="hero-name"
+        >
+            Farmer
+        </div>
+
+        <div
+            id="heroPower"
+            class="hero-power"
+        >
+            Moc: Rzut widłami
+        </div>
+
     </main>
 
     <section class="bottom-left">
+
         <div class="pass">
             🎫 KRÓLEWSKA DROGA<br>
             45 / 100
         </div>
+
     </section>
 
     <section class="bottom-center">
-        <button class="event" onclick="openMap()">
+
+        <button
+            class="event"
+            onclick="openMap()"
+        >
             ⚔️ BITWA KRÓLESTW<br>
 
-            <span id="mapName" style="color:#5cff73">
+            <span
+                id="mapName"
+                style="color:#5cff73"
+            >
                 Zielona Dolina
             </span>
 
             <br>
-            <small>Kliknij, aby zmienić mapę</small>
+
+            <small>
+                Kliknij, aby zmienić mapę
+            </small>
         </button>
+
     </section>
 
     <section class="bottom-right">
-        <button class="play" onclick="location.href='walka.html'">
+
+        <button
+            class="play"
+            onclick="location.href='walka.html'"
+        >
             GRAJ
         </button>
+
     </section>
+
 </div>
 
-<div id="mapOverlay" class="overlay">
+<div
+    id="mapOverlay"
+    class="overlay"
+>
+
     <div class="window">
-        <button class="close" onclick="closeMap()">✖</button>
-        <h2>WYBIERZ MAPĘ</h2>
+
+        <button
+            class="close"
+            onclick="closeMap()"
+        >
+            ✖
+        </button>
+
+        <h2>
+            WYBIERZ MAPĘ
+        </h2>
 
         <div class="maps">
-            <button class="map-button green-map" onclick="selectMap('green')">
-                🌳<br>Zielona Dolina
+
+            <button
+                class="map-button green-map"
+                onclick="selectMap('green')"
+            >
+                🌳<br>
+                Zielona Dolina
             </button>
 
-            <button class="map-button red-map" onclick="selectMap('red')">
-                🌋<br>Czerwona Twierdza
+            <button
+                class="map-button red-map"
+                onclick="selectMap('red')"
+            >
+                🌋<br>
+                Czerwona Twierdza
             </button>
 
-            <button class="map-button yellow-map" onclick="selectMap('yellow')">
-                🏜️<br>Złota Pustynia
+            <button
+                class="map-button yellow-map"
+                onclick="selectMap('yellow')"
+            >
+                🏜️<br>
+                Złota Pustynia
             </button>
+
         </div>
+
     </div>
+
 </div>
 
-<div id="profileOverlay" class="overlay">
-    <div class="window">
-        <button class="close" onclick="closeProfile()">✖</button>
-        <h2>TWÓJ PROFIL</h2>
+<div
+    id="profileOverlay"
+    class="overlay"
+>
 
-        <div id="profilePreview" class="profile-preview">👑</div>
+    <div class="window">
+
+        <button
+            class="close"
+            onclick="closeProfile()"
+        >
+            ✖
+        </button>
+
+        <h2>
+            TWÓJ PROFIL
+        </h2>
+
+        <div
+            id="profilePreview"
+            class="profile-preview"
+        >
+            👑
+        </div>
 
         <div class="section">
-            <span class="section-title">👤 Nazwa gracza</span>
+
+            <span class="section-title">
+                👤 Nazwa gracza
+            </span>
 
             <input
                 id="profileName"
@@ -701,10 +1262,14 @@
                 maxlength="20"
                 placeholder="Wpisz nazwę"
             >
+
         </div>
 
         <div class="section">
-            <span class="section-title">🖼️ Zdjęcie profilowe</span>
+
+            <span class="section-title">
+                🖼️ Zdjęcie profilowe
+            </span>
 
             <input
                 id="avatarFile"
@@ -713,36 +1278,68 @@
                 accept="image/*"
             >
 
-            <button class="secondary" onclick="removeAvatar()">
+            <button
+                class="secondary"
+                onclick="removeAvatar()"
+            >
                 USUŃ ZDJĘCIE / UŻYJ KORONY
             </button>
+
         </div>
 
-        <button class="action" onclick="saveProfileData()">
+        <button
+            class="action"
+            onclick="saveProfileData()"
+        >
             ZAPISZ PROFIL
         </button>
 
-        <div id="profileMessage" class="message"></div>
+        <div
+            id="profileMessage"
+            class="message"
+        ></div>
+
     </div>
+
 </div>
 
-<div id="adminOverlay" class="overlay">
+<div
+    id="adminOverlay"
+    class="overlay"
+>
+
     <div class="window">
-        <button class="close" onclick="closeAdmin()">✖</button>
-        <h2>PANEL ADMINISTRATORA</h2>
+
+        <button
+            class="close"
+            onclick="closeAdmin()"
+        >
+            ✖
+        </button>
+
+        <h2>
+            PANEL ADMINISTRATORA
+        </h2>
 
         <div class="section">
-            <span class="section-title">👤 Nazwa odbiorcy</span>
+
+            <span class="section-title">
+                👤 Nazwa odbiorcy
+            </span>
 
             <input
                 id="adminTargetName"
                 class="input"
                 placeholder="Dokładna nazwa gracza"
             >
+
         </div>
 
         <div class="section">
-            <span class="section-title">🪙 Monety</span>
+
+            <span class="section-title">
+                🪙 Monety
+            </span>
 
             <input
                 id="adminCoins"
@@ -752,10 +1349,14 @@
                 step="1"
                 placeholder="0"
             >
+
         </div>
 
         <div class="section">
-            <span class="section-title">🎟️ Bilety</span>
+
+            <span class="section-title">
+                🎟️ Bilety
+            </span>
 
             <input
                 id="adminTickets"
@@ -765,22 +1366,45 @@
                 step="1"
                 placeholder="0"
             >
+
         </div>
 
         <div class="section">
-            <span class="section-title">🧙 Odblokuj postacie</span>
-            <div id="adminHeroChecks" class="hero-checks"></div>
+
+            <span class="section-title">
+                🧙 Odblokuj postacie
+            </span>
+
+            <div
+                id="adminHeroChecks"
+                class="hero-checks"
+            ></div>
+
         </div>
 
         <div class="section">
-            <span class="section-title">🏆 Pucharki postaci</span>
 
-            <select id="adminTrophyHero" class="input"></select>
+            <span class="section-title">
+                🏆 Pucharki postaci
+            </span>
 
-           <select id="adminTrophyMode" class="input">
-    <option value="add">Dodaj lub odejmij</option>
-    <option value="set">Ustaw dokładną liczbę</option>
-</select>
+            <select
+                id="adminTrophyHero"
+                class="input"
+            ></select>
+
+            <select
+                id="adminTrophyMode"
+                class="input"
+            >
+                <option value="add">
+                    Dodaj lub odejmij
+                </option>
+
+                <option value="set">
+                    Ustaw dokładną liczbę
+                </option>
+            </select>
 
             <input
                 id="adminTrophyAmount"
@@ -793,14 +1417,23 @@
             <div class="help">
                 Wynik nigdy nie spadnie poniżej 0.
             </div>
+
         </div>
 
-        <button class="action" onclick="adminConfirm()">
-            POTWIERDŹ
+        <button
+            class="action"
+            onclick="adminConfirm()"
+        >
+            POTWIERDŹ I DODAJ WSZYSTKO
         </button>
 
-        <div id="adminMessage" class="message"></div>
+        <div
+            id="adminMessage"
+            class="message"
+        ></div>
+
     </div>
+
 </div>
 
 <script src="dane.js"></script>
@@ -809,9 +1442,14 @@
 <script>
 "use strict";
 
-const ACCOUNTS_KEY = "medievalArenaAccounts_v1";
-const CURRENT_ACCOUNT_KEY = "medievalArenaCurrentAccount_v1";
-const ADMIN_FORM_KEY = "medievalArenaLastAdminForm_v1";
+const ACCOUNTS_KEY =
+    "medievalArenaAccounts_v1";
+
+const CURRENT_ACCOUNT_KEY =
+    "medievalArenaCurrentAccount_v1";
+
+const ADMIN_FORM_KEY =
+    "medievalArenaLastAdminForm_v1";
 
 const MAPS = {
     green: "Zielona Dolina",
@@ -827,7 +1465,9 @@ function byId(id) {
 
 function safeParse(value, fallback) {
     try {
-        return value ? JSON.parse(value) : fallback;
+        return value
+            ? JSON.parse(value)
+            : fallback;
     } catch {
         return fallback;
     }
@@ -842,15 +1482,22 @@ function normalizeName(name) {
 
 function copyState(state) {
     return {
-        tickets: Number(state.tickets) || 0,
-        coins: Number(state.coins) || 0,
-        selected: state.selected || "farmer",
+        tickets:
+            Number(state.tickets) || 0,
 
-        unlocked: Array.isArray(state.unlocked)
-            ? [...new Set(state.unlocked)]
-            : ["farmer"],
+        coins:
+            Number(state.coins) || 0,
 
-        wins: Number(state.wins) || 0,
+        selected:
+            state.selected || "farmer",
+
+        unlocked:
+            Array.isArray(state.unlocked)
+                ? [...new Set(state.unlocked)]
+                : ["farmer"],
+
+        wins:
+            Number(state.wins) || 0,
 
         heroTrophies:
             state.heroTrophies &&
@@ -858,13 +1505,16 @@ function copyState(state) {
                 ? {...state.heroTrophies}
                 : {},
 
-        lastReward: state.lastReward || null
+        lastReward:
+            state.lastReward || null
     };
 }
 
 function getAccounts() {
     return safeParse(
-        localStorage.getItem(ACCOUNTS_KEY),
+        localStorage.getItem(
+            ACCOUNTS_KEY
+        ),
         {}
     );
 }
@@ -877,33 +1527,53 @@ function saveAccounts(accounts) {
 }
 
 function ensureCurrentAccount() {
-    const accounts = getAccounts();
+    const accounts =
+        getAccounts();
 
-    let key = localStorage.getItem(
-        CURRENT_ACCOUNT_KEY
-    );
+    let key =
+        localStorage.getItem(
+            CURRENT_ACCOUNT_KEY
+        );
 
-    if (key && accounts[key]) {
+    if (
+        key &&
+        accounts[key]
+    ) {
         return key;
     }
 
-    let name = "MedievalPlayer";
+    let name =
+        "MedievalPlayer";
+
     let number = 2;
 
-    while (accounts[normalizeName(name)]) {
-        name = "MedievalPlayer" + number;
+    while (
+        accounts[
+            normalizeName(name)
+        ]
+    ) {
+        name =
+            "MedievalPlayer" +
+            number;
+
         number++;
     }
 
-    key = normalizeName(name);
+    key =
+        normalizeName(name);
 
     accounts[key] = {
         name: name,
         avatar: "",
-        state: copyState(getState())
+        state:
+            copyState(
+                getState()
+            )
     };
 
-    saveAccounts(accounts);
+    saveAccounts(
+        accounts
+    );
 
     localStorage.setItem(
         CURRENT_ACCOUNT_KEY,
@@ -914,136 +1584,262 @@ function ensureCurrentAccount() {
 }
 
 function syncCurrentStateToAccount() {
-    const key = ensureCurrentAccount();
-    const accounts = getAccounts();
+    const key =
+        ensureCurrentAccount();
+
+    const accounts =
+        getAccounts();
 
     accounts[key].state =
-        copyState(getState());
+        copyState(
+            getState()
+        );
 
-    saveAccounts(accounts);
+    saveAccounts(
+        accounts
+    );
 }
 
 function getTotalTrophies(state) {
     return Object.values(
         state.heroTrophies || {}
-    ).reduce(function(total, amount) {
-        return total + Math.max(
-            0,
-            Number(amount) || 0
-        );
-    }, 0);
+    ).reduce(
+        function(total, amount) {
+            return (
+                total +
+                Math.max(
+                    0,
+                    Number(amount) || 0
+                )
+            );
+        },
+        0
+    );
 }
 
 function getTrophyTier(amount) {
-    const trophies = Math.max(
-        0,
-        Number(amount) || 0
-    );
+    const trophies =
+        Math.max(
+            0,
+            Math.floor(
+                Number(amount) || 0
+            )
+        );
+
+    let tier;
+
+    if (trophies < 20) {
+        tier = 1;
+    } else {
+        tier =
+            Math.floor(
+                trophies / 10
+            );
+    }
+
+    let className;
 
     if (trophies < 50) {
-        return {name: "TIER 1", className: "tier-1"};
-    }
-
-    if (trophies < 100) {
-        return {name: "TIER 5", className: "tier-5"};
-    }
-
-    if (trophies < 150) {
-        return {name: "TIER 10", className: "tier-10"};
-    }
-
-    if (trophies < 200) {
-        return {name: "TIER 15", className: "tier-15"};
-    }
-
-    if (trophies < 250) {
-        return {name: "TIER 20", className: "tier-20"};
-    }
-
-    if (trophies < 300) {
-        return {name: "TIER 25", className: "tier-25"};
-    }
-
-    if (trophies < 350) {
-        return {name: "TIER 30", className: "tier-30"};
-    }
-
-    if (trophies < 400) {
-        return {name: "TIER 35", className: "tier-35"};
-    }
-
-    if (trophies < 450) {
-        return {name: "TIER 40", className: "tier-40"};
-    }
-
-    if (trophies < 500) {
-        return {name: "TIER 45", className: "tier-45"};
-    }
-
-    if (trophies < 1000) {
-        return {name: "TIER 50", className: "tier-50"};
+        className = "tier-1";
+    } else if (trophies < 100) {
+        className = "tier-5";
+    } else if (trophies < 150) {
+        className = "tier-10";
+    } else if (trophies < 200) {
+        className = "tier-15";
+    } else if (trophies < 250) {
+        className = "tier-20";
+    } else if (trophies < 300) {
+        className = "tier-25";
+    } else if (trophies < 350) {
+        className = "tier-30";
+    } else if (trophies < 400) {
+        className = "tier-35";
+    } else if (trophies < 450) {
+        className = "tier-40";
+    } else if (trophies < 500) {
+        className = "tier-45";
+    } else if (trophies < 1000) {
+        className = "tier-50";
+    } else {
+        className = "tier-max";
     }
 
     return {
-        name: "TIER MAX",
-        className: "tier-max"
+        tier: tier,
+        name:
+            "TIER " + tier,
+        className:
+            className
     };
 }
 
-function renderAvatar(element, avatar) {
-    element.innerHTML = "";
+function getTierProgress(amount) {
+    const trophies =
+        Math.max(
+            0,
+            Math.floor(
+                Number(amount) || 0
+            )
+        );
+
+    if (trophies < 20) {
+        return {
+            current:
+                trophies,
+
+            required:
+                20,
+
+            percent:
+                trophies / 20 * 100,
+
+            missing:
+                20 - trophies
+        };
+    }
+
+    const current =
+        trophies % 10;
+
+    return {
+        current:
+            current,
+
+        required:
+            10,
+
+        percent:
+            current / 10 * 100,
+
+        missing:
+            10 - current
+    };
+}
+
+function renderAvatar(
+    element,
+    avatar
+) {
+    element.innerHTML =
+        "";
 
     if (avatar) {
-        const image = document.createElement("img");
-        image.src = avatar;
-        element.appendChild(image);
+        const image =
+            document.createElement(
+                "img"
+            );
+
+        image.src =
+            avatar;
+
+        element.appendChild(
+            image
+        );
     } else {
-        element.textContent = "👑";
+        element.textContent =
+            "👑";
     }
 }
 
 function renderLobby() {
-    const state = getState();
+    const state =
+        getState();
 
     if (
         !state.heroTrophies ||
-        typeof state.heroTrophies !== "object"
+        typeof state.heroTrophies !==
+            "object"
     ) {
-        state.heroTrophies = {};
+        state.heroTrophies =
+            {};
+
         saveState(state);
     }
 
-    const hero = getHero(state.selected);
+    const hero =
+        getHero(
+            state.selected
+        );
 
     const account =
-        getAccounts()[ensureCurrentAccount()];
+        getAccounts()[
+            ensureCurrentAccount()
+        ];
 
-    const trophies = Math.max(
-        0,
-        Number(
-            state.heroTrophies[state.selected]
-        ) || 0
-    );
+    const trophies =
+        Math.max(
+            0,
+            Number(
+                state.heroTrophies[
+                    state.selected
+                ]
+            ) || 0
+        );
 
-    const tier = getTrophyTier(trophies);
+    const tier =
+        getTrophyTier(
+            trophies
+        );
 
-    byId("heroIcon").textContent = hero.ikona;
-    byId("heroName").textContent = hero.nazwa;
-    byId("heroPower").textContent = "Moc: " + hero.moc;
+    const progress =
+        getTierProgress(
+            trophies
+        );
 
-    byId("selectedHeroTrophies").textContent =
+    byId("heroIcon")
+        .textContent =
+        hero.ikona;
+
+    byId("heroName")
+        .textContent =
+        hero.nazwa;
+
+    byId("heroPower")
+        .textContent =
+        "Moc: " +
+        hero.moc;
+
+    byId("selectedHeroTrophies")
+        .textContent =
         trophies;
 
-    byId("heroTierName").textContent =
+    byId("heroTierName")
+        .textContent =
         tier.name;
 
-    byId("heroTrophyBadge").className =
-        "hero-trophies " + tier.className;
+    byId("heroTrophyBadge")
+        .className =
+        "hero-trophies " +
+        tier.className;
 
-    byId("totalTrophies").textContent =
-        getTotalTrophies(state);
+    byId("tierProgressFill")
+        .style.width =
+        progress.percent +
+        "%";
 
-    byId("topName").textContent =
+    byId("tierProgressFill")
+        .classList.toggle(
+            "empty",
+            progress.current === 0
+        );
+
+    byId("tierProgressText")
+        .textContent =
+        progress.current +
+        " / " +
+        progress.required +
+        " • brakuje " +
+        progress.missing;
+
+    byId("totalTrophies")
+        .textContent =
+        getTotalTrophies(
+            state
+        );
+
+    byId("topName")
+        .textContent =
         account.name;
 
     renderAvatar(
@@ -1052,14 +1848,22 @@ function renderLobby() {
     );
 
     updateTopbar();
+
     syncCurrentStateToAccount();
 }
 
 function dailyReward() {
-    const state = getState();
-    const today = new Date().toDateString();
+    const state =
+        getState();
 
-    if (state.lastReward === today) {
+    const today =
+        new Date()
+            .toDateString();
+
+    if (
+        state.lastReward ===
+        today
+    ) {
         alert(
             "Dzisiejsza nagroda została już odebrana."
         );
@@ -1067,35 +1871,50 @@ function dailyReward() {
         return;
     }
 
-    state.lastReward = today;
+    state.lastReward =
+        today;
+
     state.tickets += 3;
     state.coins += 50;
 
     saveState(state);
+
     syncCurrentStateToAccount();
+
     renderLobby();
 
-    alert("Dostajesz 3 bilety i 50 monet!");
+    alert(
+        "Dostajesz 3 bilety i 50 monet!"
+    );
 }
 
 function openMap() {
-    byId("mapOverlay").classList.add("visible");
+    byId("mapOverlay")
+        .classList.add(
+            "visible"
+        );
 }
 
 function closeMap() {
-    byId("mapOverlay").classList.remove("visible");
+    byId("mapOverlay")
+        .classList.remove(
+            "visible"
+        );
 }
 
 function selectMap(mapId) {
     const selected =
-        MAPS[mapId] ? mapId : "green";
+        MAPS[mapId]
+            ? mapId
+            : "green";
 
     localStorage.setItem(
         "selectedMap",
         selected
     );
 
-    byId("mapName").textContent =
+    byId("mapName")
+        .textContent =
         MAPS[selected];
 
     closeMap();
@@ -1103,12 +1922,17 @@ function selectMap(mapId) {
 
 function loadMap() {
     const stored =
-        localStorage.getItem("selectedMap");
+        localStorage.getItem(
+            "selectedMap"
+        );
 
     const selected =
-        MAPS[stored] ? stored : "green";
+        MAPS[stored]
+            ? stored
+            : "green";
 
-    byId("mapName").textContent =
+    byId("mapName")
+        .textContent =
         MAPS[selected];
 }
 
@@ -1116,14 +1940,20 @@ function openProfile() {
     syncCurrentStateToAccount();
 
     const account =
-        getAccounts()[ensureCurrentAccount()];
+        getAccounts()[
+            ensureCurrentAccount()
+        ];
 
-    pendingAvatar = account.avatar || "";
+    pendingAvatar =
+        account.avatar || "";
 
-    byId("profileName").value =
+    byId("profileName")
+        .value =
         account.name;
 
-    byId("avatarFile").value = "";
+    byId("avatarFile")
+        .value =
+        "";
 
     renderAvatar(
         byId("profilePreview"),
@@ -1133,18 +1963,25 @@ function openProfile() {
     showProfileMessage("");
 
     byId("profileOverlay")
-        .classList.add("visible");
+        .classList.add(
+            "visible"
+        );
 }
 
 function closeProfile() {
     byId("profileOverlay")
-        .classList.remove("visible");
+        .classList.remove(
+            "visible"
+        );
 }
 
 function removeAvatar() {
-    pendingAvatar = "";
+    pendingAvatar =
+        "";
 
-    byId("avatarFile").value = "";
+    byId("avatarFile")
+        .value =
+        "";
 
     renderAvatar(
         byId("profilePreview"),
@@ -1152,40 +1989,54 @@ function removeAvatar() {
     );
 }
 
-byId("avatarFile").addEventListener(
-    "change",
-    function(event) {
-        const file = event.target.files[0];
+byId("avatarFile")
+    .addEventListener(
+        "change",
+        function(event) {
+            const file =
+                event.target.files[0];
 
-        if (!file) {
-            return;
-        }
+            if (!file) {
+                return;
+            }
 
-        const reader = new FileReader();
+            const reader =
+                new FileReader();
 
-        reader.onload = function() {
-            pendingAvatar = reader.result;
+            reader.onload =
+                function() {
+                    pendingAvatar =
+                        reader.result;
 
-            renderAvatar(
-                byId("profilePreview"),
-                pendingAvatar
+                    renderAvatar(
+                        byId(
+                            "profilePreview"
+                        ),
+                        pendingAvatar
+                    );
+                };
+
+            reader.readAsDataURL(
+                file
             );
-        };
-
-        reader.readAsDataURL(file);
-    }
-);
+        }
+    );
 
 function saveProfileData() {
-    const name = byId("profileName")
-        .value
-        .trim()
-        .replace(/\s+/g, " ");
+    const name =
+        byId("profileName")
+            .value
+            .trim()
+            .replace(
+                /\s+/g,
+                " "
+            );
 
     if (
         name.length < 3 ||
         name.length > 20 ||
-        !/^[\p{L}\p{N}_ -]+$/u.test(name)
+        !/^[\p{L}\p{N}_ -]+$/u
+            .test(name)
     ) {
         showProfileMessage(
             "Niepoprawna nazwa.",
@@ -1197,9 +2048,14 @@ function saveProfileData() {
 
     syncCurrentStateToAccount();
 
-    const accounts = getAccounts();
-    const oldKey = ensureCurrentAccount();
-    const newKey = normalizeName(name);
+    const accounts =
+        getAccounts();
+
+    const oldKey =
+        ensureCurrentAccount();
+
+    const newKey =
+        normalizeName(name);
 
     if (
         newKey !== oldKey &&
@@ -1215,18 +2071,31 @@ function saveProfileData() {
 
     const account = {
         ...accounts[oldKey],
-        name: name,
-        avatar: pendingAvatar,
-        state: copyState(getState())
+
+        name:
+            name,
+
+        avatar:
+            pendingAvatar,
+
+        state:
+            copyState(
+                getState()
+            )
     };
 
-    if (newKey !== oldKey) {
+    if (
+        newKey !== oldKey
+    ) {
         delete accounts[oldKey];
     }
 
-    accounts[newKey] = account;
+    accounts[newKey] =
+        account;
 
-    saveAccounts(accounts);
+    saveAccounts(
+        accounts
+    );
 
     localStorage.setItem(
         CURRENT_ACCOUNT_KEY,
@@ -1239,13 +2108,24 @@ function saveProfileData() {
         "Profil został zapisany."
     );
 
-    setTimeout(closeProfile, 500);
+    setTimeout(
+        closeProfile,
+        500
+    );
 }
 
-function showProfileMessage(text, error = false) {
-    const element = byId("profileMessage");
+function showProfileMessage(
+    text,
+    error = false
+) {
+    const element =
+        byId(
+            "profileMessage"
+        );
 
-    element.textContent = text;
+    element.textContent =
+        text;
+
     element.classList.toggle(
         "error",
         error
@@ -1254,74 +2134,129 @@ function showProfileMessage(text, error = false) {
 
 function loadAdminHeroes() {
     const checks =
-        byId("adminHeroChecks");
+        byId(
+            "adminHeroChecks"
+        );
 
     const select =
-        byId("adminTrophyHero");
+        byId(
+            "adminTrophyHero"
+        );
 
-    checks.innerHTML = "";
-    select.innerHTML = "";
+    checks.innerHTML =
+        "";
 
-    BOHATEROWIE.forEach(function(hero) {
-        const label =
-            document.createElement("label");
+    select.innerHTML =
+        "";
 
-        label.className = "hero-check";
+    BOHATEROWIE.forEach(
+        function(hero) {
+            const label =
+                document.createElement(
+                    "label"
+                );
 
-        const checkbox =
-            document.createElement("input");
+            label.className =
+                "hero-check";
 
-        checkbox.type = "checkbox";
-        checkbox.value = hero.id;
+            const checkbox =
+                document.createElement(
+                    "input"
+                );
 
-        const text =
-            document.createElement("span");
+            checkbox.type =
+                "checkbox";
 
-        text.textContent =
-            hero.ikona + " " + hero.nazwa;
+            checkbox.value =
+                hero.id;
 
-        label.appendChild(checkbox);
-        label.appendChild(text);
-        checks.appendChild(label);
+            const text =
+                document.createElement(
+                    "span"
+                );
 
-        const option =
-            document.createElement("option");
+            text.textContent =
+                hero.ikona +
+                " " +
+                hero.nazwa;
 
-        option.value = hero.id;
+            label.appendChild(
+                checkbox
+            );
 
-        option.textContent =
-            hero.ikona + " " + hero.nazwa;
+            label.appendChild(
+                text
+            );
 
-        select.appendChild(option);
-    });
+            checks.appendChild(
+                label
+            );
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+            option.value =
+                hero.id;
+
+            option.textContent =
+                hero.ikona +
+                " " +
+                hero.nazwa;
+
+            select.appendChild(
+                option
+            );
+        }
+    );
 }
 
 function saveAdminForm() {
-    const selectedHeroes = Array.from(
-        byId("adminHeroChecks")
-            .querySelectorAll("input:checked")
-    ).map(function(input) {
-        return input.value;
-    });
+    const selectedHeroes =
+        Array.from(
+            byId(
+                "adminHeroChecks"
+            )
+            .querySelectorAll(
+                "input:checked"
+            )
+        ).map(
+            function(input) {
+                return input.value;
+            }
+        );
 
     const data = {
         targetName:
-            byId("adminTargetName").value,
+            byId(
+                "adminTargetName"
+            ).value,
 
         coins:
-            byId("adminCoins").value,
+            byId(
+                "adminCoins"
+            ).value,
 
         tickets:
-            byId("adminTickets").value,
+            byId(
+                "adminTickets"
+            ).value,
 
         trophyHero:
-            byId("adminTrophyHero").value,
+            byId(
+                "adminTrophyHero"
+            ).value,
 
         trophyMode:
-            byId("adminTrophyMode").value,
+            byId(
+                "adminTrophyMode"
+            ).value,
 
         trophyAmount:
-            byId("adminTrophyAmount").value,
+            byId(
+                "adminTrophyAmount"
+            ).value,
 
         selectedHeroes:
             selectedHeroes
@@ -1334,48 +2269,66 @@ function saveAdminForm() {
 }
 
 function loadAdminForm() {
-    const saved = safeParse(
-        localStorage.getItem(ADMIN_FORM_KEY),
-        null
-    );
+    const saved =
+        safeParse(
+            localStorage.getItem(
+                ADMIN_FORM_KEY
+            ),
+            null
+        );
 
     if (!saved) {
         return false;
     }
 
-    byId("adminTargetName").value =
+    byId("adminTargetName")
+        .value =
         saved.targetName || "";
 
-    byId("adminCoins").value =
+    byId("adminCoins")
+        .value =
         saved.coins || "";
 
-    byId("adminTickets").value =
+    byId("adminTickets")
+        .value =
         saved.tickets || "";
 
-    byId("adminTrophyHero").value =
-        saved.trophyHero || "farmer";
+    byId("adminTrophyHero")
+        .value =
+        saved.trophyHero ||
+        "farmer";
 
-    byId("adminTrophyMode").value =
-    saved.trophyMode === "set"
-        ? "set"
-        : "add";
+    byId("adminTrophyMode")
+        .value =
+        saved.trophyMode ===
+        "set"
+            ? "set"
+            : "add";
 
-    byId("adminTrophyAmount").value =
+    byId("adminTrophyAmount")
+        .value =
         saved.trophyAmount || "";
 
     const selectedHeroes =
-        Array.isArray(saved.selectedHeroes)
+        Array.isArray(
+            saved.selectedHeroes
+        )
             ? saved.selectedHeroes
             : [];
 
     byId("adminHeroChecks")
-        .querySelectorAll("input")
-        .forEach(function(input) {
-            input.checked =
-                selectedHeroes.includes(
-                    input.value
-                );
-        });
+        .querySelectorAll(
+            "input"
+        )
+        .forEach(
+            function(input) {
+                input.checked =
+                    selectedHeroes
+                        .includes(
+                            input.value
+                        );
+            }
+        );
 
     return true;
 }
@@ -1384,7 +2337,6 @@ function openAdmin() {
     syncCurrentStateToAccount();
 
     loadAdminHeroes();
-    byId("adminTrophyMode").value = "add";
 
     const loaded =
         loadAdminForm();
@@ -1395,32 +2347,46 @@ function openAdmin() {
                 ensureCurrentAccount()
             ];
 
-        byId("adminTargetName").value =
+        byId("adminTargetName")
+            .value =
             account.name;
     }
+
+    byId("adminTrophyMode")
+        .value =
+        "add";
 
     showAdminMessage("");
 
     byId("adminOverlay")
-        .classList.add("visible");
+        .classList.add(
+            "visible"
+        );
 }
 
 function closeAdmin() {
     saveAdminForm();
 
     byId("adminOverlay")
-        .classList.remove("visible");
+        .classList.remove(
+            "visible"
+        );
 }
 
-function readNonNegativeInteger(id) {
+function readNonNegativeInteger(
+    id
+) {
     const raw =
-        byId(id).value.trim();
+        byId(id)
+            .value
+            .trim();
 
     if (raw === "") {
         return 0;
     }
 
-    const value = Number(raw);
+    const value =
+        Number(raw);
 
     if (
         !Number.isInteger(value) ||
@@ -1433,31 +2399,51 @@ function readNonNegativeInteger(id) {
 }
 
 function adminConfirm() {
-    const targetKey = normalizeName(
-        byId("adminTargetName").value
-    );
+    const targetKey =
+        normalizeName(
+            byId(
+                "adminTargetName"
+            ).value
+        );
 
     const coins =
-        readNonNegativeInteger("adminCoins");
+        readNonNegativeInteger(
+            "adminCoins"
+        );
 
     const tickets =
-        readNonNegativeInteger("adminTickets");
+        readNonNegativeInteger(
+            "adminTickets"
+        );
 
-    const selectedHeroes = Array.from(
-        byId("adminHeroChecks")
-            .querySelectorAll("input:checked")
-    ).map(function(input) {
-        return input.value;
-    });
+    const selectedHeroes =
+        Array.from(
+            byId(
+                "adminHeroChecks"
+            )
+            .querySelectorAll(
+                "input:checked"
+            )
+        ).map(
+            function(input) {
+                return input.value;
+            }
+        );
 
     const trophyHero =
-        byId("adminTrophyHero").value;
+        byId(
+            "adminTrophyHero"
+        ).value;
 
     const trophyMode =
-        byId("adminTrophyMode").value;
+        byId(
+            "adminTrophyMode"
+        ).value;
 
     const trophyRaw =
-        byId("adminTrophyAmount").value.trim();
+        byId(
+            "adminTrophyAmount"
+        ).value.trim();
 
     if (!targetKey) {
         showAdminMessage(
@@ -1482,12 +2468,16 @@ function adminConfirm() {
 
     let trophyAmount = 0;
 
-    if (trophyMode !== "none") {
-        trophyAmount = Number(trophyRaw);
+    if (
+        trophyRaw !== ""
+    ) {
+        trophyAmount =
+            Number(trophyRaw);
 
         if (
-            trophyRaw === "" ||
-            !Number.isInteger(trophyAmount)
+            !Number.isInteger(
+                trophyAmount
+            )
         ) {
             showAdminMessage(
                 "Wpisz poprawną liczbę pucharków.",
@@ -1500,9 +2490,12 @@ function adminConfirm() {
 
     syncCurrentStateToAccount();
 
-    const accounts = getAccounts();
+    const accounts =
+        getAccounts();
 
-    if (!accounts[targetKey]) {
+    if (
+        !accounts[targetKey]
+    ) {
         showAdminMessage(
             "Nie znaleziono takiego gracza.",
             true
@@ -1511,44 +2504,71 @@ function adminConfirm() {
         return;
     }
 
-    const state = copyState(
-        accounts[targetKey].state || {}
-    );
+    const state =
+        copyState(
+            accounts[targetKey]
+                .state || {}
+        );
 
-    state.coins += coins;
-    state.tickets += tickets;
+    state.coins +=
+        coins;
 
-    selectedHeroes.forEach(function(heroId) {
-        if (!state.unlocked.includes(heroId)) {
-            state.unlocked.push(heroId);
+    state.tickets +=
+        tickets;
+
+    selectedHeroes.forEach(
+        function(heroId) {
+            if (
+                !state.unlocked
+                    .includes(heroId)
+            ) {
+                state.unlocked
+                    .push(heroId);
+            }
         }
-    });
+    );
 
     if (
         !state.heroTrophies ||
-        typeof state.heroTrophies !== "object"
+        typeof state.heroTrophies !==
+            "object"
     ) {
-        state.heroTrophies = {};
+        state.heroTrophies =
+            {};
     }
 
-    if (trophyMode !== "none") {
-        const current = Math.max(
-            0,
-            Number(
-                state.heroTrophies[trophyHero]
-            ) || 0
-        );
+    if (
+        trophyRaw !== ""
+    ) {
+        const current =
+            Math.max(
+                0,
+                Number(
+                    state.heroTrophies[
+                        trophyHero
+                    ]
+                ) || 0
+            );
 
-        if (trophyMode === "add") {
-            state.heroTrophies[trophyHero] =
+        if (
+            trophyMode === "add"
+        ) {
+            state.heroTrophies[
+                trophyHero
+            ] =
                 Math.max(
                     0,
-                    current + trophyAmount
+                    current +
+                    trophyAmount
                 );
         }
 
-        if (trophyMode === "set") {
-            state.heroTrophies[trophyHero] =
+        if (
+            trophyMode === "set"
+        ) {
+            state.heroTrophies[
+                trophyHero
+            ] =
                 Math.max(
                     0,
                     trophyAmount
@@ -1556,14 +2576,19 @@ function adminConfirm() {
         }
     }
 
-    accounts[targetKey].state = state;
-    saveAccounts(accounts);
+    accounts[targetKey].state =
+        state;
+
+    saveAccounts(
+        accounts
+    );
 
     if (
         targetKey ===
         ensureCurrentAccount()
     ) {
         saveState(state);
+
         renderLobby();
     }
 
@@ -1576,10 +2601,18 @@ function adminConfirm() {
     );
 }
 
-function showAdminMessage(text, error = false) {
-    const element = byId("adminMessage");
+function showAdminMessage(
+    text,
+    error = false
+) {
+    const element =
+        byId(
+            "adminMessage"
+        );
 
-    element.textContent = text;
+    element.textContent =
+        text;
+
     element.classList.toggle(
         "error",
         error
@@ -1593,17 +2626,21 @@ function showAdminMessage(text, error = false) {
     "adminTrophyHero",
     "adminTrophyMode",
     "adminTrophyAmount"
-].forEach(function(id) {
-    byId(id).addEventListener(
-        "input",
-        saveAdminForm
-    );
+].forEach(
+    function(id) {
+        byId(id)
+            .addEventListener(
+                "input",
+                saveAdminForm
+            );
 
-    byId(id).addEventListener(
-        "change",
-        saveAdminForm
-    );
-});
+        byId(id)
+            .addEventListener(
+                "change",
+                saveAdminForm
+            );
+    }
+);
 
 byId("adminHeroChecks")
     .addEventListener(
@@ -1615,36 +2652,53 @@ byId("adminHeroChecks")
     "mapOverlay",
     "profileOverlay",
     "adminOverlay"
-].forEach(function(id) {
-    byId(id).addEventListener(
-        "click",
-        function(event) {
-            if (event.target !== this) {
-                return;
-            }
+].forEach(
+    function(id) {
+        byId(id)
+            .addEventListener(
+                "click",
+                function(event) {
+                    if (
+                        event.target !==
+                        this
+                    ) {
+                        return;
+                    }
 
-            if (id === "adminOverlay") {
-                closeAdmin();
-            } else {
-                this.classList.remove(
-                    "visible"
-                );
-            }
-        }
-    );
-});
+                    if (
+                        id ===
+                        "adminOverlay"
+                    ) {
+                        closeAdmin();
+                    } else {
+                        this.classList
+                            .remove(
+                                "visible"
+                            );
+                    }
+                }
+            );
+    }
+);
 
 document.addEventListener(
     "keydown",
     function(event) {
-        if (event.key === "Escape") {
+        if (
+            event.key ===
+            "Escape"
+        ) {
             closeMap();
             closeProfile();
 
             if (
-                byId("adminOverlay")
-                    .classList
-                    .contains("visible")
+                byId(
+                    "adminOverlay"
+                )
+                .classList
+                .contains(
+                    "visible"
+                )
             ) {
                 closeAdmin();
             }
