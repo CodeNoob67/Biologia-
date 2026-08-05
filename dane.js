@@ -70,7 +70,7 @@ const BOHATEROWIE = [
         rzadkosc: "epicki",
         moc: "Desperacki atak",
         opis:
-            "Goblin jest szybkim wojownikiem wręcz. Poniżej 50% życia zadaje 25% więcej obrażeń.",
+            "Goblin jest szybkim wojownikiem walczącym wręcz. Poniżej 50% życia zadaje 25% więcej obrażeń.",
         hp: 105,
         damage: 28,
         speed: 4.4,
@@ -125,6 +125,38 @@ const BOHATEROWIE = [
         range: 690,
         cooldown: 820,
         ticketCost: 34
+    },
+
+    {
+        id: "wampir",
+        nazwa: "Wampir",
+        ikona: "🧛",
+        rzadkosc: "mityczny",
+        moc: "Nocny rój",
+        opis:
+            "Wampir nie ma normalnego ataku. Co 4 sekundy może zamienić się w szybką grupę nietoperzy, która przechodzi przez ściany i zadaje obrażenia przy dotknięciu. Wampir leczy się o 25% zadanych obrażeń.",
+        hp: 135,
+        damage: 32,
+        speed: 3.3,
+        range: 70,
+        cooldown: 4000,
+        ticketCost: 38
+    },
+
+       {
+        id: "tesla",
+        nazwa: "Tesla",
+        ikona: "⚡",
+        rzadkosc: "bardzo-rzadki",
+        moc: "Elektryczne Ultra",
+        opis:
+            "Tesla strzela szerokimi falami elektryczności, które rozszerzają się wraz z odległością. Co piąty atak jest żółtym Ultra, które porusza się szybciej i zatrzymuje trafionych wrogów na 1 sekundę.",
+        hp: 150,
+        damage: 27,
+        speed: 3.4,
+        range: 620,
+        cooldown: 720,
+        ticketCost: 22
     },
 
     {
