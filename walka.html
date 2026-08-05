@@ -374,86 +374,54 @@ const MAPS = {
 };
 
 const HERO_STATS = {
-    farmer: {
-        hp: 145,
-        damage: 24,
-        speed: 3.4,
-        range: 520,
-        cooldown: 1500,
-        projectileSpeed: 7,
-        projectileWidth: 10,
-        projectileLife: 850,
-        melee: false
-    },
+   farmer: {
+    hp: 145,
+    damage: 24,
+    speed: 1.7,
+    ...
+},
 
-    rycerz: {
-        hp: 190,
-        damage: 31,
-        speed: 2.9,
-        range: 92,
-        cooldown: 780,
-        melee: true
-    },
+rycerz: {
+    hp: 190,
+    damage: 31,
+    speed: 1.45,
+    ...
+},
 
-    lucznik: {
-        hp: 90,
-        damage: 39,
-        speed: 3.4,
-        range: 99999,
-        cooldown: 1150,
-        projectileSpeed: 6,
-        projectileWidth: 7,
-        projectileLife: 7000,
-        melee: false
-    },
+lucznik: {
+    hp: 90,
+    damage: 39,
+    speed: 1.7,
+    ...
+},
 
-    goblin: {
-        hp: 72,
-        damage: 30,
-        speed: 4.5,
-        range: 82,
-        cooldown: 620,
-        melee: true
-    },
+goblin: {
+    hp: 72,
+    damage: 30,
+    speed: 2.25,
+    ...
+},
 
-    golem: {
-        hp: 340,
-        damage: 25,
-        speed: 2.15,
-        range: 125,
-        cooldown: 1100,
-        melee: true
-    },
+golem: {
+    hp: 340,
+    damage: 25,
+    speed: 1.075,
+    ...
+},
 
-    krolowa: {
-        hp: 110,
-        damage: 45,
-        speed: 3.3,
-        range: 720,
-        cooldown: 1200,
-        projectileSpeed: 11,
-        projectileWidth: 22,
-        projectileLife: 1350,
-        melee: false
-    },
+krolowa: {
+    hp: 110,
+    damage: 45,
+    speed: 1.65,
+    ...
+},
 
-    krol: {
-        hp: 185,
-        damage: 31,
-        speed: 3.55,
-        range: 650,
-        cooldown: 1450,
-        projectileSpeed: 10,
-        projectileWidth: 10,
-        projectileLife: 1300,
-        melee: false,
-        tripleShot: true,
-        shockwaveCooldown: 6500,
-        shockwaveRadius: 190,
-        shockwaveDamage: 28,
-        shockwaveHeal: 35
-    }
-};
+krol: {
+    hp: 185,
+    damage: 31,
+    speed: 1.775,
+    ...
+},
 
 let selectedMap;
 let fighters = [];
