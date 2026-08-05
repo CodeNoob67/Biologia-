@@ -3004,31 +3004,7 @@ function drawProjectiles() {
             ctx.lineWidth = 2;
             ctx.stroke();
 
-            ctx.beginPath();
-
-            ctx.moveTo(
-                screenX,
-                screenY
-            );
-
-            ctx.lineTo(
-                screenX -
-                projectile.vx * 2,
-
-                screenY -
-                projectile.vy * 2
-            );
-
-            ctx.strokeStyle =
-                projectile.color;
-
-            ctx.lineWidth =
-                Math.max(
-                    2,
-                    projectile.radius
-                );
-
-            ctx.stroke();
+            
         }
     );
 }
