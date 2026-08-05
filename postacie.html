@@ -18,7 +18,7 @@
         body {
             margin: 0;
             min-height: 100vh;
-            padding-bottom: 95px;
+            padding-bottom: 90px;
 
             color: white;
             font-family: Arial, sans-serif;
@@ -26,9 +26,9 @@
             background:
                 radial-gradient(
                     circle at top,
-                    #158bea,
-                    #0757bc 55%,
-                    #05387e
+                    #1696ef,
+                    #075cc5 55%,
+                    #05377d
                 );
         }
 
@@ -50,15 +50,15 @@
                     transparent 5px
                 );
 
-            background-size: 75px 75px;
+            background-size: 78px 78px;
         }
 
         .topbar {
             position: sticky;
             top: 0;
-            z-index: 50;
+            z-index: 100;
 
-            min-height: 75px;
+            min-height: 78px;
 
             display: flex;
             align-items: center;
@@ -69,8 +69,8 @@
 
             background:
                 linear-gradient(
-                    #202d45,
-                    #101827
+                    #27344e,
+                    #111a2b
                 );
 
             border-bottom:
@@ -81,8 +81,8 @@
         }
 
         .back-button {
-            width: 55px;
-            height: 55px;
+            width: 56px;
+            height: 56px;
 
             display: grid;
             place-items: center;
@@ -94,8 +94,8 @@
 
             background:
                 linear-gradient(
-                    #66758d,
-                    #34445c
+                    #687891,
+                    #35465f
                 );
 
             border:
@@ -114,7 +114,7 @@
             transform:
                 translateX(-50%);
 
-            font-size: 28px;
+            font-size: 29px;
             font-weight: 1000;
 
             text-shadow:
@@ -122,18 +122,17 @@
         }
 
         .counter {
-            color: #62e8ff;
+            color: #5ee9ff;
         }
 
         .currency {
             display: flex;
-            gap: 8px;
+            gap: 9px;
         }
 
         .pill {
-            min-width: 85px;
-
-            padding: 9px 12px;
+            min-width: 92px;
+            padding: 9px 13px;
 
             text-align: center;
             font-size: 18px;
@@ -144,43 +143,44 @@
             border:
                 3px solid #080d16;
 
-            border-radius: 9px;
+            border-radius: 10px;
         }
 
         .screen {
-            width: min(1300px, 96%);
+            width: min(1120px, 95%);
 
             margin: 0 auto;
-            padding: 25px 0;
+            padding: 28px 0;
         }
 
-        .section-heading {
-            margin: 0 0 7px;
+        .group-title {
+            margin: 0 0 18px;
 
-            font-size: 26px;
+            font-size: 27px;
             font-weight: 1000;
 
             text-shadow:
                 3px 3px black;
         }
 
-        .section-subtitle {
-            margin-bottom: 22px;
+        .locked-section {
+            margin-top: 42px;
+            padding-top: 30px;
 
-            color: #dcefff;
-            font-weight: 700;
+            border-top:
+                12px solid #111827;
+
+            box-shadow:
+                inset 0 5px 0 #ffffff22;
         }
 
-        .grid {
+        .characters-grid {
             display: grid;
 
             grid-template-columns:
-                repeat(
-                    auto-fill,
-                    minmax(220px, 1fr)
-                );
+                repeat(3, minmax(0, 1fr));
 
-            gap: 22px;
+            gap: 24px;
         }
 
         .character-card {
@@ -193,34 +193,40 @@
 
             overflow: hidden;
 
-            border:
-                5px solid #111827;
+            color: white;
+            text-align: left;
 
-            border-radius: 6px;
+            border:
+                5px solid #101827;
+
+            border-radius: 8px;
 
             box-shadow:
                 8px 9px 0 #00000055;
 
+            cursor: pointer;
+
             transition:
-                transform 0.18s ease,
-                filter 0.18s ease;
+                transform 0.16s ease,
+                filter 0.16s ease;
         }
 
         .character-card:hover {
             transform:
-                translateY(-5px);
+                translateY(-6px)
+                scale(1.015);
         }
 
         .character-card.selected {
             outline:
-                5px solid #fff36d;
+                6px solid #fff064;
 
             outline-offset: 3px;
         }
 
         .character-card.locked {
             filter:
-                grayscale(0.75)
+                grayscale(0.65)
                 brightness(0.62);
         }
 
@@ -228,8 +234,8 @@
             background:
                 linear-gradient(
                     135deg,
-                    #a9b2bc,
-                    #59636e
+                    #abb4bd,
+                    #58626d
                 );
         }
 
@@ -237,8 +243,8 @@
             background:
                 linear-gradient(
                     135deg,
-                    #39e255,
-                    #11972d
+                    #42e35a,
+                    #11972e
                 );
         }
 
@@ -246,8 +252,8 @@
             background:
                 linear-gradient(
                     135deg,
-                    #2f9dff,
-                    #1747a8
+                    #2fa4ff,
+                    #1944a6
                 );
         }
 
@@ -255,8 +261,8 @@
             background:
                 linear-gradient(
                     135deg,
-                    #bd4eff,
-                    #64219c
+                    #bd50ff,
+                    #64209c
                 );
         }
 
@@ -264,8 +270,8 @@
             background:
                 linear-gradient(
                     135deg,
-                    #ef3f52,
-                    #9a152d
+                    #f24459,
+                    #94152c
                 );
         }
 
@@ -273,15 +279,15 @@
             background:
                 linear-gradient(
                     135deg,
-                    #ffe551,
-                    #e39713
+                    #ffe854,
+                    #e39212
                 );
         }
 
         .card-top {
             position: relative;
 
-            min-height: 235px;
+            min-height: 245px;
 
             display: flex;
             align-items: center;
@@ -290,14 +296,14 @@
             overflow: hidden;
 
             border-bottom:
-                5px solid #111827;
+                5px solid #101827;
         }
 
         .card-pattern {
             position: absolute;
             inset: 0;
 
-            opacity: 0.11;
+            opacity: 0.12;
 
             background-image:
                 repeating-linear-gradient(
@@ -313,10 +319,10 @@
             position: absolute;
             top: 8px;
             left: 8px;
-            z-index: 6;
+            z-index: 5;
 
-            width: 58px;
-            height: 58px;
+            width: 59px;
+            height: 59px;
 
             display: flex;
             flex-direction: column;
@@ -328,7 +334,7 @@
             background:
                 linear-gradient(
                     #35dcf0,
-                    #0d75c6
+                    #0c75c7
                 );
 
             border:
@@ -356,15 +362,14 @@
         .tier-number {
             font-size: 20px;
             font-weight: 1000;
-            line-height: 19px;
         }
 
         .trophy-bar {
             position: absolute;
             top: 9px;
-            left: 68px;
+            left: 69px;
             right: 9px;
-            z-index: 5;
+            z-index: 4;
 
             height: 35px;
 
@@ -372,8 +377,8 @@
 
             background:
                 linear-gradient(
-                    #65173a,
-                    #421024
+                    #67183b,
+                    #421025
                 );
 
             border:
@@ -384,16 +389,13 @@
 
         .trophy-fill {
             position: absolute;
-            inset:
-                0 auto 0 0;
-
-            width: 0%;
+            inset: 0 auto 0 0;
 
             background:
                 linear-gradient(
                     90deg,
-                    #e77819,
-                    #ffab22
+                    #e46e17,
+                    #ffac22
                 );
         }
 
@@ -410,8 +412,8 @@
             background: white;
 
             box-shadow:
-                0 0 5px white,
-                0 0 10px white;
+                0 0 6px white,
+                0 0 11px white;
         }
 
         .trophy-fill.empty::after {
@@ -426,7 +428,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 5px;
 
             font-size: 15px;
             font-weight: 1000;
@@ -435,17 +436,18 @@
                 2px 2px black;
         }
 
-        .locked-badge,
-        .new-badge {
+        .status-badge {
             position: absolute;
-            top: 50px;
+            top: 52px;
             right: 8px;
-            z-index: 6;
+            z-index: 5;
 
             padding: 5px 8px;
 
             font-size: 12px;
             font-weight: 1000;
+
+            background: #202938;
 
             border:
                 3px solid #111827;
@@ -454,56 +456,37 @@
                 2px 2px black;
         }
 
-        .locked-badge {
-            background: #252d3b;
-        }
-
-        .new-badge {
-            background: #ee2525;
+        .selected-badge {
+            background: #24b83d;
         }
 
         .character-icon {
             position: relative;
-            z-index: 3;
+            z-index: 2;
 
-            margin-top: 32px;
+            margin-top: 35px;
 
-            font-size: 125px;
+            font-size: 130px;
 
             filter:
                 drop-shadow(
-                    0 10px 3px #00000066
+                    0 11px 3px #00000066
                 );
-
-            transition:
-                transform 0.2s ease;
-        }
-
-        .character-card:hover
-        .character-icon {
-            transform:
-                scale(1.06)
-                rotate(-2deg);
         }
 
         .card-bottom {
-            position: relative;
-
             flex: 1;
 
-            padding:
-                10px 10px 12px;
-
-            color: white;
+            padding: 12px;
 
             background:
                 linear-gradient(
-                    #20283a,
-                    #121827
+                    #222b3e,
+                    #111827
                 );
         }
 
-        .hero-name-row {
+        .name-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -513,7 +496,7 @@
         .hero-name {
             margin: 0;
 
-            font-size: 19px;
+            font-size: 21px;
             font-weight: 1000;
             text-transform: uppercase;
 
@@ -522,74 +505,39 @@
         }
 
         .rarity-name {
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 1000;
             text-align: right;
             text-transform: uppercase;
         }
 
-        .rarity-startowy-text {
-            color: #d8dee5;
-        }
-
-        .rarity-rzadki-text {
-            color: #65ff7d;
-        }
-
-        .rarity-bardzo-rzadki-text {
-            color: #63b5ff;
-        }
-
-        .rarity-epicki-text {
-            color: #dc79ff;
-        }
-
-        .rarity-mityczny-text {
-            color: #ff6676;
-        }
-
-        .rarity-legendarny-text {
-            color: #ffe55c;
-        }
-
         .hero-power {
-            min-height: 31px;
-            margin-top: 6px;
+            margin-top: 7px;
 
-            color: #ffe560;
-            font-size: 12px;
+            color: #ffe65e;
+            font-size: 13px;
             font-weight: 900;
         }
 
-        .hero-description {
-            min-height: 48px;
-            margin-top: 7px;
-
-            color: #d5deeb;
-            font-size: 11px;
-            line-height: 1.35;
-        }
-
-        .small-stats {
+        .hero-stats {
             display: grid;
 
             grid-template-columns:
                 repeat(3, 1fr);
 
-            gap: 4px;
+            gap: 5px;
 
-            margin-top: 9px;
+            margin-top: 12px;
         }
 
-        .small-stat {
-            padding: 5px 2px;
+        .hero-stat {
+            padding: 6px 2px;
 
             text-align: center;
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 900;
 
-            background:
-                #080d17aa;
+            background: #080d17aa;
 
             border:
                 2px solid #080d16;
@@ -597,64 +545,13 @@
             border-radius: 5px;
         }
 
-        .range-stat {
-            margin-top: 5px;
-            padding: 5px;
-
-            text-align: center;
-            font-size: 10px;
-            font-weight: 900;
-
-            background:
-                #080d17aa;
-
-            border:
-                2px solid #080d16;
-
-            border-radius: 5px;
-        }
-
-        .select-button {
-            width: 100%;
-
+        .click-info {
             margin-top: 10px;
-            padding: 9px;
 
-            color: white;
-            font-size: 14px;
-            font-weight: 1000;
-
-            background:
-                linear-gradient(
-                    #33dbea,
-                    #087cbc
-                );
-
-            border:
-                4px solid #080d16;
-
-            border-radius: 5px;
-
-            box-shadow:
-                0 4px 0 #00000066;
-
-            cursor: pointer;
-        }
-
-        .select-button.selected {
-            color: #112015;
-
-            background:
-                linear-gradient(
-                    #62ff62,
-                    #18bd36
-                );
-        }
-
-        .select-button:disabled {
-            color: #aab0ba;
-            background: #3e4653;
-            cursor: not-allowed;
+            color: #d9e9ff;
+            text-align: center;
+            font-size: 11px;
+            font-weight: 900;
         }
 
         .bottom-nav {
@@ -662,9 +559,9 @@
             left: 0;
             right: 0;
             bottom: 0;
-            z-index: 60;
+            z-index: 110;
 
-            min-height: 75px;
+            min-height: 76px;
 
             display: flex;
             justify-content: center;
@@ -683,7 +580,7 @@
         }
 
         .bottom-nav a {
-            min-width: 110px;
+            min-width: 112px;
 
             padding: 8px 15px;
 
@@ -715,41 +612,539 @@
                 );
         }
 
-        @media (max-width: 700px) {
+        .details-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+
+            display: none;
+
+            overflow-y: auto;
+
+            background: #000000dd;
+        }
+
+        .details-overlay.visible {
+            display: block;
+        }
+
+        .details-screen {
+            position: relative;
+
+            min-height: 100vh;
+
+            display: grid;
+
+            grid-template-columns:
+                minmax(270px, 0.85fr)
+                minmax(360px, 1.25fr)
+                minmax(300px, 0.9fr);
+
+            gap: 22px;
+
+            padding: 25px;
+
+            overflow: hidden;
+
+            background:
+                radial-gradient(
+                    circle at center,
+                    #fff88d,
+                    #ffc91d 42%,
+                    #f37b12 100%
+                );
+        }
+
+        .details-screen::before {
+            content: "";
+
+            position: absolute;
+            inset: 0;
+
+            opacity: 0.11;
+
+            background-image:
+                radial-gradient(
+                    star,
+                    white,
+                    transparent
+                );
+        }
+
+        .details-column {
+            position: relative;
+            z-index: 2;
+
+            min-width: 0;
+        }
+
+        .close-details {
+            position: fixed;
+            top: 14px;
+            left: 14px;
+            z-index: 1100;
+
+            width: 62px;
+            height: 62px;
+
+            display: grid;
+            place-items: center;
+
+            color: white;
+            font-size: 35px;
+            font-weight: 1000;
+
+            background:
+                linear-gradient(
+                    #69768c,
+                    #343f55
+                );
+
+            border:
+                5px solid #111827;
+
+            border-radius: 9px;
+
+            box-shadow:
+                0 5px 0 #00000066;
+
+            cursor: pointer;
+        }
+
+        .details-left {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            padding-top: 45px;
+        }
+
+        .details-rarity {
+            width: fit-content;
+
+            padding: 6px 12px;
+
+            color: #111827;
+            font-size: 13px;
+            font-weight: 1000;
+            text-transform: uppercase;
+
+            background: #ffffffcc;
+
+            border:
+                3px solid #111827;
+
+            border-radius: 8px;
+        }
+
+        .details-name {
+            margin: 14px 0 2px;
+
+            font-size: clamp(38px, 5vw, 68px);
+            line-height: 0.92;
+            font-weight: 1000;
+            text-transform: uppercase;
+
+            text-shadow:
+                4px 4px white,
+                7px 7px #111827;
+        }
+
+        .details-role {
+            margin-top: 14px;
+
+            font-size: 18px;
+            font-weight: 1000;
+
+            text-shadow:
+                2px 2px white;
+        }
+
+        .details-trophies {
+            width: min(100%, 330px);
+
+            margin-top: 20px;
+            padding: 11px 14px;
+
+            color: white;
+            font-size: 21px;
+            font-weight: 1000;
+
+            background:
+                linear-gradient(
+                    #681a72,
+                    #351041
+                );
+
+            border:
+                5px solid #111827;
+
+            border-radius: 8px;
+
+            text-shadow:
+                2px 2px black;
+        }
+
+        .details-description {
+            width: min(100%, 380px);
+
+            margin-top: 18px;
+
+            color: #272015;
+            font-size: 16px;
+            font-weight: 800;
+            line-height: 1.4;
+        }
+
+        .select-hero-button {
+            width: min(100%, 340px);
+
+            margin-top: 25px;
+            padding: 18px;
+
+            color: #111827;
+            font-size: 25px;
+            font-weight: 1000;
+
+            background:
+                linear-gradient(
+                    #ffe43d,
+                    #eca900
+                );
+
+            border:
+                5px solid #111827;
+
+            border-radius: 9px;
+
+            box-shadow:
+                0 7px 0 #00000066;
+
+            cursor: pointer;
+        }
+
+        .select-hero-button.selected {
+            color: #102115;
+
+            background:
+                linear-gradient(
+                    #6aff6e,
+                    #19bd38
+                );
+        }
+
+        .select-hero-button:disabled {
+            color: #c5c9d0;
+            background: #535d6d;
+            cursor: not-allowed;
+        }
+
+        .details-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            min-height: 700px;
+        }
+
+        .large-character {
+            position: relative;
+
+            font-size: clamp(190px, 25vw, 360px);
+
+            filter:
+                drop-shadow(
+                    0 25px 6px #6d3d0077
+                );
+
+            animation:
+                heroIdle 2.3s
+                ease-in-out infinite;
+        }
+
+        @keyframes heroIdle {
+            0%,
+            100% {
+                transform:
+                    translateY(0)
+                    rotate(-2deg);
+            }
+
+            50% {
+                transform:
+                    translateY(-18px)
+                    rotate(2deg);
+            }
+        }
+
+        .large-shadow {
+            width: 65%;
+            height: 55px;
+
+            margin-top: -20px;
+
+            background: #7d450055;
+
+            border-radius: 50%;
+
+            filter:
+                blur(5px);
+        }
+
+        .details-right {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            padding-top: 50px;
+        }
+
+        .abilities-title {
+            margin: 0 0 13px;
+
+            font-size: 26px;
+            font-weight: 1000;
+
+            text-shadow:
+                3px 3px white;
+        }
+
+        .ability-card {
+            margin-bottom: 16px;
+            padding: 15px;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    #3d285e,
+                    #1c1530
+                );
+
+            border:
+                5px solid #111827;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 6px 0 #00000055;
+        }
+
+        .ability-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .ability-icon {
+            width: 67px;
+            height: 67px;
+
+            display: grid;
+            place-items: center;
+
+            flex-shrink: 0;
+
+            font-size: 38px;
+
+            background:
+                linear-gradient(
+                    #53e94f,
+                    #158b2b
+                );
+
+            border:
+                4px solid #111827;
+
+            border-radius: 50%;
+        }
+
+        .ability-icon.star {
+            background:
+                linear-gradient(
+                    #ffd63e,
+                    #e17800
+                );
+        }
+
+        .ability-name {
+            font-size: 18px;
+            font-weight: 1000;
+        }
+
+        .ability-type {
+            margin-top: 2px;
+
+            color: #9ceeff;
+            font-size: 12px;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .ability-description {
+            margin-top: 12px;
+
+            color: #dce7f7;
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 1.35;
+        }
+
+        .ability-button {
+            width: 100%;
+
+            margin-top: 13px;
+            padding: 11px;
+
+            color: #111827;
+            font-size: 15px;
+            font-weight: 1000;
+
+            background:
+                linear-gradient(
+                    #5eff68,
+                    #1ebd39
+                );
+
+            border:
+                4px solid #111827;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+        }
+
+        .ability-button.star {
+            background:
+                linear-gradient(
+                    #ffe44b,
+                    #eca400
+                );
+        }
+
+        .ability-button.owned {
+            color: white;
+
+            background:
+                linear-gradient(
+                    #56647a,
+                    #27344a
+                );
+        }
+
+        .ability-button:disabled {
+            opacity: 0.78;
+            cursor: default;
+        }
+
+        .details-stats {
+            margin-top: 8px;
+            padding: 15px;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    #7f4a09,
+                    #4d2a05
+                );
+
+            border:
+                5px solid #111827;
+
+            border-radius: 10px;
+        }
+
+        .details-stat {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+
+            padding: 9px 0;
+
+            font-size: 16px;
+            font-weight: 1000;
+
+            border-bottom:
+                2px solid #ffffff22;
+        }
+
+        .details-stat:last-child {
+            border-bottom: 0;
+        }
+
+        .details-message {
+            min-height: 27px;
+
+            margin-top: 8px;
+
+            color: #153c17;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 1000;
+        }
+
+        .details-message.error {
+            color: #8c1111;
+        }
+
+        @media (max-width: 950px) {
+            .characters-grid {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+
+            .details-screen {
+                grid-template-columns:
+                    1fr;
+
+                padding:
+                    90px 20px 30px;
+            }
+
+            .details-left,
+            .details-right {
+                align-items: center;
+                text-align: center;
+                padding-top: 0;
+            }
+
+            .details-center {
+                min-height: 360px;
+            }
+
+            .large-character {
+                font-size: 220px;
+            }
+
+            .details-description {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .details-right {
+                width: min(600px, 100%);
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 620px) {
             .page-title {
                 position: static;
-
                 transform: none;
 
                 font-size: 18px;
             }
 
             .pill {
-                min-width: 55px;
+                min-width: 56px;
                 padding: 7px;
                 font-size: 14px;
             }
 
-            .grid {
-                grid-template-columns:
-                    repeat(
-                        2,
-                        minmax(145px, 1fr)
-                    );
-
-                gap: 12px;
-            }
-
-            .character-card {
-                min-height: 350px;
-            }
-
-            .card-top {
-                min-height: 185px;
-            }
-
-            .character-icon {
-                font-size: 90px;
+            .characters-grid {
+                grid-template-columns: 1fr;
             }
 
             .bottom-nav a {
@@ -801,19 +1196,31 @@
 
 <main class="screen">
 
-    <h1 class="section-heading">
-        TWOI BOHATEROWIE
-    </h1>
+    <section>
 
-    <div class="section-subtitle">
-        Wybierz odblokowaną postać.
-        Każda postać ma własne pucharki, tier i unikalną moc.
-    </div>
+        <h1 class="group-title">
+            ODBLOKOWANE POSTACIE
+        </h1>
 
-    <div
-        id="characters"
-        class="grid"
-    ></div>
+        <div
+            id="unlockedCharacters"
+            class="characters-grid"
+        ></div>
+
+    </section>
+
+    <section class="locked-section">
+
+        <h1 class="group-title">
+            🔒 NIEODBLOKOWANE POSTACIE
+        </h1>
+
+        <div
+            id="lockedCharacters"
+            class="characters-grid"
+        ></div>
+
+    </section>
 
 </main>
 
@@ -844,6 +1251,207 @@
 
 </nav>
 
+<div
+    id="detailsOverlay"
+    class="details-overlay"
+>
+
+    <button
+        class="close-details"
+        onclick="closeCharacterDetails()"
+    >
+        ◀
+    </button>
+
+    <div
+        id="detailsScreen"
+        class="details-screen"
+    >
+
+        <section class="details-column details-left">
+
+            <div
+                id="detailsRarity"
+                class="details-rarity"
+            >
+                RZADKOŚĆ
+            </div>
+
+            <h1
+                id="detailsName"
+                class="details-name"
+            >
+                POSTAĆ
+            </h1>
+
+            <div
+                id="detailsRole"
+                class="details-role"
+            >
+                BOHATER
+            </div>
+
+            <div
+                id="detailsTrophies"
+                class="details-trophies"
+            >
+                🏆 0
+            </div>
+
+            <div
+                id="detailsDescription"
+                class="details-description"
+            ></div>
+
+            <button
+                id="selectHeroButton"
+                class="select-hero-button"
+                onclick="selectCurrentHero()"
+            >
+                WYBIERZ
+            </button>
+
+        </section>
+
+        <section class="details-column details-center">
+
+            <div
+                id="largeCharacter"
+                class="large-character"
+            >
+                🧙
+            </div>
+
+            <div class="large-shadow"></div>
+
+        </section>
+
+        <section class="details-column details-right">
+
+            <h2 class="abilities-title">
+                MOCE POSTACI
+            </h2>
+
+            <div class="ability-card">
+
+                <div class="ability-header">
+
+                    <div class="ability-icon">
+                        ⚙️
+                    </div>
+
+                    <div>
+
+                        <div
+                            id="gadgetName"
+                            class="ability-name"
+                        >
+                            Gadżet
+                        </div>
+
+                        <div class="ability-type">
+                            GADŻET
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div
+                    id="gadgetDescription"
+                    class="ability-description"
+                ></div>
+
+                <button
+                    id="gadgetButton"
+                    class="ability-button"
+                    onclick="buyCurrentGadget()"
+                >
+                    KUP ZA 🪙 2000
+                </button>
+
+            </div>
+
+            <div class="ability-card">
+
+                <div class="ability-header">
+
+                    <div class="ability-icon star">
+                        ⭐
+                    </div>
+
+                    <div>
+
+                        <div
+                            id="starPowerName"
+                            class="ability-name"
+                        >
+                            Gwiezdna moc
+                        </div>
+
+                        <div class="ability-type">
+                            GWIEZDNA MOC
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div
+                    id="starPowerDescription"
+                    class="ability-description"
+                ></div>
+
+                <button
+                    id="starPowerButton"
+                    class="ability-button star"
+                    onclick="buyCurrentStarPower()"
+                >
+                    KUP ZA 🪙 5000
+                </button>
+
+            </div>
+
+            <div class="details-stats">
+
+                <div class="details-stat">
+                    <span>❤️ ŻYCIE</span>
+                    <span id="detailHp">0</span>
+                </div>
+
+                <div class="details-stat">
+                    <span>⚔️ ATAK</span>
+                    <span id="detailDamage">0</span>
+                </div>
+
+                <div class="details-stat">
+                    <span>👟 PRĘDKOŚĆ</span>
+                    <span id="detailSpeed">0</span>
+                </div>
+
+                <div class="details-stat">
+                    <span>🎯 ZASIĘG</span>
+                    <span id="detailRange">0</span>
+                </div>
+
+                <div class="details-stat">
+                    <span>✨ MOC</span>
+                    <span id="detailPower">-</span>
+                </div>
+
+            </div>
+
+            <div
+                id="detailsMessage"
+                class="details-message"
+            ></div>
+
+        </section>
+
+    </div>
+
+</div>
+
 <script src="dane.js"></script>
 <script src="common.js"></script>
 
@@ -853,52 +1461,206 @@
 const HERO_RARITIES = {
     startowy: {
         name: "Startowy",
-        className:
-            "rarity-startowy",
-        textClass:
-            "rarity-startowy-text"
+        className: "rarity-startowy"
     },
 
     rzadki: {
         name: "Rzadki",
-        className:
-            "rarity-rzadki",
-        textClass:
-            "rarity-rzadki-text"
+        className: "rarity-rzadki"
     },
 
     "bardzo-rzadki": {
         name: "Bardzo rzadki",
-        className:
-            "rarity-bardzo-rzadki",
-        textClass:
-            "rarity-bardzo-rzadki-text"
+        className: "rarity-bardzo-rzadki"
     },
 
     epicki: {
         name: "Epicki",
-        className:
-            "rarity-epicki",
-        textClass:
-            "rarity-epicki-text"
+        className: "rarity-epicki"
     },
 
     mityczny: {
         name: "Mityczny",
-        className:
-            "rarity-mityczny",
-        textClass:
-            "rarity-mityczny-text"
+        className: "rarity-mityczny"
     },
 
     legendarny: {
         name: "Legendarny",
-        className:
-            "rarity-legendarny",
-        textClass:
-            "rarity-legendarny-text"
+        className: "rarity-legendarny"
     }
 };
+
+const HERO_ABILITIES = {
+    farmer: {
+        gadgetName: "Szybkie zbiory",
+        gadgetDescription:
+            "Farmer przez chwilę porusza się szybciej i może łatwiej uciec przed przeciwnikami.",
+
+        starName: "Ostre widły",
+        starDescription:
+            "Wzmocniony co trzeci atak Farmera zadaje jeszcze większe obrażenia."
+    },
+
+    rycerz: {
+        gadgetName: "Mocna tarcza",
+        gadgetDescription:
+            "Rycerz natychmiast otrzymuje krótką ochronę zmniejszającą otrzymywane obrażenia.",
+
+        starName: "Ostatni obrońca",
+        starDescription:
+            "Tarcza Rycerza przy małej ilości życia jest skuteczniejsza."
+    },
+
+    lucznik: {
+        gadgetName: "Odrzut",
+        gadgetDescription:
+            "Łucznik odskakuje od najbliższego przeciwnika i tworzy między nimi dystans.",
+
+        starName: "Napięta cięciwa",
+        starDescription:
+            "Co trzecia błyskawiczna strzała zadaje dodatkowe obrażenia."
+    },
+
+    ksiadz: {
+        gadgetName: "Święte wezwanie",
+        gadgetDescription:
+            "Ksiądz natychmiast przywołuje dodatkowego słabszego Ducha.",
+
+        starName: "Wieczna służba",
+        starDescription:
+            "Przywołane Duchy Księdza mają więcej życia i zadają większe obrażenia."
+    },
+
+    goblin: {
+        gadgetName: "Dymna bomba",
+        gadgetDescription:
+            "Goblin na krótko ukrywa się przed przeciwnikami.",
+
+        starName: "Desperacja",
+        starDescription:
+            "Goblin poniżej połowy życia otrzymuje jeszcze większą premię do obrażeń."
+    },
+
+    golem: {
+        gadgetName: "Kamienna skóra",
+        gadgetDescription:
+            "Golem przez chwilę otrzymuje znacznie mniej obrażeń.",
+
+        starName: "Trzęsienie ziemi",
+        starDescription:
+            "Fala uderzeniowa Golema jest większa i zadaje więcej obrażeń."
+    },
+
+    duch: {
+        gadgetName: "Widmowy skok",
+        gadgetDescription:
+            "Duch natychmiast przemieszcza się w kierunku wskazanego przeciwnika.",
+
+        starName: "Niematerialny",
+        starDescription:
+            "Po przejściu przez ścianę Duch na chwilę porusza się szybciej."
+    },
+
+    czarodziej: {
+        gadgetName: "Magiczna eksplozja",
+        gadgetDescription:
+            "Czarodziej tworzy wokół siebie eksplozję odpychającą przeciwników.",
+
+        starName: "Silniejsza klątwa",
+        starDescription:
+            "Przeklęci przeciwnicy otrzymują jeszcze więcej obrażeń."
+    },
+
+    krol: {
+        gadgetName: "Królewski rozkaz",
+        gadgetDescription:
+            "Król przez chwilę strzela jeszcze szybciej trzema pociskami.",
+
+        starName: "Złota salwa",
+        starDescription:
+            "Środkowy pocisk Króla zadaje dodatkowe obrażenia."
+    },
+
+    wiedzma: {
+        gadgetName: "Magiczny wir",
+        gadgetDescription:
+            "Wiedźma wystrzeliwuje szybki krąg małych magicznych kul.",
+
+        starName: "Nieskończony strumień",
+        starDescription:
+            "Kule Wiedźmy są jeszcze szybsze i mają większy zasięg."
+    }
+};
+
+let currentHeroId = null;
+
+function prepareState() {
+    const state = getState();
+
+    if (!Array.isArray(state.unlocked)) {
+        state.unlocked = ["farmer"];
+    }
+
+    state.unlocked =
+        state.unlocked.filter(
+            function(heroId) {
+                return BOHATEROWIE.some(
+                    function(hero) {
+                        return hero.id === heroId;
+                    }
+                );
+            }
+        );
+
+    if (!state.unlocked.includes("farmer")) {
+        state.unlocked.unshift("farmer");
+    }
+
+    if (
+        !state.heroTrophies ||
+        typeof state.heroTrophies !== "object"
+    ) {
+        state.heroTrophies = {};
+    }
+
+    if (
+        !state.heroGadgets ||
+        typeof state.heroGadgets !== "object"
+    ) {
+        state.heroGadgets = {};
+    }
+
+    if (
+        !state.heroStarPowers ||
+        typeof state.heroStarPowers !== "object"
+    ) {
+        state.heroStarPowers = {};
+    }
+
+    const selectedExists =
+        BOHATEROWIE.some(
+            function(hero) {
+                return hero.id === state.selected;
+            }
+        );
+
+    if (
+        !selectedExists ||
+        !state.unlocked.includes(state.selected)
+    ) {
+        state.selected = "farmer";
+    }
+
+    state.coins =
+        Math.max(
+            0,
+            Number(state.coins) || 0
+        );
+
+    saveState(state);
+
+    return state;
+}
 
 function getHeroTier(trophies) {
     const amount =
@@ -930,7 +1692,6 @@ function getTierProgress(trophies) {
     if (amount < 20) {
         return {
             current: amount,
-            required: 20,
             percent:
                 amount / 20 * 100
         };
@@ -941,7 +1702,6 @@ function getTierProgress(trophies) {
 
     return {
         current: current,
-        required: 10,
         percent:
             current / 10 * 100
     };
@@ -956,97 +1716,235 @@ function getRangeName(hero) {
         return "MELEE";
     }
 
-    if (
-        hero.range >= 650
-    ) {
+    if (hero.range >= 650) {
         return "DŁUGI";
     }
 
-    if (
-        hero.range >= 450
-    ) {
+    if (hero.range >= 450) {
         return "ŚREDNI";
     }
 
     return "KRÓTKI";
 }
 
+function createCharacterCard(
+    hero,
+    state
+) {
+    const unlocked =
+        state.unlocked.includes(
+            hero.id
+        );
+
+    const selected =
+        state.selected ===
+        hero.id;
+
+    const rarity =
+        HERO_RARITIES[
+            hero.rzadkosc
+        ] ||
+        HERO_RARITIES.startowy;
+
+    const trophies =
+        Math.max(
+            0,
+            Number(
+                state.heroTrophies[
+                    hero.id
+                ]
+            ) || 0
+        );
+
+    const tier =
+        getHeroTier(trophies);
+
+    const progress =
+        getTierProgress(trophies);
+
+    const card =
+        document.createElement(
+            "article"
+        );
+
+    card.className =
+        "character-card " +
+        rarity.className;
+
+    if (!unlocked) {
+        card.classList.add(
+            "locked"
+        );
+    }
+
+    if (selected) {
+        card.classList.add(
+            "selected"
+        );
+    }
+
+    card.innerHTML = `
+        <div class="card-top">
+
+            <div class="card-pattern"></div>
+
+            <div class="tier-badge">
+
+                <span class="tier-word">
+                    TIER
+                </span>
+
+                <span class="tier-number">
+                    ${tier}
+                </span>
+
+            </div>
+
+            <div class="trophy-bar">
+
+                <div
+                    class="
+                        trophy-fill
+                        ${
+                            progress.current === 0
+                                ? "empty"
+                                : ""
+                        }
+                    "
+                    style="
+                        width:
+                        ${progress.percent}%;
+                    "
+                ></div>
+
+                <div class="trophy-text">
+                    🏆 ${trophies}
+                </div>
+
+            </div>
+
+            <div
+                class="
+                    status-badge
+                    ${
+                        selected
+                            ? "selected-badge"
+                            : ""
+                    }
+                "
+            >
+                ${
+                    !unlocked
+                        ? "🔒 ZABLOKOWANY"
+                        : selected
+                            ? "WYBRANO"
+                            : "ODBLOKOWANY"
+                }
+            </div>
+
+            <div class="character-icon">
+                ${hero.ikona}
+            </div>
+
+        </div>
+
+        <div class="card-bottom">
+
+            <div class="name-row">
+
+                <h2 class="hero-name">
+                    ${hero.nazwa}
+                </h2>
+
+                <div class="rarity-name">
+                    ${rarity.name}
+                </div>
+
+            </div>
+
+            <div class="hero-power">
+                ⭐ ${hero.moc}
+            </div>
+
+            <div class="hero-stats">
+
+                <div class="hero-stat">
+                    ❤️ ${hero.hp}
+                </div>
+
+                <div class="hero-stat">
+                    ⚔️ ${hero.damage}
+                </div>
+
+                <div class="hero-stat">
+                    👟 ${hero.speed}
+                </div>
+
+            </div>
+
+            <div class="click-info">
+                KLIKNIJ, ABY ZOBACZYĆ POSTAĆ
+            </div>
+
+        </div>
+    `;
+
+    card.addEventListener(
+        "click",
+        function() {
+            openCharacterDetails(
+                hero.id
+            );
+        }
+    );
+
+    return card;
+}
+
 function renderCharacters() {
     const state =
-        getState();
+        prepareState();
 
-    if (
-        !Array.isArray(
-            state.unlocked
-        )
-    ) {
-        state.unlocked =
-            ["farmer"];
-    }
-
-    if (
-        !state.heroTrophies ||
-        typeof state.heroTrophies !==
-            "object"
-    ) {
-        state.heroTrophies =
-            {};
-    }
-
-    state.unlocked =
-        state.unlocked.filter(
-            function(heroId) {
-                return BOHATEROWIE.some(
-                    function(hero) {
-                        return (
-                            hero.id ===
-                            heroId
-                        );
-                    }
-                );
-            }
-        );
-
-    if (
-        !state.unlocked.includes(
-            "farmer"
-        )
-    ) {
-        state.unlocked.unshift(
-            "farmer"
-        );
-    }
-
-    const selectedExists =
-        BOHATEROWIE.some(
-            function(hero) {
-                return (
-                    hero.id ===
-                    state.selected
-                );
-            }
-        );
-
-    if (!selectedExists) {
-        state.selected =
-            "farmer";
-    }
-
-    const container =
+    const unlockedContainer =
         document.getElementById(
-            "characters"
+            "unlockedCharacters"
         );
 
-    container.innerHTML =
-        "";
+    const lockedContainer =
+        document.getElementById(
+            "lockedCharacters"
+        );
 
-    const unlockedCount =
-        BOHATEROWIE.filter(
-            function(hero) {
-                return state.unlocked
-                    .includes(hero.id);
+    unlockedContainer.innerHTML = "";
+    lockedContainer.innerHTML = "";
+
+    let unlockedCount = 0;
+
+    BOHATEROWIE.forEach(
+        function(hero) {
+            const card =
+                createCharacterCard(
+                    hero,
+                    state
+                );
+
+            if (
+                state.unlocked.includes(
+                    hero.id
+                )
+            ) {
+                unlockedContainer.appendChild(
+                    card
+                );
+
+                unlockedCount++;
+            } else {
+                lockedContainer.appendChild(
+                    card
+                );
             }
-        ).length;
+        }
+    );
 
     document
         .getElementById(
@@ -1057,237 +1955,480 @@ function renderCharacters() {
         "/" +
         BOHATEROWIE.length;
 
-    BOHATEROWIE.forEach(
-        function(hero) {
-            const unlocked =
-                state.unlocked.includes(
-                    hero.id
-                );
+    if (
+        lockedContainer.children.length === 0
+    ) {
+        lockedContainer.innerHTML =
+            "<div>Wszystkie postacie są odblokowane.</div>";
+    }
 
-            const selected =
-                state.selected ===
-                hero.id;
-
-            const rarity =
-                HERO_RARITIES[
-                    hero.rzadkosc
-                ] ||
-                HERO_RARITIES
-                    .startowy;
-
-            const trophies =
-                Math.max(
-                    0,
-                    Number(
-                        state.heroTrophies[
-                            hero.id
-                        ]
-                    ) || 0
-                );
-
-            const tier =
-                getHeroTier(
-                    trophies
-                );
-
-            const progress =
-                getTierProgress(
-                    trophies
-                );
-
-            const card =
-                document.createElement(
-                    "article"
-                );
-
-            card.className =
-                "character-card " +
-                rarity.className;
-
-            if (!unlocked) {
-                card.classList.add(
-                    "locked"
-                );
-            }
-
-            if (selected) {
-                card.classList.add(
-                    "selected"
-                );
-            }
-
-            const isNew =
-                unlocked &&
-                hero.id !== "farmer" &&
-                trophies === 0 &&
-                !selected;
-
-            card.innerHTML = `
-                <div class="card-top">
-
-                    <div class="card-pattern"></div>
-
-                    <div class="tier-badge">
-
-                        <span class="tier-word">
-                            TIER
-                        </span>
-
-                        <span class="tier-number">
-                            ${tier}
-                        </span>
-
-                    </div>
-
-                    <div class="trophy-bar">
-
-                        <div
-                            class="
-                                trophy-fill
-                                ${
-                                    progress.current === 0
-                                        ? "empty"
-                                        : ""
-                                }
-                            "
-                            style="
-                                width:
-                                ${progress.percent}%;
-                            "
-                        ></div>
-
-                        <div class="trophy-text">
-                            🏆 ${trophies}
-                        </div>
-
-                    </div>
-
-                    ${
-                        !unlocked
-                            ? `
-                                <div class="locked-badge">
-                                    🔒 ZABLOKOWANY
-                                </div>
-                            `
-                            : isNew
-                                ? `
-                                    <div class="new-badge">
-                                        NOWY
-                                    </div>
-                                `
-                                : ""
-                    }
-
-                    <div class="character-icon">
-                        ${hero.ikona}
-                    </div>
-
-                </div>
-
-                <div class="card-bottom">
-
-                    <div class="hero-name-row">
-
-                        <h2 class="hero-name">
-                            ${hero.nazwa}
-                        </h2>
-
-                        <span
-                            class="
-                                rarity-name
-                                ${rarity.textClass}
-                            "
-                        >
-                            ${rarity.name}
-                        </span>
-
-                    </div>
-
-                    <div class="hero-power">
-                        ⭐ ${hero.moc}
-                    </div>
-
-                    <div class="hero-description">
-                        ${hero.opis}
-                    </div>
-
-                    <div class="small-stats">
-
-                        <div class="small-stat">
-                            ❤️ ŻYCIE<br>
-                            ${hero.hp}
-                        </div>
-
-                        <div class="small-stat">
-                            ⚔️ ATAK<br>
-                            ${hero.damage}
-                        </div>
-
-                        <div class="small-stat">
-                            👟 RUCH<br>
-                            ${hero.speed}
-                        </div>
-
-                    </div>
-
-                    <div class="range-stat">
-                        🎯 ZASIĘG:
-                        ${getRangeName(hero)}
-                    </div>
-
-                    <button
-                        class="
-                            select-button
-                            ${
-                                selected
-                                    ? "selected"
-                                    : ""
-                            }
-                        "
-                    >
-                        ${
-                            !unlocked
-                                ? "ZABLOKOWANY"
-                                : selected
-                                    ? "WYBRANO"
-                                    : "WYBIERZ"
-                        }
-                    </button>
-
-                </div>
-            `;
-
-            const button =
-                card.querySelector(
-                    ".select-button"
-                );
-
-            if (!unlocked) {
-                button.disabled =
-                    true;
-            } else {
-                button.addEventListener(
-                    "click",
-                    function() {
-                        state.selected =
-                            hero.id;
-
-                        saveState(state);
-
-                        renderCharacters();
-                    }
-                );
-            }
-
-            container.appendChild(
-                card
-            );
-        }
-    );
-
-    saveState(state);
     updateTopbar();
 }
+
+function openCharacterDetails(
+    heroId
+) {
+    const state =
+        prepareState();
+
+    const hero =
+        getHero(heroId);
+
+    if (!hero) {
+        return;
+    }
+
+    currentHeroId =
+        hero.id;
+
+    const unlocked =
+        state.unlocked.includes(
+            hero.id
+        );
+
+    const selected =
+        state.selected ===
+        hero.id;
+
+    const rarity =
+        HERO_RARITIES[
+            hero.rzadkosc
+        ] ||
+        HERO_RARITIES.startowy;
+
+    const abilities =
+        HERO_ABILITIES[
+            hero.id
+        ] || {
+            gadgetName: "Specjalny gadżet",
+            gadgetDescription:
+                "Unikalny gadżet tej postaci.",
+
+            starName: "Gwiezdna moc",
+            starDescription:
+                "Unikalna gwiezdna moc tej postaci."
+        };
+
+    const trophies =
+        Math.max(
+            0,
+            Number(
+                state.heroTrophies[
+                    hero.id
+                ]
+            ) || 0
+        );
+
+    document
+        .getElementById(
+            "detailsName"
+        )
+        .textContent =
+        hero.nazwa;
+
+    document
+        .getElementById(
+            "detailsRarity"
+        )
+        .textContent =
+        rarity.name;
+
+    document
+        .getElementById(
+            "detailsRole"
+        )
+        .textContent =
+        getRangeName(hero) +
+        " ZASIĘG";
+
+    document
+        .getElementById(
+            "detailsTrophies"
+        )
+        .textContent =
+        "🏆 " +
+        trophies +
+        " | TIER " +
+        getHeroTier(trophies);
+
+    document
+        .getElementById(
+            "detailsDescription"
+        )
+        .textContent =
+        hero.opis;
+
+    document
+        .getElementById(
+            "largeCharacter"
+        )
+        .textContent =
+        hero.ikona;
+
+    document
+        .getElementById(
+            "detailHp"
+        )
+        .textContent =
+        hero.hp;
+
+    document
+        .getElementById(
+            "detailDamage"
+        )
+        .textContent =
+        hero.damage;
+
+    document
+        .getElementById(
+            "detailSpeed"
+        )
+        .textContent =
+        hero.speed;
+
+    document
+        .getElementById(
+            "detailRange"
+        )
+        .textContent =
+        getRangeName(hero);
+
+    document
+        .getElementById(
+            "detailPower"
+        )
+        .textContent =
+        hero.moc;
+
+    document
+        .getElementById(
+            "gadgetName"
+        )
+        .textContent =
+        abilities.gadgetName;
+
+    document
+        .getElementById(
+            "gadgetDescription"
+        )
+        .textContent =
+        abilities.gadgetDescription;
+
+    document
+        .getElementById(
+            "starPowerName"
+        )
+        .textContent =
+        abilities.starName;
+
+    document
+        .getElementById(
+            "starPowerDescription"
+        )
+        .textContent =
+        abilities.starDescription;
+
+    const selectButton =
+        document.getElementById(
+            "selectHeroButton"
+        );
+
+    selectButton.disabled =
+        !unlocked;
+
+    selectButton.classList.toggle(
+        "selected",
+        selected
+    );
+
+    selectButton.textContent =
+        !unlocked
+            ? "POSTAĆ ZABLOKOWANA"
+            : selected
+                ? "WYBRANO"
+                : "WYBIERZ";
+
+    updateAbilityButtons(
+        state,
+        hero
+    );
+
+    clearDetailsMessage();
+
+    document
+        .getElementById(
+            "detailsOverlay"
+        )
+        .classList.add(
+            "visible"
+        );
+
+    document.body.style.overflow =
+        "hidden";
+}
+
+function closeCharacterDetails() {
+    document
+        .getElementById(
+            "detailsOverlay"
+        )
+        .classList.remove(
+            "visible"
+        );
+
+    document.body.style.overflow =
+        "";
+
+    currentHeroId = null;
+
+    renderCharacters();
+}
+
+function selectCurrentHero() {
+    if (!currentHeroId) {
+        return;
+    }
+
+    const state =
+        prepareState();
+
+    if (
+        !state.unlocked.includes(
+            currentHeroId
+        )
+    ) {
+        showDetailsMessage(
+            "Ta postać jest zablokowana.",
+            true
+        );
+
+        return;
+    }
+
+    state.selected =
+        currentHeroId;
+
+    saveState(state);
+
+    showDetailsMessage(
+        "Wybrano postać."
+    );
+
+    openCharacterDetails(
+        currentHeroId
+    );
+
+    renderCharacters();
+}
+
+function updateAbilityButtons(
+    state,
+    hero
+) {
+    const unlocked =
+        state.unlocked.includes(
+            hero.id
+        );
+
+    const gadgetOwned =
+        Boolean(
+            state.heroGadgets[
+                hero.id
+            ]
+        );
+
+    const starOwned =
+        Boolean(
+            state.heroStarPowers[
+                hero.id
+            ]
+        );
+
+    const gadgetButton =
+        document.getElementById(
+            "gadgetButton"
+        );
+
+    const starButton =
+        document.getElementById(
+            "starPowerButton"
+        );
+
+    gadgetButton.classList.toggle(
+        "owned",
+        gadgetOwned
+    );
+
+    starButton.classList.toggle(
+        "owned",
+        starOwned
+    );
+
+    gadgetButton.disabled =
+        !unlocked ||
+        gadgetOwned;
+
+    starButton.disabled =
+        !unlocked ||
+        starOwned;
+
+    gadgetButton.textContent =
+        !unlocked
+            ? "POSTAĆ ZABLOKOWANA"
+            : gadgetOwned
+                ? "KUPIONO"
+                : "KUP ZA 🪙 2000";
+
+    starButton.textContent =
+        !unlocked
+            ? "POSTAĆ ZABLOKOWANA"
+            : starOwned
+                ? "KUPIONO"
+                : "KUP ZA 🪙 5000";
+}
+
+function buyCurrentGadget() {
+    buyAbility(
+        "gadget"
+    );
+}
+
+function buyCurrentStarPower() {
+    buyAbility(
+        "star"
+    );
+}
+
+function buyAbility(type) {
+    if (!currentHeroId) {
+        return;
+    }
+
+    const state =
+        prepareState();
+
+    if (
+        !state.unlocked.includes(
+            currentHeroId
+        )
+    ) {
+        showDetailsMessage(
+            "Najpierw odblokuj tę postać.",
+            true
+        );
+
+        return;
+    }
+
+    const isGadget =
+        type === "gadget";
+
+    const price =
+        isGadget
+            ? 2000
+            : 5000;
+
+    const collection =
+        isGadget
+            ? state.heroGadgets
+            : state.heroStarPowers;
+
+    if (
+        collection[
+            currentHeroId
+        ]
+    ) {
+        showDetailsMessage(
+            "Ta moc została już kupiona.",
+            true
+        );
+
+        return;
+    }
+
+    if (
+        state.coins <
+        price
+    ) {
+        showDetailsMessage(
+            "Masz za mało monet. Potrzebujesz " +
+            price +
+            " monet.",
+            true
+        );
+
+        return;
+    }
+
+    state.coins -=
+        price;
+
+    collection[
+        currentHeroId
+    ] = true;
+
+    saveState(state);
+
+    updateTopbar();
+
+    const hero =
+        getHero(
+            currentHeroId
+        );
+
+    updateAbilityButtons(
+        state,
+        hero
+    );
+
+    showDetailsMessage(
+        isGadget
+            ? "Kupiono gadżet!"
+            : "Kupiono gwiezdną moc!"
+    );
+}
+
+function showDetailsMessage(
+    message,
+    error = false
+) {
+    const element =
+        document.getElementById(
+            "detailsMessage"
+        );
+
+    element.textContent =
+        message;
+
+    element.classList.toggle(
+        "error",
+        error
+    );
+}
+
+function clearDetailsMessage() {
+    const element =
+        document.getElementById(
+            "detailsMessage"
+        );
+
+    element.textContent = "";
+
+    element.classList.remove(
+        "error"
+    );
+}
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+        if (
+            event.key === "Escape"
+        ) {
+            closeCharacterDetails();
+        }
+    }
+);
 
 renderCharacters();
 </script>
