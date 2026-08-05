@@ -2,7 +2,6 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
@@ -19,7 +18,6 @@
             margin: 0;
             min-height: 100vh;
             overflow: hidden;
-
             font-family: Arial, sans-serif;
             color: white;
             text-align: center;
@@ -34,14 +32,11 @@
 
         .topbar {
             height: 72px;
-
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-
             padding: 10px 18px;
-
             background: #111827;
             border-bottom: 4px solid #050912;
         }
@@ -60,17 +55,13 @@
         button,
         .back-button {
             padding: 10px 15px;
-
             color: white;
             font-family: inherit;
             font-weight: 900;
             text-decoration: none;
-
             background: #35445e;
-
             border: 3px solid #080d16;
             border-radius: 10px;
-
             cursor: pointer;
         }
 
@@ -80,24 +71,19 @@
 
         .game-info {
             height: 58px;
-
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 10px;
             flex-wrap: wrap;
-
             padding: 7px;
         }
 
         .info-box {
             padding: 7px 13px;
-
             background: #26344b;
-
             border: 3px solid #101722;
             border-radius: 10px;
-
             font-weight: 900;
         }
 
@@ -116,24 +102,17 @@
 
             max-width: 900px;
             max-height: 900px;
-
             margin: 0 auto;
         }
 
         canvas {
             width: 100%;
             height: 100%;
-
             display: block;
-
             background: #58ad58;
-
             border: 7px solid #111827;
             border-radius: 12px;
-
-            box-shadow:
-                0 15px 40px #00000099;
-
+            box-shadow: 0 15px 40px #00000099;
             cursor: crosshair;
         }
 
@@ -141,13 +120,11 @@
             position: absolute;
             inset: 7px;
             z-index: 10;
-
             display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             gap: 22px;
-
             background: #000000aa;
             border-radius: 6px;
         }
@@ -165,7 +142,6 @@
         .return-button {
             min-width: 230px;
             padding: 18px 30px;
-
             color: #111827;
             font-size: 28px;
             font-weight: 1000;
@@ -178,10 +154,7 @@
 
             border: 5px solid #111827;
             border-radius: 14px;
-
-            box-shadow:
-                0 7px 0 #00000077;
-
+            box-shadow: 0 7px 0 #00000077;
             cursor: pointer;
         }
 
@@ -189,12 +162,9 @@
             position: fixed;
             left: 15px;
             bottom: 12px;
-
             padding: 8px 12px;
-
             color: #d1d5db;
             font-size: 13px;
-
             background: #111827cc;
             border-radius: 8px;
         }
@@ -220,6 +190,10 @@
 
             .death-title {
                 font-size: 38px;
+            }
+
+            .controls {
+                display: none;
             }
         }
     </style>
@@ -374,54 +348,95 @@ const MAPS = {
 };
 
 const HERO_STATS = {
-   farmer: {
-    hp: 145,
-    damage: 24,
-    speed: 1.7,
-    ...
-},
+    farmer: {
+        hp: 145,
+        damage: 24,
+        speed: 1.7,
+        range: 500,
+        cooldown: 750,
+        projectileSpeed: 7,
+        projectileWidth: 9,
+        projectileLife: 1200,
+        melee: false
+    },
 
-rycerz: {
-    hp: 190,
-    damage: 31,
-    speed: 1.45,
-    ...
-},
+    rycerz: {
+        hp: 190,
+        damage: 31,
+        speed: 1.45,
+        range: 85,
+        cooldown: 650,
+        projectileSpeed: 0,
+        projectileWidth: 0,
+        projectileLife: 0,
+        melee: true
+    },
 
-lucznik: {
-    hp: 90,
-    damage: 39,
-    speed: 1.7,
-    ...
-},
+    lucznik: {
+        hp: 90,
+        damage: 39,
+        speed: 1.7,
+        range: 700,
+        cooldown: 900,
+        projectileSpeed: 10,
+        projectileWidth: 7,
+        projectileLife: 1500,
+        melee: false
+    },
 
-goblin: {
-    hp: 72,
-    damage: 30,
-    speed: 2.25,
-    ...
-},
+    goblin: {
+        hp: 72,
+        damage: 30,
+        speed: 2.25,
+        range: 75,
+        cooldown: 500,
+        projectileSpeed: 0,
+        projectileWidth: 0,
+        projectileLife: 0,
+        melee: true
+    },
 
-golem: {
-    hp: 340,
-    damage: 25,
-    speed: 1.075,
-    ...
-},
+    golem: {
+        hp: 340,
+        damage: 25,
+        speed: 1.075,
+        range: 95,
+        cooldown: 1100,
+        projectileSpeed: 0,
+        projectileWidth: 0,
+        projectileLife: 0,
+        melee: true
+    },
 
-krolowa: {
-    hp: 110,
-    damage: 45,
-    speed: 1.65,
-    ...
-},
+    krolowa: {
+        hp: 110,
+        damage: 45,
+        speed: 1.65,
+        range: 650,
+        cooldown: 1000,
+        projectileSpeed: 8,
+        projectileWidth: 11,
+        projectileLife: 1500,
+        melee: false,
+        tripleShot: true
+    },
 
-krol: {
-    hp: 185,
-    damage: 31,
-    speed: 1.775,
-    ...
-},
+    krol: {
+        hp: 185,
+        damage: 31,
+        speed: 1.775,
+        range: 550,
+        cooldown: 800,
+        projectileSpeed: 8,
+        projectileWidth: 10,
+        projectileLife: 1400,
+        melee: false,
+        shockwaveCooldown: 7000,
+        shockwaveRadius: 230,
+        shockwaveDamage: 35,
+        shockwaveHeal: 20
+    }
+};
 
 let selectedMap;
 let fighters = [];
@@ -490,89 +505,61 @@ const bushes = [
     { x: 1550, y: 1250, w: 150, h: 200 }
 ];
 
-window.addEventListener(
-    "keydown",
-    function(event) {
-        const key =
-            event.key.toLowerCase();
+window.addEventListener("keydown", function(event) {
+    const key = event.key.toLowerCase();
+    keys[key] = true;
 
-        keys[key] = true;
-
-        if (
-            key === "arrowup" ||
-            key === "arrowdown" ||
-            key === "arrowleft" ||
-            key === "arrowright"
-        ) {
-            event.preventDefault();
-        }
-    }
-);
-
-window.addEventListener(
-    "keyup",
-    function(event) {
-        keys[event.key.toLowerCase()] = false;
-    }
-);
-
-canvas.addEventListener(
-    "mousemove",
-    function(event) {
-        const rectangle =
-            canvas.getBoundingClientRect();
-
-        mouse.x =
-            (event.clientX - rectangle.left) *
-            canvas.width /
-            rectangle.width;
-
-        mouse.y =
-            (event.clientY - rectangle.top) *
-            canvas.height /
-            rectangle.height;
-    }
-);
-
-canvas.addEventListener(
-    "mousedown",
-    function(event) {
-        if (event.button === 0) {
-            mouse.down = true;
-        }
-    }
-);
-
-window.addEventListener(
-    "mouseup",
-    function(event) {
-        if (event.button === 0) {
-            mouse.down = false;
-        }
-    }
-);
-
-canvas.addEventListener(
-    "contextmenu",
-    function(event) {
+    if (
+        key === "arrowup" ||
+        key === "arrowdown" ||
+        key === "arrowleft" ||
+        key === "arrowright"
+    ) {
         event.preventDefault();
     }
-);
+});
+
+window.addEventListener("keyup", function(event) {
+    keys[event.key.toLowerCase()] = false;
+});
+
+canvas.addEventListener("mousemove", function(event) {
+    const rectangle = canvas.getBoundingClientRect();
+
+    mouse.x =
+        (event.clientX - rectangle.left) *
+        canvas.width /
+        rectangle.width;
+
+    mouse.y =
+        (event.clientY - rectangle.top) *
+        canvas.height /
+        rectangle.height;
+});
+
+canvas.addEventListener("mousedown", function(event) {
+    if (event.button === 0) {
+        mouse.down = true;
+    }
+});
+
+window.addEventListener("mouseup", function(event) {
+    if (event.button === 0) {
+        mouse.down = false;
+    }
+});
+
+canvas.addEventListener("contextmenu", function(event) {
+    event.preventDefault();
+});
 
 function randomNumber(minimum, maximum) {
-    return (
-        Math.random() *
-        (maximum - minimum) +
-        minimum
-    );
+    return Math.random() * (maximum - minimum) + minimum;
 }
 
 function randomItem(array) {
     return array[
-        Math.floor(
-            Math.random() *
-            array.length
-        )
+        Math.floor(Math.random() * array.length)
     ];
 }
 
@@ -584,8 +571,7 @@ function distance(first, second) {
 }
 
 function normalize(dx, dy) {
-    const length =
-        Math.hypot(dx, dy) || 1;
+    const length = Math.hypot(dx, dy) || 1;
 
     return {
         x: dx / length,
@@ -594,32 +580,20 @@ function normalize(dx, dy) {
 }
 
 function getCharacterStats(heroId) {
-    return (
-        HERO_STATS[heroId] ||
-        HERO_STATS.farmer
-    );
+    return HERO_STATS[heroId] || HERO_STATS.farmer;
 }
 
-function createFighter(
-    hero,
-    x,
-    y,
-    isPlayer,
-    number
-) {
-    const stats =
-        getCharacterStats(hero.id);
+function createFighter(hero, x, y, isPlayer, number) {
+    const stats = getCharacterStats(hero.id);
 
     return {
-        id:
-            isPlayer
-                ? "player"
-                : "bot-" + number,
+        id: isPlayer
+            ? "player"
+            : "bot-" + number,
 
-        name:
-            isPlayer
-                ? "TY"
-                : "BOT " + number,
+        name: isPlayer
+            ? "TY"
+            : "BOT " + number,
 
         heroId: hero.id,
         heroName: hero.nazwa,
@@ -627,7 +601,6 @@ function createFighter(
 
         x: x,
         y: y,
-
         radius: 28,
 
         hp: stats.hp,
@@ -647,11 +620,8 @@ function createFighter(
         projectileLife:
             stats.projectileLife || 0,
 
-        melee:
-            stats.melee,
-
-        tripleShot:
-            stats.tripleShot || false,
+        melee: stats.melee,
+        tripleShot: stats.tripleShot || false,
 
         shockwaveCooldown:
             stats.shockwaveCooldown || 0,
@@ -675,11 +645,8 @@ function createFighter(
         target: null,
         behavior: "wander",
 
-        directionX:
-            randomNumber(-1, 1),
-
-        directionY:
-            randomNumber(-1, 1),
+        directionX: randomNumber(-1, 1),
+        directionY: randomNumber(-1, 1),
 
         nextDecision:
             performance.now() +
@@ -688,33 +655,29 @@ function createFighter(
         color:
             isPlayer
                 ? "#36a9ff"
-                : `hsl(
-                    ${Math.random() * 360},
-                    70%,
-                    55%
-                )`
+                : `hsl(${Math.random() * 360}, 70%, 55%)`
     };
 }
 
 function startGame() {
     const mapId =
-        localStorage.getItem(
-            "selectedMap"
-        ) || "green";
+        localStorage.getItem("selectedMap") ||
+        "green";
 
     selectedMap =
-        MAPS[mapId];
+        MAPS[mapId] ||
+        MAPS.green;
 
     document
         .getElementById("mapName")
         .textContent =
         selectedMap.name;
 
-    const state =
-        getState();
+    const state = getState();
 
     const selectedHero =
-        getHero(state.selected);
+        getHero(state.selected) ||
+        BOHATEROWIE[0];
 
     fighters = [];
     projectiles = [];
@@ -722,29 +685,24 @@ function startGame() {
 
     winner = null;
     matchFinished = false;
-
     mouse.down = false;
 
     document
         .getElementById("deathScreen")
         .classList.remove("visible");
 
-    player =
-        createFighter(
-            selectedHero,
-            WORLD_WIDTH / 2,
-            WORLD_HEIGHT - 220,
-            true,
-            0
-        );
+    player = createFighter(
+        selectedHero,
+        WORLD_WIDTH / 2,
+        WORLD_HEIGHT - 220,
+        true,
+        0
+    );
 
     fighters.push(player);
 
     const spawnPositions = [
-        {
-            x: 180,
-            y: 180
-        },
+        { x: 180, y: 180 },
 
         {
             x: WORLD_WIDTH / 2,
@@ -777,11 +735,7 @@ function startGame() {
         }
     ];
 
-    for (
-        let i = 0;
-        i < 7;
-        i++
-    ) {
+    for (let i = 0; i < 7; i++) {
         const randomHero =
             randomItem(BOHATEROWIE);
 
@@ -805,16 +759,18 @@ function startGame() {
 
 function updateInformation() {
     const alive =
-        fighters.filter(
-            function(fighter) {
-                return fighter.alive;
-            }
-        ).length;
+        fighters.filter(function(fighter) {
+            return fighter.alive;
+        }).length;
 
     document
         .getElementById("aliveCounter")
         .textContent =
         "Pozostało: " + alive;
+
+    if (!player) {
+        return;
+    }
 
     document
         .getElementById("playerInfo")
@@ -823,16 +779,17 @@ function updateInformation() {
         " " +
         player.heroName +
         " | ❤️ " +
-        Math.max(
-            0,
-            Math.ceil(player.hp)
-        ) +
+        Math.max(0, Math.ceil(player.hp)) +
         (player.hidden
             ? " | 🌿 UKRYTY"
             : "");
 }
 
 function updateCamera() {
+    if (!player) {
+        return;
+    }
+
     camera.x =
         player.x -
         canvas.width / 2;
@@ -841,97 +798,68 @@ function updateCamera() {
         player.y -
         canvas.height / 2;
 
-    camera.x =
-        Math.max(
-            0,
-            Math.min(
-                WORLD_WIDTH -
-                canvas.width,
-                camera.x
-            )
-        );
+    camera.x = Math.max(
+        0,
+        Math.min(
+            WORLD_WIDTH - canvas.width,
+            camera.x
+        )
+    );
 
-    camera.y =
-        Math.max(
-            0,
-            Math.min(
-                WORLD_HEIGHT -
-                canvas.height,
-                camera.y
-            )
-        );
+    camera.y = Math.max(
+        0,
+        Math.min(
+            WORLD_HEIGHT - canvas.height,
+            camera.y
+        )
+    );
 }
 
-function rectangleCollision(
-    x,
-    y,
-    radius,
-    rectangle
-) {
-    const closestX =
-        Math.max(
-            rectangle.x,
-            Math.min(
-                x,
-                rectangle.x +
-                rectangle.w
-            )
-        );
+function rectangleCollision(x, y, radius, rectangle) {
+    const closestX = Math.max(
+        rectangle.x,
+        Math.min(
+            x,
+            rectangle.x + rectangle.w
+        )
+    );
 
-    const closestY =
-        Math.max(
-            rectangle.y,
-            Math.min(
-                y,
-                rectangle.y +
-                rectangle.h
-            )
-        );
+    const closestY = Math.max(
+        rectangle.y,
+        Math.min(
+            y,
+            rectangle.y + rectangle.h
+        )
+    );
 
-    const dx =
-        x - closestX;
-
-    const dy =
-        y - closestY;
+    const dx = x - closestX;
+    const dy = y - closestY;
 
     return (
-        dx * dx +
-        dy * dy <
+        dx * dx + dy * dy <
         radius * radius
     );
 }
 
-function collidesWithWall(
-    x,
-    y,
-    radius
-) {
-    return walls.some(
-        function(wall) {
-            return rectangleCollision(
-                x,
-                y,
-                radius,
-                wall
-            );
-        }
-    );
+function collidesWithWall(x, y, radius) {
+    return walls.some(function(wall) {
+        return rectangleCollision(
+            x,
+            y,
+            radius,
+            wall
+        );
+    });
 }
 
-function moveFighter(
-    fighter,
-    dx,
-    dy
-) {
-    const nextX =
-        Math.max(
-            fighter.radius,
-            Math.min(
-                WORLD_WIDTH -
-                fighter.radius,
-                fighter.x + dx
-            )
-        );
+function moveFighter(fighter, dx, dy) {
+    const nextX = Math.max(
+        fighter.radius,
+        Math.min(
+            WORLD_WIDTH - fighter.radius,
+            fighter.x + dx
+        )
+    );
 
     if (
         !collidesWithWall(
@@ -943,15 +871,13 @@ function moveFighter(
         fighter.x = nextX;
     }
 
-    const nextY =
-        Math.max(
-            fighter.radius,
-            Math.min(
-                WORLD_HEIGHT -
-                fighter.radius,
-                fighter.y + dy
-            )
-        );
+    const nextY = Math.max(
+        fighter.radius,
+        Math.min(
+            WORLD_HEIGHT - fighter.radius,
+            fighter.y + dy
+        )
+    );
 
     if (
         !collidesWithWall(
@@ -964,57 +890,40 @@ function moveFighter(
     }
 }
 
-function pointInsideRectangle(
-    x,
-    y,
-    rectangle
-) {
+function pointInsideRectangle(x, y, rectangle) {
     return (
         x >= rectangle.x &&
-        x <= rectangle.x +
-            rectangle.w &&
+        x <= rectangle.x + rectangle.w &&
         y >= rectangle.y &&
-        y <= rectangle.y +
-            rectangle.h
+        y <= rectangle.y + rectangle.h
     );
 }
 
 function updateBushStatus() {
-    fighters.forEach(
-        function(fighter) {
-            fighter.hidden =
-                fighter.alive &&
-                bushes.some(
-                    function(bush) {
-                        return pointInsideRectangle(
-                            fighter.x,
-                            fighter.y,
-                            bush
-                        );
-                    }
+    fighters.forEach(function(fighter) {
+        fighter.hidden =
+            fighter.alive &&
+            bushes.some(function(bush) {
+                return pointInsideRectangle(
+                    fighter.x,
+                    fighter.y,
+                    bush
                 );
-        }
-    );
+            });
+    });
 }
 
-function canSeeFighter(
-    observer,
-    target
-) {
+function canSeeFighter(observer, target) {
     if (!target.hidden) {
         return true;
     }
 
-    return (
-        distance(
-            observer,
-            target
-        ) < 170
-    );
+    return distance(observer, target) < 170;
 }
 
 function movePlayer() {
     if (
+        !player ||
         !player.alive ||
         matchFinished
     ) {
@@ -1061,10 +970,8 @@ function movePlayer() {
 
         moveFighter(
             player,
-            direction.x *
-            player.speed,
-            direction.y *
-            player.speed
+            direction.x * player.speed,
+            direction.y * player.speed
         );
     }
 
@@ -1084,18 +991,16 @@ function movePlayer() {
 }
 
 function getPossibleTargets(fighter) {
-    return fighters.filter(
-        function(other) {
-            return (
-                other.alive &&
-                other !== fighter &&
-                canSeeFighter(
-                    fighter,
-                    other
-                )
-            );
-        }
-    );
+    return fighters.filter(function(other) {
+        return (
+            other.alive &&
+            other !== fighter &&
+            canSeeFighter(
+                fighter,
+                other
+            )
+        );
+    });
 }
 
 function chooseBotDecision(bot) {
@@ -1140,10 +1045,7 @@ function chooseBotDecision(bot) {
         randomNumber(700, 2200);
 }
 
-function updateBot(
-    bot,
-    currentTime
-) {
+function updateBot(bot, currentTime) {
     if (
         !bot.alive ||
         matchFinished
@@ -1152,8 +1054,7 @@ function updateBot(
     }
 
     if (
-        currentTime >=
-            bot.nextDecision ||
+        currentTime >= bot.nextDecision ||
         !bot.target ||
         !bot.target.alive ||
         !canSeeFighter(
@@ -1164,10 +1065,7 @@ function updateBot(
         chooseBotDecision(bot);
     }
 
-    if (
-        bot.behavior ===
-        "wander"
-    ) {
+    if (bot.behavior === "wander") {
         const direction =
             normalize(
                 bot.directionX,
@@ -1176,18 +1074,11 @@ function updateBot(
 
         moveFighter(
             bot,
-            direction.x *
-            bot.speed *
-            0.58,
-            direction.y *
-            bot.speed *
-            0.58
+            direction.x * bot.speed * 0.58,
+            direction.y * bot.speed * 0.58
         );
 
-        if (
-            Math.random() <
-            0.015
-        ) {
+        if (Math.random() < 0.015) {
             bot.directionX =
                 randomNumber(-1, 1);
 
@@ -1217,21 +1108,14 @@ function updateBot(
             bot.target
         );
 
-    if (
-        bot.behavior === "flee"
-    ) {
+    if (bot.behavior === "flee") {
         moveFighter(
             bot,
-            -direction.x *
-            bot.speed,
-            -direction.y *
-            bot.speed
+            -direction.x * bot.speed,
+            -direction.y * bot.speed
         );
 
-        if (
-            Math.random() <
-            0.018
-        ) {
+        if (Math.random() < 0.018) {
             attackTowards(
                 bot,
                 bot.target.x,
@@ -1256,22 +1140,14 @@ function updateBot(
     ) {
         moveFighter(
             bot,
-            direction.x *
-            bot.speed *
-            0.78,
-            direction.y *
-            bot.speed *
-            0.78
+            direction.x * bot.speed * 0.78,
+            direction.y * bot.speed * 0.78
         );
     } else if (!bot.melee) {
         moveFighter(
             bot,
-            -direction.x *
-            bot.speed *
-            0.25,
-            -direction.y *
-            bot.speed *
-            0.25
+            -direction.x * bot.speed * 0.25,
+            -direction.y * bot.speed * 0.25
         );
     }
 
@@ -1282,11 +1158,7 @@ function updateBot(
     );
 }
 
-function attackTowards(
-    attacker,
-    targetX,
-    targetY
-) {
+function attackTowards(attacker, targetX, targetY) {
     if (!attacker.alive) {
         return;
     }
@@ -1375,113 +1247,82 @@ function attackTowards(
     );
 }
 
-function findTargetNearPoint(
-    attacker,
-    targetX,
-    targetY
-) {
+function findTargetNearPoint(attacker, targetX, targetY) {
     const targets =
-        fighters.filter(
-            function(fighter) {
-                return (
-                    fighter.alive &&
-                    fighter !== attacker &&
-                    canSeeFighter(
-                        attacker,
-                        fighter
-                    )
-                );
-            }
-        );
-
-    targets.sort(
-        function(first, second) {
-            const firstDistance =
-                Math.hypot(
-                    first.x - targetX,
-                    first.y - targetY
-                );
-
-            const secondDistance =
-                Math.hypot(
-                    second.x - targetX,
-                    second.y - targetY
-                );
-
+        fighters.filter(function(fighter) {
             return (
-                firstDistance -
-                secondDistance
+                fighter.alive &&
+                fighter !== attacker &&
+                canSeeFighter(
+                    attacker,
+                    fighter
+                )
             );
-        }
-    );
+        });
+
+    targets.sort(function(first, second) {
+        const firstDistance =
+            Math.hypot(
+                first.x - targetX,
+                first.y - targetY
+            );
+
+        const secondDistance =
+            Math.hypot(
+                second.x - targetX,
+                second.y - targetY
+            );
+
+        return (
+            firstDistance -
+            secondDistance
+        );
+    });
 
     return targets[0] || null;
 }
 
-function rotateDirection(
-    direction,
-    angle
-) {
+function rotateDirection(direction, angle) {
     return {
         x:
-            direction.x *
-            Math.cos(angle) -
-            direction.y *
-            Math.sin(angle),
+            direction.x * Math.cos(angle) -
+            direction.y * Math.sin(angle),
 
         y:
-            direction.x *
-            Math.sin(angle) +
-            direction.y *
-            Math.cos(angle)
+            direction.x * Math.sin(angle) +
+            direction.y * Math.cos(angle)
     };
 }
 
-function createProjectile(
-    attacker,
-    direction,
-    angle
-) {
+function createProjectile(attacker, direction, angle) {
     const rotated =
         rotateDirection(
             direction,
             angle
         );
 
-    let color =
-        "#f9eda2";
+    let color = "#f9eda2";
 
-    if (
-        attacker.heroId ===
-        "farmer"
-    ) {
+    if (attacker.heroId === "farmer") {
         color = "#6b4327";
     }
 
-    if (
-        attacker.heroId ===
-        "krolowa"
-    ) {
+    if (attacker.heroId === "krolowa") {
         color = "#df61ff";
     }
 
-    if (
-        attacker.heroId ===
-        "krol"
-    ) {
+    if (attacker.heroId === "krol") {
         color = "#ffd638";
     }
 
     projectiles.push({
         x:
             attacker.x +
-            rotated.x *
-            34,
+            rotated.x * 34,
 
         y:
             attacker.y +
-            rotated.y *
-            34,
+            rotated.y * 34,
 
         vx:
             rotated.x *
@@ -1501,19 +1342,12 @@ function createProjectile(
             attacker,
 
         color: color,
-
-        born:
-            performance.now(),
-
-        life:
-            attacker.projectileLife
+        born: performance.now(),
+        life: attacker.projectileLife
     });
 }
 
-function createMeleeEffect(
-    attacker,
-    direction
-) {
+function createMeleeEffect(attacker, direction) {
     shockwaves.push({
         x:
             attacker.x +
@@ -1534,83 +1368,72 @@ function createMeleeEffect(
     });
 }
 
-function updateKingShockwaves(
-    currentTime
-) {
-    fighters.forEach(
-        function(fighter) {
-            if (
-                !fighter.alive ||
-                fighter.heroId !== "krol"
-            ) {
-                return;
-            }
-
-            if (
-                currentTime -
-                fighter.lastShockwave <
-                fighter.shockwaveCooldown
-            ) {
-                return;
-            }
-
-            fighter.lastShockwave =
-                currentTime;
-
-            fighter.hp =
-                Math.min(
-                    fighter.maxHp,
-                    fighter.hp +
-                    fighter.shockwaveHeal
-                );
-
-            fighters.forEach(
-                function(target) {
-                    if (
-                        target !== fighter &&
-                        target.alive &&
-                        distance(
-                            fighter,
-                            target
-                        ) <=
-                        fighter.shockwaveRadius
-                    ) {
-                        damageFighter(
-                            target,
-                            fighter.shockwaveDamage,
-                            fighter
-                        );
-                    }
-                }
-            );
-
-            shockwaves.push({
-                x: fighter.x,
-                y: fighter.y,
-                radius: 20,
-                maximumRadius:
-                    fighter.shockwaveRadius,
-
-                color: "#ffd638",
-                born: currentTime,
-                life: 700,
-                visualOnly: false
-            });
+function updateKingShockwaves(currentTime) {
+    fighters.forEach(function(fighter) {
+        if (
+            !fighter.alive ||
+            fighter.heroId !== "krol"
+        ) {
+            return;
         }
-    );
+
+        if (
+            currentTime -
+            fighter.lastShockwave <
+            fighter.shockwaveCooldown
+        ) {
+            return;
+        }
+
+        fighter.lastShockwave =
+            currentTime;
+
+        fighter.hp = Math.min(
+            fighter.maxHp,
+            fighter.hp +
+            fighter.shockwaveHeal
+        );
+
+        fighters.forEach(function(target) {
+            if (
+                target !== fighter &&
+                target.alive &&
+                distance(
+                    fighter,
+                    target
+                ) <=
+                fighter.shockwaveRadius
+            ) {
+                damageFighter(
+                    target,
+                    fighter.shockwaveDamage,
+                    fighter
+                );
+            }
+        });
+
+        shockwaves.push({
+            x: fighter.x,
+            y: fighter.y,
+            radius: 20,
+
+            maximumRadius:
+                fighter.shockwaveRadius,
+
+            color: "#ffd638",
+            born: currentTime,
+            life: 700,
+            visualOnly: false
+        });
+    });
 }
 
-function damageFighter(
-    target,
-    damage,
-    attacker
-) {
+function damageFighter(target, damage, attacker) {
     if (!target.alive) {
         return;
     }
 
     target.hp -= damage;
-
     target.hidden = false;
 
     if (target.hp <= 0) {
@@ -1626,30 +1449,21 @@ function damageFighter(
     updateInformation();
 }
 
-function projectileHitsWall(
-    projectile
-) {
-    return walls.some(
-        function(wall) {
-            return rectangleCollision(
-                projectile.x,
-                projectile.y,
-                projectile.radius,
-                wall
-            );
-        }
-    );
+function projectileHitsWall(projectile) {
+    return walls.some(function(wall) {
+        return rectangleCollision(
+            projectile.x,
+            projectile.y,
+            projectile.radius,
+            wall
+        );
+    });
 }
 
-function updateProjectiles(
-    currentTime
-) {
+function updateProjectiles(currentTime) {
     for (
-        let i =
-            projectiles.length - 1;
-
+        let i = projectiles.length - 1;
         i >= 0;
-
         i--
     ) {
         const projectile =
@@ -1674,10 +1488,8 @@ function updateProjectiles(
         if (
             projectile.x < 0 ||
             projectile.y < 0 ||
-            projectile.x >
-                WORLD_WIDTH ||
-            projectile.y >
-                WORLD_HEIGHT
+            projectile.x > WORLD_WIDTH ||
+            projectile.y > WORLD_HEIGHT
         ) {
             remove = true;
         }
@@ -1691,14 +1503,10 @@ function updateProjectiles(
         }
 
         if (!remove) {
-            for (
-                const fighter
-                of fighters
-            ) {
+            for (const fighter of fighters) {
                 if (
                     !fighter.alive ||
-                    fighter ===
-                        projectile.owner
+                    fighter === projectile.owner
                 ) {
                     continue;
                 }
@@ -1706,10 +1514,10 @@ function updateProjectiles(
                 if (
                     Math.hypot(
                         projectile.x -
-                            fighter.x,
+                        fighter.x,
 
                         projectile.y -
-                            fighter.y
+                        fighter.y
                     ) <
                     projectile.radius +
                     fighter.radius
@@ -1727,37 +1535,28 @@ function updateProjectiles(
         }
 
         if (remove) {
-            projectiles.splice(
-                i,
-                1
-            );
+            projectiles.splice(i, 1);
         }
     }
 }
 
-function updateShockwaves(
-    currentTime
-) {
+function updateShockwaves(currentTime) {
     for (
-        let i =
-            shockwaves.length - 1;
-
+        let i = shockwaves.length - 1;
         i >= 0;
-
         i--
     ) {
         const wave =
             shockwaves[i];
 
-        const progress =
-            Math.min(
-                1,
-                (
-                    currentTime -
-                    wave.born
-                ) /
-                wave.life
-            );
+        const progress = Math.min(
+            1,
+            (
+                currentTime -
+                wave.born
+            ) /
+            wave.life
+        );
 
         wave.radius =
             20 +
@@ -1768,21 +1567,16 @@ function updateShockwaves(
             progress;
 
         if (progress >= 1) {
-            shockwaves.splice(
-                i,
-                1
-            );
+            shockwaves.splice(i, 1);
         }
     }
 }
 
 function checkWinner() {
     const alive =
-        fighters.filter(
-            function(fighter) {
-                return fighter.alive;
-            }
-        );
+        fighters.filter(function(fighter) {
+            return fighter.alive;
+        });
 
     if (
         alive.length !== 1 ||
@@ -1798,21 +1592,23 @@ function checkWinner() {
         const state =
             getState();
 
-        state.tickets += 4;
-        state.coins += 50;
-        state.wins += 1;
+        state.tickets =
+            (state.tickets || 0) + 4;
+
+        state.coins =
+            (state.coins || 0) + 50;
+
+        state.wins =
+            (state.wins || 0) + 1;
 
         saveState(state);
-
         showDeathScreen(true);
     } else if (!player.alive) {
         showDeathScreen(false);
     }
 }
 
-function showDeathScreen(
-    playerWon
-) {
+function showDeathScreen(playerWon) {
     const deathScreen =
         document.getElementById(
             "deathScreen"
@@ -1843,31 +1639,19 @@ function update() {
     const currentTime =
         performance.now();
 
-    fighters.forEach(
-        function(fighter) {
-            if (!fighter.isPlayer) {
-                updateBot(
-                    fighter,
-                    currentTime
-                );
-            }
+    fighters.forEach(function(fighter) {
+        if (!fighter.isPlayer) {
+            updateBot(
+                fighter,
+                currentTime
+            );
         }
-    );
+    });
 
     updateBushStatus();
-
-    updateProjectiles(
-        currentTime
-    );
-
-    updateKingShockwaves(
-        currentTime
-    );
-
-    updateShockwaves(
-        currentTime
-    );
-
+    updateProjectiles(currentTime);
+    updateKingShockwaves(currentTime);
+    updateShockwaves(currentTime);
     updateCamera();
     updateInformation();
     checkWinner();
@@ -1881,19 +1665,12 @@ function worldToScreenY(y) {
     return y - camera.y;
 }
 
-function objectVisible(
-    x,
-    y,
-    width,
-    height
-) {
+function objectVisible(x, y, width, height) {
     return (
         x + width >= camera.x &&
-        x <= camera.x +
-            canvas.width &&
+        x <= camera.x + canvas.width &&
         y + height >= camera.y &&
-        y <= camera.y +
-            canvas.height
+        y <= camera.y + canvas.height
     );
 }
 
@@ -1939,19 +1716,13 @@ function drawMap() {
         );
 
     for (
-        let column =
-            startColumn;
-
+        let column = startColumn;
         column <= endColumn;
-
         column++
     ) {
         for (
-            let row =
-                startRow;
-
+            let row = startRow;
             row <= endRow;
-
             row++
         ) {
             if (
@@ -1961,17 +1732,16 @@ function drawMap() {
                 ) % 2 === 0
             ) {
                 ctx.fillStyle =
-                    selectedMap
-                        .groundDark;
+                    selectedMap.groundDark;
 
                 ctx.fillRect(
                     column *
-                        tileSize -
-                        camera.x,
+                    tileSize -
+                    camera.x,
 
                     row *
-                        tileSize -
-                        camera.y,
+                    tileSize -
+                    camera.y,
 
                     tileSize,
                     tileSize
@@ -1980,9 +1750,7 @@ function drawMap() {
         }
     }
 
-    ctx.strokeStyle =
-        "#111827";
-
+    ctx.strokeStyle = "#111827";
     ctx.lineWidth = 10;
 
     ctx.strokeRect(
@@ -1994,209 +1762,172 @@ function drawMap() {
 }
 
 function drawWalls() {
-    walls.forEach(
-        function(wall) {
-            if (
-                !objectVisible(
-                    wall.x,
-                    wall.y,
-                    wall.w,
-                    wall.h
-                )
-            ) {
-                return;
-            }
-
-            const x =
-                worldToScreenX(
-                    wall.x
-                );
-
-            const y =
-                worldToScreenY(
-                    wall.y
-                );
-
-            ctx.fillStyle =
-                "#00000044";
-
-            ctx.fillRect(
-                x + 8,
-                y + 10,
+    walls.forEach(function(wall) {
+        if (
+            !objectVisible(
+                wall.x,
+                wall.y,
                 wall.w,
                 wall.h
-            );
-
-            ctx.fillStyle =
-                selectedMap.wall;
-
-            ctx.fillRect(
-                x,
-                y,
-                wall.w,
-                wall.h
-            );
-
-            ctx.fillStyle =
-                selectedMap.wallTop;
-
-            ctx.fillRect(
-                x,
-                y,
-                wall.w,
-                Math.min(
-                    24,
-                    wall.h
-                )
-            );
-
-            ctx.strokeStyle =
-                "#32271e";
-
-            ctx.lineWidth = 4;
-
-            ctx.strokeRect(
-                x,
-                y,
-                wall.w,
-                wall.h
-            );
-
-            for (
-                let brickX = 18;
-                brickX <
-                    wall.w;
-
-                brickX += 45
-            ) {
-                ctx.beginPath();
-
-                ctx.moveTo(
-                    x + brickX,
-                    y
-                );
-
-                ctx.lineTo(
-                    x + brickX,
-                    y +
-                    Math.min(
-                        24,
-                        wall.h
-                    )
-                );
-
-                ctx.stroke();
-            }
+            )
+        ) {
+            return;
         }
-    );
+
+        const x =
+            worldToScreenX(wall.x);
+
+        const y =
+            worldToScreenY(wall.y);
+
+        ctx.fillStyle = "#00000044";
+
+        ctx.fillRect(
+            x + 8,
+            y + 10,
+            wall.w,
+            wall.h
+        );
+
+        ctx.fillStyle =
+            selectedMap.wall;
+
+        ctx.fillRect(
+            x,
+            y,
+            wall.w,
+            wall.h
+        );
+
+        ctx.fillStyle =
+            selectedMap.wallTop;
+
+        ctx.fillRect(
+            x,
+            y,
+            wall.w,
+            Math.min(24, wall.h)
+        );
+
+        ctx.strokeStyle = "#32271e";
+        ctx.lineWidth = 4;
+
+        ctx.strokeRect(
+            x,
+            y,
+            wall.w,
+            wall.h
+        );
+
+        for (
+            let brickX = 18;
+            brickX < wall.w;
+            brickX += 45
+        ) {
+            ctx.beginPath();
+
+            ctx.moveTo(
+                x + brickX,
+                y
+            );
+
+            ctx.lineTo(
+                x + brickX,
+                y + Math.min(24, wall.h)
+            );
+
+            ctx.stroke();
+        }
+    });
 }
 
 function drawBushes() {
-    bushes.forEach(
-        function(bush) {
-            if (
-                !objectVisible(
-                    bush.x,
-                    bush.y,
-                    bush.w,
-                    bush.h
-                )
-            ) {
-                return;
-            }
-
-            const x =
-                worldToScreenX(
-                    bush.x
-                );
-
-            const y =
-                worldToScreenY(
-                    bush.y
-                );
-
-            ctx.fillStyle =
-                selectedMap.bush;
-
-            ctx.fillRect(
-                x,
-                y,
+    bushes.forEach(function(bush) {
+        if (
+            !objectVisible(
+                bush.x,
+                bush.y,
                 bush.w,
                 bush.h
-            );
-
-            ctx.fillStyle =
-                selectedMap.bushLight;
-
-            const leafSize = 34;
-
-            for (
-                let leafX = 8;
-                leafX <
-                    bush.w;
-
-                leafX += leafSize
-            ) {
-                for (
-                    let leafY = 8;
-                    leafY <
-                        bush.h;
-
-                    leafY += leafSize
-                ) {
-                    ctx.beginPath();
-
-                    ctx.arc(
-                        x +
-                        leafX +
-                        randomStaticOffset(
-                            bush.x +
-                            leafX
-                        ),
-
-                        y +
-                        leafY +
-                        randomStaticOffset(
-                            bush.y +
-                            leafY
-                        ),
-
-                        16,
-                        0,
-                        Math.PI * 2
-                    );
-
-                    ctx.fill();
-                }
-            }
-
-            ctx.strokeStyle =
-                "#183c22";
-
-            ctx.lineWidth = 4;
-
-            ctx.strokeRect(
-                x,
-                y,
-                bush.w,
-                bush.h
-            );
+            )
+        ) {
+            return;
         }
-    );
+
+        const x =
+            worldToScreenX(bush.x);
+
+        const y =
+            worldToScreenY(bush.y);
+
+        ctx.fillStyle =
+            selectedMap.bush;
+
+        ctx.fillRect(
+            x,
+            y,
+            bush.w,
+            bush.h
+        );
+
+        ctx.fillStyle =
+            selectedMap.bushLight;
+
+        const leafSize = 34;
+
+        for (
+            let leafX = 8;
+            leafX < bush.w;
+            leafX += leafSize
+        ) {
+            for (
+                let leafY = 8;
+                leafY < bush.h;
+                leafY += leafSize
+            ) {
+                ctx.beginPath();
+
+                ctx.arc(
+                    x +
+                    leafX +
+                    randomStaticOffset(
+                        bush.x +
+                        leafX
+                    ),
+
+                    y +
+                    leafY +
+                    randomStaticOffset(
+                        bush.y +
+                        leafY
+                    ),
+
+                    16,
+                    0,
+                    Math.PI * 2
+                );
+
+                ctx.fill();
+            }
+        }
+
+        ctx.strokeStyle = "#183c22";
+        ctx.lineWidth = 4;
+
+        ctx.strokeRect(
+            x,
+            y,
+            bush.w,
+            bush.h
+        );
+    });
 }
 
 function randomStaticOffset(value) {
-    return (
-        Math.sin(value * 12.345) *
-        4
-    );
+    return Math.sin(value * 12.345) * 4;
 }
 
-function drawHealthBar(
-    fighter,
-    screenX,
-    screenY
-) {
+function drawHealthBar(fighter, screenX, screenY) {
     const width = 62;
     const height = 9;
 
@@ -2209,8 +1940,7 @@ function drawHealthBar(
         fighter.radius -
         27;
 
-    ctx.fillStyle =
-        "#281b20";
+    ctx.fillStyle = "#281b20";
 
     ctx.fillRect(
         x,
@@ -2238,9 +1968,7 @@ function drawHealthBar(
         height
     );
 
-    ctx.strokeStyle =
-        "#111827";
-
+    ctx.strokeStyle = "#111827";
     ctx.lineWidth = 2;
 
     ctx.strokeRect(
@@ -2257,22 +1985,16 @@ function drawFighter(fighter) {
     }
 
     const screenX =
-        worldToScreenX(
-            fighter.x
-        );
+        worldToScreenX(fighter.x);
 
     const screenY =
-        worldToScreenY(
-            fighter.y
-        );
+        worldToScreenY(fighter.y);
 
     if (
         screenX < -80 ||
         screenY < -80 ||
-        screenX >
-            canvas.width + 80 ||
-        screenY >
-            canvas.height + 80
+        screenX > canvas.width + 80 ||
+        screenY > canvas.height + 80
     ) {
         return;
     }
@@ -2335,14 +2057,9 @@ function drawFighter(fighter) {
 
     ctx.stroke();
 
-    ctx.font =
-        "43px Arial";
-
-    ctx.textAlign =
-        "center";
-
-    ctx.textBaseline =
-        "middle";
+    ctx.font = "43px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
 
     ctx.fillText(
         fighter.icon,
@@ -2350,12 +2067,8 @@ function drawFighter(fighter) {
         screenY
     );
 
-    ctx.font =
-        "bold 13px Arial";
-
-    ctx.strokeStyle =
-        "black";
-
+    ctx.font = "bold 13px Arial";
+    ctx.strokeStyle = "black";
     ctx.lineWidth = 4;
 
     ctx.strokeText(
@@ -2364,8 +2077,7 @@ function drawFighter(fighter) {
         screenY + 49
     );
 
-    ctx.fillStyle =
-        "white";
+    ctx.fillStyle = "white";
 
     ctx.fillText(
         fighter.name,
@@ -2380,8 +2092,7 @@ function drawFighter(fighter) {
     );
 
     if (fighter.hidden) {
-        ctx.font =
-            "20px Arial";
+        ctx.font = "20px Arial";
 
         ctx.fillText(
             "🌿",
@@ -2394,129 +2105,111 @@ function drawFighter(fighter) {
 }
 
 function drawProjectiles() {
-    projectiles.forEach(
-        function(projectile) {
-            const screenX =
-                worldToScreenX(
-                    projectile.x
-                );
-
-            const screenY =
-                worldToScreenY(
-                    projectile.y
-                );
-
-            if (
-                screenX < -40 ||
-                screenY < -40 ||
-                screenX >
-                    canvas.width + 40 ||
-                screenY >
-                    canvas.height + 40
-            ) {
-                return;
-            }
-
-            ctx.beginPath();
-
-            ctx.arc(
-                screenX,
-                screenY,
-                projectile.radius,
-                0,
-                Math.PI * 2
+    projectiles.forEach(function(projectile) {
+        const screenX =
+            worldToScreenX(
+                projectile.x
             );
 
-            ctx.fillStyle =
-                projectile.color;
-
-            ctx.fill();
-
-            ctx.strokeStyle =
-                "#111827";
-
-            ctx.lineWidth = 2;
-
-            ctx.stroke();
-
-            ctx.beginPath();
-
-            ctx.moveTo(
-                screenX,
-                screenY
+        const screenY =
+            worldToScreenY(
+                projectile.y
             );
 
-            ctx.lineTo(
-                screenX -
-                projectile.vx * 3,
-
-                screenY -
-                projectile.vy * 3
-            );
-
-            ctx.strokeStyle =
-                projectile.color;
-
-            ctx.lineWidth =
-                projectile.radius;
-
-            ctx.stroke();
+        if (
+            screenX < -40 ||
+            screenY < -40 ||
+            screenX > canvas.width + 40 ||
+            screenY > canvas.height + 40
+        ) {
+            return;
         }
-    );
+
+        ctx.beginPath();
+
+        ctx.arc(
+            screenX,
+            screenY,
+            projectile.radius,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fillStyle =
+            projectile.color;
+
+        ctx.fill();
+
+        ctx.strokeStyle = "#111827";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            screenX,
+            screenY
+        );
+
+        ctx.lineTo(
+            screenX -
+            projectile.vx * 3,
+
+            screenY -
+            projectile.vy * 3
+        );
+
+        ctx.strokeStyle =
+            projectile.color;
+
+        ctx.lineWidth =
+            projectile.radius;
+
+        ctx.stroke();
+    });
 }
 
 function drawShockwaves() {
-    shockwaves.forEach(
-        function(wave) {
-            const screenX =
-                worldToScreenX(
-                    wave.x
-                );
+    shockwaves.forEach(function(wave) {
+        const screenX =
+            worldToScreenX(wave.x);
 
-            const screenY =
-                worldToScreenY(
-                    wave.y
-                );
+        const screenY =
+            worldToScreenY(wave.y);
 
-            const remaining =
-                Math.max(
-                    0,
-                    1 -
-                    (
-                        performance.now() -
-                        wave.born
-                    ) /
-                    wave.life
-                );
+        const remaining = Math.max(
+            0,
+            1 -
+            (
+                performance.now() -
+                wave.born
+            ) /
+            wave.life
+        );
 
-            ctx.save();
+        ctx.save();
+        ctx.globalAlpha = remaining;
+        ctx.beginPath();
 
-            ctx.globalAlpha =
-                remaining;
+        ctx.arc(
+            screenX,
+            screenY,
+            wave.radius,
+            0,
+            Math.PI * 2
+        );
 
-            ctx.beginPath();
+        ctx.strokeStyle =
+            wave.color;
 
-            ctx.arc(
-                screenX,
-                screenY,
-                wave.radius,
-                0,
-                Math.PI * 2
-            );
+        ctx.lineWidth =
+            wave.visualOnly
+                ? 12
+                : 18;
 
-            ctx.strokeStyle =
-                wave.color;
-
-            ctx.lineWidth =
-                wave.visualOnly
-                    ? 12
-                    : 18;
-
-            ctx.stroke();
-
-            ctx.restore();
-        }
-    );
+        ctx.stroke();
+        ctx.restore();
+    });
 }
 
 function drawMiniMap() {
@@ -2530,8 +2223,7 @@ function drawMiniMap() {
 
     const y = 16;
 
-    ctx.fillStyle =
-        "#111827cc";
+    ctx.fillStyle = "#111827cc";
 
     ctx.fillRect(
         x,
@@ -2550,45 +2242,42 @@ function drawMiniMap() {
         height - 10
     );
 
-    fighters.forEach(
-        function(fighter) {
-            if (!fighter.alive) {
-                return;
-            }
-
-            const dotX =
-                x + 5 +
-                fighter.x /
-                WORLD_WIDTH *
-                (width - 10);
-
-            const dotY =
-                y + 5 +
-                fighter.y /
-                WORLD_HEIGHT *
-                (height - 10);
-
-            ctx.beginPath();
-
-            ctx.arc(
-                dotX,
-                dotY,
-                fighter.isPlayer
-                    ? 5
-                    : 3,
-
-                0,
-                Math.PI * 2
-            );
-
-            ctx.fillStyle =
-                fighter.isPlayer
-                    ? "#36a9ff"
-                    : "#ef4d4d";
-
-            ctx.fill();
+    fighters.forEach(function(fighter) {
+        if (!fighter.alive) {
+            return;
         }
-    );
+
+        const dotX =
+            x + 5 +
+            fighter.x /
+            WORLD_WIDTH *
+            (width - 10);
+
+        const dotY =
+            y + 5 +
+            fighter.y /
+            WORLD_HEIGHT *
+            (height - 10);
+
+        ctx.beginPath();
+
+        ctx.arc(
+            dotX,
+            dotY,
+            fighter.isPlayer
+                ? 5
+                : 3,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fillStyle =
+            fighter.isPlayer
+                ? "#36a9ff"
+                : "#ef4d4d";
+
+        ctx.fill();
+    });
 
     ctx.strokeStyle = "white";
     ctx.lineWidth = 2;
@@ -2603,6 +2292,7 @@ function drawMiniMap() {
 
 function drawCrosshair() {
     if (
+        !player ||
         !player.alive ||
         matchFinished
     ) {
@@ -2619,11 +2309,8 @@ function drawCrosshair() {
         Math.PI * 2
     );
 
-    ctx.strokeStyle =
-        "#ffffffcc";
-
+    ctx.strokeStyle = "#ffffffcc";
     ctx.lineWidth = 2;
-
     ctx.stroke();
 
     ctx.beginPath();
