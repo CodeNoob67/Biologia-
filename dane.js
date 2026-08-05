@@ -147,7 +147,7 @@ const BOHATEROWIE = [
         id: "tesla",
         nazwa: "Tesla",
         ikona: "⚡",
-        rzadkosc: "bardzo-rzadki",
+        rzadkosc: "mityczny",
         moc: "Elektryczne Ultra",
         opis:
             "Tesla strzela szerokimi falami elektryczności, które rozszerzają się wraz z odległością. Co piąty atak jest żółtym Ultra, które porusza się szybciej i zatrzymuje trafionych wrogów na 1 sekundę.",
