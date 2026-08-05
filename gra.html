@@ -15,7 +15,7 @@ button,input{font:inherit}.lobby{position:relative;width:100vw;height:100vh;over
 .menuBtn{width:52px;height:52px;display:grid;place-items:center;color:#fff;font-size:29px;background:linear-gradient(#60718e,#34445e);border:3px solid #111827;border-radius:9px;cursor:pointer}
 .rank{position:absolute;top:90px;left:50%;z-index:3;transform:translateX(-50%);display:flex;gap:8px}.rank span{padding:7px 12px;background:#283349;border:3px solid #101724;border-radius:9px;font-weight:900}
 .side{position:absolute;top:130px;z-index:4;display:flex;flex-direction:column;gap:13px}.side.left{left:12px}.side.right{right:12px}.side a,.side button{width:85px;min-height:58px;display:grid;place-items:center;padding:5px;color:#fff;text-decoration:none;font-size:12px;font-weight:900;background:linear-gradient(#435670,#202d42);border:3px solid #101724;border-radius:9px;box-shadow:0 4px #0006;cursor:pointer}
-.hero{position:absolute;left:50%;top:53%;z-index:2;transform:translate(-50%,-50%);width:340px;height:430px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end}.heroIcon{font-size:190px;filter:drop-shadow(0 15px 6px #00466e88);animation:idle 2.2s ease-in-out infinite}@keyframes idle{50%{transform:translateY(-12px)}}.heroName{padding:7px 15px;background:#28344b;border:3px solid #111827;border-radius:10px;font-size:20px;font-weight:900}.heroPower{margin-top:6px;color:#fff080;font-weight:900;text-shadow:2px 2px #000}
+.hero{position:absolute;left:50%;top:53%;z-index:2;transform:translate(-50%,-50%);width:340px;height:430px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end}.heroIcon{font-size:190px;filter:drop-shadow(0 15px 6px #00466e88);animation:idle 2.2s ease-in-out infinite}@keyframes idle{50%{transform:translateY(-12px)}}.heroTrophies{z-index:3;margin-bottom:7px;padding:7px 14px;color:#ffe66d;font-size:18px;font-weight:1000;background:#28344b;border:3px solid #111827;border-radius:10px;text-shadow:2px 2px #000}.heroName{padding:7px 15px;background:#28344b;border:3px solid #111827;border-radius:10px;font-size:20px;font-weight:900}.heroPower{margin-top:6px;color:#fff080;font-weight:900;text-shadow:2px 2px #000}
 .bottomL,.bottomC,.bottomR{position:absolute;bottom:18px;z-index:4}.bottomL{left:15px;width:260px}.bottomC{left:50%;width:370px;transform:translateX(-50%)}.bottomR{right:17px;width:280px}.pass,.event,.play{width:100%;border:4px solid #111827;border-radius:12px;box-shadow:0 6px #0006;font-weight:900}.pass{padding:12px;color:#111827;background:linear-gradient(90deg,#f0c900,#f79e00)}.event{padding:11px 15px;color:#fff;background:linear-gradient(#222c3d,#111827);cursor:pointer}.play{padding:22px;color:#111827;font-size:34px;background:linear-gradient(#ffd934,#f0a900);cursor:pointer}
 .overlay{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:20px;background:#000b}.overlay.show{display:flex}.window{position:relative;width:min(700px,95%);max-height:92vh;overflow:auto;padding:28px;text-align:center;background:linear-gradient(#374762,#1b263a);border:5px solid #111827;border-radius:20px;box-shadow:0 12px #0006}.window h2{margin-top:0;color:#ffd83d}.close{position:absolute;top:10px;right:12px;width:45px;height:45px;color:#fff;font-size:22px;background:#d83c3c;border:3px solid #111827;border-radius:10px;cursor:pointer}
 .section{margin:15px 0;padding:15px;text-align:left;background:#202c42;border:3px solid #101827;border-radius:14px}.section b{display:block;margin-bottom:9px}.input{width:100%;padding:12px;color:#111827;font-size:17px;font-weight:800;background:#fff;border:3px solid #111827;border-radius:10px}.help{margin-top:7px;color:#cad7e8;font-size:12px}
@@ -38,7 +38,7 @@ button,input{font:inherit}.lobby{position:relative;width:100vw;height:100vh;over
 <a href="sklep.html">🛒<br>SKLEP</a><a href="postacie.html">🧙<br>POSTACIE</a><button onclick="dailyReward()">🎁<br>NAGRODY</button><button>📜<br>WIEŚCI</button>
 </div>
 <div class="side right"><button>🤝<br>ZNAJOMI</button><button>🛡️<br>KLAN</button><button>💬<br>CZAT</button></div>
-<main class="hero"><div id="heroIcon" class="heroIcon">🧑‍🌾</div><div id="heroName" class="heroName">Farmer</div><div id="heroPower" class="heroPower">Moc: Rzut widłami</div></main>
+<main class="hero"><div id="heroTrophies" class="heroTrophies">🏆 0</div><div id="heroIcon" class="heroIcon">🧑‍🌾</div><div id="heroName" class="heroName">Farmer</div><div id="heroPower" class="heroPower">Moc: Rzut widłami</div></main>
 <section class="bottomL"><div class="pass">🎫 KRÓLEWSKA DROGA<br>45 / 100</div></section>
 <section class="bottomC"><button class="event" onclick="openMap()">⚔️ BITWA KRÓLESTW<br><span id="mapName" style="color:#5cff73">Zielona Dolina</span><br><small>Kliknij, aby zmienić mapę</small></button></section>
 <section class="bottomR"><button class="play" onclick="location.href='walka.html'">GRAJ</button></section>
@@ -71,6 +71,7 @@ const $ = id => document.getElementById(id);
 
 const topAvatar = $("topAvatar");
 const topName = $("topName");
+const heroTrophies = $("heroTrophies");
 const heroIcon = $("heroIcon");
 const heroName = $("heroName");
 const heroPower = $("heroPower");
@@ -94,7 +95,7 @@ const adminMsg = $("adminMsg");
 
 function parse(v,f){try{return v?JSON.parse(v):f}catch{return f}}
 function norm(n){return String(n||"").trim().replace(/\s+/g," ").toLowerCase()}
-function copyState(s){return{tickets:Number(s.tickets)||0,coins:Number(s.coins)||0,selected:s.selected||"farmer",unlocked:Array.isArray(s.unlocked)?[...new Set(s.unlocked)]:["farmer"],wins:Number(s.wins)||0,lastReward:s.lastReward||null}}
+function copyState(s){return{tickets:Number(s.tickets)||0,coins:Number(s.coins)||0,selected:s.selected||"farmer",unlocked:Array.isArray(s.unlocked)?[...new Set(s.unlocked)]:["farmer"],wins:Number(s.wins)||0,heroTrophies:s.heroTrophies&&typeof s.heroTrophies==="object"?{...s.heroTrophies}:{},lastReward:s.lastReward||null}}
 function accounts(){return parse(localStorage.getItem(ACCOUNTS_KEY),{})}
 function saveAccounts(a){localStorage.setItem(ACCOUNTS_KEY,JSON.stringify(a))}
 function ensureAccount(){
@@ -109,7 +110,7 @@ function sync(){
 function avatar(el,data){el.innerHTML="";if(data){const img=document.createElement("img");img.src=data;el.appendChild(img)}else el.textContent="👑"}
 function render(){
  const state=getState(),hero=getHero(state.selected),a=accounts()[ensureAccount()];
- heroIcon.textContent=hero.ikona;heroName.textContent=hero.nazwa;heroPower.textContent="Moc: "+hero.moc;topName.textContent=a.name;avatar(topAvatar,a.avatar);updateTopbar();sync()
+ heroTrophies.textContent="🏆 "+(Number(state.heroTrophies?.[state.selected])||0);heroIcon.textContent=hero.ikona;heroName.textContent=hero.nazwa;heroPower.textContent="Moc: "+hero.moc;topName.textContent=a.name;avatar(topAvatar,a.avatar);updateTopbar();sync()
 }
 function dailyReward(){const s=getState(),today=new Date().toDateString();if(s.lastReward===today)return alert("Dzisiejsza nagroda została już odebrana.");s.lastReward=today;s.tickets+=3;s.coins+=50;saveState(s);sync();updateTopbar();alert("Dostajesz 3 bilety i 50 monet!")}
 function openMap(){mapOverlay.classList.add("show")}function closeMap(){mapOverlay.classList.remove("show")}
