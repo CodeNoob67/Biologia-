@@ -2,6 +2,7 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
+
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
@@ -73,7 +74,9 @@
                 );
 
             border-bottom: 5px solid #070c14;
-            box-shadow: 0 5px 0 #00000066;
+
+            box-shadow:
+                0 5px 0 #00000066;
         }
 
         .back-button {
@@ -97,19 +100,22 @@
             border: 4px solid #080d16;
             border-radius: 10px;
 
-            box-shadow: 0 4px 0 #00000066;
+            box-shadow:
+                0 4px 0 #00000066;
         }
 
         .page-title {
             position: absolute;
             left: 50%;
 
-            transform: translateX(-50%);
+            transform:
+                translateX(-50%);
 
             font-size: 29px;
             font-weight: 1000;
 
-            text-shadow: 3px 3px black;
+            text-shadow:
+                3px 3px black;
         }
 
         .counter {
@@ -123,6 +129,7 @@
 
         .pill {
             min-width: 92px;
+
             padding: 9px 13px;
 
             text-align: center;
@@ -148,14 +155,24 @@
             font-size: 27px;
             font-weight: 1000;
 
-            text-shadow: 3px 3px black;
+            text-shadow:
+                3px 3px black;
+        }
+
+        .group-description {
+            margin: -8px 0 20px;
+
+            color: #dcecff;
+            font-size: 14px;
+            font-weight: 800;
         }
 
         .locked-section {
             margin-top: 44px;
             padding-top: 30px;
 
-            border-top: 12px solid #101827;
+            border-top:
+                12px solid #101827;
 
             box-shadow:
                 inset 0 5px 0 #ffffff22;
@@ -163,7 +180,10 @@
 
         .characters-grid {
             display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
+
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+
             gap: 23px;
         }
 
@@ -180,7 +200,8 @@
             border: 5px solid #101827;
             border-radius: 5px;
 
-            box-shadow: 7px 8px 0 #00000066;
+            box-shadow:
+                7px 8px 0 #00000066;
 
             cursor: pointer;
 
@@ -196,7 +217,9 @@
         }
 
         .character-card.selected {
-            outline: 6px solid #fff064;
+            outline:
+                6px solid #fff064;
+
             outline-offset: 3px;
         }
 
@@ -271,7 +294,8 @@
 
             overflow: hidden;
 
-            border-bottom: 5px solid #101827;
+            border-bottom:
+                5px solid #101827;
         }
 
         .card-pattern {
@@ -312,7 +336,8 @@
                     #0c75c7
                 );
 
-            border: 4px solid #111827;
+            border:
+                4px solid #111827;
 
             clip-path:
                 polygon(
@@ -324,7 +349,8 @@
                     6% 17%
                 );
 
-            text-shadow: 2px 2px black;
+            text-shadow:
+                2px 2px black;
         }
 
         .tier-word {
@@ -361,9 +387,11 @@
                     #3d1026
                 );
 
-            border: 4px solid #111827;
+            border:
+                4px solid #111827;
 
-            text-shadow: 2px 2px black;
+            text-shadow:
+                2px 2px black;
         }
 
         .status-badge {
@@ -379,9 +407,11 @@
 
             background: #272f3e;
 
-            border: 3px solid #111827;
+            border:
+                3px solid #111827;
 
-            text-shadow: 2px 2px black;
+            text-shadow:
+                2px 2px black;
         }
 
         .selected-badge {
@@ -430,7 +460,8 @@
             font-weight: 1000;
             text-transform: uppercase;
 
-            text-shadow: 2px 2px black;
+            text-shadow:
+                2px 2px black;
         }
 
         .card-power {
@@ -451,7 +482,9 @@
 
             background: #260d22;
 
-            border: 3px solid #080d16;
+            border:
+                3px solid #080d16;
+
             border-radius: 3px;
         }
 
@@ -498,7 +531,25 @@
             font-size: 12px;
             font-weight: 1000;
 
-            text-shadow: 2px 2px black;
+            text-shadow:
+                2px 2px black;
+        }
+
+        .empty-list {
+            grid-column: 1 / -1;
+
+            padding: 25px;
+
+            text-align: center;
+            font-size: 18px;
+            font-weight: 900;
+
+            background: #111827aa;
+
+            border:
+                4px solid #080d16;
+
+            border-radius: 10px;
         }
 
         .bottom-nav {
@@ -522,11 +573,13 @@
                     #101827
                 );
 
-            border-top: 5px solid #080d16;
+            border-top:
+                5px solid #080d16;
         }
 
         .bottom-nav a {
             min-width: 112px;
+
             padding: 8px 15px;
 
             color: white;
@@ -541,7 +594,9 @@
                     #202d42
                 );
 
-            border: 3px solid #080d16;
+            border:
+                3px solid #080d16;
+
             border-radius: 8px;
         }
 
@@ -596,6 +651,66 @@
                 );
         }
 
+        .details-screen.rarity-background-startowy {
+            background:
+                radial-gradient(
+                    circle at center,
+                    #e5e7eb,
+                    #9ca3af 48%,
+                    #4b5563
+                );
+        }
+
+        .details-screen.rarity-background-rzadki {
+            background:
+                radial-gradient(
+                    circle at center,
+                    #a7f3b1,
+                    #35cf50 48%,
+                    #087b23
+                );
+        }
+
+        .details-screen.rarity-background-bardzo-rzadki {
+            background:
+                radial-gradient(
+                    circle at center,
+                    #9dd9ff,
+                    #2e9df4 48%,
+                    #153c99
+                );
+        }
+
+        .details-screen.rarity-background-epicki {
+            background:
+                radial-gradient(
+                    circle at center,
+                    #e8b5ff,
+                    #ae47ed 48%,
+                    #56127d
+                );
+        }
+
+        .details-screen.rarity-background-mityczny {
+            background:
+                radial-gradient(
+                    circle at center,
+                    #ff9ea8,
+                    #e4384e 48%,
+                    #7b1025
+                );
+        }
+
+        .details-screen.rarity-background-legendarny {
+            background:
+                radial-gradient(
+                    circle at center,
+                    #fff88d,
+                    #ffc91d 42%,
+                    #f37b12 100%
+                );
+        }
+
         .close-details {
             position: fixed;
             top: 14px;
@@ -618,10 +733,13 @@
                     #343f55
                 );
 
-            border: 5px solid #111827;
+            border:
+                5px solid #111827;
+
             border-radius: 9px;
 
-            box-shadow: 0 5px 0 #00000066;
+            box-shadow:
+                0 5px 0 #00000066;
 
             cursor: pointer;
         }
@@ -653,14 +771,18 @@
 
             background: #ffffffcc;
 
-            border: 3px solid #111827;
+            border:
+                3px solid #111827;
+
             border-radius: 8px;
         }
 
         .details-name {
             margin: 14px 0 2px;
 
-            font-size: clamp(38px, 5vw, 68px);
+            font-size:
+                clamp(38px, 5vw, 68px);
+
             line-height: 0.92;
             font-weight: 1000;
             text-transform: uppercase;
@@ -679,7 +801,8 @@
         }
 
         .details-trophies {
-            width: min(100%, 330px);
+            width:
+                min(100%, 330px);
 
             margin-top: 20px;
             padding: 11px 14px;
@@ -694,14 +817,18 @@
                     #351041
                 );
 
-            border: 5px solid #111827;
+            border:
+                5px solid #111827;
+
             border-radius: 8px;
 
-            text-shadow: 2px 2px black;
+            text-shadow:
+                2px 2px black;
         }
 
         .details-description {
-            width: min(100%, 380px);
+            width:
+                min(100%, 380px);
 
             margin-top: 18px;
 
@@ -712,7 +839,8 @@
         }
 
         .select-hero-button {
-            width: min(100%, 340px);
+            width:
+                min(100%, 340px);
 
             margin-top: 25px;
             padding: 18px;
@@ -727,10 +855,13 @@
                     #eca900
                 );
 
-            border: 5px solid #111827;
+            border:
+                5px solid #111827;
+
             border-radius: 9px;
 
-            box-shadow: 0 7px 0 #00000066;
+            box-shadow:
+                0 7px 0 #00000066;
 
             cursor: pointer;
         }
@@ -761,7 +892,8 @@
         }
 
         .large-character {
-            font-size: clamp(190px, 25vw, 360px);
+            font-size:
+                clamp(190px, 25vw, 360px);
 
             filter:
                 drop-shadow(
@@ -798,7 +930,8 @@
 
             border-radius: 50%;
 
-            filter: blur(5px);
+            filter:
+                blur(5px);
         }
 
         .details-right {
@@ -829,10 +962,13 @@
                     #1c1530
                 );
 
-            border: 5px solid #111827;
+            border:
+                5px solid #111827;
+
             border-radius: 12px;
 
-            box-shadow: 0 6px 0 #00000055;
+            box-shadow:
+                0 6px 0 #00000055;
         }
 
         .ability-header {
@@ -858,7 +994,9 @@
                     #158b2b
                 );
 
-            border: 4px solid #111827;
+            border:
+                4px solid #111827;
+
             border-radius: 50%;
         }
 
@@ -909,7 +1047,9 @@
                     #1ebd39
                 );
 
-            border: 4px solid #111827;
+            border:
+                4px solid #111827;
+
             border-radius: 8px;
 
             cursor: pointer;
@@ -950,7 +1090,9 @@
                     #4d2a05
                 );
 
-            border: 5px solid #111827;
+            border:
+                5px solid #111827;
+
             border-radius: 10px;
         }
 
@@ -964,7 +1106,8 @@
             font-size: 16px;
             font-weight: 1000;
 
-            border-bottom: 2px solid #ffffff22;
+            border-bottom:
+                2px solid #ffffff22;
         }
 
         .details-stat:last-child {
@@ -989,7 +1132,10 @@
         @media (max-width: 950px) {
             .characters-grid {
                 grid-template-columns:
-                    repeat(2, minmax(0, 1fr));
+                    repeat(
+                        2,
+                        minmax(0, 1fr)
+                    );
             }
 
             .details-screen {
@@ -1020,7 +1166,9 @@
             }
 
             .details-right {
-                width: min(600px, 100%);
+                width:
+                    min(600px, 100%);
+
                 margin: 0 auto;
             }
         }
@@ -1028,6 +1176,7 @@
         @media (max-width: 620px) {
             .page-title {
                 position: static;
+
                 transform: none;
 
                 font-size: 18px;
@@ -1035,7 +1184,9 @@
 
             .pill {
                 min-width: 56px;
+
                 padding: 7px;
+
                 font-size: 14px;
             }
 
@@ -1045,6 +1196,7 @@
 
             .bottom-nav a {
                 min-width: 70px;
+
                 padding: 7px;
             }
         }
@@ -1066,6 +1218,7 @@
 
     <div class="page-title">
         POSTACIE
+
         <span
             id="ownedCounter"
             class="counter"
@@ -1097,6 +1250,11 @@
         <h1 class="group-title">
             ODBLOKOWANE POSTACIE
         </h1>
+
+        <div class="group-description">
+            Kliknij postać, aby zobaczyć szczegóły,
+            gadżet, gwiezdną moc i przycisk wyboru.
+        </div>
 
         <div
             id="unlockedCharacters"
@@ -1159,7 +1317,10 @@
         ◀
     </button>
 
-    <div class="details-screen">
+    <div
+        id="detailsScreen"
+        class="details-screen"
+    >
 
         <section class="details-column details-left">
 
@@ -1354,132 +1515,213 @@
 const HERO_RARITIES = {
     startowy: {
         name: "Startowy",
-        className: "rarity-startowy"
+        className: "rarity-startowy",
+        backgroundClass:
+            "rarity-background-startowy"
     },
 
     rzadki: {
         name: "Rzadki",
-        className: "rarity-rzadki"
+        className: "rarity-rzadki",
+        backgroundClass:
+            "rarity-background-rzadki"
     },
 
     "bardzo-rzadki": {
         name: "Bardzo rzadki",
-        className: "rarity-bardzo-rzadki"
+        className:
+            "rarity-bardzo-rzadki",
+        backgroundClass:
+            "rarity-background-bardzo-rzadki"
     },
 
     epicki: {
         name: "Epicki",
-        className: "rarity-epicki"
+        className: "rarity-epicki",
+        backgroundClass:
+            "rarity-background-epicki"
     },
 
     mityczny: {
         name: "Mityczny",
-        className: "rarity-mityczny"
+        className: "rarity-mityczny",
+        backgroundClass:
+            "rarity-background-mityczny"
     },
 
     legendarny: {
         name: "Legendarny",
-        className: "rarity-legendarny"
+        className: "rarity-legendarny",
+        backgroundClass:
+            "rarity-background-legendarny"
     }
 };
 
 const HERO_ABILITIES = {
     farmer: {
-        gadgetName: "Szybkie zbiory",
-        gadgetDescription:
-            "Farmer przez chwilę porusza się szybciej.",
+        gadgetName:
+            "Szybkie zbiory",
 
-        starName: "Ostre widły",
+        gadgetDescription:
+            "Farmer przez kilka sekund porusza się szybciej.",
+
+        starName:
+            "Ostre widły",
+
         starDescription:
             "Co trzeci atak Farmera zadaje jeszcze większe obrażenia."
     },
 
     rycerz: {
-        gadgetName: "Mocna tarcza",
+        gadgetName:
+            "Mocna tarcza",
+
         gadgetDescription:
             "Rycerz otrzymuje krótką ochronę przed obrażeniami.",
 
-        starName: "Ostatni obrońca",
+        starName:
+            "Ostatni obrońca",
+
         starDescription:
             "Tarcza przy małej ilości życia pochłania więcej obrażeń."
     },
 
     lucznik: {
-        gadgetName: "Odrzut",
+        gadgetName:
+            "Odrzut",
+
         gadgetDescription:
             "Łucznik odskakuje od najbliższego przeciwnika.",
 
-        starName: "Napięta cięciwa",
+        starName:
+            "Napięta cięciwa",
+
         starDescription:
             "Co trzecia szybka strzała zadaje dodatkowe obrażenia."
     },
 
     ksiadz: {
-        gadgetName: "Święte wezwanie",
+        gadgetName:
+            "Święte wezwanie",
+
         gadgetDescription:
             "Ksiądz natychmiast przywołuje dodatkowego Ducha.",
 
-        starName: "Wieczna służba",
+        starName:
+            "Wieczna służba",
+
         starDescription:
-            "Przywołane Duchy mają więcej życia i obrażeń."
+            "Przywołane Duchy mają więcej życia i zadają większe obrażenia."
+    },
+
+    tesla: {
+        gadgetName:
+            "Pole elektromagnetyczne",
+
+        gadgetDescription:
+            "Tesla tworzy wokół siebie pole, które przez chwilę spowalnia pobliskich przeciwników.",
+
+        starName:
+            "Przeciążenie Ultra",
+
+        starDescription:
+            "Żółty atak Ultra jest szerszy, szybszy i zatrzymuje przeciwników na dłużej."
     },
 
     goblin: {
-        gadgetName: "Dymna bomba",
+        gadgetName:
+            "Dymna bomba",
+
         gadgetDescription:
             "Goblin na chwilę ukrywa się przed przeciwnikami.",
 
-        starName: "Desperacja",
+        starName:
+            "Desperacja",
+
         starDescription:
             "Goblin z małą ilością życia zadaje jeszcze więcej obrażeń."
     },
 
     golem: {
-        gadgetName: "Kamienna skóra",
+        gadgetName:
+            "Kamienna skóra",
+
         gadgetDescription:
             "Golem przez chwilę otrzymuje mniej obrażeń.",
 
-        starName: "Trzęsienie ziemi",
+        starName:
+            "Trzęsienie ziemi",
+
         starDescription:
             "Fala uderzeniowa Golema jest większa i silniejsza."
     },
 
     duch: {
-        gadgetName: "Widmowy skok",
-        gadgetDescription:
-            "Duch szybko przemieszcza się do przeciwnika.",
+        gadgetName:
+            "Widmowy skok",
 
-        starName: "Niematerialny",
+        gadgetDescription:
+            "Duch szybko przemieszcza się w kierunku przeciwnika.",
+
+        starName:
+            "Niematerialny",
+
         starDescription:
-            "Po przejściu przez ścianę Duch porusza się szybciej."
+            "Po przejściu przez ścianę Duch przez chwilę porusza się szybciej."
     },
 
     czarodziej: {
-        gadgetName: "Magiczna eksplozja",
+        gadgetName:
+            "Magiczna eksplozja",
+
         gadgetDescription:
             "Czarodziej tworzy magiczną eksplozję wokół siebie.",
 
-        starName: "Silniejsza klątwa",
+        starName:
+            "Silniejsza klątwa",
+
         starDescription:
             "Przeklęci przeciwnicy otrzymują więcej obrażeń."
     },
 
+    wampir: {
+        gadgetName:
+            "Krwawy głód",
+
+        gadgetDescription:
+            "Następna przemiana Wampira leczy go mocniej za trafionych przeciwników.",
+
+        starName:
+            "Nocny łowca",
+
+        starDescription:
+            "Forma nietoperzy trwa dłużej i porusza się jeszcze szybciej."
+    },
+
     krol: {
-        gadgetName: "Królewski rozkaz",
+        gadgetName:
+            "Królewski rozkaz",
+
         gadgetDescription:
             "Król przez chwilę strzela szybciej.",
 
-        starName: "Złota salwa",
+        starName:
+            "Złota salwa",
+
         starDescription:
             "Środkowy pocisk Króla zadaje więcej obrażeń."
     },
 
     wiedzma: {
-        gadgetName: "Magiczny wir",
+        gadgetName:
+            "Magiczny wir",
+
         gadgetDescription:
             "Wiedźma wystrzeliwuje kule we wszystkich kierunkach.",
 
-        starName: "Nieskończony strumień",
+        starName:
+            "Nieskończony strumień",
+
         starDescription:
             "Kule Wiedźmy są szybsze i mają większy zasięg."
     }
@@ -1488,10 +1730,16 @@ const HERO_ABILITIES = {
 let currentHeroId = null;
 
 function prepareState() {
-    const state = getState();
+    const state =
+        getState();
 
-    if (!Array.isArray(state.unlocked)) {
-        state.unlocked = ["farmer"];
+    if (
+        !Array.isArray(
+            state.unlocked
+        )
+    ) {
+        state.unlocked =
+            ["farmer"];
     }
 
     state.unlocked =
@@ -1499,47 +1747,83 @@ function prepareState() {
             function(heroId) {
                 return BOHATEROWIE.some(
                     function(hero) {
-                        return hero.id === heroId;
+                        return (
+                            hero.id ===
+                            heroId
+                        );
                     }
                 );
             }
         );
 
-    if (!state.unlocked.includes("farmer")) {
-        state.unlocked.unshift("farmer");
+    if (
+        !state.unlocked.includes(
+            "farmer"
+        )
+    ) {
+        state.unlocked.unshift(
+            "farmer"
+        );
     }
 
     if (
         !state.heroTrophies ||
-        typeof state.heroTrophies !== "object"
+        typeof state.heroTrophies !==
+            "object"
     ) {
         state.heroTrophies = {};
     }
 
     if (
         !state.heroGadgets ||
-        typeof state.heroGadgets !== "object"
+        typeof state.heroGadgets !==
+            "object"
     ) {
         state.heroGadgets = {};
     }
 
     if (
         !state.heroStarPowers ||
-        typeof state.heroStarPowers !== "object"
+        typeof state.heroStarPowers !==
+            "object"
     ) {
         state.heroStarPowers = {};
     }
 
+    const selectedExists =
+        BOHATEROWIE.some(
+            function(hero) {
+                return (
+                    hero.id ===
+                    state.selected
+                );
+            }
+        );
+
     if (
-        !state.unlocked.includes(state.selected)
+        !selectedExists ||
+        !state.unlocked.includes(
+            state.selected
+        )
     ) {
-        state.selected = "farmer";
+        state.selected =
+            "farmer";
     }
 
     state.coins =
         Math.max(
             0,
-            Number(state.coins) || 0
+            Number(
+                state.coins
+            ) || 0
+        );
+
+    state.tickets =
+        Math.max(
+            0,
+            Number(
+                state.tickets
+            ) || 0
         );
 
     saveState(state);
@@ -1552,7 +1836,9 @@ function getHeroTier(trophies) {
         Math.max(
             0,
             Math.floor(
-                Number(trophies) || 0
+                Number(
+                    trophies
+                ) || 0
             )
         );
 
@@ -1560,30 +1846,53 @@ function getHeroTier(trophies) {
         return 1;
     }
 
-    return Math.floor(amount / 10);
+    return Math.floor(
+        amount / 10
+    );
 }
 
-function getTierProgress(trophies) {
+function getTierProgress(
+    trophies
+) {
     const amount =
         Math.max(
             0,
             Math.floor(
-                Number(trophies) || 0
+                Number(
+                    trophies
+                ) || 0
             )
         );
 
     if (amount < 20) {
         return {
-            current: amount,
-            required: 20,
-            percent: amount / 20 * 100
+            current:
+                amount,
+
+            required:
+                20,
+
+            percent:
+                amount /
+                20 *
+                100
         };
     }
 
+    const current =
+        amount % 10;
+
     return {
-        current: amount % 10,
-        required: 10,
-        percent: amount % 10 / 10 * 100
+        current:
+            current,
+
+        required:
+            10,
+
+        percent:
+            current /
+            10 *
+            100
     };
 }
 
@@ -1596,55 +1905,85 @@ function getRangeName(hero) {
         return "MELEE";
     }
 
-    if (hero.range >= 650) {
+    if (
+        hero.id === "wampir"
+    ) {
+        return "PRZEMIANA";
+    }
+
+    if (
+        hero.range >= 650
+    ) {
         return "DŁUGI";
     }
 
-    if (hero.range >= 450) {
+    if (
+        hero.range >= 450
+    ) {
         return "ŚREDNI";
     }
 
     return "KRÓTKI";
 }
 
-function createCharacterCard(hero, state) {
+function createCharacterCard(
+    hero,
+    state
+) {
     const unlocked =
-        state.unlocked.includes(hero.id);
+        state.unlocked.includes(
+            hero.id
+        );
 
     const selected =
-        state.selected === hero.id;
+        state.selected ===
+        hero.id;
 
     const rarity =
-        HERO_RARITIES[hero.rzadkosc] ||
+        HERO_RARITIES[
+            hero.rzadkosc
+        ] ||
         HERO_RARITIES.startowy;
 
     const trophies =
         Math.max(
             0,
             Number(
-                state.heroTrophies[hero.id]
+                state.heroTrophies[
+                    hero.id
+                ]
             ) || 0
         );
 
     const tier =
-        getHeroTier(trophies);
+        getHeroTier(
+            trophies
+        );
 
     const progress =
-        getTierProgress(trophies);
+        getTierProgress(
+            trophies
+        );
 
     const card =
-        document.createElement("article");
+        document.createElement(
+            "article"
+        );
 
     card.className =
         "character-card " +
         rarity.className;
 
     if (!unlocked) {
-        card.classList.add("locked");
+        card.classList.add(
+            "locked"
+        );
     }
 
     if (selected) {
-        card.classList.add("selected");
+        card.classList.add(
+            "selected"
+        );
     }
 
     card.innerHTML = `
@@ -1653,6 +1992,7 @@ function createCharacterCard(hero, state) {
             <div class="card-pattern"></div>
 
             <div class="tier-badge">
+
                 <span class="tier-word">
                     TIER
                 </span>
@@ -1660,6 +2000,7 @@ function createCharacterCard(hero, state) {
                 <span class="tier-number">
                     ${tier}
                 </span>
+
             </div>
 
             <div class="trophy-box">
@@ -1675,7 +2016,12 @@ function createCharacterCard(hero, state) {
                     `
                     : selected
                         ? `
-                            <div class="status-badge selected-badge">
+                            <div
+                                class="
+                                    status-badge
+                                    selected-badge
+                                "
+                            >
                                 ✓
                             </div>
                         `
@@ -1732,7 +2078,9 @@ function createCharacterCard(hero, state) {
     card.addEventListener(
         "click",
         function() {
-            openCharacterDetails(hero.id);
+            openCharacterDetails(
+                hero.id
+            );
         }
     );
 
@@ -1740,7 +2088,8 @@ function createCharacterCard(hero, state) {
 }
 
 function renderCharacters() {
-    const state = prepareState();
+    const state =
+        prepareState();
 
     const unlockedContainer =
         document.getElementById(
@@ -1752,8 +2101,11 @@ function renderCharacters() {
             "lockedCharacters"
         );
 
-    unlockedContainer.innerHTML = "";
-    lockedContainer.innerHTML = "";
+    unlockedContainer.innerHTML =
+        "";
+
+    lockedContainer.innerHTML =
+        "";
 
     let unlockedCount = 0;
 
@@ -1793,42 +2145,85 @@ function renderCharacters() {
         BOHATEROWIE.length;
 
     if (
-        lockedContainer.children.length === 0
+        unlockedContainer
+            .children
+            .length === 0
+    ) {
+        unlockedContainer.innerHTML =
+            `
+                <div class="empty-list">
+                    Nie masz odblokowanych postaci.
+                </div>
+            `;
+    }
+
+    if (
+        lockedContainer
+            .children
+            .length === 0
     ) {
         lockedContainer.innerHTML =
-            "<div>Wszystkie postacie są odblokowane.</div>";
+            `
+                <div class="empty-list">
+                    Wszystkie postacie są odblokowane.
+                </div>
+            `;
     }
 
     updateTopbar();
 }
 
-function openCharacterDetails(heroId) {
-    const state = prepareState();
-    const hero = getHero(heroId);
+function openCharacterDetails(
+    heroId
+) {
+    const state =
+        prepareState();
+
+    const hero =
+        BOHATEROWIE.find(
+            function(character) {
+                return (
+                    character.id ===
+                    heroId
+                );
+            }
+        );
 
     if (!hero) {
         return;
     }
 
-    currentHeroId = hero.id;
+    currentHeroId =
+        hero.id;
 
     const unlocked =
-        state.unlocked.includes(hero.id);
+        state.unlocked.includes(
+            hero.id
+        );
 
     const selected =
-        state.selected === hero.id;
+        state.selected ===
+        hero.id;
 
     const rarity =
-        HERO_RARITIES[hero.rzadkosc] ||
+        HERO_RARITIES[
+            hero.rzadkosc
+        ] ||
         HERO_RARITIES.startowy;
 
     const abilities =
-        HERO_ABILITIES[hero.id] || {
-            gadgetName: "Specjalny gadżet",
+        HERO_ABILITIES[
+            hero.id
+        ] || {
+            gadgetName:
+                "Specjalny gadżet",
+
             gadgetDescription:
                 "Unikalny gadżet tej postaci.",
 
-            starName: "Gwiezdna moc",
+            starName:
+                "Gwiezdna moc",
+
             starDescription:
                 "Unikalna gwiezdna moc tej postaci."
         };
@@ -1837,88 +2232,124 @@ function openCharacterDetails(heroId) {
         Math.max(
             0,
             Number(
-                state.heroTrophies[hero.id]
+                state.heroTrophies[
+                    hero.id
+                ]
             ) || 0
         );
 
     document
-        .getElementById("detailsName")
+        .getElementById(
+            "detailsName"
+        )
         .textContent =
         hero.nazwa;
 
     document
-        .getElementById("detailsRarity")
+        .getElementById(
+            "detailsRarity"
+        )
         .textContent =
         rarity.name;
 
     document
-        .getElementById("detailsRole")
+        .getElementById(
+            "detailsRole"
+        )
         .textContent =
         getRangeName(hero) +
         " ZASIĘG";
 
     document
-        .getElementById("detailsTrophies")
+        .getElementById(
+            "detailsTrophies"
+        )
         .textContent =
         "🏆 " +
         trophies +
         " | TIER " +
-        getHeroTier(trophies);
+        getHeroTier(
+            trophies
+        );
 
     document
-        .getElementById("detailsDescription")
+        .getElementById(
+            "detailsDescription"
+        )
         .textContent =
         hero.opis;
 
     document
-        .getElementById("largeCharacter")
+        .getElementById(
+            "largeCharacter"
+        )
         .textContent =
         hero.ikona;
 
     document
-        .getElementById("detailHp")
+        .getElementById(
+            "detailHp"
+        )
         .textContent =
         hero.hp;
 
     document
-        .getElementById("detailDamage")
+        .getElementById(
+            "detailDamage"
+        )
         .textContent =
         hero.damage;
 
     document
-        .getElementById("detailSpeed")
+        .getElementById(
+            "detailSpeed"
+        )
         .textContent =
         hero.speed;
 
     document
-        .getElementById("detailRange")
+        .getElementById(
+            "detailRange"
+        )
         .textContent =
         getRangeName(hero);
 
     document
-        .getElementById("detailPower")
+        .getElementById(
+            "detailPower"
+        )
         .textContent =
         hero.moc;
 
     document
-        .getElementById("gadgetName")
+        .getElementById(
+            "gadgetName"
+        )
         .textContent =
         abilities.gadgetName;
 
     document
-        .getElementById("gadgetDescription")
+        .getElementById(
+            "gadgetDescription"
+        )
         .textContent =
-        abilities.gadgetDescription;
+        abilities
+            .gadgetDescription;
 
     document
-        .getElementById("starPowerName")
+        .getElementById(
+            "starPowerName"
+        )
         .textContent =
         abilities.starName;
 
     document
-        .getElementById("starPowerDescription")
+        .getElementById(
+            "starPowerDescription"
+        )
         .textContent =
-        abilities.starDescription;
+        abilities
+            .starDescription;
 
     const selectButton =
         document.getElementById(
@@ -1940,6 +2371,31 @@ function openCharacterDetails(heroId) {
                 ? "WYBRANO"
                 : "WYBIERZ";
 
+    const detailsScreen =
+        document.getElementById(
+            "detailsScreen"
+        );
+
+    Object.values(
+        HERO_RARITIES
+    ).forEach(
+        function(rarityData) {
+            detailsScreen
+                .classList
+                .remove(
+                    rarityData
+                        .backgroundClass
+                );
+        }
+    );
+
+    detailsScreen
+        .classList
+        .add(
+            rarity
+                .backgroundClass
+        );
+
     updateAbilityButtons(
         state,
         hero
@@ -1951,7 +2407,10 @@ function openCharacterDetails(heroId) {
         .getElementById(
             "detailsOverlay"
         )
-        .classList.add("visible");
+        .classList
+        .add(
+            "visible"
+        );
 
     document.body.style.overflow =
         "hidden";
@@ -1962,11 +2421,16 @@ function closeCharacterDetails() {
         .getElementById(
             "detailsOverlay"
         )
-        .classList.remove("visible");
+        .classList
+        .remove(
+            "visible"
+        );
 
-    document.body.style.overflow = "";
+    document.body.style.overflow =
+        "";
 
-    currentHeroId = null;
+    currentHeroId =
+        null;
 
     renderCharacters();
 }
@@ -1976,7 +2440,8 @@ function selectCurrentHero() {
         return;
     }
 
-    const state = prepareState();
+    const state =
+        prepareState();
 
     if (
         !state.unlocked.includes(
@@ -1991,7 +2456,8 @@ function selectCurrentHero() {
         return;
     }
 
-    state.selected = currentHeroId;
+    state.selected =
+        currentHeroId;
 
     saveState(state);
 
@@ -2011,16 +2477,22 @@ function updateAbilityButtons(
     hero
 ) {
     const unlocked =
-        state.unlocked.includes(hero.id);
+        state.unlocked.includes(
+            hero.id
+        );
 
     const gadgetOwned =
         Boolean(
-            state.heroGadgets[hero.id]
+            state.heroGadgets[
+                hero.id
+            ]
         );
 
     const starOwned =
         Boolean(
-            state.heroStarPowers[hero.id]
+            state.heroStarPowers[
+                hero.id
+            ]
         );
 
     const gadgetButton =
@@ -2067,11 +2539,15 @@ function updateAbilityButtons(
 }
 
 function buyCurrentGadget() {
-    buyAbility("gadget");
+    buyAbility(
+        "gadget"
+    );
 }
 
 function buyCurrentStarPower() {
-    buyAbility("star");
+    buyAbility(
+        "star"
+    );
 }
 
 function buyAbility(type) {
@@ -2079,7 +2555,8 @@ function buyAbility(type) {
         return;
     }
 
-    const state = prepareState();
+    const state =
+        prepareState();
 
     if (
         !state.unlocked.includes(
@@ -2107,7 +2584,11 @@ function buyAbility(type) {
             ? state.heroGadgets
             : state.heroStarPowers;
 
-    if (collection[currentHeroId]) {
+    if (
+        collection[
+            currentHeroId
+        ]
+    ) {
         showDetailsMessage(
             "Ta moc została już kupiona.",
             true
@@ -2116,7 +2597,10 @@ function buyAbility(type) {
         return;
     }
 
-    if (state.coins < price) {
+    if (
+        state.coins <
+        price
+    ) {
         showDetailsMessage(
             "Masz za mało monet. Potrzebujesz " +
             price +
@@ -2127,14 +2611,26 @@ function buyAbility(type) {
         return;
     }
 
-    state.coins -= price;
-    collection[currentHeroId] = true;
+    state.coins -=
+        price;
+
+    collection[
+        currentHeroId
+    ] = true;
 
     saveState(state);
+
     updateTopbar();
 
     const hero =
-        getHero(currentHeroId);
+        BOHATEROWIE.find(
+            function(character) {
+                return (
+                    character.id ===
+                    currentHeroId
+                );
+            }
+        );
 
     updateAbilityButtons(
         state,
@@ -2157,7 +2653,8 @@ function showDetailsMessage(
             "detailsMessage"
         );
 
-    element.textContent = message;
+    element.textContent =
+        message;
 
     element.classList.toggle(
         "error",
@@ -2171,22 +2668,28 @@ function clearDetailsMessage() {
             "detailsMessage"
         );
 
-    element.textContent = "";
+    element.textContent =
+        "";
 
-    element.classList.remove("error");
+    element.classList.remove(
+        "error"
+    );
 }
 
 document.addEventListener(
     "keydown",
     function(event) {
         if (
-            event.key === "Escape" &&
+            event.key ===
+            "Escape" &&
             document
                 .getElementById(
                     "detailsOverlay"
                 )
                 .classList
-                .contains("visible")
+                .contains(
+                    "visible"
+                )
         ) {
             closeCharacterDetails();
         }
