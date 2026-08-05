@@ -3,23 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Medieval Arena</title>
-    <link rel="stylesheet" href="style.css">
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
             overflow: hidden;
             font-family: Arial, sans-serif;
-            background:
-                radial-gradient(circle at center, #25d8ff 0%, #079fe0 55%, #0876bd 100%);
             color: white;
+
+            background:
+                radial-gradient(
+                    circle at center,
+                    #25d8ff 0%,
+                    #079fe0 55%,
+                    #0876bd 100%
+                );
+        }
+
+        button,
+        a {
+            font-family: inherit;
         }
 
         .game-lobby {
+            position: relative;
             width: 100vw;
             height: 100vh;
-            position: relative;
             overflow: hidden;
         }
 
@@ -27,8 +42,14 @@
             position: absolute;
             inset: 0;
             opacity: 0.08;
+
             background-image:
-                radial-gradient(circle, white 3px, transparent 4px);
+                radial-gradient(
+                    circle,
+                    white 3px,
+                    transparent 4px
+                );
+
             background-size: 70px 70px;
         }
 
@@ -37,6 +58,8 @@
             top: 0;
             left: 0;
             right: 0;
+            z-index: 5;
+
             height: 75px;
 
             display: flex;
@@ -45,11 +68,15 @@
 
             padding: 8px 14px;
 
-            background: linear-gradient(#2f3b53, #182238);
+            background:
+                linear-gradient(
+                    #2f3b53,
+                    #182238
+                );
+
             border-bottom: 4px solid #101725;
 
             box-shadow: 0 5px 0 #00000055;
-            z-index: 5;
         }
 
         .profile-box {
@@ -69,6 +96,7 @@
             justify-content: center;
 
             background: #1d95e8;
+
             border: 4px solid #111827;
             border-radius: 10px;
 
@@ -89,6 +117,7 @@
             padding: 5px 8px;
 
             background: #253044;
+
             border: 3px solid #101724;
             border-radius: 8px;
 
@@ -97,8 +126,8 @@
 
         .top-currencies {
             display: flex;
-            gap: 10px;
             align-items: center;
+            gap: 10px;
         }
 
         .currency-box {
@@ -106,25 +135,27 @@
             padding: 9px 12px;
 
             background: #263248;
+
             border: 3px solid #111827;
             border-radius: 10px;
 
             text-align: center;
-            font-weight: 900;
             font-size: 18px;
+            font-weight: 900;
         }
 
         .menu-button {
             width: 50px;
             height: 50px;
 
+            color: white;
+            font-size: 26px;
+
+            background: #46566e;
+
             border: 3px solid #111827;
             border-radius: 9px;
 
-            background: #46566e;
-            color: white;
-
-            font-size: 26px;
             cursor: pointer;
         }
 
@@ -132,19 +163,20 @@
             position: absolute;
             top: 90px;
             left: 50%;
+            z-index: 3;
 
             transform: translateX(-50%);
 
             display: flex;
-            gap: 8px;
             align-items: center;
-            z-index: 3;
+            gap: 8px;
         }
 
         .rank-part {
             padding: 7px 12px;
 
             background: #283349;
+
             border: 3px solid #101724;
             border-radius: 9px;
 
@@ -154,12 +186,11 @@
         .side-menu {
             position: absolute;
             top: 130px;
+            z-index: 4;
 
             display: flex;
             flex-direction: column;
             gap: 13px;
-
-            z-index: 4;
         }
 
         .side-menu.left {
@@ -171,6 +202,8 @@
         }
 
         .side-button {
+            position: relative;
+
             width: 85px;
             min-height: 55px;
 
@@ -183,19 +216,26 @@
 
             color: white;
             text-decoration: none;
-            font-weight: 900;
             font-size: 12px;
+            font-weight: 900;
 
-            background: linear-gradient(#435670, #202d42);
+            background:
+                linear-gradient(
+                    #435670,
+                    #202d42
+                );
+
             border: 3px solid #101724;
             border-radius: 9px;
 
             box-shadow: 0 4px 0 #00000066;
+
+            cursor: pointer;
         }
 
         .side-icon {
-            font-size: 24px;
             margin-bottom: 2px;
+            font-size: 24px;
         }
 
         .notification {
@@ -211,20 +251,18 @@
             justify-content: center;
 
             background: red;
+
             border: 2px solid white;
             border-radius: 50%;
 
             font-size: 12px;
         }
 
-        .relative {
-            position: relative;
-        }
-
         .character-area {
             position: absolute;
             left: 50%;
             top: 53%;
+            z-index: 2;
 
             transform: translate(-50%, -50%);
 
@@ -235,8 +273,6 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-end;
-
-            z-index: 2;
         }
 
         .character-shadow {
@@ -258,59 +294,81 @@
 
             font-size: 190px;
 
-            filter: drop-shadow(0 15px 6px #00466e88);
-            animation: characterIdle 2.2s ease-in-out infinite;
+            filter:
+                drop-shadow(
+                    0 15px 6px #00466e88
+                );
+
+            animation:
+                characterIdle 2.2s
+                ease-in-out infinite;
         }
 
         @keyframes characterIdle {
-            0%, 100% {
-                transform: translateY(0) rotate(-1deg);
+            0%,
+            100% {
+                transform:
+                    translateY(0)
+                    rotate(-1deg);
             }
 
             50% {
-                transform: translateY(-12px) rotate(1deg);
+                transform:
+                    translateY(-12px)
+                    rotate(1deg);
             }
         }
 
         .character-title {
-            margin-top: -5px;
+            z-index: 3;
 
+            margin-top: -5px;
             padding: 7px 15px;
 
             background: #28344b;
+
             border: 3px solid #111827;
             border-radius: 10px;
 
             font-size: 20px;
             font-weight: 900;
-            z-index: 3;
         }
 
         .character-power {
+            z-index: 3;
+
             margin-top: 6px;
-            font-weight: 900;
+
             color: #fff080;
-            text-shadow: 2px 2px #000;
+
+            font-weight: 900;
+            text-shadow: 2px 2px black;
         }
 
         .bottom-left {
             position: absolute;
             left: 15px;
             bottom: 20px;
+            z-index: 4;
 
             width: 260px;
-            z-index: 4;
         }
 
         .pass-box {
             padding: 12px;
 
-            background: linear-gradient(90deg, #f0c900, #f79e00);
-            border: 4px solid #111827;
-            border-radius: 12px;
-
             color: #111827;
             font-weight: 900;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #f0c900,
+                    #f79e00
+                );
+
+            border: 4px solid #111827;
+            border-radius: 12px;
 
             box-shadow: 0 6px 0 #00000066;
         }
@@ -324,14 +382,17 @@
             margin-top: 8px;
 
             background: #553e00;
+
             border: 3px solid #111827;
             border-radius: 10px;
+
             overflow: hidden;
         }
 
         .progress-fill {
             width: 45%;
             height: 100%;
+
             background: #f6df3c;
         }
 
@@ -339,24 +400,33 @@
             position: absolute;
             left: 50%;
             bottom: 18px;
+            z-index: 4;
 
             transform: translateX(-50%);
 
             width: 370px;
-            z-index: 4;
         }
 
         .event-box {
+            width: 100%;
             padding: 11px 15px;
 
-            background: linear-gradient(#222c3d, #111827);
-            border: 4px solid #090e17;
-            border-radius: 12px;
-
+            color: white;
             text-align: center;
             font-weight: 900;
 
+            background:
+                linear-gradient(
+                    #222c3d,
+                    #111827
+                );
+
+            border: 4px solid #090e17;
+            border-radius: 12px;
+
             box-shadow: 0 6px 0 #00000066;
+
+            cursor: pointer;
         }
 
         .event-title {
@@ -364,38 +434,201 @@
         }
 
         .event-map {
-            color: #5cff73;
             margin-top: 3px;
+
+            color: #5cff73;
+        }
+
+        .change-map-text {
+            margin-top: 5px;
+
+            color: #cccccc;
+            font-size: 12px;
         }
 
         .bottom-right {
             position: absolute;
             right: 17px;
             bottom: 18px;
+            z-index: 4;
 
             width: 280px;
-            z-index: 4;
         }
 
         .play-button {
             width: 100%;
             padding: 22px;
 
-            background: linear-gradient(#ffd934, #f0a900);
-            border: 5px solid #111827;
-            border-radius: 13px;
-
             color: #111827;
             font-size: 34px;
             font-weight: 1000;
 
-            cursor: pointer;
+            background:
+                linear-gradient(
+                    #ffd934,
+                    #f0a900
+                );
+
+            border: 5px solid #111827;
+            border-radius: 13px;
+
             box-shadow: 0 7px 0 #00000066;
+
+            cursor: pointer;
         }
 
         .play-button:active {
             transform: translateY(4px);
             box-shadow: 0 3px 0 #00000066;
+        }
+
+        .map-menu {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+
+            display: none;
+            align-items: center;
+            justify-content: center;
+
+            background: #000000bb;
+        }
+
+        .map-menu.visible {
+            display: flex;
+        }
+
+        .map-window {
+            position: relative;
+
+            width: min(850px, 92%);
+            padding: 30px;
+
+            text-align: center;
+
+            background:
+                linear-gradient(
+                    #374762,
+                    #1b263a
+                );
+
+            border: 5px solid #111827;
+            border-radius: 20px;
+
+            box-shadow: 0 12px 0 #00000066;
+        }
+
+        .map-window h2 {
+            margin-top: 0;
+            font-size: 32px;
+        }
+
+        .close-map-menu {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+
+            width: 45px;
+            height: 45px;
+
+            color: white;
+            font-size: 22px;
+
+            background: #d83c3c;
+
+            border: 3px solid #111827;
+            border-radius: 10px;
+
+            cursor: pointer;
+        }
+
+        .map-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .map-card {
+            padding: 12px;
+
+            color: white;
+
+            border: 4px solid #111827;
+            border-radius: 15px;
+
+            box-shadow: 0 6px 0 #00000066;
+
+            cursor: pointer;
+        }
+
+        .map-card strong {
+            display: block;
+            margin-top: 10px;
+            font-size: 20px;
+        }
+
+        .map-card span {
+            display: block;
+            margin-top: 5px;
+        }
+
+        .map-preview {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border: 4px solid #111827;
+            border-radius: 10px;
+
+            font-size: 70px;
+        }
+
+        .green-map {
+            background: #27984c;
+        }
+
+        .green-map .map-preview {
+            background:
+                repeating-linear-gradient(
+                    45deg,
+                    #4cbf65,
+                    #4cbf65 30px,
+                    #3da957 30px,
+                    #3da957 60px
+                );
+        }
+
+        .red-map {
+            background: #b73b39;
+        }
+
+        .red-map .map-preview {
+            background:
+                repeating-linear-gradient(
+                    45deg,
+                    #d94b43,
+                    #d94b43 30px,
+                    #b83835 30px,
+                    #b83835 60px
+                );
+        }
+
+        .yellow-map {
+            background: #ca9828;
+        }
+
+        .yellow-map .map-preview {
+            background:
+                repeating-linear-gradient(
+                    45deg,
+                    #e8bd42,
+                    #e8bd42 30px,
+                    #cc9c2c 30px,
+                    #cc9c2c 60px
+                );
         }
 
         @media (max-width: 900px) {
@@ -428,6 +661,25 @@
                 font-size: 26px;
             }
         }
+
+        @media (max-width: 700px) {
+            .map-list {
+                grid-template-columns: 1fr;
+            }
+
+            .map-preview {
+                aspect-ratio: 2 / 1;
+            }
+
+            .profile-box {
+                min-width: 130px;
+            }
+
+            .currency-box {
+                min-width: 55px;
+                padding: 7px;
+            }
+        }
     </style>
 </head>
 
@@ -441,7 +693,9 @@
 
         <div class="profile-box">
 
-            <div class="profile-icon">👑</div>
+            <div class="profile-icon">
+                👑
+            </div>
 
             <div class="profile-info">
 
@@ -498,25 +752,45 @@
             SKLEP
         </a>
 
-        <a href="postacie.html" class="side-button relative">
+        <a href="postacie.html" class="side-button">
 
-            <span class="notification">1</span>
+            <span class="notification">
+                1
+            </span>
 
-            <span class="side-icon">🧙</span>
+            <span class="side-icon">
+                🧙
+            </span>
+
             POSTACIE
+
         </a>
 
-        <button class="side-button relative" onclick="dailyReward()">
+        <button
+            class="side-button"
+            onclick="dailyReward()"
+        >
 
-            <span class="notification">2</span>
+            <span class="notification">
+                2
+            </span>
 
-            <span class="side-icon">🎁</span>
+            <span class="side-icon">
+                🎁
+            </span>
+
             NAGRODY
+
         </button>
 
         <button class="side-button">
-            <span class="side-icon">📜</span>
+
+            <span class="side-icon">
+                📜
+            </span>
+
             WIEŚCI
+
         </button>
 
     </div>
@@ -524,18 +798,33 @@
     <div class="side-menu right">
 
         <button class="side-button">
-            <span class="side-icon">🤝</span>
+
+            <span class="side-icon">
+                🤝
+            </span>
+
             ZNAJOMI
+
         </button>
 
         <button class="side-button">
-            <span class="side-icon">🛡️</span>
+
+            <span class="side-icon">
+                🛡️
+            </span>
+
             KLAN
+
         </button>
 
         <button class="side-button">
-            <span class="side-icon">💬</span>
+
+            <span class="side-icon">
+                💬
+            </span>
+
             CZAT
+
         </button>
 
     </div>
@@ -544,15 +833,24 @@
 
         <div class="character-shadow"></div>
 
-        <div id="heroIcon" class="character">
+        <div
+            id="heroIcon"
+            class="character"
+        >
             🧑‍🌾
         </div>
 
-        <div id="heroName" class="character-title">
+        <div
+            id="heroName"
+            class="character-title"
+        >
             Farmer
         </div>
 
-        <div id="heroPower" class="character-power">
+        <div
+            id="heroPower"
+            class="character-power"
+        >
             Moc: Rzut widłami
         </div>
 
@@ -571,7 +869,9 @@
             </div>
 
             <div class="progress-background">
+
                 <div class="progress-fill"></div>
+
             </div>
 
         </div>
@@ -580,78 +880,115 @@
 
     <section class="bottom-center">
 
-    <button class="event-box map-select-button" onclick="openMapMenu()">
+        <button
+            class="event-box"
+            onclick="openMapMenu()"
+        >
 
-        <div class="event-title">
-            ⚔️ BITWA KRÓLESTW
-        </div>
+            <div class="event-title">
+                ⚔️ BITWA KRÓLESTW
+            </div>
 
-        <div id="selectedMapName" class="event-map">
-            Zielona Dolina
-        </div>
+            <div
+                id="selectedMapName"
+                class="event-map"
+            >
+                Zielona Dolina
+            </div>
 
-        <div class="change-map-text">
-            Kliknij, aby zmienić mapę
-        </div>
+            <div class="change-map-text">
+                Kliknij, aby zmienić mapę
+            </div>
 
-    </button>
+        </button>
 
-</section>
-    
+    </section>
+
     <section class="bottom-right">
 
-        <button class="play-button" onclick="location.href='walka.html'">
+        <button
+            class="play-button"
+            onclick="location.href='walka.html'"
+        >
             GRAJ
         </button>
 
     </section>
 
-    <div id="mapMenu" class="map-menu">
+</div>
+
+<div id="mapMenu" class="map-menu">
 
     <div class="map-window">
 
-        <button class="close-map-menu" onclick="closeMapMenu()">
+        <button
+            class="close-map-menu"
+            onclick="closeMapMenu()"
+        >
             ✖
         </button>
 
-        <h2>WYBIERZ MAPĘ</h2>
+        <h2>
+            WYBIERZ MAPĘ
+        </h2>
 
         <div class="map-list">
 
-            <button class="map-card green-map" onclick="selectMap('green')">
+            <button
+                class="map-card green-map"
+                onclick="selectMap('green')"
+            >
+
                 <div class="map-preview">
                     🌳
                 </div>
 
-                <strong>Zielona Dolina</strong>
+                <strong>
+                    Zielona Dolina
+                </strong>
 
                 <span>
                     Trawiasta mapa
                 </span>
+
             </button>
 
-            <button class="map-card red-map" onclick="selectMap('red')">
+            <button
+                class="map-card red-map"
+                onclick="selectMap('red')"
+            >
+
                 <div class="map-preview">
                     🌋
                 </div>
 
-                <strong>Czerwona Twierdza</strong>
+                <strong>
+                    Czerwona Twierdza
+                </strong>
 
                 <span>
                     Ognista mapa
                 </span>
+
             </button>
 
-            <button class="map-card yellow-map" onclick="selectMap('yellow')">
+            <button
+                class="map-card yellow-map"
+                onclick="selectMap('yellow')"
+            >
+
                 <div class="map-preview">
                     🏜️
                 </div>
 
-                <strong>Złota Pustynia</strong>
+                <strong>
+                    Złota Pustynia
+                </strong>
 
                 <span>
                     Pustynna mapa
                 </span>
+
             </button>
 
         </div>
@@ -660,18 +997,34 @@
 
 </div>
 
-</div>
-
 <script src="dane.js"></script>
 <script src="common.js"></script>
 
 <script>
+const MAPS = {
+    green: {
+        name: "Zielona Dolina"
+    },
+
+    red: {
+        name: "Czerwona Twierdza"
+    },
+
+    yellow: {
+        name: "Złota Pustynia"
+    }
+};
+
 function renderLobby() {
     const state = getState();
     const hero = getHero(state.selected);
 
-    document.getElementById("heroIcon").textContent = hero.ikona;
-    document.getElementById("heroName").textContent = hero.nazwa;
+    document.getElementById("heroIcon").textContent =
+        hero.ikona;
+
+    document.getElementById("heroName").textContent =
+        hero.nazwa;
+
     document.getElementById("heroPower").textContent =
         "Moc: " + hero.moc;
 
@@ -683,7 +1036,10 @@ function dailyReward() {
     const today = new Date().toDateString();
 
     if (state.lastReward === today) {
-        alert("Dzisiejsza nagroda została już odebrana.");
+        alert(
+            "Dzisiejsza nagroda została już odebrana."
+        );
+
         return;
     }
 
@@ -694,9 +1050,49 @@ function dailyReward() {
     saveState(state);
     updateTopbar();
 
-    alert("Dostajesz 3 bilety i 50 monet!");
+    alert(
+        "Dostajesz 3 bilety i 50 monet!"
+    );
 }
 
+function openMapMenu() {
+    document
+        .getElementById("mapMenu")
+        .classList.add("visible");
+}
+
+function closeMapMenu() {
+    document
+        .getElementById("mapMenu")
+        .classList.remove("visible");
+}
+
+function selectMap(mapId) {
+    localStorage.setItem(
+        "selectedMap",
+        mapId
+    );
+
+    document
+        .getElementById("selectedMapName")
+        .textContent =
+        MAPS[mapId].name;
+
+    closeMapMenu();
+}
+
+function loadSelectedMap() {
+    const selectedMap =
+        localStorage.getItem("selectedMap")
+        || "green";
+
+    document
+        .getElementById("selectedMapName")
+        .textContent =
+        MAPS[selectedMap].name;
+}
+
+loadSelectedMap();
 renderLobby();
 </script>
 
