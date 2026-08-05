@@ -660,6 +660,8 @@ function createFighter(hero, x, y, isPlayer, number) {
 }
 
 function startGame() {
+    resetMatchTrophies();
+    
     const mapId =
         localStorage.getItem("selectedMap") ||
         "green";
