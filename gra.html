@@ -1,173 +1,2649 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Medieval Arena</title>
-<style>
-*{box-sizing:border-box}body{margin:0;overflow:hidden;font-family:Arial,sans-serif;color:#fff;background:radial-gradient(circle,#25d8ff,#079fe0 55%,#0876bd)}
-button,input{font:inherit}.lobby{position:relative;width:100vw;height:100vh;overflow:hidden}.pattern{position:absolute;inset:0;opacity:.08;background-image:radial-gradient(circle,#fff 3px,transparent 4px);background-size:70px 70px}
-.top{position:absolute;inset:0 0 auto;z-index:5;height:75px;display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:linear-gradient(#2f3b53,#182238);border-bottom:4px solid #101725;box-shadow:0 5px #0005}
-.profile{display:flex;align-items:center;gap:10px;min-width:250px;padding:3px 8px 3px 3px;color:#fff;text-align:left;background:transparent;border:0;border-radius:12px;cursor:pointer}.profile:hover{background:#ffffff18}
-.avatar{width:55px;height:55px;flex:0 0 55px;display:grid;place-items:center;overflow:hidden;background:#1d95e8;border:4px solid #111827;border-radius:10px;font-size:30px}.avatar img,.preview img{width:100%;height:100%;object-fit:cover}
-.name{max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:900}.edit{color:#bcdcff;font-size:10px;font-weight:800}.trophy{margin-top:4px;padding:4px 8px;background:#253044;border:3px solid #101724;border-radius:8px;font-weight:900}
-.money{display:flex;gap:10px;align-items:center}.currency{min-width:80px;padding:9px 12px;text-align:center;font-size:18px;font-weight:900;background:#263248;border:3px solid #111827;border-radius:10px}
-.menuBtn{width:52px;height:52px;display:grid;place-items:center;color:#fff;font-size:29px;background:linear-gradient(#60718e,#34445e);border:3px solid #111827;border-radius:9px;cursor:pointer}
-.rank{position:absolute;top:90px;left:50%;z-index:3;transform:translateX(-50%);display:flex;gap:8px}.rank span{padding:7px 12px;background:#283349;border:3px solid #101724;border-radius:9px;font-weight:900}
-.side{position:absolute;top:130px;z-index:4;display:flex;flex-direction:column;gap:13px}.side.left{left:12px}.side.right{right:12px}.side a,.side button{width:85px;min-height:58px;display:grid;place-items:center;padding:5px;color:#fff;text-decoration:none;font-size:12px;font-weight:900;background:linear-gradient(#435670,#202d42);border:3px solid #101724;border-radius:9px;box-shadow:0 4px #0006;cursor:pointer}
-.hero{position:absolute;left:50%;top:53%;z-index:2;transform:translate(-50%,-50%);width:340px;height:430px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end}.heroIcon{font-size:190px;filter:drop-shadow(0 15px 6px #00466e88);animation:idle 2.2s ease-in-out infinite}@keyframes idle{50%{transform:translateY(-12px)}}.heroTrophies{z-index:3;margin-bottom:7px;padding:7px 14px;color:#ffe66d;font-size:18px;font-weight:1000;background:#28344b;border:3px solid #111827;border-radius:10px;text-shadow:2px 2px #000}.heroName{padding:7px 15px;background:#28344b;border:3px solid #111827;border-radius:10px;font-size:20px;font-weight:900}.heroPower{margin-top:6px;color:#fff080;font-weight:900;text-shadow:2px 2px #000}
-.bottomL,.bottomC,.bottomR{position:absolute;bottom:18px;z-index:4}.bottomL{left:15px;width:260px}.bottomC{left:50%;width:370px;transform:translateX(-50%)}.bottomR{right:17px;width:280px}.pass,.event,.play{width:100%;border:4px solid #111827;border-radius:12px;box-shadow:0 6px #0006;font-weight:900}.pass{padding:12px;color:#111827;background:linear-gradient(90deg,#f0c900,#f79e00)}.event{padding:11px 15px;color:#fff;background:linear-gradient(#222c3d,#111827);cursor:pointer}.play{padding:22px;color:#111827;font-size:34px;background:linear-gradient(#ffd934,#f0a900);cursor:pointer}
-.overlay{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:20px;background:#000b}.overlay.show{display:flex}.window{position:relative;width:min(700px,95%);max-height:92vh;overflow:auto;padding:28px;text-align:center;background:linear-gradient(#374762,#1b263a);border:5px solid #111827;border-radius:20px;box-shadow:0 12px #0006}.window h2{margin-top:0;color:#ffd83d}.close{position:absolute;top:10px;right:12px;width:45px;height:45px;color:#fff;font-size:22px;background:#d83c3c;border:3px solid #111827;border-radius:10px;cursor:pointer}
-.section{margin:15px 0;padding:15px;text-align:left;background:#202c42;border:3px solid #101827;border-radius:14px}.section b{display:block;margin-bottom:9px}.input{width:100%;padding:12px;color:#111827;font-size:17px;font-weight:800;background:#fff;border:3px solid #111827;border-radius:10px}.help{margin-top:7px;color:#cad7e8;font-size:12px}
-.preview{width:130px;height:130px;display:grid;place-items:center;margin:0 auto 15px;overflow:hidden;background:#1d95e8;border:5px solid #111827;border-radius:18px;font-size:64px}.checks{display:grid;grid-template-columns:1fr 1fr;gap:8px}.check{display:flex;align-items:center;gap:8px;padding:9px;background:#111827;border:2px solid #46536a;border-radius:9px}.check input{width:20px;height:20px}.action{width:100%;padding:15px;color:#111827;font-size:18px;font-weight:1000;background:linear-gradient(#ffd93d,#eca500);border:4px solid #111827;border-radius:12px;cursor:pointer}.secondary{width:100%;margin-top:8px;padding:10px;color:#fff;font-weight:900;background:#435670;border:3px solid #111827;border-radius:10px;cursor:pointer}.msg{min-height:28px;margin-top:12px;color:#7dff95;font-weight:900}.msg.error{color:#ff7474}.maps{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.map{padding:15px;color:#fff;font-size:18px;font-weight:900;border:4px solid #111827;border-radius:14px;cursor:pointer}.green{background:#27984c}.red{background:#b73b39}.yellow{background:#ca9828}
-.heroTrophies {
-    z-index: 3;
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    margin-bottom: 7px;
-    padding: 7px 14px;
+    <title>Medieval Arena</title>
 
-    color: #ffe66d;
-    font-size: 18px;
-    font-weight: 1000;
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-    background: #28344b;
+        body {
+            margin: 0;
+            overflow: hidden;
 
-    border: 3px solid #111827;
-    border-radius: 10px;
+            font-family: Arial, sans-serif;
+            color: white;
 
-    text-shadow: 2px 2px black;
-}
- 
- @media(max-width:900px){.checks,.maps{grid-template-columns:1fr}.currency{min-width:55px;padding:7px}.profile{min-width:130px}.bottomL{width:170px}.bottomC{width:250px}.bottomR{width:180px}.heroIcon{font-size:135px}}
-</style>
+            background:
+                radial-gradient(
+                    circle at center,
+                    #25d8ff 0%,
+                    #079fe0 55%,
+                    #0876bd 100%
+                );
+        }
+
+        button,
+        input,
+        select {
+            font-family: inherit;
+        }
+
+        button {
+            color: inherit;
+        }
+
+        .lobby {
+            position: relative;
+
+            width: 100vw;
+            height: 100vh;
+
+            overflow: hidden;
+        }
+
+        .pattern {
+            position: absolute;
+            inset: 0;
+
+            opacity: 0.08;
+
+            background-image:
+                radial-gradient(
+                    circle,
+                    white 3px,
+                    transparent 4px
+                );
+
+            background-size: 70px 70px;
+        }
+
+        .top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 5;
+
+            height: 75px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 8px 14px;
+
+            background:
+                linear-gradient(
+                    #2f3b53,
+                    #182238
+                );
+
+            border-bottom: 4px solid #101725;
+
+            box-shadow:
+                0 5px 0 #00000055;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            min-width: 250px;
+
+            padding: 3px 8px 3px 3px;
+
+            color: white;
+            text-align: left;
+
+            background: transparent;
+            border: 0;
+            border-radius: 12px;
+
+            cursor: pointer;
+        }
+
+        .profile:hover {
+            background: #ffffff18;
+        }
+
+        .avatar {
+            width: 55px;
+            height: 55px;
+            flex: 0 0 55px;
+
+            display: grid;
+            place-items: center;
+
+            overflow: hidden;
+
+            background: #1d95e8;
+
+            border: 4px solid #111827;
+            border-radius: 10px;
+
+            font-size: 30px;
+        }
+
+        .avatar img,
+        .preview img {
+            width: 100%;
+            height: 100%;
+
+            display: block;
+
+            object-fit: cover;
+        }
+
+        .profile-name {
+            max-width: 180px;
+
+            overflow: hidden;
+
+            font-weight: 900;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .profile-edit {
+            color: #bcdcff;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .profile-wins {
+            margin-top: 4px;
+            padding: 4px 8px;
+
+            background: #253044;
+
+            border: 3px solid #101724;
+            border-radius: 8px;
+
+            font-weight: 900;
+        }
+
+        .currencies {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .currency {
+            min-width: 80px;
+
+            padding: 9px 12px;
+
+            text-align: center;
+            font-size: 18px;
+            font-weight: 900;
+
+            background: #263248;
+
+            border: 3px solid #111827;
+            border-radius: 10px;
+        }
+
+        .admin-button {
+            width: 52px;
+            height: 52px;
+
+            display: grid;
+            place-items: center;
+
+            color: white;
+            font-size: 29px;
+
+            background:
+                linear-gradient(
+                    #60718e,
+                    #34445e
+                );
+
+            border: 3px solid #111827;
+            border-radius: 9px;
+
+            cursor: pointer;
+        }
+
+        .rank {
+            position: absolute;
+            top: 90px;
+            left: 50%;
+            z-index: 3;
+
+            transform: translateX(-50%);
+
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .rank-box {
+            padding: 7px 12px;
+
+            background: #283349;
+
+            border: 3px solid #101724;
+            border-radius: 9px;
+
+            font-weight: 900;
+        }
+
+        .side {
+            position: absolute;
+            top: 130px;
+            z-index: 4;
+
+            display: flex;
+            flex-direction: column;
+            gap: 13px;
+        }
+
+        .side.left {
+            left: 12px;
+        }
+
+        .side.right {
+            right: 12px;
+        }
+
+        .side a,
+        .side button {
+            width: 85px;
+            min-height: 58px;
+
+            display: grid;
+            place-items: center;
+
+            padding: 5px;
+
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 900;
+
+            background:
+                linear-gradient(
+                    #435670,
+                    #202d42
+                );
+
+            border: 3px solid #101724;
+            border-radius: 9px;
+
+            box-shadow:
+                0 4px 0 #00000066;
+
+            cursor: pointer;
+        }
+
+        .hero-area {
+            position: absolute;
+            left: 50%;
+            top: 53%;
+            z-index: 2;
+
+            transform:
+                translate(-50%, -50%);
+
+            width: 340px;
+            height: 470px;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .hero-trophies {
+            position: relative;
+            z-index: 3;
+
+            min-width: 130px;
+
+            margin-bottom: 8px;
+            padding: 8px 15px;
+
+            color: white;
+            text-align: center;
+
+            border: 4px solid #111827;
+            border-radius: 13px;
+
+            box-shadow:
+                0 5px 0 #00000066,
+                inset 0 2px 0 #ffffff55;
+
+            text-shadow:
+                2px 2px black;
+        }
+
+        .hero-tier-name {
+            display: block;
+
+            font-size: 13px;
+            font-weight: 1000;
+        }
+
+        .hero-trophy-number {
+            display: block;
+
+            margin-top: 2px;
+
+            font-size: 21px;
+            font-weight: 1000;
+        }
+
+        .tier-1 {
+            background:
+                linear-gradient(
+                    #f0a42d,
+                    #b85816
+                );
+        }
+
+        .tier-5 {
+            background:
+                linear-gradient(
+                    #d2d5df,
+                    #736d88
+                );
+        }
+
+        .tier-10 {
+            background:
+                linear-gradient(
+                    #ffd84c,
+                    #e28a13
+                );
+        }
+
+        .tier-15 {
+            background:
+                linear-gradient(
+                    #30e6f2,
+                    #0786ad
+                );
+        }
+
+        .tier-20 {
+            background:
+                linear-gradient(
+                    #f94be7,
+                    #9833a9
+                );
+        }
+
+        .tier-25 {
+            background:
+                linear-gradient(
+                    #43ed79,
+                    #15934e
+                );
+        }
+
+        .tier-30 {
+            background:
+                linear-gradient(
+                    #ff5353,
+                    #a51f2f
+                );
+        }
+
+        .tier-35 {
+            background:
+                linear-gradient(
+                    #8262c9,
+                    #30254f
+                );
+        }
+
+        .tier-40 {
+            color: #182238;
+
+            background:
+                linear-gradient(
+                    #e8ffff,
+                    #74cce6
+                );
+
+            text-shadow: none;
+        }
+
+        .tier-45 {
+            background:
+                linear-gradient(
+                    #90f3ee,
+                    #8653cd
+                );
+        }
+
+        .tier-50 {
+            background:
+                linear-gradient(
+                    135deg,
+                    #46e6f0,
+                    #f5f5f5,
+                    #e454f4
+                );
+        }
+
+        .tier-max {
+            background:
+                linear-gradient(
+                    135deg,
+                    #3be6ef,
+                    #ffffff,
+                    #f348e2,
+                    #ffca38
+                );
+
+            box-shadow:
+                0 0 22px #ffffffaa,
+                0 5px 0 #00000066;
+        }
+
+        .hero-icon {
+            position: relative;
+            z-index: 2;
+
+            font-size: 190px;
+
+            filter:
+                drop-shadow(
+                    0 15px 6px #00466e88
+                );
+
+            animation:
+                heroIdle 2.2s
+                ease-in-out infinite;
+        }
+
+        @keyframes heroIdle {
+            0%,
+            100% {
+                transform:
+                    translateY(0)
+                    rotate(-1deg);
+            }
+
+            50% {
+                transform:
+                    translateY(-12px)
+                    rotate(1deg);
+            }
+        }
+
+        .hero-name {
+            z-index: 3;
+
+            padding: 7px 15px;
+
+            background: #28344b;
+
+            border: 3px solid #111827;
+            border-radius: 10px;
+
+            font-size: 20px;
+            font-weight: 900;
+        }
+
+        .hero-power {
+            z-index: 3;
+
+            margin-top: 6px;
+
+            color: #fff080;
+
+            font-weight: 900;
+
+            text-shadow:
+                2px 2px black;
+        }
+
+        .bottom-left,
+        .bottom-center,
+        .bottom-right {
+            position: absolute;
+            bottom: 18px;
+            z-index: 4;
+        }
+
+        .bottom-left {
+            left: 15px;
+            width: 260px;
+        }
+
+        .bottom-center {
+            left: 50%;
+            width: 370px;
+
+            transform:
+                translateX(-50%);
+        }
+
+        .bottom-right {
+            right: 17px;
+            width: 280px;
+        }
+
+        .pass,
+        .event,
+        .play {
+            width: 100%;
+
+            border: 4px solid #111827;
+            border-radius: 12px;
+
+            box-shadow:
+                0 6px 0 #00000066;
+
+            font-weight: 900;
+        }
+
+        .pass {
+            padding: 12px;
+
+            color: #111827;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #f0c900,
+                    #f79e00
+                );
+        }
+
+        .event {
+            padding: 11px 15px;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    #222c3d,
+                    #111827
+                );
+
+            cursor: pointer;
+        }
+
+        .selected-map {
+            color: #5cff73;
+        }
+
+        .play {
+            padding: 22px;
+
+            color: #111827;
+            font-size: 34px;
+
+            background:
+                linear-gradient(
+                    #ffd934,
+                    #f0a900
+                );
+
+            cursor: pointer;
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+
+            display: none;
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+
+            background: #000000bb;
+        }
+
+        .overlay.visible {
+            display: flex;
+        }
+
+        .window {
+            position: relative;
+
+            width: min(700px, 95%);
+            max-height: 92vh;
+
+            overflow-y: auto;
+
+            padding: 28px;
+
+            text-align: center;
+
+            background:
+                linear-gradient(
+                    #374762,
+                    #1b263a
+                );
+
+            border: 5px solid #111827;
+            border-radius: 20px;
+
+            box-shadow:
+                0 12px 0 #00000066;
+        }
+
+        .window h2 {
+            margin-top: 0;
+
+            color: #ffd83d;
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+
+            width: 45px;
+            height: 45px;
+
+            color: white;
+            font-size: 22px;
+
+            background: #d83c3c;
+
+            border: 3px solid #111827;
+            border-radius: 10px;
+
+            cursor: pointer;
+        }
+
+        .maps {
+            display: grid;
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 15px;
+        }
+
+        .map-button {
+            padding: 15px;
+
+            color: white;
+            font-size: 18px;
+            font-weight: 900;
+
+            border: 4px solid #111827;
+            border-radius: 14px;
+
+            cursor: pointer;
+        }
+
+        .green-map {
+            background: #27984c;
+        }
+
+        .red-map {
+            background: #b73b39;
+        }
+
+        .yellow-map {
+            background: #ca9828;
+        }
+
+        .section {
+            margin: 15px 0;
+            padding: 15px;
+
+            text-align: left;
+
+            background: #202c42;
+
+            border: 3px solid #101827;
+            border-radius: 14px;
+        }
+
+        .section-title {
+            display: block;
+
+            margin-bottom: 9px;
+
+            font-weight: 900;
+        }
+
+        .input {
+            width: 100%;
+
+            padding: 12px;
+
+            color: #111827;
+            font-size: 17px;
+            font-weight: 800;
+
+            background: white;
+
+            border: 3px solid #111827;
+            border-radius: 10px;
+
+            outline: none;
+        }
+
+        .input + .input {
+            margin-top: 10px;
+        }
+
+        .help {
+            margin-top: 7px;
+
+            color: #cad7e8;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .preview {
+            width: 130px;
+            height: 130px;
+
+            display: grid;
+            place-items: center;
+
+            margin: 0 auto 15px;
+
+            overflow: hidden;
+
+            background: #1d95e8;
+
+            border: 5px solid #111827;
+            border-radius: 18px;
+
+            font-size: 64px;
+        }
+
+        .hero-checks {
+            display: grid;
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 8px;
+        }
+
+        .hero-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            padding: 9px;
+
+            background: #111827;
+
+            border: 2px solid #46536a;
+            border-radius: 9px;
+
+            cursor: pointer;
+        }
+
+        .hero-check input {
+            width: 20px;
+            height: 20px;
+        }
+
+        .action {
+            width: 100%;
+
+            padding: 15px;
+
+            color: #111827;
+            font-size: 18px;
+            font-weight: 1000;
+
+            background:
+                linear-gradient(
+                    #ffd93d,
+                    #eca500
+                );
+
+            border: 4px solid #111827;
+            border-radius: 12px;
+
+            cursor: pointer;
+        }
+
+        .secondary {
+            width: 100%;
+
+            margin-top: 8px;
+            padding: 10px;
+
+            color: white;
+            font-weight: 900;
+
+            background: #435670;
+
+            border: 3px solid #111827;
+            border-radius: 10px;
+
+            cursor: pointer;
+        }
+
+        .message {
+            min-height: 28px;
+
+            margin-top: 12px;
+
+            color: #7dff95;
+
+            font-weight: 900;
+        }
+
+        .message.error {
+            color: #ff7474;
+        }
+
+        @media (max-width: 700px) {
+            .maps,
+            .hero-checks {
+                grid-template-columns: 1fr;
+            }
+
+            .currency {
+                min-width: 55px;
+                padding: 7px;
+            }
+
+            .profile {
+                min-width: 130px;
+            }
+
+            .hero-icon {
+                font-size: 135px;
+            }
+
+            .bottom-left {
+                width: 170px;
+            }
+
+            .bottom-center {
+                width: 250px;
+            }
+
+            .bottom-right {
+                width: 180px;
+            }
+        }
+    </style>
 </head>
+
 <body>
+
 <div class="lobby">
-<div class="pattern"></div>
-<header class="top">
-<button class="profile" onclick="openProfile()">
-<div id="topAvatar" class="avatar">👑</div>
-<div><div id="topName" class="name">MedievalPlayer</div><div class="edit">Kliknij, aby edytować profil</div><div class="trophy">🏆 <span data-wins>0</span></div></div>
-</button>
-<div class="money"><div class="currency">🪙 <span data-coins>0</span></div><div class="currency">🎟️ <span data-tickets>0</span></div><button class="menuBtn" onclick="openAdmin()">☰</button></div>
-</header>
-<div class="rank"><span>RANGA 1</span><span>🏆 <span data-wins>0</span></span><span>🛡️ 1</span></div>
-<div class="side left">
-<a href="sklep.html">🛒<br>SKLEP</a><a href="postacie.html">🧙<br>POSTACIE</a><button onclick="dailyReward()">🎁<br>NAGRODY</button><button>📜<br>WIEŚCI</button>
+
+    <div class="pattern"></div>
+
+    <header class="top">
+
+        <button
+            class="profile"
+            type="button"
+            onclick="openProfile()"
+        >
+
+            <div
+                id="topAvatar"
+                class="avatar"
+            >
+                👑
+            </div>
+
+            <div>
+
+                <div
+                    id="topName"
+                    class="profile-name"
+                >
+                    MedievalPlayer
+                </div>
+
+                <div class="profile-edit">
+                    Kliknij, aby edytować profil
+                </div>
+
+                <div class="profile-wins">
+                    🏆 Wygrane:
+                    <span data-wins>0</span>
+                </div>
+
+            </div>
+
+        </button>
+
+        <div class="currencies">
+
+            <div class="currency">
+                🪙
+                <span data-coins>0</span>
+            </div>
+
+            <div class="currency">
+                🎟️
+                <span data-tickets>0</span>
+            </div>
+
+            <button
+                class="admin-button"
+                type="button"
+                onclick="openAdmin()"
+            >
+                ☰
+            </button>
+
+        </div>
+
+    </header>
+
+    <div class="rank">
+
+        <div class="rank-box">
+            RANGA 1
+        </div>
+
+        <div class="rank-box">
+            🏆
+            <span id="totalTrophies">0</span>
+        </div>
+
+        <div class="rank-box">
+            ZWYCIĘSTWA:
+            <span data-wins>0</span>
+        </div>
+
+    </div>
+
+    <div class="side left">
+
+        <a href="sklep.html">
+            🛒<br>
+            SKLEP
+        </a>
+
+        <a href="postacie.html">
+            🧙<br>
+            POSTACIE
+        </a>
+
+        <button
+            type="button"
+            onclick="dailyReward()"
+        >
+            🎁<br>
+            NAGRODY
+        </button>
+
+        <button type="button">
+            📜<br>
+            WIEŚCI
+        </button>
+
+    </div>
+
+    <div class="side right">
+
+        <button type="button">
+            🤝<br>
+            ZNAJOMI
+        </button>
+
+        <button type="button">
+            🛡️<br>
+            KLAN
+        </button>
+
+        <button type="button">
+            💬<br>
+            CZAT
+        </button>
+
+    </div>
+
+    <main class="hero-area">
+
+        <div
+            id="heroTrophyBadge"
+            class="hero-trophies tier-1"
+        >
+
+            <span
+                id="heroTierName"
+                class="hero-tier-name"
+            >
+                TIER 1
+            </span>
+
+            <span class="hero-trophy-number">
+                🏆
+                <span id="selectedHeroTrophies">
+                    0
+                </span>
+            </span>
+
+        </div>
+
+        <div
+            id="heroIcon"
+            class="hero-icon"
+        >
+            🧑‍🌾
+        </div>
+
+        <div
+            id="heroName"
+            class="hero-name"
+        >
+            Farmer
+        </div>
+
+        <div
+            id="heroPower"
+            class="hero-power"
+        >
+            Moc: Rzut widłami
+        </div>
+
+    </main>
+
+    <section class="bottom-left">
+
+        <div class="pass">
+            🎫 KRÓLEWSKA DROGA<br>
+            45 / 100
+        </div>
+
+    </section>
+
+    <section class="bottom-center">
+
+        <button
+            class="event"
+            type="button"
+            onclick="openMap()"
+        >
+            ⚔️ BITWA KRÓLESTW<br>
+
+            <span
+                id="mapName"
+                class="selected-map"
+            >
+                Zielona Dolina
+            </span>
+
+            <br>
+
+            <small>
+                Kliknij, aby zmienić mapę
+            </small>
+        </button>
+
+    </section>
+
+    <section class="bottom-right">
+
+        <button
+            class="play"
+            type="button"
+            onclick="location.href='walka.html'"
+        >
+            GRAJ
+        </button>
+
+    </section>
+
 </div>
-<div class="side right"><button>🤝<br>ZNAJOMI</button><button>🛡️<br>KLAN</button><button>💬<br>CZAT</button></div>
-<main class="hero"><div id="heroTrophies" class="heroTrophies">
-    🏆 <span data-hero-trophies>0</span>
-</div><div id="heroIcon" class="heroIcon">🧑‍🌾</div><div id="heroName" class="heroName">Farmer</div><div id="heroPower" class="heroPower">Moc: Rzut widłami</div></main>
-<section class="bottomL"><div class="pass">🎫 KRÓLEWSKA DROGA<br>45 / 100</div></section>
-<section class="bottomC"><button class="event" onclick="openMap()">⚔️ BITWA KRÓLESTW<br><span id="mapName" style="color:#5cff73">Zielona Dolina</span><br><small>Kliknij, aby zmienić mapę</small></button></section>
-<section class="bottomR"><button class="play" onclick="location.href='walka.html'">GRAJ</button></section>
+
+<div
+    id="mapOverlay"
+    class="overlay"
+>
+
+    <div class="window">
+
+        <button
+            class="close"
+            type="button"
+            onclick="closeMap()"
+        >
+            ✖
+        </button>
+
+        <h2>
+            WYBIERZ MAPĘ
+        </h2>
+
+        <div class="maps">
+
+            <button
+                class="map-button green-map"
+                type="button"
+                onclick="selectMap('green')"
+            >
+                🌳<br>
+                Zielona Dolina
+            </button>
+
+            <button
+                class="map-button red-map"
+                type="button"
+                onclick="selectMap('red')"
+            >
+                🌋<br>
+                Czerwona Twierdza
+            </button>
+
+            <button
+                class="map-button yellow-map"
+                type="button"
+                onclick="selectMap('yellow')"
+            >
+                🏜️<br>
+                Złota Pustynia
+            </button>
+
+        </div>
+
+    </div>
+
 </div>
 
-<div id="mapOverlay" class="overlay"><div class="window"><button class="close" onclick="closeMap()">✖</button><h2>WYBIERZ MAPĘ</h2><div class="maps"><button class="map green" onclick="selectMap('green')">🌳<br>Zielona Dolina</button><button class="map red" onclick="selectMap('red')">🌋<br>Czerwona Twierdza</button><button class="map yellow" onclick="selectMap('yellow')">🏜️<br>Złota Pustynia</button></div></div></div>
+<div
+    id="profileOverlay"
+    class="overlay"
+>
 
-<div id="profileOverlay" class="overlay"><div class="window"><button class="close" onclick="closeProfile()">✖</button><h2>TWÓJ PROFIL</h2>
-<div id="profilePreview" class="preview">👑</div>
-<div class="section"><b>👤 Nazwa gracza</b><input id="profileName" class="input" maxlength="20" placeholder="Wpisz nazwę"><div class="help">3–20 znaków. Nazwa nie może powtarzać się w tej przeglądarce.</div></div>
-<div class="section"><b>🖼️ Zdjęcie profilowe</b><input id="avatarFile" class="input" type="file" accept="image/*"><button class="secondary" onclick="removeAvatar()">USUŃ ZDJĘCIE / UŻYJ KORONY</button></div>
-<button class="action" onclick="saveProfileData()">ZAPISZ PROFIL</button><div id="profileMsg" class="msg"></div>
-</div></div>
+    <div class="window">
 
-<div id="adminOverlay" class="overlay"><div class="window"><button class="close" onclick="closeAdmin()">✖</button><h2>PANEL ADMINISTRATORA</h2>
-<div class="section"><b>👤 Nazwa odbiorcy</b><input id="targetName" class="input" placeholder="Dokładna nazwa gracza"></div>
-<div class="section"><b>🪙 Monety</b><input id="coinsInput" class="input" type="number" min="0" placeholder="0"></div>
-<div class="section"><b>🎟️ Bilety</b><input id="ticketsInput" class="input" type="number" min="0" placeholder="0"></div>
-<div class="section"><b>🧙 Postacie</b><div id="heroChecks" class="checks"></div></div>
-<button class="action" onclick="adminConfirm()">POTWIERDŹ I DODAJ WSZYSTKO</button><div id="adminMsg" class="msg"></div>
-</div></div>
+        <button
+            class="close"
+            type="button"
+            onclick="closeProfile()"
+        >
+            ✖
+        </button>
+
+        <h2>
+            TWÓJ PROFIL
+        </h2>
+
+        <div
+            id="profilePreview"
+            class="preview"
+        >
+            👑
+        </div>
+
+        <div class="section">
+
+            <span class="section-title">
+                👤 Nazwa gracza
+            </span>
+
+            <input
+                id="profileName"
+                class="input"
+                type="text"
+                maxlength="20"
+                placeholder="Wpisz nazwę"
+            >
+
+            <div class="help">
+                Nazwa musi mieć od 3 do 20 znaków.
+                Nie może powtarzać się w tej przeglądarce.
+            </div>
+
+        </div>
+
+        <div class="section">
+
+            <span class="section-title">
+                🖼️ Zdjęcie profilowe
+            </span>
+
+            <input
+                id="avatarFile"
+                class="input"
+                type="file"
+                accept="image/*"
+            >
+
+            <button
+                class="secondary"
+                type="button"
+                onclick="removeAvatar()"
+            >
+                USUŃ ZDJĘCIE / UŻYJ KORONY
+            </button>
+
+        </div>
+
+        <button
+            class="action"
+            type="button"
+            onclick="saveProfileData()"
+        >
+            ZAPISZ PROFIL
+        </button>
+
+        <div
+            id="profileMessage"
+            class="message"
+        ></div>
+
+    </div>
+
+</div>
+
+<div
+    id="adminOverlay"
+    class="overlay"
+>
+
+    <div class="window">
+
+        <button
+            class="close"
+            type="button"
+            onclick="closeAdmin()"
+        >
+            ✖
+        </button>
+
+        <h2>
+            PANEL ADMINISTRATORA
+        </h2>
+
+        <div class="section">
+
+            <span class="section-title">
+                👤 Nazwa odbiorcy
+            </span>
+
+            <input
+                id="adminTargetName"
+                class="input"
+                type="text"
+                placeholder="Dokładna nazwa gracza"
+            >
+
+        </div>
+
+        <div class="section">
+
+            <span class="section-title">
+                🪙 Monety
+            </span>
+
+            <input
+                id="adminCoins"
+                class="input"
+                type="number"
+                min="0"
+                step="1"
+                placeholder="0"
+            >
+
+        </div>
+
+        <div class="section">
+
+            <span class="section-title">
+                🎟️ Bilety
+            </span>
+
+            <input
+                id="adminTickets"
+                class="input"
+                type="number"
+                min="0"
+                step="1"
+                placeholder="0"
+            >
+
+        </div>
+
+        <div class="section">
+
+            <span class="section-title">
+                🧙 Postacie do odblokowania
+            </span>
+
+            <div
+                id="adminHeroChecks"
+                class="hero-checks"
+            ></div>
+
+        </div>
+
+        <div class="section">
+
+            <span class="section-title">
+                🏆 Pucharki konkretnej postaci
+            </span>
+
+            <select
+                id="adminTrophyHero"
+                class="input"
+            ></select>
+
+            <select
+                id="adminTrophyMode"
+                class="input"
+            >
+
+                <option value="none">
+                    Nie zmieniaj pucharków
+                </option>
+
+                <option value="add">
+                    Dodaj lub odejmij
+                </option>
+
+                <option value="set">
+                    Ustaw dokładną liczbę
+                </option>
+
+            </select>
+
+            <input
+                id="adminTrophyAmount"
+                class="input"
+                type="number"
+                step="1"
+                placeholder="np. 50 albo -20"
+            >
+
+            <div class="help">
+                Możesz wpisać liczbę ujemną, aby odjąć pucharki.
+                Wynik nigdy nie spadnie poniżej 0.
+            </div>
+
+        </div>
+
+        <button
+            class="action"
+            type="button"
+            onclick="adminConfirm()"
+        >
+            POTWIERDŹ I DODAJ WSZYSTKO
+        </button>
+
+        <div
+            id="adminMessage"
+            class="message"
+        ></div>
+
+    </div>
+
+</div>
 
 <script src="dane.js"></script>
 <script src="common.js"></script>
+
 <script>
-const ACCOUNTS_KEY="medievalArenaAccounts_v1",CURRENT_KEY="medievalArenaCurrentAccount_v1";
-const MAPS={green:"Zielona Dolina",red:"Czerwona Twierdza",yellow:"Złota Pustynia"};
-let pendingAvatar="";
-const $ = id => document.getElementById(id);
+"use strict";
 
-const topAvatar = $("topAvatar");
-const topName = $("topName");
-const heroTrophies = $("heroTrophies");
-const heroIcon = $("heroIcon");
-const heroName = $("heroName");
-const heroPower = $("heroPower");
-const mapName = $("mapName");
+const ACCOUNTS_KEY =
+    "medievalArenaAccounts_v1";
 
-const mapOverlay = $("mapOverlay");
-const profileOverlay = $("profileOverlay");
-const adminOverlay = $("adminOverlay");
+const CURRENT_ACCOUNT_KEY =
+    "medievalArenaCurrentAccount_v1";
 
-const profileName = $("profileName");
-const profilePreview = $("profilePreview");
-const profileMsg = $("profileMsg");
-const avatarFile = $("avatarFile");
+const MAPS = {
+    green: "Zielona Dolina",
+    red: "Czerwona Twierdza",
+    yellow: "Złota Pustynia"
+};
 
-const targetName = $("targetName");
-const coinsInput = $("coinsInput");
-const ticketsInput = $("ticketsInput");
-const heroChecks = $("heroChecks");
-const adminMsg = $("adminMsg");
+let pendingAvatar = "";
 
-
-function parse(v,f){try{return v?JSON.parse(v):f}catch{return f}}
-function norm(n){return String(n||"").trim().replace(/\s+/g," ").toLowerCase()}
-function copyState(s){return{tickets:Number(s.tickets)||0,coins:Number(s.coins)||0,selected:s.selected||"farmer",unlocked:Array.isArray(s.unlocked)?[...new Set(s.unlocked)]:["farmer"],wins:Number(s.wins)||0,heroTrophies:s.heroTrophies&&typeof s.heroTrophies==="object"?{...s.heroTrophies}:{},lastReward:s.lastReward||null}}
-function accounts(){return parse(localStorage.getItem(ACCOUNTS_KEY),{})}
-function saveAccounts(a){localStorage.setItem(ACCOUNTS_KEY,JSON.stringify(a))}
-function ensureAccount(){
- let a=accounts(),k=localStorage.getItem(CURRENT_KEY);
- if(k&&a[k])return k;
- let name="MedievalPlayer",i=2;while(a[norm(name)])name="MedievalPlayer"+i++;
- k=norm(name);a[k]={name,avatar:"",state:copyState(getState())};saveAccounts(a);localStorage.setItem(CURRENT_KEY,k);return k
-}
-function sync(){
- const k=ensureAccount(),a=accounts();a[k].state=copyState(getState());saveAccounts(a)
-}
-function avatar(el,data){el.innerHTML="";if(data){const img=document.createElement("img");img.src=data;el.appendChild(img)}else el.textContent="👑"}
-function render(){
- const state=getState(),hero=getHero(state.selected),a=accounts()[ensureAccount()];
- heroTrophies.textContent="🏆 "+(Number(state.heroTrophies?.[state.selected])||0);heroIcon.textContent=hero.ikona;heroName.textContent=hero.nazwa;heroPower.textContent="Moc: "+hero.moc;topName.textContent=a.name;avatar(topAvatar,a.avatar);updateTopbar();sync()
-}
-function dailyReward(){const s=getState(),today=new Date().toDateString();if(s.lastReward===today)return alert("Dzisiejsza nagroda została już odebrana.");s.lastReward=today;s.tickets+=3;s.coins+=50;saveState(s);sync();updateTopbar();alert("Dostajesz 3 bilety i 50 monet!")}
-function openMap(){mapOverlay.classList.add("show")}function closeMap(){mapOverlay.classList.remove("show")}
-function selectMap(id){localStorage.setItem("selectedMap",id);mapName.textContent=MAPS[id];closeMap()}
-function loadMap(){const id=MAPS[localStorage.getItem("selectedMap")]?localStorage.getItem("selectedMap"):"green";mapName.textContent=MAPS[id]}
-
-function openProfile(){sync();const a=accounts()[ensureAccount()];profileName.value=a.name;pendingAvatar=a.avatar||"";avatar(profilePreview,pendingAvatar);profileMsg.textContent="";profileOverlay.classList.add("show")}
-function closeProfile(){profileOverlay.classList.remove("show")}
-function removeAvatar(){pendingAvatar="";avatar(profilePreview,"");avatarFile.value=""}
-avatarFile.addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;if(f.size>8*1024*1024)return msg(profileMsg,"Zdjęcie jest za duże.",1);const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement("canvas"),x=c.getContext("2d"),size=256,m=Math.min(im.width,im.height);c.width=c.height=size;x.drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,size,size);pendingAvatar=c.toDataURL("image/jpeg",.82);avatar(profilePreview,pendingAvatar)};im.src=r.result};r.readAsDataURL(f)});
-function saveProfileData(){
- const name=profileName.value.trim().replace(/\s+/g," ");
- if(name.length<3||name.length>20||!/^[\p{L}\p{N}_ -]+$/u.test(name))return msg(profileMsg,"Niepoprawna nazwa.",1);
- sync();const a=accounts(),old=ensureAccount(),key=norm(name);
- if(key!==old&&a[key])return msg(profileMsg,"Ta nazwa jest już zajęta.",1);
- const obj={...a[old],name,avatar:pendingAvatar,state:copyState(getState())};if(key!==old)delete a[old];a[key]=obj;
- try{saveAccounts(a)}catch{return msg(profileMsg,"Nie udało się zapisać zdjęcia.",1)}
- localStorage.setItem(CURRENT_KEY,key);render();msg(profileMsg,"Profil zapisany.");setTimeout(closeProfile,500)
+function byId(id) {
+    return document.getElementById(id);
 }
 
-function openAdmin(){sync();const a=accounts()[ensureAccount()];targetName.value=a.name;coinsInput.value="";ticketsInput.value="";adminMsg.textContent="";heroChecks.innerHTML="";BOHATEROWIE.forEach(h=>{const l=document.createElement("label");l.className="check";l.innerHTML='<input type="checkbox" value="'+h.id+'"><span>'+h.ikona+" "+h.nazwa+"</span>";heroChecks.appendChild(l)});adminOverlay.classList.add("show")}
-function closeAdmin(){adminOverlay.classList.remove("show")}
-function adminConfirm(){
- const key=norm(targetName.value),c=coinsInput.value===""?0:Number(coinsInput.value),t=ticketsInput.value===""?0:Number(ticketsInput.value),heroes=[...heroChecks.querySelectorAll("input:checked")].map(x=>x.value);
- if(!key)return msg(adminMsg,"Podaj nazwę gracza.",1);
- if(!Number.isInteger(c)||c<0||!Number.isInteger(t)||t<0)return msg(adminMsg,"Monety i bilety muszą być liczbami całkowitymi.",1);
- if(!c&&!t&&!heroes.length)return msg(adminMsg,"Nie wybrano niczego do dodania.",1);
- sync();const a=accounts();if(!a[key])return msg(adminMsg,"Nie znaleziono takiego gracza.",1);
- const s=copyState(a[key].state);s.coins+=c;s.tickets+=t;heroes.forEach(id=>{if(!s.unlocked.includes(id))s.unlocked.push(id)});a[key].state=s;saveAccounts(a);
- if(key===ensureAccount()){saveState(s);render()}
- msg(adminMsg,"Dodano wszystko graczowi „"+a[key].name+"”.");coinsInput.value="";ticketsInput.value="";heroChecks.querySelectorAll("input").forEach(x=>x.checked=false)
+function safeParse(value, fallback) {
+    try {
+        return value
+            ? JSON.parse(value)
+            : fallback;
+    } catch {
+        return fallback;
+    }
 }
-function msg(el,text,error=false){el.textContent=text;el.classList.toggle("error",!!error)}
-[mapOverlay,profileOverlay,adminOverlay].forEach(o=>o.addEventListener("click",e=>{if(e.target===o)o.classList.remove("show")}));
-document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeMap();closeProfile();closeAdmin()}});
-window.addEventListener("beforeunload",sync);
-ensureAccount();loadMap();render();
+
+function normalizeName(name) {
+    return String(name || "")
+        .trim()
+        .replace(/\s+/g, " ")
+        .toLowerCase();
+}
+
+function copyState(state) {
+    return {
+        tickets:
+            Number(state.tickets) || 0,
+
+        coins:
+            Number(state.coins) || 0,
+
+        selected:
+            state.selected || "farmer",
+
+        unlocked:
+            Array.isArray(state.unlocked)
+                ? [...new Set(state.unlocked)]
+                : ["farmer"],
+
+        wins:
+            Number(state.wins) || 0,
+
+        heroTrophies:
+            state.heroTrophies &&
+            typeof state.heroTrophies ===
+                "object"
+                ? {...state.heroTrophies}
+                : {},
+
+        lastReward:
+            state.lastReward || null
+    };
+}
+
+function getAccounts() {
+    const saved = safeParse(
+        localStorage.getItem(
+            ACCOUNTS_KEY
+        ),
+        {}
+    );
+
+    return (
+        saved &&
+        typeof saved === "object"
+    )
+        ? saved
+        : {};
+}
+
+function saveAccounts(accounts) {
+    localStorage.setItem(
+        ACCOUNTS_KEY,
+        JSON.stringify(accounts)
+    );
+}
+
+function ensureCurrentAccount() {
+    const accounts =
+        getAccounts();
+
+    let currentKey =
+        localStorage.getItem(
+            CURRENT_ACCOUNT_KEY
+        );
+
+    if (
+        currentKey &&
+        accounts[currentKey]
+    ) {
+        return currentKey;
+    }
+
+    let name =
+        "MedievalPlayer";
+
+    let number = 2;
+
+    while (
+        accounts[
+            normalizeName(name)
+        ]
+    ) {
+        name =
+            "MedievalPlayer" +
+            number;
+
+        number++;
+    }
+
+    currentKey =
+        normalizeName(name);
+
+    accounts[currentKey] = {
+        name: name,
+        avatar: "",
+        state:
+            copyState(
+                getState()
+            )
+    };
+
+    saveAccounts(accounts);
+
+    localStorage.setItem(
+        CURRENT_ACCOUNT_KEY,
+        currentKey
+    );
+
+    return currentKey;
+}
+
+function syncCurrentStateToAccount() {
+    const key =
+        ensureCurrentAccount();
+
+    const accounts =
+        getAccounts();
+
+    accounts[key].state =
+        copyState(
+            getState()
+        );
+
+    saveAccounts(accounts);
+}
+
+function getTotalTrophies(state) {
+    return Object.values(
+        state.heroTrophies || {}
+    ).reduce(
+        function(total, amount) {
+            return (
+                total +
+                Math.max(
+                    0,
+                    Number(amount) || 0
+                )
+            );
+        },
+        0
+    );
+}
+
+function getTrophyTier(amount) {
+    const trophies =
+        Math.max(
+            0,
+            Number(amount) || 0
+        );
+
+    if (trophies < 50) {
+        return {
+            name: "TIER 1",
+            className: "tier-1"
+        };
+    }
+
+    if (trophies < 100) {
+        return {
+            name: "TIER 5",
+            className: "tier-5"
+        };
+    }
+
+    if (trophies < 150) {
+        return {
+            name: "TIER 10",
+            className: "tier-10"
+        };
+    }
+
+    if (trophies < 200) {
+        return {
+            name: "TIER 15",
+            className: "tier-15"
+        };
+    }
+
+    if (trophies < 250) {
+        return {
+            name: "TIER 20",
+            className: "tier-20"
+        };
+    }
+
+    if (trophies < 300) {
+        return {
+            name: "TIER 25",
+            className: "tier-25"
+        };
+    }
+
+    if (trophies < 350) {
+        return {
+            name: "TIER 30",
+            className: "tier-30"
+        };
+    }
+
+    if (trophies < 400) {
+        return {
+            name: "TIER 35",
+            className: "tier-35"
+        };
+    }
+
+    if (trophies < 450) {
+        return {
+            name: "TIER 40",
+            className: "tier-40"
+        };
+    }
+
+    if (trophies < 500) {
+        return {
+            name: "TIER 45",
+            className: "tier-45"
+        };
+    }
+
+    if (trophies < 1000) {
+        return {
+            name: "TIER 50",
+            className: "tier-50"
+        };
+    }
+
+    return {
+        name: "TIER MAX",
+        className: "tier-max"
+    };
+}
+
+function renderAvatar(
+    element,
+    avatarData
+) {
+    element.innerHTML = "";
+
+    if (avatarData) {
+        const image =
+            document.createElement(
+                "img"
+            );
+
+        image.src =
+            avatarData;
+
+        image.alt =
+            "Zdjęcie profilowe";
+
+        element.appendChild(
+            image
+        );
+    } else {
+        element.textContent =
+            "👑";
+    }
+}
+
+function renderLobby() {
+    const state =
+        getState();
+
+    if (
+        !state.heroTrophies ||
+        typeof state.heroTrophies !==
+            "object"
+    ) {
+        state.heroTrophies = {};
+        saveState(state);
+    }
+
+    const hero =
+        getHero(
+            state.selected
+        );
+
+    const accountKey =
+        ensureCurrentAccount();
+
+    const account =
+        getAccounts()[
+            accountKey
+        ];
+
+    const heroTrophies =
+        Math.max(
+            0,
+            Number(
+                state.heroTrophies[
+                    state.selected
+                ]
+            ) || 0
+        );
+
+    const tier =
+        getTrophyTier(
+            heroTrophies
+        );
+
+    byId("heroIcon")
+        .textContent =
+        hero.ikona;
+
+    byId("heroName")
+        .textContent =
+        hero.nazwa;
+
+    byId("heroPower")
+        .textContent =
+        "Moc: " +
+        hero.moc;
+
+    byId("selectedHeroTrophies")
+        .textContent =
+        heroTrophies;
+
+    byId("heroTierName")
+        .textContent =
+        tier.name;
+
+    byId("heroTrophyBadge")
+        .className =
+        "hero-trophies " +
+        tier.className;
+
+    byId("totalTrophies")
+        .textContent =
+        getTotalTrophies(
+            state
+        );
+
+    byId("topName")
+        .textContent =
+        account.name;
+
+    renderAvatar(
+        byId("topAvatar"),
+        account.avatar
+    );
+
+    updateTopbar();
+    syncCurrentStateToAccount();
+}
+
+function dailyReward() {
+    const state =
+        getState();
+
+    const today =
+        new Date()
+            .toDateString();
+
+    if (
+        state.lastReward ===
+        today
+    ) {
+        alert(
+            "Dzisiejsza nagroda została już odebrana."
+        );
+
+        return;
+    }
+
+    state.lastReward =
+        today;
+
+    state.tickets += 3;
+    state.coins += 50;
+
+    saveState(state);
+
+    syncCurrentStateToAccount();
+    renderLobby();
+
+    alert(
+        "Dostajesz 3 bilety i 50 monet!"
+    );
+}
+
+function openMap() {
+    byId("mapOverlay")
+        .classList.add(
+            "visible"
+        );
+}
+
+function closeMap() {
+    byId("mapOverlay")
+        .classList.remove(
+            "visible"
+        );
+}
+
+function selectMap(mapId) {
+    const selected =
+        MAPS[mapId]
+            ? mapId
+            : "green";
+
+    localStorage.setItem(
+        "selectedMap",
+        selected
+    );
+
+    byId("mapName")
+        .textContent =
+        MAPS[selected];
+
+    closeMap();
+}
+
+function loadMap() {
+    const stored =
+        localStorage.getItem(
+            "selectedMap"
+        );
+
+    const selected =
+        MAPS[stored]
+            ? stored
+            : "green";
+
+    byId("mapName")
+        .textContent =
+        MAPS[selected];
+}
+
+function openProfile() {
+    syncCurrentStateToAccount();
+
+    const key =
+        ensureCurrentAccount();
+
+    const account =
+        getAccounts()[key];
+
+    pendingAvatar =
+        account.avatar || "";
+
+    byId("profileName")
+        .value =
+        account.name;
+
+    byId("avatarFile")
+        .value =
+        "";
+
+    renderAvatar(
+        byId("profilePreview"),
+        pendingAvatar
+    );
+
+    showProfileMessage("");
+
+    byId("profileOverlay")
+        .classList.add(
+            "visible"
+        );
+}
+
+function closeProfile() {
+    byId("profileOverlay")
+        .classList.remove(
+            "visible"
+        );
+}
+
+function removeAvatar() {
+    pendingAvatar = "";
+
+    byId("avatarFile")
+        .value =
+        "";
+
+    renderAvatar(
+        byId("profilePreview"),
+        ""
+    );
+}
+
+function resizeAvatar(file) {
+    return new Promise(
+        function(resolve, reject) {
+            const reader =
+                new FileReader();
+
+            reader.onerror =
+                function() {
+                    reject(
+                        new Error(
+                            "Nie udało się odczytać zdjęcia."
+                        )
+                    );
+                };
+
+            reader.onload =
+                function() {
+                    const image =
+                        new Image();
+
+                    image.onerror =
+                        function() {
+                            reject(
+                                new Error(
+                                    "Niepoprawny plik zdjęcia."
+                                )
+                            );
+                        };
+
+                    image.onload =
+                        function() {
+                            const canvas =
+                                document.createElement(
+                                    "canvas"
+                                );
+
+                            const context =
+                                canvas.getContext(
+                                    "2d"
+                                );
+
+                            const size =
+                                256;
+
+                            canvas.width =
+                                size;
+
+                            canvas.height =
+                                size;
+
+                            const cropSize =
+                                Math.min(
+                                    image.width,
+                                    image.height
+                                );
+
+                            const cropX =
+                                (
+                                    image.width -
+                                    cropSize
+                                ) / 2;
+
+                            const cropY =
+                                (
+                                    image.height -
+                                    cropSize
+                                ) / 2;
+
+                            context.drawImage(
+                                image,
+                                cropX,
+                                cropY,
+                                cropSize,
+                                cropSize,
+                                0,
+                                0,
+                                size,
+                                size
+                            );
+
+                            resolve(
+                                canvas.toDataURL(
+                                    "image/jpeg",
+                                    0.82
+                                )
+                            );
+                        };
+
+                    image.src =
+                        reader.result;
+                };
+
+            reader.readAsDataURL(
+                file
+            );
+        }
+    );
+}
+
+byId("avatarFile")
+    .addEventListener(
+        "change",
+        async function(event) {
+            const file =
+                event.target.files[0];
+
+            if (!file) {
+                return;
+            }
+
+            if (
+                file.size >
+                8 * 1024 * 1024
+            ) {
+                showProfileMessage(
+                    "Zdjęcie jest za duże.",
+                    true
+                );
+
+                return;
+            }
+
+            try {
+                pendingAvatar =
+                    await resizeAvatar(
+                        file
+                    );
+
+                renderAvatar(
+                    byId(
+                        "profilePreview"
+                    ),
+                    pendingAvatar
+                );
+
+                showProfileMessage(
+                    "Zdjęcie jest gotowe do zapisania."
+                );
+            } catch (error) {
+                showProfileMessage(
+                    error.message,
+                    true
+                );
+            }
+        }
+    );
+
+function saveProfileData() {
+    const displayName =
+        byId("profileName")
+            .value
+            .trim()
+            .replace(
+                /\s+/g,
+                " "
+            );
+
+    if (
+        displayName.length < 3 ||
+        displayName.length > 20 ||
+        !/^[\p{L}\p{N}_ -]+$/u
+            .test(displayName)
+    ) {
+        showProfileMessage(
+            "Niepoprawna nazwa.",
+            true
+        );
+
+        return;
+    }
+
+    syncCurrentStateToAccount();
+
+    const accounts =
+        getAccounts();
+
+    const oldKey =
+        ensureCurrentAccount();
+
+    const newKey =
+        normalizeName(
+            displayName
+        );
+
+    if (
+        newKey !== oldKey &&
+        accounts[newKey]
+    ) {
+        showProfileMessage(
+            "Ta nazwa jest już zajęta.",
+            true
+        );
+
+        return;
+    }
+
+    const updatedAccount = {
+        ...accounts[oldKey],
+
+        name:
+            displayName,
+
+        avatar:
+            pendingAvatar,
+
+        state:
+            copyState(
+                getState()
+            )
+    };
+
+    if (
+        newKey !== oldKey
+    ) {
+        delete accounts[oldKey];
+    }
+
+    accounts[newKey] =
+        updatedAccount;
+
+    try {
+        saveAccounts(
+            accounts
+        );
+    } catch {
+        showProfileMessage(
+            "Nie udało się zapisać profilu.",
+            true
+        );
+
+        return;
+    }
+
+    localStorage.setItem(
+        CURRENT_ACCOUNT_KEY,
+        newKey
+    );
+
+    renderLobby();
+
+    showProfileMessage(
+        "Profil został zapisany."
+    );
+
+    setTimeout(
+        closeProfile,
+        500
+    );
+}
+
+function showProfileMessage(
+    text,
+    error = false
+) {
+    const element =
+        byId(
+            "profileMessage"
+        );
+
+    element.textContent =
+        text;
+
+    element.classList.toggle(
+        "error",
+        error
+    );
+}
+
+function openAdmin() {
+    syncCurrentStateToAccount();
+
+    const account =
+        getAccounts()[
+            ensureCurrentAccount()
+        ];
+
+    byId("adminTargetName")
+        .value =
+        account.name;
+
+    byId("adminCoins")
+        .value =
+        "";
+
+    byId("adminTickets")
+        .value =
+        "";
+
+    byId("adminTrophyAmount")
+        .value =
+        "";
+
+    byId("adminTrophyMode")
+        .value =
+        "none";
+
+    loadAdminHeroes();
+
+    showAdminMessage("");
+
+    byId("adminOverlay")
+        .classList.add(
+            "visible"
+        );
+}
+
+function closeAdmin() {
+    byId("adminOverlay")
+        .classList.remove(
+            "visible"
+        );
+}
+
+function loadAdminHeroes() {
+    const checksContainer =
+        byId(
+            "adminHeroChecks"
+        );
+
+    const trophySelect =
+        byId(
+            "adminTrophyHero"
+        );
+
+    checksContainer.innerHTML =
+        "";
+
+    trophySelect.innerHTML =
+        "";
+
+    BOHATEROWIE.forEach(
+        function(hero) {
+            const label =
+                document.createElement(
+                    "label"
+                );
+
+            label.className =
+                "hero-check";
+
+            const checkbox =
+                document.createElement(
+                    "input"
+                );
+
+            checkbox.type =
+                "checkbox";
+
+            checkbox.value =
+                hero.id;
+
+            const text =
+                document.createElement(
+                    "span"
+                );
+
+            text.textContent =
+                hero.ikona +
+                " " +
+                hero.nazwa;
+
+            label.appendChild(
+                checkbox
+            );
+
+            label.appendChild(
+                text
+            );
+
+            checksContainer.appendChild(
+                label
+            );
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+            option.value =
+                hero.id;
+
+            option.textContent =
+                hero.ikona +
+                " " +
+                hero.nazwa;
+
+            trophySelect.appendChild(
+                option
+            );
+        }
+    );
+}
+
+function readNonNegativeInteger(
+    inputId
+) {
+    const raw =
+        byId(inputId)
+            .value
+            .trim();
+
+    if (raw === "") {
+        return 0;
+    }
+
+    const value =
+        Number(raw);
+
+    if (
+        !Number.isInteger(value) ||
+        value < 0
+    ) {
+        return null;
+    }
+
+    return value;
+}
+
+function adminConfirm() {
+    const targetKey =
+        normalizeName(
+            byId(
+                "adminTargetName"
+            ).value
+        );
+
+    const coins =
+        readNonNegativeInteger(
+            "adminCoins"
+        );
+
+    const tickets =
+        readNonNegativeInteger(
+            "adminTickets"
+        );
+
+    const heroIds =
+        Array.from(
+            byId(
+                "adminHeroChecks"
+            )
+            .querySelectorAll(
+                "input:checked"
+            )
+        ).map(
+            function(input) {
+                return input.value;
+            }
+        );
+
+    const trophyMode =
+        byId(
+            "adminTrophyMode"
+        ).value;
+
+    const trophyHeroId =
+        byId(
+            "adminTrophyHero"
+        ).value;
+
+    const trophyRaw =
+        byId(
+            "adminTrophyAmount"
+        ).value.trim();
+
+    if (!targetKey) {
+        showAdminMessage(
+            "Podaj nazwę odbiorcy.",
+            true
+        );
+
+        return;
+    }
+
+    if (
+        coins === null ||
+        tickets === null
+    ) {
+        showAdminMessage(
+            "Monety i bilety muszą być liczbami całkowitymi równymi 0 lub większymi.",
+            true
+        );
+
+        return;
+    }
+
+    let trophyAmount = 0;
+
+    if (
+        trophyMode !== "none"
+    ) {
+        trophyAmount =
+            Number(trophyRaw);
+
+        if (
+            trophyRaw === "" ||
+            !Number.isInteger(
+                trophyAmount
+            )
+        ) {
+            showAdminMessage(
+                "Wpisz poprawną całkowitą liczbę pucharków.",
+                true
+            );
+
+            return;
+        }
+    }
+
+    if (
+        coins === 0 &&
+        tickets === 0 &&
+        heroIds.length === 0 &&
+        trophyMode === "none"
+    ) {
+        showAdminMessage(
+            "Nie wybrano niczego do dodania.",
+            true
+        );
+
+        return;
+    }
+
+    syncCurrentStateToAccount();
+
+    const accounts =
+        getAccounts();
+
+    if (!accounts[targetKey]) {
+        showAdminMessage(
+            "Nie znaleziono takiego gracza.",
+            true
+        );
+
+        return;
+    }
+
+    const targetState =
+        copyState(
+            accounts[
+                targetKey
+            ].state || {}
+        );
+
+    targetState.coins +=
+        coins;
+
+    targetState.tickets +=
+        tickets;
+
+    heroIds.forEach(
+        function(heroId) {
+            if (
+                !targetState
+                    .unlocked
+                    .includes(heroId)
+            ) {
+                targetState
+                    .unlocked
+                    .push(heroId);
+            }
+        }
+    );
+
+    if (
+        !targetState.heroTrophies ||
+        typeof targetState
+            .heroTrophies !==
+            "object"
+    ) {
+        targetState.heroTrophies =
+            {};
+    }
+
+    if (
+        trophyMode !== "none"
+    ) {
+        const currentTrophies =
+            Math.max(
+                0,
+                Number(
+                    targetState
+                        .heroTrophies[
+                        trophyHeroId
+                    ]
+                ) || 0
+            );
+
+        if (
+            trophyMode === "add"
+        ) {
+            targetState
+                .heroTrophies[
+                trophyHeroId
+            ] =
+                Math.max(
+                    0,
+                    currentTrophies +
+                    trophyAmount
+                );
+        }
+
+        if (
+            trophyMode === "set"
+        ) {
+            targetState
+                .heroTrophies[
+                trophyHeroId
+            ] =
+                Math.max(
+                    0,
+                    trophyAmount
+                );
+        }
+    }
+
+    accounts[targetKey].state =
+        targetState;
+
+    saveAccounts(accounts);
+
+    const currentKey =
+        ensureCurrentAccount();
+
+    if (
+        targetKey === currentKey
+    ) {
+        saveState(
+            targetState
+        );
+
+        renderLobby();
+    }
+
+    showAdminMessage(
+        "Zmiany zostały zapisane dla gracza „" +
+        accounts[targetKey].name +
+        "”."
+    );
+
+    byId("adminCoins")
+        .value =
+        "";
+
+    byId("adminTickets")
+        .value =
+        "";
+
+    byId("adminTrophyAmount")
+        .value =
+        "";
+
+    byId("adminTrophyMode")
+        .value =
+        "none";
+
+    byId("adminHeroChecks")
+        .querySelectorAll(
+            "input"
+        )
+        .forEach(
+            function(input) {
+                input.checked =
+                    false;
+            }
+        );
+}
+
+function showAdminMessage(
+    text,
+    error = false
+) {
+    const element =
+        byId(
+            "adminMessage"
+        );
+
+    element.textContent =
+        text;
+
+    element.classList.toggle(
+        "error",
+        error
+    );
+}
+
+[
+    "mapOverlay",
+    "profileOverlay",
+    "adminOverlay"
+].forEach(
+    function(id) {
+        byId(id)
+            .addEventListener(
+                "click",
+                function(event) {
+                    if (
+                        event.target !==
+                        this
+                    ) {
+                        return;
+                    }
+
+                    this.classList.remove(
+                        "visible"
+                    );
+                }
+            );
+    }
+);
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+        if (
+            event.key ===
+            "Escape"
+        ) {
+            closeMap();
+            closeProfile();
+            closeAdmin();
+        }
+    }
+);
+
+window.addEventListener(
+    "beforeunload",
+    syncCurrentStateToAccount
+);
+
+ensureCurrentAccount();
+loadMap();
+renderLobby();
 </script>
+
 </body>
 </html>
