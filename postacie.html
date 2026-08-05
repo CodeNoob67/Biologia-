@@ -18,7 +18,6 @@
         body {
             margin: 0;
             min-height: 100vh;
-
             padding-bottom: 95px;
 
             color: white;
@@ -27,9 +26,9 @@
             background:
                 radial-gradient(
                     circle at top,
-                    #087ae0,
-                    #0755bd 55%,
-                    #063a91
+                    #158bea,
+                    #0757bc 55%,
+                    #05387e
                 );
         }
 
@@ -42,7 +41,7 @@
             inset: 0;
             z-index: -1;
 
-            opacity: 0.07;
+            opacity: 0.08;
 
             background-image:
                 radial-gradient(
@@ -74,8 +73,7 @@
                     #101827
                 );
 
-            border-bottom:
-                5px solid #070c14;
+            border-bottom: 5px solid #070c14;
 
             box-shadow:
                 0 5px 0 #00000066;
@@ -99,9 +97,7 @@
                     #34445c
                 );
 
-            border:
-                4px solid #080d16;
-
+            border: 4px solid #080d16;
             border-radius: 10px;
 
             box-shadow:
@@ -133,7 +129,6 @@
 
         .pill {
             min-width: 85px;
-
             padding: 9px 12px;
 
             text-align: center;
@@ -142,24 +137,21 @@
 
             background: #263248;
 
-            border:
-                3px solid #080d16;
-
+            border: 3px solid #080d16;
             border-radius: 9px;
         }
 
         .screen {
-            width: min(1200px, 96%);
+            width: min(1250px, 96%);
 
             margin: 0 auto;
             padding: 25px 0;
         }
 
         .section-heading {
-            margin:
-                0 0 8px;
+            margin: 0 0 7px;
 
-            font-size: 25px;
+            font-size: 26px;
             font-weight: 1000;
 
             text-shadow:
@@ -188,17 +180,15 @@
         .character-card {
             position: relative;
 
-            min-height: 355px;
+            min-height: 370px;
 
             display: flex;
             flex-direction: column;
 
             overflow: hidden;
 
-            border:
-                5px solid #111827;
-
-            border-radius: 5px;
+            border: 5px solid #111827;
+            border-radius: 6px;
 
             box-shadow:
                 8px 9px 0 #00000055;
@@ -214,16 +204,14 @@
         }
 
         .character-card.selected {
-            outline:
-                5px solid #fff36d;
-
+            outline: 5px solid #fff36d;
             outline-offset: 3px;
         }
 
         .character-card.locked {
             filter:
-                grayscale(0.72)
-                brightness(0.65);
+                grayscale(0.75)
+                brightness(0.62);
         }
 
         .rarity-startowy {
@@ -244,21 +232,12 @@
                 );
         }
 
-        .rarity-bardzo-rzadki {
-            background:
-                linear-gradient(
-                    135deg,
-                    #2686ef,
-                    #103c9c
-                );
-        }
-
         .rarity-epicki {
             background:
                 linear-gradient(
                     135deg,
-                    #b94cf5,
-                    #622099
+                    #bd4eff,
+                    #64219c
                 );
         }
 
@@ -283,7 +262,7 @@
         .card-top {
             position: relative;
 
-            min-height: 225px;
+            min-height: 235px;
 
             display: flex;
             align-items: center;
@@ -299,7 +278,7 @@
             position: absolute;
             inset: 0;
 
-            opacity: 0.1;
+            opacity: 0.11;
 
             background-image:
                 repeating-linear-gradient(
@@ -317,8 +296,8 @@
             left: 8px;
             z-index: 6;
 
-            width: 54px;
-            height: 55px;
+            width: 58px;
+            height: 58px;
 
             display: flex;
             flex-direction: column;
@@ -333,8 +312,7 @@
                     #0d75c6
                 );
 
-            border:
-                4px solid #111827;
+            border: 4px solid #111827;
 
             clip-path:
                 polygon(
@@ -361,94 +339,30 @@
             line-height: 19px;
         }
 
-        .new-badge {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            z-index: 6;
-
-            padding: 5px 8px;
-
-            color: white;
-            font-size: 13px;
-            font-weight: 1000;
-
-            background: #ee2525;
-
-            border:
-                3px solid #111827;
-
-            transform:
-                rotate(2deg);
-
-            text-shadow:
-                2px 2px black;
-        }
-
-        .locked-badge {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            z-index: 6;
-
-            padding: 5px 8px;
-
-            font-size: 12px;
-            font-weight: 1000;
-
-            background: #252d3b;
-
-            border:
-                3px solid #111827;
-        }
-
-        .character-icon {
-            position: relative;
-            z-index: 3;
-
-            margin-top: 20px;
-
-            font-size: 120px;
-
-            filter:
-                drop-shadow(
-                    0 10px 3px #00000066
-                );
-
-            transition:
-                transform 0.2s ease;
-        }
-
-        .character-card:hover
-        .character-icon {
-            transform:
-                scale(1.06)
-                rotate(-2deg);
-        }
-
         .trophy-bar {
             position: absolute;
-            top: 8px;
-            left: 67px;
-            right: 8px;
+            top: 9px;
+            left: 68px;
+            right: 9px;
             z-index: 5;
 
             height: 35px;
 
             overflow: hidden;
 
-            background: #55122f;
+            background:
+                linear-gradient(
+                    #65173a,
+                    #421024
+                );
 
-            border:
-                4px solid #111827;
-
-            border-radius: 3px;
+            border: 4px solid #111827;
+            border-radius: 4px;
         }
 
         .trophy-fill {
             position: absolute;
-            inset:
-                0 auto 0 0;
+            inset: 0 auto 0 0;
 
             width: 0%;
 
@@ -473,7 +387,8 @@
             background: white;
 
             box-shadow:
-                0 0 8px white;
+                0 0 5px white,
+                0 0 10px white;
         }
 
         .trophy-fill.empty::after {
@@ -497,9 +412,58 @@
                 2px 2px black;
         }
 
+        .locked-badge,
+        .new-badge {
+            position: absolute;
+            top: 50px;
+            right: 8px;
+            z-index: 6;
+
+            padding: 5px 8px;
+
+            font-size: 12px;
+            font-weight: 1000;
+
+            border: 3px solid #111827;
+
+            text-shadow:
+                2px 2px black;
+        }
+
+        .locked-badge {
+            background: #252d3b;
+        }
+
+        .new-badge {
+            background: #ee2525;
+        }
+
+        .character-icon {
+            position: relative;
+            z-index: 3;
+
+            margin-top: 30px;
+
+            font-size: 125px;
+
+            filter:
+                drop-shadow(
+                    0 10px 3px #00000066
+                );
+
+            transition:
+                transform 0.2s ease;
+        }
+
+        .character-card:hover
+        .character-icon {
+            transform:
+                scale(1.06)
+                rotate(-2deg);
+        }
+
         .card-bottom {
             position: relative;
-
             flex: 1;
 
             padding:
@@ -535,10 +499,12 @@
         .rarity-name {
             font-size: 10px;
             font-weight: 1000;
+            text-align: right;
             text-transform: uppercase;
         }
 
         .hero-power {
+            min-height: 31px;
             margin-top: 6px;
 
             color: #ffe560;
@@ -548,6 +514,7 @@
 
         .small-stats {
             display: grid;
+
             grid-template-columns:
                 repeat(3, 1fr);
 
@@ -565,9 +532,7 @@
 
             background: #080d17aa;
 
-            border:
-                2px solid #080d16;
-
+            border: 2px solid #080d16;
             border-radius: 5px;
         }
 
@@ -587,9 +552,7 @@
                     #087cbc
                 );
 
-            border:
-                4px solid #080d16;
-
+            border: 4px solid #080d16;
             border-radius: 5px;
 
             box-shadow:
@@ -610,10 +573,7 @@
 
         .select-button:disabled {
             color: #aab0ba;
-
-            background:
-                #3e4653;
-
+            background: #3e4653;
             cursor: not-allowed;
         }
 
@@ -659,9 +619,7 @@
                     #202d42
                 );
 
-            border:
-                3px solid #080d16;
-
+            border: 3px solid #080d16;
             border-radius: 8px;
         }
 
@@ -701,11 +659,11 @@
             }
 
             .character-card {
-                min-height: 300px;
+                min-height: 315px;
             }
 
             .card-top {
-                min-height: 180px;
+                min-height: 185px;
             }
 
             .character-icon {
@@ -767,7 +725,7 @@
 
     <div class="section-subtitle">
         Wybierz odblokowaną postać.
-        Każda postać ma osobne pucharki i tier.
+        Każda postać ma własne pucharki i tier.
     </div>
 
     <div
@@ -827,8 +785,8 @@ const HERO_RARITIES = {
     },
 
     goblin: {
-        name: "Bardzo rzadki",
-        className: "rarity-bardzo-rzadki"
+        name: "Epicki",
+        className: "rarity-epicki"
     },
 
     golem: {
@@ -844,17 +802,21 @@ const HERO_RARITIES = {
     krol: {
         name: "Legendarny",
         className: "rarity-legendarny"
+    },
+
+    wiedzma: {
+        name: "Legendarna",
+        className: "rarity-legendarny"
     }
 };
 
 function getHeroTier(trophies) {
-    const amount =
-        Math.max(
-            0,
-            Math.floor(
-                Number(trophies) || 0
-            )
-        );
+    const amount = Math.max(
+        0,
+        Math.floor(
+            Number(trophies) || 0
+        )
+    );
 
     if (amount < 20) {
         return 1;
@@ -866,13 +828,12 @@ function getHeroTier(trophies) {
 }
 
 function getTierProgress(trophies) {
-    const amount =
-        Math.max(
-            0,
-            Math.floor(
-                Number(trophies) || 0
-            )
-        );
+    const amount = Math.max(
+        0,
+        Math.floor(
+            Number(trophies) || 0
+        )
+    );
 
     if (amount < 20) {
         return {
@@ -899,11 +860,59 @@ function renderCharacters() {
         getState();
 
     if (
+        !Array.isArray(
+            state.unlocked
+        )
+    ) {
+        state.unlocked =
+            ["farmer"];
+    }
+
+    if (
         !state.heroTrophies ||
         typeof state.heroTrophies !==
             "object"
     ) {
-        state.heroTrophies = {};
+        state.heroTrophies =
+            {};
+    }
+
+    if (
+        !BOHATEROWIE.some(
+            function(hero) {
+                return (
+                    hero.id ===
+                    state.selected
+                );
+            }
+        )
+    ) {
+        state.selected =
+            "farmer";
+    }
+
+    state.unlocked =
+        state.unlocked.filter(
+            function(heroId) {
+                return BOHATEROWIE.some(
+                    function(hero) {
+                        return (
+                            hero.id ===
+                            heroId
+                        );
+                    }
+                );
+            }
+        );
+
+    if (
+        !state.unlocked.includes(
+            "farmer"
+        )
+    ) {
+        state.unlocked.unshift(
+            "farmer"
+        );
     }
 
     const container =
@@ -911,7 +920,8 @@ function renderCharacters() {
             "characters"
         );
 
-    container.innerHTML = "";
+    container.innerHTML =
+        "";
 
     const unlockedCount =
         BOHATEROWIE.filter(
@@ -994,7 +1004,8 @@ function renderCharacters() {
             const isNew =
                 unlocked &&
                 hero.id !== "farmer" &&
-                trophies === 0;
+                trophies === 0 &&
+                !selected;
 
             card.innerHTML = `
                 <div class="card-top">
@@ -1002,6 +1013,7 @@ function renderCharacters() {
                     <div class="card-pattern"></div>
 
                     <div class="tier-badge">
+
                         <span class="tier-word">
                             TIER
                         </span>
@@ -1009,19 +1021,23 @@ function renderCharacters() {
                         <span class="tier-number">
                             ${tier}
                         </span>
+
                     </div>
 
                     <div class="trophy-bar">
 
                         <div
-                            class="trophy-fill ${
-                                progress.current === 0
-                                    ? "empty"
-                                    : ""
-                            }"
+                            class="
+                                trophy-fill
+                                ${
+                                    progress.current === 0
+                                        ? "empty"
+                                        : ""
+                                }
+                            "
                             style="
                                 width:
-                                ${progress.percent}%
+                                ${progress.percent}%;
                             "
                         ></div>
 
@@ -1074,17 +1090,17 @@ function renderCharacters() {
                     <div class="small-stats">
 
                         <div class="small-stat">
-                            ❤️<br>
+                            ❤️ ŻYCIE<br>
                             ${hero.hp}
                         </div>
 
                         <div class="small-stat">
-                            ⚔️<br>
+                            ⚔️ ATAK<br>
                             ${hero.damage}
                         </div>
 
                         <div class="small-stat">
-                            👟<br>
+                            👟 RUCH<br>
                             ${hero.speed}
                         </div>
 
@@ -1118,7 +1134,8 @@ function renderCharacters() {
                 );
 
             if (!unlocked) {
-                button.disabled = true;
+                button.disabled =
+                    true;
             } else {
                 button.addEventListener(
                     "click",
