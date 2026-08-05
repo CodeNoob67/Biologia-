@@ -27,7 +27,8 @@
         }
 
         button,
-        a {
+        input,
+        select {
             font-family: inherit;
         }
 
@@ -144,19 +145,43 @@
             font-weight: 900;
         }
 
-        .menu-button {
-            width: 50px;
-            height: 50px;
+        .panel-button {
+            width: 52px;
+            height: 52px;
 
-            color: white;
-            font-size: 26px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
 
-            background: #46566e;
+            background:
+                linear-gradient(
+                    #60718e,
+                    #34445e
+                );
 
             border: 3px solid #111827;
             border-radius: 9px;
 
             cursor: pointer;
+
+            box-shadow: 0 4px 0 #00000066;
+        }
+
+        .panel-button span {
+            display: block;
+
+            width: 27px;
+            height: 4px;
+
+            background: white;
+            border-radius: 5px;
+        }
+
+        .panel-button:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #00000066;
         }
 
         .rank-box {
@@ -482,7 +507,8 @@
             box-shadow: 0 3px 0 #00000066;
         }
 
-        .map-menu {
+        .map-menu,
+        .admin-menu {
             position: fixed;
             inset: 0;
             z-index: 100;
@@ -491,14 +517,18 @@
             align-items: center;
             justify-content: center;
 
+            padding: 20px;
+
             background: #000000bb;
         }
 
-        .map-menu.visible {
+        .map-menu.visible,
+        .admin-menu.visible {
             display: flex;
         }
 
-        .map-window {
+        .map-window,
+        .admin-window {
             position: relative;
 
             width: min(850px, 92%);
@@ -518,12 +548,21 @@
             box-shadow: 0 12px 0 #00000066;
         }
 
-        .map-window h2 {
-            margin-top: 0;
-            font-size: 32px;
+        .admin-window {
+            width: min(650px, 95%);
         }
 
-        .close-map-menu {
+        .map-window h2,
+        .admin-window h2 {
+            margin-top: 0;
+
+            color: #ffd83d;
+
+            font-size: 32px;
+            text-shadow: 3px 3px #111827;
+        }
+
+        .close-window {
             position: absolute;
             top: 10px;
             right: 12px;
@@ -631,6 +670,108 @@
                 );
         }
 
+        .admin-section {
+            margin: 17px 0;
+            padding: 16px;
+
+            text-align: left;
+
+            background: #202c42;
+
+            border: 3px solid #101827;
+            border-radius: 14px;
+        }
+
+        .admin-section-title {
+            margin-bottom: 10px;
+
+            color: white;
+
+            font-size: 19px;
+            font-weight: 900;
+        }
+
+        .admin-row {
+            display: grid;
+            grid-template-columns: 1fr 130px;
+            gap: 10px;
+        }
+
+        .admin-input,
+        .admin-select {
+            width: 100%;
+            min-width: 0;
+            padding: 12px;
+
+            color: #111827;
+            font-size: 17px;
+            font-weight: 800;
+
+            background: white;
+
+            border: 3px solid #111827;
+            border-radius: 10px;
+
+            outline: none;
+        }
+
+        .admin-input:focus,
+        .admin-select:focus {
+            border-color: #31aaff;
+        }
+
+        .admin-send {
+            padding: 11px;
+
+            color: #111827;
+            font-size: 16px;
+            font-weight: 1000;
+
+            background:
+                linear-gradient(
+                    #ffd93d,
+                    #eca500
+                );
+
+            border: 3px solid #111827;
+            border-radius: 10px;
+
+            box-shadow: 0 4px 0 #00000066;
+
+            cursor: pointer;
+        }
+
+        .admin-send:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #00000066;
+        }
+
+        .admin-message {
+            min-height: 27px;
+            margin-top: 15px;
+            padding: 7px;
+
+            color: #7dff95;
+
+            font-size: 16px;
+            font-weight: 900;
+        }
+
+        .admin-message.error {
+            color: #ff7474;
+        }
+
+        .admin-current {
+            margin-top: 12px;
+            padding: 10px;
+
+            background: #111827;
+
+            border-radius: 10px;
+
+            font-weight: 900;
+        }
+
         @media (max-width: 900px) {
             .side-button {
                 width: 66px;
@@ -679,6 +820,15 @@
                 min-width: 55px;
                 padding: 7px;
             }
+
+            .admin-row {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-window {
+                max-height: 92vh;
+                overflow-y: auto;
+            }
         }
     </style>
 </head>
@@ -721,8 +871,14 @@
                 🎟️ <span data-tickets>0</span>
             </div>
 
-            <button class="menu-button">
-                ☰
+            <button
+                class="panel-button"
+                onclick="openAdminPanel()"
+                title="Panel administratora"
+            >
+                <span></span>
+                <span></span>
+                <span></span>
             </button>
 
         </div>
@@ -922,7 +1078,7 @@
     <div class="map-window">
 
         <button
-            class="close-map-menu"
+            class="close-window"
             onclick="closeMapMenu()"
         >
             ✖
@@ -992,6 +1148,121 @@
             </button>
 
         </div>
+
+    </div>
+
+</div>
+
+<div id="adminMenu" class="admin-menu">
+
+    <div class="admin-window">
+
+        <button
+            class="close-window"
+            onclick="closeAdminPanel()"
+        >
+            ✖
+        </button>
+
+        <h2>
+            PANEL ADMINISTRATORA
+        </h2>
+
+        <div class="admin-current">
+            🎟️ Bilety:
+            <span id="adminTickets">0</span>
+
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+
+            🪙 Monety:
+            <span id="adminCoins">0</span>
+        </div>
+
+        <div class="admin-section">
+
+            <div class="admin-section-title">
+                🎟️ Dodaj bilety
+            </div>
+
+            <div class="admin-row">
+
+                <input
+                    id="ticketAmount"
+                    class="admin-input"
+                    type="number"
+                    min="1"
+                    step="1"
+                    placeholder="Wpisz liczbę, np. 100"
+                >
+
+                <button
+                    class="admin-send"
+                    onclick="addTickets()"
+                >
+                    WYŚLIJ
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="admin-section">
+
+            <div class="admin-section-title">
+                🪙 Dodaj monety
+            </div>
+
+            <div class="admin-row">
+
+                <input
+                    id="coinAmount"
+                    class="admin-input"
+                    type="number"
+                    min="1"
+                    step="1"
+                    placeholder="Wpisz liczbę, np. 1000"
+                >
+
+                <button
+                    class="admin-send"
+                    onclick="addCoins()"
+                >
+                    WYŚLIJ
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="admin-section">
+
+            <div class="admin-section-title">
+                🧙 Dodaj postać
+            </div>
+
+            <div class="admin-row">
+
+                <select
+                    id="characterSelect"
+                    class="admin-select"
+                >
+                </select>
+
+                <button
+                    class="admin-send"
+                    onclick="addCharacter()"
+                >
+                    WYŚLIJ
+                </button>
+
+            </div>
+
+        </div>
+
+        <div
+            id="adminMessage"
+            class="admin-message"
+        ></div>
 
     </div>
 
@@ -1091,6 +1362,294 @@ function loadSelectedMap() {
         .textContent =
         MAPS[selectedMap].name;
 }
+
+function openAdminPanel() {
+    document
+        .getElementById("adminMenu")
+        .classList.add("visible");
+
+    loadCharacterOptions();
+    updateAdminValues();
+    clearAdminMessage();
+}
+
+function closeAdminPanel() {
+    document
+        .getElementById("adminMenu")
+        .classList.remove("visible");
+}
+
+function updateAdminValues() {
+    const state = getState();
+
+    document
+        .getElementById("adminTickets")
+        .textContent =
+        state.tickets;
+
+    document
+        .getElementById("adminCoins")
+        .textContent =
+        state.coins;
+
+    updateTopbar();
+}
+
+function loadCharacterOptions() {
+    const state = getState();
+
+    const select =
+        document.getElementById(
+            "characterSelect"
+        );
+
+    select.innerHTML = "";
+
+    BOHATEROWIE.forEach(
+        function(hero) {
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+            option.value =
+                hero.id;
+
+            const unlocked =
+                state.unlocked.includes(
+                    hero.id
+                );
+
+            option.textContent =
+                hero.ikona +
+                " " +
+                hero.nazwa +
+                (
+                    unlocked
+                        ? " — odblokowano"
+                        : ""
+                );
+
+            select.appendChild(option);
+        }
+    );
+}
+
+function getPositiveInteger(inputId) {
+    const input =
+        document.getElementById(
+            inputId
+        );
+
+    const value =
+        Number(input.value);
+
+    if (
+        !Number.isFinite(value) ||
+        value <= 0 ||
+        !Number.isInteger(value)
+    ) {
+        showAdminMessage(
+            "Wpisz poprawną liczbę całkowitą większą od 0.",
+            true
+        );
+
+        return null;
+    }
+
+    return value;
+}
+
+function addTickets() {
+    const amount =
+        getPositiveInteger(
+            "ticketAmount"
+        );
+
+    if (amount === null) {
+        return;
+    }
+
+    const state = getState();
+
+    state.tickets += amount;
+
+    saveState(state);
+
+    document
+        .getElementById("ticketAmount")
+        .value = "";
+
+    updateAdminValues();
+
+    showAdminMessage(
+        "Dodano " +
+        amount +
+        " biletów."
+    );
+}
+
+function addCoins() {
+    const amount =
+        getPositiveInteger(
+            "coinAmount"
+        );
+
+    if (amount === null) {
+        return;
+    }
+
+    const state = getState();
+
+    state.coins += amount;
+
+    saveState(state);
+
+    document
+        .getElementById("coinAmount")
+        .value = "";
+
+    updateAdminValues();
+
+    showAdminMessage(
+        "Dodano " +
+        amount +
+        " monet."
+    );
+}
+
+function addCharacter() {
+    const select =
+        document.getElementById(
+            "characterSelect"
+        );
+
+    const heroId =
+        select.value;
+
+    const hero =
+        getHero(heroId);
+
+    const state =
+        getState();
+
+    if (
+        state.unlocked.includes(
+            heroId
+        )
+    ) {
+        showAdminMessage(
+            hero.nazwa +
+            " jest już odblokowany.",
+            true
+        );
+
+        return;
+    }
+
+    state.unlocked.push(
+        heroId
+    );
+
+    saveState(state);
+
+    loadCharacterOptions();
+
+    showAdminMessage(
+        "Odblokowano postać: " +
+        hero.ikona +
+        " " +
+        hero.nazwa +
+        "."
+    );
+}
+
+function showAdminMessage(
+    message,
+    error = false
+) {
+    const messageElement =
+        document.getElementById(
+            "adminMessage"
+        );
+
+    messageElement.textContent =
+        message;
+
+    messageElement.classList.toggle(
+        "error",
+        error
+    );
+}
+
+function clearAdminMessage() {
+    const messageElement =
+        document.getElementById(
+            "adminMessage"
+        );
+
+    messageElement.textContent = "";
+
+    messageElement.classList.remove(
+        "error"
+    );
+}
+
+document
+    .getElementById("adminMenu")
+    .addEventListener(
+        "click",
+        function(event) {
+            if (
+                event.target ===
+                this
+            ) {
+                closeAdminPanel();
+            }
+        }
+    );
+
+document
+    .getElementById("mapMenu")
+    .addEventListener(
+        "click",
+        function(event) {
+            if (
+                event.target ===
+                this
+            ) {
+                closeMapMenu();
+            }
+        }
+    );
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+        if (
+            event.key === "Escape"
+        ) {
+            closeAdminPanel();
+            closeMapMenu();
+        }
+
+        if (
+            event.key === "Enter" &&
+            document.activeElement.id ===
+                "ticketAmount"
+        ) {
+            addTickets();
+        }
+
+        if (
+            event.key === "Enter" &&
+            document.activeElement.id ===
+                "coinAmount"
+        ) {
+            addCoins();
+        }
+    }
+);
 
 loadSelectedMap();
 renderLobby();
