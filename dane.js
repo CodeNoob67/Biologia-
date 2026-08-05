@@ -3,13 +3,14 @@ const BOHATEROWIE = [
         id: "farmer",
         nazwa: "Farmer",
         ikona: "🧑‍🌾",
-        moc: "Rzut widłami",
-        opis: "Farmer rzuca widłami i zadaje obrażenia z dystansu.",
-        hp: 120,
+        moc: "Wzmocnione widły",
+        opis:
+            "Walczący na krótkim dystansie farmer. Co trzeci atak zadaje 50% więcej obrażeń.",
+        hp: 115,
         damage: 18,
-        speed: 3.5,
-        range: 220,
-        cooldown: 550,
+        speed: 3.4,
+        range: 330,
+        cooldown: 650,
         ticketCost: 0
     },
 
@@ -17,13 +18,14 @@ const BOHATEROWIE = [
         id: "rycerz",
         nazwa: "Rycerz",
         ikona: "🛡️",
-        moc: "Szarża tarczą",
-        opis: "Rycerz atakuje mieczem i odpycha przeciwników.",
-        hp: 175,
-        damage: 28,
-        speed: 3,
-        range: 65,
-        cooldown: 500,
+        moc: "Ostatnia tarcza",
+        opis:
+            "Silny wojownik walczący wręcz. Przy małej ilości życia otrzymuje tarczę pochłaniającą 30% obrażeń.",
+        hp: 205,
+        damage: 31,
+        speed: 2.8,
+        range: 88,
+        cooldown: 650,
         ticketCost: 8
     },
 
@@ -31,13 +33,14 @@ const BOHATEROWIE = [
         id: "lucznik",
         nazwa: "Łucznik",
         ikona: "🏹",
-        moc: "Potrójna strzała",
-        opis: "Łucznik strzela szybko z dużego dystansu.",
-        hp: 100,
-        damage: 20,
-        speed: 3.8,
-        range: 260,
-        cooldown: 450,
+        moc: "Błyskawiczna strzała",
+        opis:
+            "Atakuje z bardzo dużego dystansu. Co trzecia strzała leci znacznie szybciej.",
+        hp: 145,
+        damage: 30,
+        speed: 3.4,
+        range: 720,
+        cooldown: 750,
         ticketCost: 12
     },
 
@@ -45,55 +48,74 @@ const BOHATEROWIE = [
         id: "goblin",
         nazwa: "Goblin",
         ikona: "👺",
-        moc: "Trujący sztylet",
-        opis: "Goblin jest bardzo szybki i zatruwa przeciwników.",
-        hp: 90,
-        damage: 24,
-        speed: 4.5,
-        range: 70,
-        cooldown: 400,
-        ticketCost: 16
+        moc: "Desperacki atak",
+        opis:
+            "Bardzo szybki wojownik walczący wręcz. Poniżej połowy życia zadaje 25% więcej obrażeń.",
+        hp: 105,
+        damage: 28,
+        speed: 4.4,
+        range: 76,
+        cooldown: 480,
+        ticketCost: 18
     },
 
     {
         id: "golem",
         nazwa: "Golem",
         ikona: "🗿",
-        moc: "Kamienne uderzenie",
-        opis: "Golem ma bardzo dużo życia, ale jest wolny.",
-        hp: 260,
-        damage: 42,
-        speed: 2.2,
-        range: 75,
-        cooldown: 900,
-        ticketCost: 24
+        moc: "Kamienna fala",
+        opis:
+            "Powolny i bardzo wytrzymały. Co piąty atak wysyła falę uderzeniową.",
+        hp: 330,
+        damage: 38,
+        speed: 2.1,
+        range: 350,
+        cooldown: 950,
+        ticketCost: 26
     },
 
     {
         id: "czarodziej",
         nazwa: "Czarodziej",
         ikona: "🧙‍♂️",
-        moc: "Magiczna kula",
-        opis: "Mityczny wojownik, który strzela potężnymi kulami magii.",
-        hp: 125,
-        damage: 42,
-        speed: 1.55,
-        range: 240,
-        cooldown: 700,
-        ticketCost: 32
+        moc: "Magiczna klątwa",
+        opis:
+            "Co czwarty atak nakłada klątwę. Przeklęty przeciwnik przez 3 sekundy otrzymuje 20% więcej obrażeń.",
+        hp: 145,
+        damage: 39,
+        speed: 3.4,
+        range: 690,
+        cooldown: 820,
+        ticketCost: 34
     },
 
     {
         id: "krol",
         nazwa: "Król",
         ikona: "🤴",
-        moc: "Królewski rozkaz",
-        opis: "Król wzmacnia swoje ataki i zadaje ogromne obrażenia.",
-        hp: 210,
-        damage: 48,
-        speed: 2.9,
-        range: 80,
+        moc: "Potrójny królewski atak",
+        opis:
+            "Legendarny wojownik, który przy każdym ataku wystrzeliwuje trzy pociski.",
+        hp: 155,
+        damage: 32,
+        speed: 3,
+        range: 580,
         cooldown: 850,
-        ticketCost: 40
+        ticketCost: 42
+    },
+
+    {
+        id: "wiedzma",
+        nazwa: "Wiedźma",
+        ikona: "🧙‍♀️",
+        moc: "Magiczny strumień",
+        opis:
+            "Strzela bez przerwy małymi kulami energii, które poruszają się niemal natychmiastowo.",
+        hp: 105,
+        damage: 7,
+        speed: 4,
+        range: 750,
+        cooldown: 0,
+        ticketCost: 250
     }
 ];
