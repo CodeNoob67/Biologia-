@@ -1,213 +1,251 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gra 2D</title>
 
-<title>Kalkulator HOMA-IR | Kobieta w Harmonii™</title>
+    <style>
+        body {
+            margin: 0;
+            background: #20242b;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
 
-<style>
+        h1 {
+            margin: 15px 0 5px;
+        }
 
-body{
-    margin:0;
-    font-family:Arial,Helvetica,sans-serif;
-    background:#F4F1EC;
-    color:#5B4A3B;
-}
+        p {
+            margin: 5px;
+        }
 
-.container{
-    max-width:700px;
-    margin:50px auto;
-    background:white;
-    padding:40px;
-    border-radius:20px;
-    box-shadow:0 10px 30px rgba(0,0,0,.08);
-}
-
-h1{
-    text-align:center;
-    color:#6B7A5E;
-    margin-bottom:10px;
-}
-
-h2{
-    color:#6B7A5E;
-}
-
-p{
-    line-height:1.8;
-}
-
-.info{
-    background:#F9F1EC;
-    border-left:6px solid #A2A58A;
-    padding:18px;
-    border-radius:12px;
-    margin:25px 0;
-}
-
-label{
-    display:block;
-    margin-top:20px;
-    margin-bottom:8px;
-    font-weight:bold;
-}
-
-input{
-    width:100%;
-    padding:15px;
-    border-radius:10px;
-    border:1px solid #DCCDBA;
-    font-size:18px;
-    box-sizing:border-box;
-}
-
-button{
-    width:100%;
-    margin-top:30px;
-    padding:16px;
-    background:#A2A58A;
-    color:white;
-    border:none;
-    border-radius:12px;
-    font-size:18px;
-    cursor:pointer;
-    transition:.3s;
-}
-
-button:hover{
-    background:#6B7A5E;
-}
-
-.result{
-    margin-top:30px;
-    padding:20px;
-    background:#F9F1E7;
-    border-radius:15px;
-    text-align:center;
-}
-
-.value{
-    font-size:40px;
-    color:#6B7A5E;
-    font-weight:bold;
-}
-
-.footer{
-    margin-top:35px;
-    font-size:14px;
-    color:#777;
-    line-height:1.6;
-}
-
-</style>
-
+        canvas {
+            margin-top: 10px;
+            background: #77c66e;
+            border: 5px solid white;
+            border-radius: 10px;
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="container">
+<h1>Monetowa Przygoda</h1>
+<p>Poruszanie: WASD lub strzałki</p>
+<p id="wynik">Monety: 0</p>
 
-<h1>Kalkulator HOMA-IR</h1>
-
-<p>
-Wskaźnik <strong>HOMA-IR</strong> pomaga ocenić stopień insulinooporności na podstawie
-stężenia glukozy i insuliny na czczo.
-</p>
-
-<div class="info">
-
-<b>Jak wykonać badanie?</b><br><br>
-
-✔ Glukoza na czczo<br>
-✔ Insulina na czczo<br><br>
-
-Oba badania należy wykonać z tej samej próbki krwi po minimum 8 godzinach na czczo.
-
-</div>
-
-<label>Glukoza na czczo (mg/dl)</label>
-<input type="number" id="glukoza" step="0.1">
-
-<label>Insulina na czczo (µIU/ml)</label>
-<input type="number" id="insulina" step="0.1">
-
-<button onclick="oblicz()">Oblicz HOMA-IR</button>
-
-<div class="result" id="wynik" style="display:none">
-
-<div class="value" id="wartosc"></div>
-
-<p id="opis"></p>
-
-</div>
-
-<div class="footer">
-
-<b>Uwaga:</b><br><br>
-
-Interpretacja wskaźnika HOMA-IR zależy od wieku, masy ciała, stanu zdrowia oraz objawów klinicznych.
-
-Wynik kalkulatora ma charakter edukacyjny i nie stanowi diagnozy medycznej.
-
-W przypadku nieprawidłowego wyniku skonsultuj się z lekarzem lub specjalistą.
-
-</div>
-
-</div>
+<canvas id="gra" width="800" height="500"></canvas>
 
 <script>
+    const canvas = document.getElementById("gra");
+    const ctx = canvas.getContext("2d");
+    const wynikTekst = document.getElementById("wynik");
 
-function oblicz(){
+    const gracz = {
+        x: 100,
+        y: 100,
+        szerokosc: 40,
+        wysokosc: 40,
+        predkosc: 5
+    };
 
-let glukoza=parseFloat(document.getElementById("glukoza").value);
+    const moneta = {
+        x: 500,
+        y: 250,
+        promien: 15
+    };
 
-let insulina=parseFloat(document.getElementById("insulina").value);
+    const przeciwnik = {
+        x: 300,
+        y: 200,
+        szerokosc: 45,
+        wysokosc: 45,
+        predkoscX: 3
+    };
 
-if(isNaN(glukoza)||isNaN(insulina)){
+    let monety = 0;
+    let klawisze = {};
 
-alert("Uzupełnij oba pola.");
+    document.addEventListener("keydown", function(event) {
+        klawisze[event.key.toLowerCase()] = true;
+    });
 
-return;
+    document.addEventListener("keyup", function(event) {
+        klawisze[event.key.toLowerCase()] = false;
+    });
 
-}
+    function poruszGraczem() {
+        if (klawisze["w"] || klawisze["arrowup"]) {
+            gracz.y -= gracz.predkosc;
+        }
 
-let homa=(glukoza*insulina)/405;
+        if (klawisze["s"] || klawisze["arrowdown"]) {
+            gracz.y += gracz.predkosc;
+        }
 
-document.getElementById("wynik").style.display="block";
+        if (klawisze["a"] || klawisze["arrowleft"]) {
+            gracz.x -= gracz.predkosc;
+        }
 
-document.getElementById("wartosc").innerHTML=homa.toFixed(2);
+        if (klawisze["d"] || klawisze["arrowright"]) {
+            gracz.x += gracz.predkosc;
+        }
 
-let opis="";
+        if (gracz.x < 0) {
+            gracz.x = 0;
+        }
 
-if(homa<1){
+        if (gracz.y < 0) {
+            gracz.y = 0;
+        }
 
-opis="Bardzo dobra wrażliwość na insulinę.";
+        if (gracz.x + gracz.szerokosc > canvas.width) {
+            gracz.x = canvas.width - gracz.szerokosc;
+        }
 
-}
+        if (gracz.y + gracz.wysokosc > canvas.height) {
+            gracz.y = canvas.height - gracz.wysokosc;
+        }
+    }
 
-else if(homa<2){
+    function poruszPrzeciwnikiem() {
+        przeciwnik.x += przeciwnik.predkoscX;
 
-opis="Wynik prawidłowy.";
+        if (
+            przeciwnik.x <= 0 ||
+            przeciwnik.x + przeciwnik.szerokosc >= canvas.width
+        ) {
+            przeciwnik.predkoscX *= -1;
+        }
+    }
 
-}
+    function czyDotykaMonety() {
+        const srodekGraczaX = gracz.x + gracz.szerokosc / 2;
+        const srodekGraczaY = gracz.y + gracz.wysokosc / 2;
 
-else if(homa<2.5){
+        const odlegloscX = srodekGraczaX - moneta.x;
+        const odlegloscY = srodekGraczaY - moneta.y;
 
-opis="⚠ Wynik może sugerować rozwijającą się insulinooporność. Warto skonsultować go ze specjalistą. Zapraszam na konsultację";
+        const odleglosc = Math.sqrt(
+            odlegloscX * odlegloscX +
+            odlegloscY * odlegloscY
+        );
 
-}
+        if (odleglosc < moneta.promien + gracz.szerokosc / 2) {
+            monety++;
 
-else{
+            wynikTekst.textContent = "Monety: " + monety;
 
-opis="⚠ Podwyższony wskaźnik HOMA-IR. Wynik może wskazywać na insulinooporność i wymaga konsultacji z lekarzem.";
+            moneta.x = Math.random() * (canvas.width - 40) + 20;
+            moneta.y = Math.random() * (canvas.height - 40) + 20;
+        }
+    }
 
-}
+    function czyDotykaPrzeciwnika() {
+        if (
+            gracz.x < przeciwnik.x + przeciwnik.szerokosc &&
+            gracz.x + gracz.szerokosc > przeciwnik.x &&
+            gracz.y < przeciwnik.y + przeciwnik.wysokosc &&
+            gracz.y + gracz.wysokosc > przeciwnik.y
+        ) {
+            gracz.x = 100;
+            gracz.y = 100;
+            monety = 0;
 
-document.getElementById("opis").innerHTML=opis;
+            wynikTekst.textContent = "Monety: 0";
+        }
+    }
 
-}
+    function rysujTlo() {
+        ctx.fillStyle = "#77c66e";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+        ctx.fillStyle = "#5aaa52";
+
+        for (let x = 0; x < canvas.width; x += 80) {
+            for (let y = 0; y < canvas.height; y += 80) {
+                ctx.fillRect(x, y, 40, 40);
+            }
+        }
+    }
+
+    function rysujGracza() {
+        ctx.fillStyle = "#2684ff";
+        ctx.fillRect(
+            gracz.x,
+            gracz.y,
+            gracz.szerokosc,
+            gracz.wysokosc
+        );
+
+        ctx.fillStyle = "white";
+        ctx.fillRect(gracz.x + 7, gracz.y + 8, 8, 8);
+        ctx.fillRect(gracz.x + 25, gracz.y + 8, 8, 8);
+
+        ctx.fillStyle = "black";
+        ctx.fillRect(gracz.x + 10, gracz.y + 10, 4, 4);
+        ctx.fillRect(gracz.x + 28, gracz.y + 10, 4, 4);
+
+        ctx.fillRect(gracz.x + 12, gracz.y + 28, 16, 4);
+    }
+
+    function rysujMonete() {
+        ctx.beginPath();
+        ctx.arc(
+            moneta.x,
+            moneta.y,
+            moneta.promien,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fillStyle = "gold";
+        ctx.fill();
+
+        ctx.strokeStyle = "orange";
+        ctx.lineWidth = 4;
+        ctx.stroke();
+    }
+
+    function rysujPrzeciwnika() {
+        ctx.fillStyle = "#e53935";
+        ctx.fillRect(
+            przeciwnik.x,
+            przeciwnik.y,
+            przeciwnik.szerokosc,
+            przeciwnik.wysokosc
+        );
+
+        ctx.fillStyle = "white";
+        ctx.fillRect(przeciwnik.x + 7, przeciwnik.y + 8, 9, 9);
+        ctx.fillRect(przeciwnik.x + 29, przeciwnik.y + 8, 9, 9);
+
+        ctx.fillStyle = "black";
+        ctx.fillRect(przeciwnik.x + 10, przeciwnik.y + 11, 4, 4);
+        ctx.fillRect(przeciwnik.x + 32, przeciwnik.y + 11, 4, 4);
+
+        ctx.fillRect(przeciwnik.x + 12, przeciwnik.y + 30, 22, 5);
+    }
+
+    function petlaGry() {
+        poruszGraczem();
+        poruszPrzeciwnikiem();
+
+        czyDotykaMonety();
+        czyDotykaPrzeciwnika();
+
+        rysujTlo();
+        rysujMonete();
+        rysujPrzeciwnika();
+        rysujGracza();
+
+        requestAnimationFrame(petlaGry);
+    }
+
+    petlaGry();
 </script>
 
 </body>
