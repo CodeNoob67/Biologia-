@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Postacie</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="topbar">
+    <div class="logo">🧙 POSTACIE</div>
+
+    <div class="currency">
+        <div class="pill">🎟️ <span data-tickets>0</span></div>
+        <div class="pill">🪙 <span data-coins>0</span></div>
+    </div>
+</header>
+
+<main class="screen">
+
+    <h1 class="section-title">Wybierz bohatera</h1>
+
+    <div class="notice">
+        Odblokowane postacie możesz wybrać. Zablokowane postacie kupisz w sklepie.
+    </div>
+
+    <div id="characters" class="grid"></div>
+
+</main>
+
+<nav class="bottom-nav">
+    <a href="gra.html">🏰<br>Lobby</a>
+    <a class="active" href="postacie.html">🧙<br>Postacie</a>
+    <a href="sklep.html">🛒<br>Sklep</a>
+    <a href="walka.html">⚔️<br>Gra</a>
+</nav>
+
+<script src="dane.js"></script>
+<script src="common.js"></script>
+
+<script>
+function renderCharacters() {
+    const state = getState();
+    const container = document.getElementById("characters");
+
+    container.innerHTML = "";
+
+    BOHATEROWIE.forEach(function(hero) {
+        const unlocked = state.unlocked.includes(hero.id);
+        const selected = state.selected === hero.id;
+
+        const card = document.createElement("div");
+
+        card.className = "card char-card";
+
+        if (!unlocked) {
+            card.classList.add("locked");
+        }
+
+        card.innerHTML = `
+            <div class="badge ${unlocked ? "badge-owned" : "badge-locked"}">
+                ${unlocked ? "ODBLOKOWANY" : "ZABLOKOWANY"}
+            </div>
+
+            <div class="character-icon">${hero.ikona}</div>
+
+            <h2>${hero.nazwa}</h2>
+
+            <div class="power">${hero.moc}</div>
+
+            <p>${hero.opis}</p>
+
+            <div class="stats">
+
+                <div class="stat">
+                    <span>❤️ Życie</span>
+                    <b>${hero.hp}</b>
+                </div>
+
+                <div class="stat">
+                    <span>⚔️ Obrażenia</span>
+                    <b>${hero.damage}</b>
+                </div>
+
+                <div class="stat">
+                    <span>👟 Szybkość</span>
+                    <b>${hero.speed}</b>
+                </div>
+
+            </div>
+
+            <button class="btn ${selected ? "btn-green" : "btn-blue"}">
+                ${selected ? "WYBRANO" : "WYBIERZ"}
+            </button>
+        `;
+
+        const button = card.querySelector("button");
+
+        if (!unlocked) {
+            button.disabled = true;
+        } else {
+            button.onclick = function() {
+                state.selected = hero.id;
+                saveState(state);
+                renderCharacters();
+            };
+        }
+
+        container.appendChild(card);
+    });
+}
+
+renderCharacters();
+</script>
+
+</body>
+</html>
