@@ -527,23 +527,18 @@ const HERO_STATS = {
         tripleShot: true
     },
 
-    wiedzma: {
-        hp: 105,
-        damage: 7,
-        speed: 2,
-        range: 750,
-
-        /*
-        Bez cooldownu.
-        Strzela raz na każdą klatkę gry.
-        */
-        cooldown: 0,
-
-        projectileSpeed: 100,
-        projectileWidth: 10,
-        projectileLife: 700,
-        melee: false
-    }
+ wiedzma: {
+    hp: 105,
+    damage: 7,
+    speed: 2,
+    range: 750,
+    cooldown: 50,
+    projectileSpeed: 28,
+    projectileWidth: 3,
+    projectileLife: 700,
+    melee: false
+}
+    
 };
 
 const walls = [
@@ -1818,7 +1813,7 @@ function createProjectile(
         attacker.heroId ===
         "wiedzma"
     ) {
-        color = "#ff2bd6";
+        color = "#FFCC33";
     }
 
     projectiles.push({
