@@ -18,24 +18,27 @@
         body {
             margin: 0;
             min-height: 100vh;
+            overflow: hidden;
 
-            color: white;
             font-family: Arial, sans-serif;
+            color: white;
             text-align: center;
 
             background:
                 radial-gradient(
                     circle at top,
                     #34405a,
-                    #111722
+                    #101621
                 );
         }
 
         .topbar {
+            height: 72px;
+
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 10px;
+            gap: 12px;
 
             padding: 10px 18px;
 
@@ -45,7 +48,7 @@
 
         .logo {
             color: #ffd43b;
-            font-size: 25px;
+            font-size: 24px;
             font-weight: 900;
         }
 
@@ -59,6 +62,7 @@
             padding: 10px 15px;
 
             color: white;
+            font-family: inherit;
             font-weight: 900;
             text-decoration: none;
 
@@ -75,16 +79,19 @@
         }
 
         .game-info {
+            height: 58px;
+
             display: flex;
             justify-content: center;
+            align-items: center;
             gap: 10px;
             flex-wrap: wrap;
 
-            margin: 12px;
+            padding: 7px;
         }
 
         .info-box {
-            padding: 8px 13px;
+            padding: 7px 13px;
 
             background: #26344b;
 
@@ -94,59 +101,125 @@
             font-weight: 900;
         }
 
-        canvas {
-            width: min(82vh, 94vw);
-            height: min(82vh, 94vw);
+        .game-container {
+            position: relative;
 
-            max-width: 850px;
-            max-height: 850px;
+            width: min(
+                calc(100vh - 155px),
+                96vw
+            );
+
+            height: min(
+                calc(100vh - 155px),
+                96vw
+            );
+
+            max-width: 900px;
+            max-height: 900px;
+
+            margin: 0 auto;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+
+            display: block;
+
+            background: #58ad58;
 
             border: 7px solid #111827;
             border-radius: 12px;
 
-            box-shadow: 0 15px 40px #00000099;
+            box-shadow:
+                0 15px 40px #00000099;
+
+            cursor: crosshair;
+        }
+
+        .death-screen {
+            position: absolute;
+            inset: 7px;
+            z-index: 10;
+
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 22px;
+
+            background: #000000aa;
+            border-radius: 6px;
+        }
+
+        .death-screen.visible {
+            display: flex;
+        }
+
+        .death-title {
+            font-size: 54px;
+            font-weight: 1000;
+            text-shadow: 4px 4px black;
+        }
+
+        .return-button {
+            min-width: 230px;
+            padding: 18px 30px;
+
+            color: #111827;
+            font-size: 28px;
+            font-weight: 1000;
+
+            background:
+                linear-gradient(
+                    #ffd93d,
+                    #f0a500
+                );
+
+            border: 5px solid #111827;
+            border-radius: 14px;
+
+            box-shadow:
+                0 7px 0 #00000077;
+
+            cursor: pointer;
         }
 
         .controls {
-            margin: 10px;
+            position: fixed;
+            left: 15px;
+            bottom: 12px;
+
+            padding: 8px 12px;
+
             color: #d1d5db;
+            font-size: 13px;
+
+            background: #111827cc;
+            border-radius: 8px;
         }
 
-        .mobile-controls {
-            display: none;
-
-            width: 280px;
-            margin: 15px auto;
-
-            grid-template-columns:
-                repeat(3, 75px);
-
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .mobile-controls button {
-            height: 65px;
-            font-size: 25px;
-        }
-
-        .attack-button {
-            grid-column: 3;
-            grid-row: 1 / 3;
-
-            height: 138px !important;
-
-            background: #d34242 !important;
-        }
-
-        @media (max-width: 800px) {
-            .mobile-controls {
-                display: grid;
+        @media (max-width: 700px) {
+            .logo {
+                font-size: 17px;
             }
 
-            canvas {
-                width: 96vw;
-                height: 96vw;
+            .topbar {
+                padding: 8px;
+            }
+
+            .top-buttons button,
+            .back-button {
+                padding: 7px;
+                font-size: 12px;
+            }
+
+            .info-box {
+                font-size: 12px;
+            }
+
+            .death-title {
+                font-size: 38px;
             }
         }
     </style>
@@ -205,42 +278,41 @@
 
 </div>
 
-<canvas
-    id="gameCanvas"
-    width="850"
-    height="850"
-></canvas>
+<div class="game-container">
+
+    <canvas
+        id="gameCanvas"
+        width="900"
+        height="900"
+    ></canvas>
+
+    <div
+        id="deathScreen"
+        class="death-screen"
+    >
+
+        <div
+            id="deathTitle"
+            class="death-title"
+        >
+            POKONANY
+        </div>
+
+        <button
+            class="return-button"
+            onclick="location.href='gra.html'"
+        >
+            POWRÓT
+        </button>
+
+    </div>
+
+</div>
 
 <div class="controls">
     WASD lub strzałki — ruch |
-    Spacja — atak
-</div>
-
-<div class="mobile-controls">
-
-    <button data-key="arrowup">
-        ⬆️
-    </button>
-
-    <button
-        class="attack-button"
-        data-key=" "
-    >
-        ⚔️
-    </button>
-
-    <button data-key="arrowleft">
-        ⬅️
-    </button>
-
-    <button data-key="arrowdown">
-        ⬇️
-    </button>
-
-    <button data-key="arrowright">
-        ➡️
-    </button>
-
+    LPM — atak |
+    wejdź w krzaki, aby się ukryć
 </div>
 
 <script src="dane.js"></script>
@@ -253,38 +325,202 @@ const canvas =
 const ctx =
     canvas.getContext("2d");
 
+const WORLD_WIDTH = 2700;
+const WORLD_HEIGHT = 2700;
+
 const keys = {};
+
+let mouse = {
+    x: canvas.width / 2,
+    y: canvas.height / 2,
+    down: false
+};
+
+let camera = {
+    x: 0,
+    y: 0
+};
 
 const MAPS = {
     green: {
         name: "Zielona Dolina",
-        ground: "#58ad58",
-        groundDark: "#459348",
-        decoration: "🌳"
+        ground: "#5cab5d",
+        groundDark: "#4e9a50",
+        wall: "#776046",
+        wallTop: "#9c805d",
+        bush: "#247a36",
+        bushLight: "#319645"
     },
 
     red: {
         name: "Czerwona Twierdza",
-        ground: "#bd4b43",
-        groundDark: "#9b3936",
-        decoration: "🔥"
+        ground: "#bd5148",
+        groundDark: "#a8423d",
+        wall: "#612d32",
+        wallTop: "#85434a",
+        bush: "#6e2630",
+        bushLight: "#8d3540"
     },
 
     yellow: {
         name: "Złota Pustynia",
-        ground: "#deb84e",
-        groundDark: "#c79b35",
-        decoration: "🌵"
+        ground: "#d9b64e",
+        groundDark: "#c79f39",
+        wall: "#8b6834",
+        wallTop: "#ad8447",
+        bush: "#7d8a31",
+        bushLight: "#9aa640"
+    }
+};
+
+const HERO_STATS = {
+    farmer: {
+        hp: 145,
+        damage: 24,
+        speed: 3.4,
+        range: 520,
+        cooldown: 1500,
+        projectileSpeed: 7,
+        projectileWidth: 10,
+        projectileLife: 850,
+        melee: false
+    },
+
+    rycerz: {
+        hp: 190,
+        damage: 31,
+        speed: 2.9,
+        range: 92,
+        cooldown: 780,
+        melee: true
+    },
+
+    lucznik: {
+        hp: 90,
+        damage: 39,
+        speed: 3.4,
+        range: 99999,
+        cooldown: 1150,
+        projectileSpeed: 6,
+        projectileWidth: 7,
+        projectileLife: 7000,
+        melee: false
+    },
+
+    goblin: {
+        hp: 72,
+        damage: 30,
+        speed: 4.5,
+        range: 82,
+        cooldown: 620,
+        melee: true
+    },
+
+    golem: {
+        hp: 340,
+        damage: 25,
+        speed: 2.15,
+        range: 125,
+        cooldown: 1100,
+        melee: true
+    },
+
+    krolowa: {
+        hp: 110,
+        damage: 45,
+        speed: 3.3,
+        range: 720,
+        cooldown: 1200,
+        projectileSpeed: 11,
+        projectileWidth: 22,
+        projectileLife: 1350,
+        melee: false
+    },
+
+    krol: {
+        hp: 185,
+        damage: 31,
+        speed: 3.55,
+        range: 650,
+        cooldown: 1450,
+        projectileSpeed: 10,
+        projectileWidth: 10,
+        projectileLife: 1300,
+        melee: false,
+        tripleShot: true,
+        shockwaveCooldown: 6500,
+        shockwaveRadius: 190,
+        shockwaveDamage: 28,
+        shockwaveHeal: 35
     }
 };
 
 let selectedMap;
-
 let fighters = [];
 let projectiles = [];
+let shockwaves = [];
 
 let player;
 let winner = null;
+let matchFinished = false;
+
+const walls = [
+    { x: 400, y: 380, w: 420, h: 90 },
+    { x: 1880, y: 380, w: 420, h: 90 },
+
+    { x: 400, y: 2230, w: 420, h: 90 },
+    { x: 1880, y: 2230, w: 420, h: 90 },
+
+    { x: 380, y: 700, w: 90, h: 420 },
+    { x: 2230, y: 700, w: 90, h: 420 },
+
+    { x: 380, y: 1580, w: 90, h: 420 },
+    { x: 2230, y: 1580, w: 90, h: 420 },
+
+    { x: 850, y: 800, w: 340, h: 90 },
+    { x: 1510, y: 800, w: 340, h: 90 },
+
+    { x: 850, y: 1810, w: 340, h: 90 },
+    { x: 1510, y: 1810, w: 340, h: 90 },
+
+    { x: 800, y: 1050, w: 90, h: 300 },
+    { x: 1810, y: 1050, w: 90, h: 300 },
+
+    { x: 800, y: 1350, w: 90, h: 300 },
+    { x: 1810, y: 1350, w: 90, h: 300 },
+
+    { x: 1140, y: 1150, w: 420, h: 85 },
+    { x: 1140, y: 1465, w: 420, h: 85 },
+
+    { x: 1260, y: 1235, w: 80, h: 230 },
+    { x: 1360, y: 1235, w: 80, h: 230 }
+];
+
+const bushes = [
+    { x: 120, y: 220, w: 300, h: 260 },
+    { x: 2280, y: 220, w: 300, h: 260 },
+
+    { x: 120, y: 2220, w: 300, h: 260 },
+    { x: 2280, y: 2220, w: 300, h: 260 },
+
+    { x: 540, y: 520, w: 300, h: 150 },
+    { x: 1860, y: 520, w: 300, h: 150 },
+
+    { x: 540, y: 2030, w: 300, h: 150 },
+    { x: 1860, y: 2030, w: 300, h: 150 },
+
+    { x: 1030, y: 650, w: 250, h: 170 },
+    { x: 1420, y: 650, w: 250, h: 170 },
+
+    { x: 1030, y: 1880, w: 250, h: 170 },
+    { x: 1420, y: 1880, w: 250, h: 170 },
+
+    { x: 560, y: 1160, w: 180, h: 380 },
+    { x: 1960, y: 1160, w: 180, h: 380 },
+
+    { x: 1000, y: 1250, w: 150, h: 200 },
+    { x: 1550, y: 1250, w: 150, h: 200 }
+];
 
 window.addEventListener(
     "keydown",
@@ -295,7 +531,6 @@ window.addEventListener(
         keys[key] = true;
 
         if (
-            key === " " ||
             key === "arrowup" ||
             key === "arrowdown" ||
             key === "arrowleft" ||
@@ -309,38 +544,52 @@ window.addEventListener(
 window.addEventListener(
     "keyup",
     function(event) {
-        keys[event.key.toLowerCase()] =
-            false;
+        keys[event.key.toLowerCase()] = false;
     }
 );
 
-document
-    .querySelectorAll("[data-key]")
-    .forEach(function(button) {
-        const key =
-            button.dataset.key;
+canvas.addEventListener(
+    "mousemove",
+    function(event) {
+        const rectangle =
+            canvas.getBoundingClientRect();
 
-        button.addEventListener(
-            "pointerdown",
-            function() {
-                keys[key] = true;
-            }
-        );
+        mouse.x =
+            (event.clientX - rectangle.left) *
+            canvas.width /
+            rectangle.width;
 
-        button.addEventListener(
-            "pointerup",
-            function() {
-                keys[key] = false;
-            }
-        );
+        mouse.y =
+            (event.clientY - rectangle.top) *
+            canvas.height /
+            rectangle.height;
+    }
+);
 
-        button.addEventListener(
-            "pointerleave",
-            function() {
-                keys[key] = false;
-            }
-        );
-    });
+canvas.addEventListener(
+    "mousedown",
+    function(event) {
+        if (event.button === 0) {
+            mouse.down = true;
+        }
+    }
+);
+
+window.addEventListener(
+    "mouseup",
+    function(event) {
+        if (event.button === 0) {
+            mouse.down = false;
+        }
+    }
+);
+
+canvas.addEventListener(
+    "contextmenu",
+    function(event) {
+        event.preventDefault();
+    }
+);
 
 function randomNumber(minimum, maximum) {
     return (
@@ -376,6 +625,13 @@ function normalize(dx, dy) {
     };
 }
 
+function getCharacterStats(heroId) {
+    return (
+        HERO_STATS[heroId] ||
+        HERO_STATS.farmer
+    );
+}
+
 function createFighter(
     hero,
     x,
@@ -383,6 +639,9 @@ function createFighter(
     isPlayer,
     number
 ) {
+    const stats =
+        getCharacterStats(hero.id);
+
     return {
         id:
             isPlayer
@@ -401,20 +660,49 @@ function createFighter(
         x: x,
         y: y,
 
-        radius: 24,
+        radius: 28,
 
-        hp: hero.hp,
-        maxHp: hero.hp,
+        hp: stats.hp,
+        maxHp: stats.hp,
 
-        damage: hero.damage,
-        speed: hero.speed,
-        range: hero.range,
-        cooldown: hero.cooldown,
+        damage: stats.damage,
+        speed: stats.speed,
+        range: stats.range,
+        cooldown: stats.cooldown,
+
+        projectileSpeed:
+            stats.projectileSpeed || 0,
+
+        projectileWidth:
+            stats.projectileWidth || 0,
+
+        projectileLife:
+            stats.projectileLife || 0,
+
+        melee:
+            stats.melee,
+
+        tripleShot:
+            stats.tripleShot || false,
+
+        shockwaveCooldown:
+            stats.shockwaveCooldown || 0,
+
+        shockwaveRadius:
+            stats.shockwaveRadius || 0,
+
+        shockwaveDamage:
+            stats.shockwaveDamage || 0,
+
+        shockwaveHeal:
+            stats.shockwaveHeal || 0,
 
         isPlayer: isPlayer,
         alive: true,
+        hidden: false,
 
         lastAttack: 0,
+        lastShockwave: performance.now(),
 
         target: null,
         behavior: "wander",
@@ -427,11 +715,11 @@ function createFighter(
 
         nextDecision:
             performance.now() +
-            randomNumber(700, 2000),
+            randomNumber(700, 2200),
 
         color:
             isPlayer
-                ? "#44aaff"
+                ? "#36a9ff"
                 : `hsl(
                     ${Math.random() * 360},
                     70%,
@@ -462,14 +750,22 @@ function startGame() {
 
     fighters = [];
     projectiles = [];
+    shockwaves = [];
 
     winner = null;
+    matchFinished = false;
+
+    mouse.down = false;
+
+    document
+        .getElementById("deathScreen")
+        .classList.remove("visible");
 
     player =
         createFighter(
             selectedHero,
-            425,
-            730,
+            WORLD_WIDTH / 2,
+            WORLD_HEIGHT - 220,
             true,
             0
         );
@@ -478,38 +774,38 @@ function startGame() {
 
     const spawnPositions = [
         {
-            x: 100,
-            y: 100
+            x: 180,
+            y: 180
         },
 
         {
-            x: 425,
-            y: 100
+            x: WORLD_WIDTH / 2,
+            y: 180
         },
 
         {
-            x: 750,
-            y: 100
+            x: WORLD_WIDTH - 180,
+            y: 180
         },
 
         {
-            x: 100,
-            y: 425
+            x: 180,
+            y: WORLD_HEIGHT / 2
         },
 
         {
-            x: 750,
-            y: 425
+            x: WORLD_WIDTH - 180,
+            y: WORLD_HEIGHT / 2
         },
 
         {
-            x: 170,
-            y: 730
+            x: 220,
+            y: WORLD_HEIGHT - 220
         },
 
         {
-            x: 680,
-            y: 730
+            x: WORLD_WIDTH - 220,
+            y: WORLD_HEIGHT - 220
         }
     ];
 
@@ -524,18 +820,18 @@ function startGame() {
         const position =
             spawnPositions[i];
 
-        const bot =
+        fighters.push(
             createFighter(
                 randomHero,
                 position.x,
                 position.y,
                 false,
                 i + 1
-            );
-
-        fighters.push(bot);
+            )
+        );
     }
 
+    updateCamera();
     updateInformation();
 }
 
@@ -548,16 +844,12 @@ function updateInformation() {
         ).length;
 
     document
-        .getElementById(
-            "aliveCounter"
-        )
+        .getElementById("aliveCounter")
         .textContent =
         "Pozostało: " + alive;
 
     document
-        .getElementById(
-            "playerInfo"
-        )
+        .getElementById("playerInfo")
         .textContent =
         player.icon +
         " " +
@@ -566,35 +858,197 @@ function updateInformation() {
         Math.max(
             0,
             Math.ceil(player.hp)
+        ) +
+        (player.hidden
+            ? " | 🌿 UKRYTY"
+            : "");
+}
+
+function updateCamera() {
+    camera.x =
+        player.x -
+        canvas.width / 2;
+
+    camera.y =
+        player.y -
+        canvas.height / 2;
+
+    camera.x =
+        Math.max(
+            0,
+            Math.min(
+                WORLD_WIDTH -
+                canvas.width,
+                camera.x
+            )
+        );
+
+    camera.y =
+        Math.max(
+            0,
+            Math.min(
+                WORLD_HEIGHT -
+                canvas.height,
+                camera.y
+            )
         );
 }
 
-function keepInsideArena(fighter) {
-    fighter.x =
+function rectangleCollision(
+    x,
+    y,
+    radius,
+    rectangle
+) {
+    const closestX =
         Math.max(
-            fighter.radius,
+            rectangle.x,
             Math.min(
-                canvas.width -
-                fighter.radius,
-                fighter.x
+                x,
+                rectangle.x +
+                rectangle.w
             )
         );
 
-    fighter.y =
+    const closestY =
+        Math.max(
+            rectangle.y,
+            Math.min(
+                y,
+                rectangle.y +
+                rectangle.h
+            )
+        );
+
+    const dx =
+        x - closestX;
+
+    const dy =
+        y - closestY;
+
+    return (
+        dx * dx +
+        dy * dy <
+        radius * radius
+    );
+}
+
+function collidesWithWall(
+    x,
+    y,
+    radius
+) {
+    return walls.some(
+        function(wall) {
+            return rectangleCollision(
+                x,
+                y,
+                radius,
+                wall
+            );
+        }
+    );
+}
+
+function moveFighter(
+    fighter,
+    dx,
+    dy
+) {
+    const nextX =
         Math.max(
             fighter.radius,
             Math.min(
-                canvas.height -
+                WORLD_WIDTH -
                 fighter.radius,
-                fighter.y
+                fighter.x + dx
             )
         );
+
+    if (
+        !collidesWithWall(
+            nextX,
+            fighter.y,
+            fighter.radius
+        )
+    ) {
+        fighter.x = nextX;
+    }
+
+    const nextY =
+        Math.max(
+            fighter.radius,
+            Math.min(
+                WORLD_HEIGHT -
+                fighter.radius,
+                fighter.y + dy
+            )
+        );
+
+    if (
+        !collidesWithWall(
+            fighter.x,
+            nextY,
+            fighter.radius
+        )
+    ) {
+        fighter.y = nextY;
+    }
+}
+
+function pointInsideRectangle(
+    x,
+    y,
+    rectangle
+) {
+    return (
+        x >= rectangle.x &&
+        x <= rectangle.x +
+            rectangle.w &&
+        y >= rectangle.y &&
+        y <= rectangle.y +
+            rectangle.h
+    );
+}
+
+function updateBushStatus() {
+    fighters.forEach(
+        function(fighter) {
+            fighter.hidden =
+                fighter.alive &&
+                bushes.some(
+                    function(bush) {
+                        return pointInsideRectangle(
+                            fighter.x,
+                            fighter.y,
+                            bush
+                        );
+                    }
+                );
+        }
+    );
+}
+
+function canSeeFighter(
+    observer,
+    target
+) {
+    if (!target.hidden) {
+        return true;
+    }
+
+    return (
+        distance(
+            observer,
+            target
+        ) < 170
+    );
 }
 
 function movePlayer() {
     if (
         !player.alive ||
-        winner
+        matchFinished
     ) {
         return;
     }
@@ -637,108 +1091,74 @@ function movePlayer() {
         const direction =
             normalize(dx, dy);
 
-        player.x +=
+        moveFighter(
+            player,
             direction.x *
-            player.speed;
-
-        player.y +=
+            player.speed,
             direction.y *
-            player.speed;
+            player.speed
+        );
     }
 
-    keepInsideArena(player);
+    if (mouse.down) {
+        const targetWorldX =
+            mouse.x + camera.x;
 
-    if (keys[" "]) {
-        const target =
-            findClosestEnemy(player);
+        const targetWorldY =
+            mouse.y + camera.y;
 
-        if (target) {
-            attack(
-                player,
-                target
-            );
-        }
+        attackTowards(
+            player,
+            targetWorldX,
+            targetWorldY
+        );
     }
 }
 
-function findClosestEnemy(fighter) {
-    const enemies =
-        fighters.filter(
-            function(other) {
-                return (
-                    other.alive &&
-                    other !== fighter
-                );
-            }
-        );
-
-    if (
-        enemies.length === 0
-    ) {
-        return null;
-    }
-
-    enemies.sort(
-        function(first, second) {
+function getPossibleTargets(fighter) {
+    return fighters.filter(
+        function(other) {
             return (
-                distance(
+                other.alive &&
+                other !== fighter &&
+                canSeeFighter(
                     fighter,
-                    first
-                ) -
-                distance(
-                    fighter,
-                    second
+                    other
                 )
             );
         }
     );
-
-    return enemies[0];
 }
 
 function chooseBotDecision(bot) {
-    const possibleTargets =
-        fighters.filter(
-            function(other) {
-                return (
-                    other.alive &&
-                    other !== bot
-                );
-            }
-        );
+    const targets =
+        getPossibleTargets(bot);
 
-    if (
-        possibleTargets.length === 0
-    ) {
+    if (targets.length === 0) {
         bot.target = null;
-        return;
-    }
-
-    bot.target =
-        randomItem(
-            possibleTargets
-        );
-
-    const roll =
-        Math.random();
-
-    if (
-        bot.hp <
-        bot.maxHp * 0.3
-    ) {
-        if (
-            Math.random() < 0.75
-        ) {
-            bot.behavior = "flee";
-        } else {
-            bot.behavior = "attack";
-        }
-    } else if (roll < 0.55) {
-        bot.behavior = "attack";
-    } else if (roll < 0.8) {
         bot.behavior = "wander";
     } else {
-        bot.behavior = "flee";
+        bot.target =
+            randomItem(targets);
+
+        const roll =
+            Math.random();
+
+        if (
+            bot.hp <
+            bot.maxHp * 0.3
+        ) {
+            bot.behavior =
+                Math.random() < 0.75
+                    ? "flee"
+                    : "attack";
+        } else if (roll < 0.58) {
+            bot.behavior = "attack";
+        } else if (roll < 0.82) {
+            bot.behavior = "wander";
+        } else {
+            bot.behavior = "flee";
+        }
     }
 
     bot.directionX =
@@ -758,7 +1178,7 @@ function updateBot(
 ) {
     if (
         !bot.alive ||
-        winner
+        matchFinished
     ) {
         return;
     }
@@ -767,9 +1187,47 @@ function updateBot(
         currentTime >=
             bot.nextDecision ||
         !bot.target ||
-        !bot.target.alive
+        !bot.target.alive ||
+        !canSeeFighter(
+            bot,
+            bot.target
+        )
     ) {
         chooseBotDecision(bot);
+    }
+
+    if (
+        bot.behavior ===
+        "wander"
+    ) {
+        const direction =
+            normalize(
+                bot.directionX,
+                bot.directionY
+            );
+
+        moveFighter(
+            bot,
+            direction.x *
+            bot.speed *
+            0.58,
+            direction.y *
+            bot.speed *
+            0.58
+        );
+
+        if (
+            Math.random() <
+            0.015
+        ) {
+            bot.directionX =
+                randomNumber(-1, 1);
+
+            bot.directionY =
+                randomNumber(-1, 1);
+        }
+
+        return;
     }
 
     if (!bot.target) {
@@ -792,128 +1250,76 @@ function updateBot(
         );
 
     if (
-        bot.behavior === "attack"
+        bot.behavior === "flee"
     ) {
+        moveFighter(
+            bot,
+            -direction.x *
+            bot.speed,
+            -direction.y *
+            bot.speed
+        );
+
         if (
-            targetDistance >
-            Math.min(
-                bot.range * 0.75,
-                150
-            )
+            Math.random() <
+            0.018
         ) {
-            bot.x +=
-                direction.x *
-                bot.speed *
-                0.75;
-
-            bot.y +=
-                direction.y *
-                bot.speed *
-                0.75;
-        } else {
-            bot.x -=
-                direction.x *
-                bot.speed *
-                0.15;
-
-            bot.y -=
-                direction.y *
-                bot.speed *
-                0.15;
+            attackTowards(
+                bot,
+                bot.target.x,
+                bot.target.y
+            );
         }
 
-        attack(
+        return;
+    }
+
+    const preferredDistance =
+        bot.melee
+            ? bot.range * 0.7
+            : Math.min(
+                bot.range * 0.58,
+                500
+            );
+
+    if (
+        targetDistance >
+        preferredDistance
+    ) {
+        moveFighter(
             bot,
-            bot.target
+            direction.x *
+            bot.speed *
+            0.78,
+            direction.y *
+            bot.speed *
+            0.78
+        );
+    } else if (!bot.melee) {
+        moveFighter(
+            bot,
+            -direction.x *
+            bot.speed *
+            0.25,
+            -direction.y *
+            bot.speed *
+            0.25
         );
     }
 
-    if (
-        bot.behavior === "flee"
-    ) {
-        bot.x -=
-            direction.x *
-            bot.speed;
-
-        bot.y -=
-            direction.y *
-            bot.speed;
-
-        if (
-            Math.random() <
-            0.025
-        ) {
-            attack(
-                bot,
-                bot.target
-            );
-        }
-    }
-
-    if (
-        bot.behavior === "wander"
-    ) {
-        const wanderDirection =
-            normalize(
-                bot.directionX,
-                bot.directionY
-            );
-
-        bot.x +=
-            wanderDirection.x *
-            bot.speed *
-            0.55;
-
-        bot.y +=
-            wanderDirection.y *
-            bot.speed *
-            0.55;
-
-        if (
-            Math.random() <
-            0.015
-        ) {
-            bot.directionX =
-                randomNumber(-1, 1);
-
-            bot.directionY =
-                randomNumber(-1, 1);
-        }
-
-        if (
-            targetDistance <
-                bot.range &&
-            Math.random() <
-                0.04
-        ) {
-            attack(
-                bot,
-                bot.target
-            );
-        }
-    }
-
-    keepInsideArena(bot);
-}
-
-function isMeleeCharacter(heroId) {
-    return (
-        heroId === "rycerz" ||
-        heroId === "goblin" ||
-        heroId === "golem" ||
-        heroId === "krol"
+    attackTowards(
+        bot,
+        bot.target.x,
+        bot.target.y
     );
 }
 
-function attack(
+function attackTowards(
     attacker,
-    target
+    targetX,
+    targetY
 ) {
-    if (
-        !attacker.alive ||
-        !target ||
-        !target.alive
-    ) {
+    if (!attacker.alive) {
         return;
     }
 
@@ -928,84 +1334,197 @@ function attack(
         return;
     }
 
+    const dx =
+        targetX - attacker.x;
+
+    const dy =
+        targetY - attacker.y;
+
+    const direction =
+        normalize(dx, dy);
+
     attacker.lastAttack =
         currentTime;
 
-    const targetDistance =
-        distance(
-            attacker,
-            target
-        );
+    attacker.hidden = false;
 
-    if (
-        isMeleeCharacter(
-            attacker.heroId
-        )
-    ) {
+    if (attacker.melee) {
+        const target =
+            findTargetNearPoint(
+                attacker,
+                targetX,
+                targetY
+            );
+
         if (
-            targetDistance <=
-            Math.max(
-                attacker.range,
-                80
-            )
+            target &&
+            distance(
+                attacker,
+                target
+            ) <= attacker.range
         ) {
             damageFighter(
                 target,
-                attacker.damage
+                attacker.damage,
+                attacker
+            );
+
+            createMeleeEffect(
+                attacker,
+                direction
             );
         }
 
         return;
     }
 
-    const dx =
-        target.x -
-        attacker.x;
+    if (attacker.tripleShot) {
+        createProjectile(
+            attacker,
+            direction,
+            -0.14
+        );
 
-    const dy =
-        target.y -
-        attacker.y;
+        createProjectile(
+            attacker,
+            direction,
+            0
+        );
 
-    const direction =
-        normalize(dx, dy);
+        createProjectile(
+            attacker,
+            direction,
+            0.14
+        );
 
-    let projectileColor =
-        "#fff0a1";
-
-    let projectileRadius =
-        8;
-
-    if (
-        attacker.heroId ===
-        "krolowa"
-    ) {
-        projectileColor =
-            "#d55cff";
-
-        projectileRadius =
-            12;
+        return;
     }
+
+    createProjectile(
+        attacker,
+        direction,
+        0
+    );
+}
+
+function findTargetNearPoint(
+    attacker,
+    targetX,
+    targetY
+) {
+    const targets =
+        fighters.filter(
+            function(fighter) {
+                return (
+                    fighter.alive &&
+                    fighter !== attacker &&
+                    canSeeFighter(
+                        attacker,
+                        fighter
+                    )
+                );
+            }
+        );
+
+    targets.sort(
+        function(first, second) {
+            const firstDistance =
+                Math.hypot(
+                    first.x - targetX,
+                    first.y - targetY
+                );
+
+            const secondDistance =
+                Math.hypot(
+                    second.x - targetX,
+                    second.y - targetY
+                );
+
+            return (
+                firstDistance -
+                secondDistance
+            );
+        }
+    );
+
+    return targets[0] || null;
+}
+
+function rotateDirection(
+    direction,
+    angle
+) {
+    return {
+        x:
+            direction.x *
+            Math.cos(angle) -
+            direction.y *
+            Math.sin(angle),
+
+        y:
+            direction.x *
+            Math.sin(angle) +
+            direction.y *
+            Math.cos(angle)
+    };
+}
+
+function createProjectile(
+    attacker,
+    direction,
+    angle
+) {
+    const rotated =
+        rotateDirection(
+            direction,
+            angle
+        );
+
+    let color =
+        "#f9eda2";
 
     if (
         attacker.heroId ===
         "farmer"
     ) {
-        projectileColor =
-            "#8b5a2b";
+        color = "#6b4327";
+    }
+
+    if (
+        attacker.heroId ===
+        "krolowa"
+    ) {
+        color = "#df61ff";
+    }
+
+    if (
+        attacker.heroId ===
+        "krol"
+    ) {
+        color = "#ffd638";
     }
 
     projectiles.push({
-        x: attacker.x,
-        y: attacker.y,
+        x:
+            attacker.x +
+            rotated.x *
+            34,
+
+        y:
+            attacker.y +
+            rotated.y *
+            34,
 
         vx:
-            direction.x * 7,
+            rotated.x *
+            attacker.projectileSpeed,
 
         vy:
-            direction.y * 7,
+            rotated.y *
+            attacker.projectileSpeed,
 
         radius:
-            projectileRadius,
+            attacker.projectileWidth,
 
         damage:
             attacker.damage,
@@ -1013,14 +1532,110 @@ function attack(
         owner:
             attacker,
 
-        color:
-            projectileColor
+        color: color,
+
+        born:
+            performance.now(),
+
+        life:
+            attacker.projectileLife
     });
+}
+
+function createMeleeEffect(
+    attacker,
+    direction
+) {
+    shockwaves.push({
+        x:
+            attacker.x +
+            direction.x * 38,
+
+        y:
+            attacker.y +
+            direction.y * 38,
+
+        radius: 25,
+        maximumRadius:
+            attacker.range,
+
+        color: "#ffffff",
+        born: performance.now(),
+        life: 180,
+        visualOnly: true
+    });
+}
+
+function updateKingShockwaves(
+    currentTime
+) {
+    fighters.forEach(
+        function(fighter) {
+            if (
+                !fighter.alive ||
+                fighter.heroId !== "krol"
+            ) {
+                return;
+            }
+
+            if (
+                currentTime -
+                fighter.lastShockwave <
+                fighter.shockwaveCooldown
+            ) {
+                return;
+            }
+
+            fighter.lastShockwave =
+                currentTime;
+
+            fighter.hp =
+                Math.min(
+                    fighter.maxHp,
+                    fighter.hp +
+                    fighter.shockwaveHeal
+                );
+
+            fighters.forEach(
+                function(target) {
+                    if (
+                        target !== fighter &&
+                        target.alive &&
+                        distance(
+                            fighter,
+                            target
+                        ) <=
+                        fighter.shockwaveRadius
+                    ) {
+                        damageFighter(
+                            target,
+                            fighter.shockwaveDamage,
+                            fighter
+                        );
+                    }
+                }
+            );
+
+            shockwaves.push({
+                x: fighter.x,
+                y: fighter.y,
+                radius: 20,
+                maximumRadius:
+                    fighter.shockwaveRadius,
+
+                color: "#ffd638",
+                born: currentTime,
+                life: 700,
+                visualOnly: false
+            });
+        }
+    );
 }
 
 function damageFighter(
     target,
-    damage
+    damage,
+    attacker
 ) {
     if (!target.alive) {
         return;
@@ -1028,16 +1643,39 @@ function damageFighter(
 
     target.hp -= damage;
 
+    target.hidden = false;
+
     if (target.hp <= 0) {
         target.hp = 0;
         target.alive = false;
+
+        if (target === player) {
+            showDeathScreen(false);
+        }
     }
 
-    updateInformation();
     checkWinner();
+    updateInformation();
 }
 
-function updateProjectiles() {
+function projectileHitsWall(
+    projectile
+) {
+    return walls.some(
+        function(wall) {
+            return rectangleCollision(
+                projectile.x,
+                projectile.y,
+                projectile.radius,
+                wall
+            );
+        }
+    );
+}
+
+function updateProjectiles(
+    currentTime
+) {
     for (
         let i =
             projectiles.length - 1;
@@ -1055,54 +1693,114 @@ function updateProjectiles() {
         projectile.y +=
             projectile.vy;
 
-        let hit = false;
+        let remove = false;
 
-        for (
-            const fighter
-            of fighters
+        if (
+            currentTime -
+            projectile.born >
+            projectile.life
         ) {
-            if (
-                !fighter.alive ||
-                fighter ===
-                    projectile.owner
-            ) {
-                continue;
-            }
-
-            const projectileDistance =
-                Math.hypot(
-                    projectile.x -
-                        fighter.x,
-
-                    projectile.y -
-                        fighter.y
-                );
-
-            if (
-                projectileDistance <
-                projectile.radius +
-                fighter.radius
-            ) {
-                damageFighter(
-                    fighter,
-                    projectile.damage
-                );
-
-                hit = true;
-                break;
-            }
+            remove = true;
         }
 
         if (
-            hit ||
             projectile.x < 0 ||
             projectile.y < 0 ||
             projectile.x >
-                canvas.width ||
+                WORLD_WIDTH ||
             projectile.y >
-                canvas.height
+                WORLD_HEIGHT
         ) {
+            remove = true;
+        }
+
+        if (
+            projectileHitsWall(
+                projectile
+            )
+        ) {
+            remove = true;
+        }
+
+        if (!remove) {
+            for (
+                const fighter
+                of fighters
+            ) {
+                if (
+                    !fighter.alive ||
+                    fighter ===
+                        projectile.owner
+                ) {
+                    continue;
+                }
+
+                if (
+                    Math.hypot(
+                        projectile.x -
+                            fighter.x,
+
+                        projectile.y -
+                            fighter.y
+                    ) <
+                    projectile.radius +
+                    fighter.radius
+                ) {
+                    damageFighter(
+                        fighter,
+                        projectile.damage,
+                        projectile.owner
+                    );
+
+                    remove = true;
+                    break;
+                }
+            }
+        }
+
+        if (remove) {
             projectiles.splice(
+                i,
+                1
+            );
+        }
+    }
+}
+
+function updateShockwaves(
+    currentTime
+) {
+    for (
+        let i =
+            shockwaves.length - 1;
+
+        i >= 0;
+
+        i--
+    ) {
+        const wave =
+            shockwaves[i];
+
+        const progress =
+            Math.min(
+                1,
+                (
+                    currentTime -
+                    wave.born
+                ) /
+                wave.life
+            );
+
+        wave.radius =
+            20 +
+            (
+                wave.maximumRadius -
+                20
+            ) *
+            progress;
+
+        if (progress >= 1) {
+            shockwaves.splice(
                 i,
                 1
             );
@@ -1120,12 +1818,13 @@ function checkWinner() {
 
     if (
         alive.length !== 1 ||
-        winner
+        matchFinished
     ) {
         return;
     }
 
     winner = alive[0];
+    matchFinished = true;
 
     if (winner === player) {
         const state =
@@ -1137,19 +1836,37 @@ function checkWinner() {
 
         saveState(state);
 
-        setTimeout(
-            function() {
-                alert(
-                    "ZWYCIĘSTWO! Dostajesz 4 bilety i 50 monet."
-                );
-            },
-            100
-        );
+        showDeathScreen(true);
+    } else if (!player.alive) {
+        showDeathScreen(false);
     }
 }
 
+function showDeathScreen(
+    playerWon
+) {
+    const deathScreen =
+        document.getElementById(
+            "deathScreen"
+        );
+
+    const deathTitle =
+        document.getElementById(
+            "deathTitle"
+        );
+
+    deathTitle.textContent =
+        playerWon
+            ? "ZWYCIĘSTWO!"
+            : "POKONANY";
+
+    deathScreen.classList.add(
+        "visible"
+    );
+}
+
 function update() {
-    if (winner) {
+    if (matchFinished) {
         return;
     }
 
@@ -1160,9 +1877,7 @@ function update() {
 
     fighters.forEach(
         function(fighter) {
-            if (
-                !fighter.isPlayer
-            ) {
+            if (!fighter.isPlayer) {
                 updateBot(
                     fighter,
                     currentTime
@@ -1171,9 +1886,47 @@ function update() {
         }
     );
 
-    updateProjectiles();
+    updateBushStatus();
+
+    updateProjectiles(
+        currentTime
+    );
+
+    updateKingShockwaves(
+        currentTime
+    );
+
+    updateShockwaves(
+        currentTime
+    );
+
+    updateCamera();
     updateInformation();
     checkWinner();
+}
+
+function worldToScreenX(x) {
+    return x - camera.x;
+}
+
+function worldToScreenY(y) {
+    return y - camera.y;
+}
+
+function objectVisible(
+    x,
+    y,
+    width,
+    height
+) {
+    return (
+        x + width >= camera.x &&
+        x <= camera.x +
+            canvas.width &&
+        y + height >= camera.y &&
+        y <= camera.y +
+            canvas.height
+    );
 }
 
 function drawMap() {
@@ -1187,36 +1940,71 @@ function drawMap() {
         canvas.height
     );
 
-    const tileSize = 85;
+    const tileSize = 100;
+
+    const startColumn =
+        Math.floor(
+            camera.x / tileSize
+        );
+
+    const endColumn =
+        Math.ceil(
+            (
+                camera.x +
+                canvas.width
+            ) /
+            tileSize
+        );
+
+    const startRow =
+        Math.floor(
+            camera.y / tileSize
+        );
+
+    const endRow =
+        Math.ceil(
+            (
+                camera.y +
+                canvas.height
+            ) /
+            tileSize
+        );
 
     for (
-        let x = 0;
-        x < canvas.width;
-        x += tileSize
+        let column =
+            startColumn;
+
+        column <= endColumn;
+
+        column++
     ) {
         for (
-            let y = 0;
-            y < canvas.height;
-            y += tileSize
+            let row =
+                startRow;
+
+            row <= endRow;
+
+            row++
         ) {
-            const column =
-                x / tileSize;
-
-            const row =
-                y / tileSize;
-
             if (
-                (column + row) %
-                2 ===
-                0
+                (
+                    column +
+                    row
+                ) % 2 === 0
             ) {
                 ctx.fillStyle =
                     selectedMap
                         .groundDark;
 
                 ctx.fillRect(
-                    x,
-                    y,
+                    column *
+                        tileSize -
+                        camera.x,
+
+                    row *
+                        tileSize -
+                        camera.y,
+
                     tileSize,
                     tileSize
                 );
@@ -1224,53 +2012,237 @@ function drawMap() {
         }
     }
 
-    ctx.font =
-        "35px Arial";
+    ctx.strokeStyle =
+        "#111827";
 
-    ctx.textAlign =
-        "center";
+    ctx.lineWidth = 10;
 
-    ctx.textBaseline =
-        "middle";
+    ctx.strokeRect(
+        -camera.x,
+        -camera.y,
+        WORLD_WIDTH,
+        WORLD_HEIGHT
+    );
+}
 
-    const decorations = [
-        [80, 210],
-        [220, 80],
-        [640, 100],
-        [770, 260],
-        [100, 650],
-        [720, 680],
-        [425, 425]
-    ];
+function drawWalls() {
+    walls.forEach(
+        function(wall) {
+            if (
+                !objectVisible(
+                    wall.x,
+                    wall.y,
+                    wall.w,
+                    wall.h
+                )
+            ) {
+                return;
+            }
 
-    decorations.forEach(
-        function(position) {
-            ctx.fillText(
-                selectedMap
-                    .decoration,
+            const x =
+                worldToScreenX(
+                    wall.x
+                );
 
-                position[0],
-                position[1]
+            const y =
+                worldToScreenY(
+                    wall.y
+                );
+
+            ctx.fillStyle =
+                "#00000044";
+
+            ctx.fillRect(
+                x + 8,
+                y + 10,
+                wall.w,
+                wall.h
+            );
+
+            ctx.fillStyle =
+                selectedMap.wall;
+
+            ctx.fillRect(
+                x,
+                y,
+                wall.w,
+                wall.h
+            );
+
+            ctx.fillStyle =
+                selectedMap.wallTop;
+
+            ctx.fillRect(
+                x,
+                y,
+                wall.w,
+                Math.min(
+                    24,
+                    wall.h
+                )
+            );
+
+            ctx.strokeStyle =
+                "#32271e";
+
+            ctx.lineWidth = 4;
+
+            ctx.strokeRect(
+                x,
+                y,
+                wall.w,
+                wall.h
+            );
+
+            for (
+                let brickX = 18;
+                brickX <
+                    wall.w;
+
+                brickX += 45
+            ) {
+                ctx.beginPath();
+
+                ctx.moveTo(
+                    x + brickX,
+                    y
+                );
+
+                ctx.lineTo(
+                    x + brickX,
+                    y +
+                    Math.min(
+                        24,
+                        wall.h
+                    )
+                );
+
+                ctx.stroke();
+            }
+        }
+    );
+}
+
+function drawBushes() {
+    bushes.forEach(
+        function(bush) {
+            if (
+                !objectVisible(
+                    bush.x,
+                    bush.y,
+                    bush.w,
+                    bush.h
+                )
+            ) {
+                return;
+            }
+
+            const x =
+                worldToScreenX(
+                    bush.x
+                );
+
+            const y =
+                worldToScreenY(
+                    bush.y
+                );
+
+            ctx.fillStyle =
+                selectedMap.bush;
+
+            ctx.fillRect(
+                x,
+                y,
+                bush.w,
+                bush.h
+            );
+
+            ctx.fillStyle =
+                selectedMap.bushLight;
+
+            const leafSize = 34;
+
+            for (
+                let leafX = 8;
+                leafX <
+                    bush.w;
+
+                leafX += leafSize
+            ) {
+                for (
+                    let leafY = 8;
+                    leafY <
+                        bush.h;
+
+                    leafY += leafSize
+                ) {
+                    ctx.beginPath();
+
+                    ctx.arc(
+                        x +
+                        leafX +
+                        randomStaticOffset(
+                            bush.x +
+                            leafX
+                        ),
+
+                        y +
+                        leafY +
+                        randomStaticOffset(
+                            bush.y +
+                            leafY
+                        ),
+
+                        16,
+                        0,
+                        Math.PI * 2
+                    );
+
+                    ctx.fill();
+                }
+            }
+
+            ctx.strokeStyle =
+                "#183c22";
+
+            ctx.lineWidth = 4;
+
+            ctx.strokeRect(
+                x,
+                y,
+                bush.w,
+                bush.h
             );
         }
     );
 }
 
-function drawHealthBar(fighter) {
-    const width = 55;
-    const height = 8;
+function randomStaticOffset(value) {
+    return (
+        Math.sin(value * 12.345) *
+        4
+    );
+}
+
+function drawHealthBar(
+    fighter,
+    screenX,
+    screenY
+) {
+    const width = 62;
+    const height = 9;
 
     const x =
-        fighter.x -
+        screenX -
         width / 2;
 
     const y =
-        fighter.y -
+        screenY -
         fighter.radius -
-        23;
+        27;
 
     ctx.fillStyle =
-        "#311f25";
+        "#281b20";
 
     ctx.fillRect(
         x,
@@ -1281,7 +2253,7 @@ function drawHealthBar(fighter) {
 
     ctx.fillStyle =
         fighter.isPlayer
-            ? "#48df68"
+            ? "#42de63"
             : "#ef4d4d";
 
     ctx.fillRect(
@@ -1316,12 +2288,64 @@ function drawFighter(fighter) {
         return;
     }
 
+    const screenX =
+        worldToScreenX(
+            fighter.x
+        );
+
+    const screenY =
+        worldToScreenY(
+            fighter.y
+        );
+
+    if (
+        screenX < -80 ||
+        screenY < -80 ||
+        screenX >
+            canvas.width + 80 ||
+        screenY >
+            canvas.height + 80
+    ) {
+        return;
+    }
+
+    const visibleToPlayer =
+        fighter === player ||
+        !fighter.hidden ||
+        (
+            player.alive &&
+            distance(
+                player,
+                fighter
+            ) < 170
+        );
+
+    if (!visibleToPlayer) {
+        return;
+    }
+
+    ctx.save();
+
+    if (
+        fighter.hidden &&
+        fighter !== player
+    ) {
+        ctx.globalAlpha = 0.4;
+    }
+
+    if (
+        fighter.hidden &&
+        fighter === player
+    ) {
+        ctx.globalAlpha = 0.65;
+    }
+
     ctx.beginPath();
 
     ctx.arc(
-        fighter.x,
-        fighter.y,
-        fighter.radius + 6,
+        screenX,
+        screenY,
+        fighter.radius + 7,
         0,
         Math.PI * 2
     );
@@ -1344,7 +2368,7 @@ function drawFighter(fighter) {
     ctx.stroke();
 
     ctx.font =
-        "40px Arial";
+        "43px Arial";
 
     ctx.textAlign =
         "center";
@@ -1354,8 +2378,8 @@ function drawFighter(fighter) {
 
     ctx.fillText(
         fighter.icon,
-        fighter.x,
-        fighter.y
+        screenX,
+        screenY
     );
 
     ctx.font =
@@ -1368,8 +2392,8 @@ function drawFighter(fighter) {
 
     ctx.strokeText(
         fighter.name,
-        fighter.x,
-        fighter.y + 43
+        screenX,
+        screenY + 49
     );
 
     ctx.fillStyle =
@@ -1377,21 +2401,59 @@ function drawFighter(fighter) {
 
     ctx.fillText(
         fighter.name,
-        fighter.x,
-        fighter.y + 43
+        screenX,
+        screenY + 49
     );
 
-    drawHealthBar(fighter);
+    drawHealthBar(
+        fighter,
+        screenX,
+        screenY
+    );
+
+    if (fighter.hidden) {
+        ctx.font =
+            "20px Arial";
+
+        ctx.fillText(
+            "🌿",
+            screenX + 28,
+            screenY - 28
+        );
+    }
+
+    ctx.restore();
 }
 
 function drawProjectiles() {
     projectiles.forEach(
         function(projectile) {
+            const screenX =
+                worldToScreenX(
+                    projectile.x
+                );
+
+            const screenY =
+                worldToScreenY(
+                    projectile.y
+                );
+
+            if (
+                screenX < -40 ||
+                screenY < -40 ||
+                screenX >
+                    canvas.width + 40 ||
+                screenY >
+                    canvas.height + 40
+            ) {
+                return;
+            }
+
             ctx.beginPath();
 
             ctx.arc(
-                projectile.x,
-                projectile.y,
+                screenX,
+                screenY,
                 projectile.radius,
                 0,
                 Math.PI * 2
@@ -1408,92 +2470,217 @@ function drawProjectiles() {
             ctx.lineWidth = 2;
 
             ctx.stroke();
+
+            ctx.beginPath();
+
+            ctx.moveTo(
+                screenX,
+                screenY
+            );
+
+            ctx.lineTo(
+                screenX -
+                projectile.vx * 3,
+
+                screenY -
+                projectile.vy * 3
+            );
+
+            ctx.strokeStyle =
+                projectile.color;
+
+            ctx.lineWidth =
+                projectile.radius;
+
+            ctx.stroke();
         }
     );
 }
 
-function drawMessage() {
-    if (winner) {
-        ctx.fillStyle =
-            "#000000aa";
+function drawShockwaves() {
+    shockwaves.forEach(
+        function(wave) {
+            const screenX =
+                worldToScreenX(
+                    wave.x
+                );
 
-        ctx.fillRect(
-            0,
-            0,
-            canvas.width,
-            canvas.height
-        );
+            const screenY =
+                worldToScreenY(
+                    wave.y
+                );
 
-        ctx.fillStyle =
-            "white";
+            const remaining =
+                Math.max(
+                    0,
+                    1 -
+                    (
+                        performance.now() -
+                        wave.born
+                    ) /
+                    wave.life
+                );
 
-        ctx.textAlign =
-            "center";
+            ctx.save();
 
-        ctx.font =
-            "bold 60px Arial";
+            ctx.globalAlpha =
+                remaining;
 
-        if (
-            winner === player
-        ) {
-            ctx.fillText(
-                "ZWYCIĘSTWO!",
-                canvas.width / 2,
-                canvas.height / 2
+            ctx.beginPath();
+
+            ctx.arc(
+                screenX,
+                screenY,
+                wave.radius,
+                0,
+                Math.PI * 2
             );
-        } else {
-            ctx.fillText(
-                winner.name +
-                " WYGRYWA!",
 
-                canvas.width / 2,
-                canvas.height / 2
-            );
+            ctx.strokeStyle =
+                wave.color;
 
-            ctx.font =
-                "bold 35px Arial";
+            ctx.lineWidth =
+                wave.visualOnly
+                    ? 12
+                    : 18;
 
-            ctx.fillText(
-                winner.icon +
-                " " +
-                winner.heroName,
+            ctx.stroke();
 
-                canvas.width / 2,
-                canvas.height / 2 +
-                65
-            );
+            ctx.restore();
         }
+    );
+}
 
+function drawMiniMap() {
+    const width = 155;
+    const height = 155;
+
+    const x =
+        canvas.width -
+        width -
+        16;
+
+    const y = 16;
+
+    ctx.fillStyle =
+        "#111827cc";
+
+    ctx.fillRect(
+        x,
+        y,
+        width,
+        height
+    );
+
+    ctx.fillStyle =
+        selectedMap.ground;
+
+    ctx.fillRect(
+        x + 5,
+        y + 5,
+        width - 10,
+        height - 10
+    );
+
+    fighters.forEach(
+        function(fighter) {
+            if (!fighter.alive) {
+                return;
+            }
+
+            const dotX =
+                x + 5 +
+                fighter.x /
+                WORLD_WIDTH *
+                (width - 10);
+
+            const dotY =
+                y + 5 +
+                fighter.y /
+                WORLD_HEIGHT *
+                (height - 10);
+
+            ctx.beginPath();
+
+            ctx.arc(
+                dotX,
+                dotY,
+                fighter.isPlayer
+                    ? 5
+                    : 3,
+
+                0,
+                Math.PI * 2
+            );
+
+            ctx.fillStyle =
+                fighter.isPlayer
+                    ? "#36a9ff"
+                    : "#ef4d4d";
+
+            ctx.fill();
+        }
+    );
+
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 2;
+
+    ctx.strokeRect(
+        x,
+        y,
+        width,
+        height
+    );
+}
+
+function drawCrosshair() {
+    if (
+        !player.alive ||
+        matchFinished
+    ) {
         return;
     }
 
-    if (!player.alive) {
-        ctx.fillStyle =
-            "#00000055";
+    ctx.beginPath();
 
-        ctx.fillRect(
-            0,
-            0,
-            canvas.width,
-            canvas.height
-        );
+    ctx.arc(
+        mouse.x,
+        mouse.y,
+        13,
+        0,
+        Math.PI * 2
+    );
 
-        ctx.fillStyle =
-            "white";
+    ctx.strokeStyle =
+        "#ffffffcc";
 
-        ctx.font =
-            "bold 36px Arial";
+    ctx.lineWidth = 2;
 
-        ctx.textAlign =
-            "center";
+    ctx.stroke();
 
-        ctx.fillText(
-            "POKONANY — OBSERWUJ WALKĘ",
+    ctx.beginPath();
 
-            canvas.width / 2,
-            65
-        );
-    }
+    ctx.moveTo(
+        mouse.x - 19,
+        mouse.y
+    );
+
+    ctx.lineTo(
+        mouse.x + 19,
+        mouse.y
+    );
+
+    ctx.moveTo(
+        mouse.x,
+        mouse.y - 19
+    );
+
+    ctx.lineTo(
+        mouse.x,
+        mouse.y + 19
+    );
+
+    ctx.stroke();
 }
 
 function draw() {
@@ -1505,13 +2692,17 @@ function draw() {
     );
 
     drawMap();
+    drawBushes();
+    drawWalls();
 
     fighters.forEach(
         drawFighter
     );
 
     drawProjectiles();
-    drawMessage();
+    drawShockwaves();
+    drawMiniMap();
+    drawCrosshair();
 }
 
 function gameLoop() {
