@@ -49,14 +49,14 @@
 
             background: #111827;
 
-            border-bottom:
-                4px solid #050912;
+            border-bottom: 4px solid #050912;
         }
 
         .logo {
             color: #ffd43b;
+
             font-size: 24px;
-            font-weight: 900;
+            font-weight: 1000;
         }
 
         .top-buttons {
@@ -69,14 +69,12 @@
             padding: 10px 15px;
 
             color: white;
-            font-weight: 900;
+            font-weight: 1000;
             text-decoration: none;
 
             background: #35445e;
 
-            border:
-                3px solid #080d16;
-
+            border: 3px solid #080d16;
             border-radius: 10px;
 
             cursor: pointer;
@@ -103,27 +101,20 @@
 
             background: #26344b;
 
-            border:
-                3px solid #101722;
-
+            border: 3px solid #101722;
             border-radius: 10px;
 
-            font-weight: 900;
+            font-weight: 1000;
         }
 
         .game-container {
             position: relative;
 
-            width:
-                min(
-                    96vw,
-                    1200px
-                );
+            width: min(96vw, 1300px);
 
             aspect-ratio: 12 / 7;
 
-            max-height:
-                calc(100vh - 155px);
+            max-height: calc(100vh - 150px);
 
             margin: 0 auto;
         }
@@ -134,11 +125,9 @@
 
             display: block;
 
-            background: #5cad58;
+            background: #58ad58;
 
-            border:
-                7px solid #111827;
-
+            border: 7px solid #111827;
             border-radius: 12px;
 
             box-shadow:
@@ -150,7 +139,7 @@
         .loading-screen {
             position: absolute;
             inset: 7px;
-            z-index: 30;
+            z-index: 50;
 
             display: flex;
             flex-direction: column;
@@ -162,14 +151,14 @@
             background:
                 radial-gradient(
                     circle,
-                    #243856,
+                    #263b5b,
                     #080e18
                 );
 
             border-radius: 5px;
 
             transition:
-                opacity 0.5s ease;
+                opacity 0.45s ease;
         }
 
         .loading-screen.hidden {
@@ -177,15 +166,15 @@
             pointer-events: none;
         }
 
-        .loading-logo {
-            font-size: 75px;
+        .loading-icon {
+            font-size: 80px;
 
             animation:
-                loadingSword 1.2s
+                swordMove 1.1s
                 ease-in-out infinite;
         }
 
-        @keyframes loadingSword {
+        @keyframes swordMove {
             0%,
             100% {
                 transform:
@@ -195,7 +184,7 @@
 
             50% {
                 transform:
-                    translateY(-12px)
+                    translateY(-14px)
                     rotate(8deg);
             }
         }
@@ -206,38 +195,33 @@
             color: #ffd43b;
 
             font-size:
-                clamp(30px, 5vw, 58px);
+                clamp(34px, 6vw, 65px);
 
             font-weight: 1000;
 
             text-shadow:
-                4px 4px black;
+                5px 5px black;
         }
 
-        .loading-map-name {
+        .loading-map {
             margin-top: 8px;
 
-            color: #8be3ff;
+            color: #73dcff;
 
             font-size: 22px;
-            font-weight: 900;
+            font-weight: 1000;
         }
 
         .loading-text {
             margin-top: 28px;
 
             font-size: 17px;
-            font-weight: 900;
+            font-weight: 1000;
         }
 
         .loading-bar {
-            width:
-                min(
-                    520px,
-                    85%
-                );
-
-            height: 35px;
+            width: min(540px, 85%);
+            height: 38px;
 
             margin-top: 12px;
 
@@ -245,9 +229,7 @@
 
             background: #080d16;
 
-            border:
-                5px solid #00050b;
-
+            border: 5px solid #00050b;
             border-radius: 12px;
 
             box-shadow:
@@ -261,38 +243,35 @@
             background:
                 linear-gradient(
                     90deg,
-                    #e56d16,
-                    #ffb126
+                    #e36d18,
+                    #ffb42b
                 );
-
-            transition:
-                width 0.12s linear;
         }
 
         .loading-percent {
             margin-top: 10px;
 
-            font-size: 18px;
+            font-size: 19px;
             font-weight: 1000;
         }
 
-        .intro-cover {
+        .intro-shade {
             position: absolute;
             inset: 7px;
-            z-index: 20;
+            z-index: 30;
 
             display: none;
 
             pointer-events: none;
 
-            background: #252932;
+            background: #4a4d55;
 
-            opacity: 0.85;
+            opacity: 0.88;
 
             border-radius: 5px;
         }
 
-        .intro-cover.visible {
+        .intro-shade.visible {
             display: block;
         }
 
@@ -300,42 +279,40 @@
             position: absolute;
             left: 50%;
             top: 50%;
-            z-index: 25;
+            z-index: 40;
 
             display: none;
 
             transform:
-                translate(-50%, -50%)
-                scale(0.4);
+                translate(-50%, -50%);
 
             color: white;
 
             font-size:
-                clamp(55px, 10vw, 120px);
+                clamp(65px, 11vw, 145px);
 
             font-weight: 1000;
 
             text-shadow:
                 6px 6px #111827,
-                10px 10px #00000088;
+                11px 11px #00000077;
         }
 
         .battle-text.visible {
             display: block;
 
             animation:
-                battleAnimation
-                1.1s ease forwards;
+                battleAppear 1.15s ease forwards;
         }
 
-        @keyframes battleAnimation {
+        @keyframes battleAppear {
             0% {
                 opacity: 0;
 
                 transform:
                     translate(-50%, -50%)
-                    scale(0.3)
-                    rotate(-8deg);
+                    scale(0.25)
+                    rotate(-10deg);
             }
 
             35% {
@@ -343,7 +320,7 @@
 
                 transform:
                     translate(-50%, -50%)
-                    scale(1.15)
+                    scale(1.2)
                     rotate(3deg);
             }
 
@@ -352,8 +329,7 @@
 
                 transform:
                     translate(-50%, -50%)
-                    scale(1)
-                    rotate(0);
+                    scale(1);
             }
 
             100% {
@@ -361,24 +337,24 @@
 
                 transform:
                     translate(-50%, -50%)
-                    scale(1.3);
+                    scale(1.35);
             }
         }
 
         .death-screen {
             position: absolute;
             inset: 7px;
-            z-index: 40;
+            z-index: 60;
 
             display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 16px;
+            gap: 17px;
 
-            padding: 20px;
+            padding: 25px;
 
-            background: #000000bb;
+            background: #000000c7;
 
             border-radius: 5px;
         }
@@ -389,7 +365,7 @@
 
         .death-title {
             font-size:
-                clamp(42px, 7vw, 80px);
+                clamp(48px, 8vw, 90px);
 
             font-weight: 1000;
 
@@ -398,17 +374,15 @@
         }
 
         .match-result {
-            padding: 13px 22px;
+            padding: 14px 24px;
 
             font-size: 20px;
-            font-weight: 900;
+            font-weight: 1000;
             line-height: 1.5;
 
-            background: #111827dd;
+            background: #111827e8;
 
-            border:
-                4px solid #050912;
-
+            border: 4px solid #050912;
             border-radius: 12px;
         }
 
@@ -428,9 +402,7 @@
                     #f0a500
                 );
 
-            border:
-                5px solid #111827;
-
+            border: 5px solid #111827;
             border-radius: 14px;
 
             box-shadow:
@@ -492,7 +464,7 @@
 
         <button
             class="restart-button"
-            onclick="restartGame()"
+            onclick="location.reload()"
         >
             NOWA GRA
         </button>
@@ -546,7 +518,7 @@
         class="loading-screen"
     >
 
-        <div class="loading-logo">
+        <div class="loading-icon">
             ⚔️
         </div>
 
@@ -555,8 +527,8 @@
         </div>
 
         <div
-            id="loadingMapName"
-            class="loading-map-name"
+            id="loadingMap"
+            class="loading-map"
         >
             Zielona Dolina
         </div>
@@ -584,8 +556,8 @@
     </div>
 
     <div
-        id="introCover"
-        class="intro-cover"
+        id="introShade"
+        class="intro-shade"
     ></div>
 
     <div
@@ -644,9 +616,6 @@ const ctx =
 
 const WORLD_WIDTH = 5000;
 const WORLD_HEIGHT = 5000;
-
-const CAMERA_WIDTH = canvas.width;
-const CAMERA_HEIGHT = canvas.height;
 
 const TOTAL_PLAYERS = 10;
 
@@ -729,6 +698,7 @@ const HERO_STATS = {
         projectileLife: 1100,
 
         melee: false,
+
         farmerThirdAttack: true
     },
 
@@ -795,6 +765,7 @@ const HERO_STATS = {
         melee: false,
 
         electricWave: true,
+
         ultraEvery: 5,
         ultraSpeedMultiplier: 1.65,
         ultraStunDuration: 1000
@@ -840,6 +811,7 @@ const HERO_STATS = {
         cooldown: 520,
 
         melee: true,
+
         canPassWalls: true
     },
 
@@ -869,6 +841,7 @@ const HERO_STATS = {
         cooldown: 4000,
 
         melee: false,
+
         vampire: true,
 
         transformationDuration: 1200,
@@ -890,6 +863,7 @@ const HERO_STATS = {
         projectileLife: 1450,
 
         melee: false,
+
         tripleShot: true
     },
 
@@ -913,56 +887,62 @@ const bushes = [];
 const waterPools = [];
 const spawnPoints = [];
 
-function addRectangle(array, x, y, w, h) {
-    array.push({
+function addRectangle(
+    collection,
+    x,
+    y,
+    width,
+    height
+) {
+    collection.push({
         x: x,
         y: y,
-        w: w,
-        h: h
+        w: width,
+        h: height
     });
 }
 
-function addFourWaySymmetry(
-    array,
+function addSymmetricFour(
+    collection,
     x,
     y,
-    w,
-    h
+    width,
+    height
 ) {
     addRectangle(
-        array,
+        collection,
         x,
         y,
-        w,
-        h
+        width,
+        height
     );
 
     addRectangle(
-        array,
-        WORLD_WIDTH - x - w,
+        collection,
+        WORLD_WIDTH - x - width,
         y,
-        w,
-        h
+        width,
+        height
     );
 
     addRectangle(
-        array,
+        collection,
         x,
-        WORLD_HEIGHT - y - h,
-        w,
-        h
+        WORLD_HEIGHT - y - height,
+        width,
+        height
     );
 
     addRectangle(
-        array,
-        WORLD_WIDTH - x - w,
-        WORLD_HEIGHT - y - h,
-        w,
-        h
+        collection,
+        WORLD_WIDTH - x - width,
+        WORLD_HEIGHT - y - height,
+        width,
+        height
     );
 }
 
-function buildArenaMap() {
+function buildMap() {
     walls.length = 0;
     bushes.length = 0;
     waterPools.length = 0;
@@ -1002,99 +982,99 @@ function buildArenaMap() {
         WORLD_HEIGHT
     );
 
-    addFourWaySymmetry(
+    addSymmetricFour(
         walls,
-        420,
-        420,
-        620,
+        430,
+        430,
+        650,
         90
     );
 
-    addFourWaySymmetry(
+    addSymmetricFour(
         walls,
-        420,
-        780,
+        430,
+        820,
         90,
         560
     );
 
-    addFourWaySymmetry(
+    addSymmetricFour(
         walls,
-        1100,
-        850,
-        500,
-        90
-    );
-
-    addFourWaySymmetry(
-        walls,
-        850,
-        1500,
-        90,
-        500
-    );
-
-    addFourWaySymmetry(
-        walls,
-        1450,
-        1450,
+        1150,
+        900,
         520,
         90
     );
 
-    addRectangle(
+    addSymmetricFour(
         walls,
-        2180,
-        1800,
-        640,
+        900,
+        1520,
+        90,
+        520
+    );
+
+    addSymmetricFour(
+        walls,
+        1500,
+        1500,
+        480,
         90
     );
 
     addRectangle(
         walls,
-        2180,
-        3110,
-        640,
+        2150,
+        1850,
+        700,
         90
     );
 
     addRectangle(
         walls,
-        1800,
-        2180,
-        90,
-        640
+        2150,
+        3060,
+        700,
+        90
     );
 
     addRectangle(
         walls,
-        3110,
-        2180,
+        1850,
+        2150,
         90,
-        640
+        700
     );
 
     addRectangle(
         walls,
-        2320,
-        2320,
-        360,
-        360
+        3060,
+        2150,
+        90,
+        700
     );
 
-    addFourWaySymmetry(
+    addRectangle(
+        walls,
+        2340,
+        2340,
+        320,
+        320
+    );
+
+    addSymmetricFour(
         waterPools,
-        650,
-        1450,
+        700,
+        1500,
         380,
         500
     );
 
-    addFourWaySymmetry(
+    addSymmetricFour(
         waterPools,
         1550,
         500,
-        520,
+        530,
         260
     );
 
@@ -1114,50 +1094,50 @@ function buildArenaMap() {
         280
     );
 
-    addFourWaySymmetry(
+    addSymmetricFour(
         bushes,
         180,
         180,
-        600,
+        620,
         150
     );
 
-    addFourWaySymmetry(
+    addSymmetricFour(
         bushes,
-        500,
-        550,
+        520,
+        560,
         520,
         120
     );
 
-    addFourWaySymmetry(
+    addSymmetricFour(
         bushes,
-        600,
-        1000,
+        620,
+        1040,
         130,
-        600
+        620
     );
 
-    addFourWaySymmetry(
+    addSymmetricFour(
         bushes,
-        1150,
-        1050,
+        1170,
+        1080,
         620,
         120
     );
 
-    addFourWaySymmetry(
+    addSymmetricFour(
         bushes,
-        1250,
-        1750,
-        480,
+        1300,
+        1760,
+        460,
         120
     );
 
     addRectangle(
         bushes,
         1970,
-        1650,
+        1660,
         1060,
         120
     );
@@ -1165,14 +1145,14 @@ function buildArenaMap() {
     addRectangle(
         bushes,
         1970,
-        3230,
+        3220,
         1060,
         120
     );
 
     addRectangle(
         bushes,
-        1650,
+        1660,
         1970,
         120,
         1060
@@ -1180,7 +1160,7 @@ function buildArenaMap() {
 
     addRectangle(
         bushes,
-        3230,
+        3220,
         1970,
         120,
         1060
@@ -1188,41 +1168,41 @@ function buildArenaMap() {
 
     addRectangle(
         bushes,
-        2120,
-        2120,
-        760,
+        2110,
+        2110,
+        780,
         120
     );
 
     addRectangle(
         bushes,
-        2120,
-        2760,
-        760,
+        2110,
+        2770,
+        780,
         120
     );
 
     spawnPoints.push(
-        { x: 280, y: 280 },
-        { x: 1250, y: 300 },
-        { x: 2500, y: 300 },
-        { x: 3750, y: 300 },
-        { x: 4720, y: 280 },
+        { x: 260, y: 260 },
+        { x: 1250, y: 270 },
+        { x: 2500, y: 270 },
+        { x: 3750, y: 270 },
+        { x: 4740, y: 260 },
 
-        { x: 280, y: 1250 },
-        { x: 4720, y: 1250 },
+        { x: 260, y: 1250 },
+        { x: 4740, y: 1250 },
 
-        { x: 280, y: 2500 },
-        { x: 4720, y: 2500 },
+        { x: 260, y: 2500 },
+        { x: 4740, y: 2500 },
 
-        { x: 280, y: 3750 },
-        { x: 4720, y: 3750 },
+        { x: 260, y: 3750 },
+        { x: 4740, y: 3750 },
 
-        { x: 280, y: 4720 },
-        { x: 1250, y: 4700 },
-        { x: 2500, y: 4700 },
-        { x: 3750, y: 4700 },
-        { x: 4720, y: 4720 },
+        { x: 260, y: 4740 },
+        { x: 1250, y: 4730 },
+        { x: 2500, y: 4730 },
+        { x: 3750, y: 4730 },
+        { x: 4740, y: 4740 },
 
         { x: 1150, y: 2500 },
         { x: 3850, y: 2500 },
@@ -1232,87 +1212,13 @@ function buildArenaMap() {
     );
 }
 
-buildArenaMap();
-    {
-        x: 180,
-        y: 180
-    },
-
-    {
-        x: 760,
-        y: 160
-    },
-
-    {
-        x: 1600,
-        y: 380
-    },
-
-    {
-        x: 2440,
-        y: 160
-    },
-
-    {
-        x: 3020,
-        y: 180
-    },
-
-    {
-        x: 180,
-        y: 900
-    },
-
-    {
-        x: 3020,
-        y: 900
-    },
-
-    {
-        x: 180,
-        y: 1620
-    },
-
-    {
-        x: 760,
-        y: 1640
-    },
-
-    {
-        x: 1600,
-        y: 1390
-    },
-
-    {
-        x: 2440,
-        y: 1640
-    },
-
-    {
-        x: 3020,
-        y: 1620
-    },
-
-    {
-        x: 900,
-        y: 900
-    },
-
-    {
-        x: 2300,
-        y: 900
-    }
-];
+buildMap();
 
 const keys = {};
 
 let mouse = {
-    x:
-        canvas.width / 2,
-
-    y:
-        canvas.height / 2,
-
+    x: canvas.width / 2,
+    y: canvas.height / 2,
     down: false
 };
 
@@ -1321,8 +1227,7 @@ let camera = {
     y: 0
 };
 
-let selectedMap =
-    MAPS.green;
+let selectedMap = MAPS.green;
 
 let fighters = [];
 let projectiles = [];
@@ -1330,20 +1235,25 @@ let electricWaves = [];
 let effects = [];
 
 let player = null;
-let winner = null;
 
 let matchFinished = false;
 let trophiesAwarded = false;
 
-let gamePhase = "loading";
-let introStartTime = 0;
+let phase = "loading";
 
-let playerCameraTarget = {
+let introStart = 0;
+
+let introStartCamera = {
     x: 0,
     y: 0
 };
 
-let summonNumber = 0;
+let introTargetCamera = {
+    x: 0,
+    y: 0
+};
+
+let summonCounter = 0;
 
 window.addEventListener(
     "keydown",
@@ -1422,6 +1332,20 @@ canvas.addEventListener(
     }
 );
 
+function clamp(
+    value,
+    minimum,
+    maximum
+) {
+    return Math.max(
+        minimum,
+        Math.min(
+            maximum,
+            value
+        )
+    );
+}
+
 function randomNumber(
     minimum,
     maximum
@@ -1445,35 +1369,51 @@ function randomItem(array) {
     ];
 }
 
-function shuffleArray(array) {
+function shuffle(array) {
     const copy =
         array.slice();
 
     for (
-        let i =
+        let index =
             copy.length - 1;
 
-        i > 0;
+        index > 0;
 
-        i--
+        index--
     ) {
-        const j =
+        const randomIndex =
             Math.floor(
                 Math.random() *
-                (i + 1)
+                (index + 1)
             );
 
         const temporary =
-            copy[i];
+            copy[index];
 
-        copy[i] =
-            copy[j];
+        copy[index] =
+            copy[randomIndex];
 
-        copy[j] =
+        copy[randomIndex] =
             temporary;
     }
 
     return copy;
+}
+
+function normalize(
+    x,
+    y
+) {
+    const length =
+        Math.hypot(
+            x,
+            y
+        ) || 1;
+
+    return {
+        x: x / length,
+        y: y / length
+    };
 }
 
 function distance(
@@ -1481,28 +1421,9 @@ function distance(
     second
 ) {
     return Math.hypot(
-        first.x -
-        second.x,
-
-        first.y -
-        second.y
+        first.x - second.x,
+        first.y - second.y
     );
-}
-
-function normalize(dx, dy) {
-    const length =
-        Math.hypot(
-            dx,
-            dy
-        ) || 1;
-
-    return {
-        x:
-            dx / length,
-
-        y:
-            dy / length
-    };
 }
 
 function rotateDirection(
@@ -1524,36 +1445,26 @@ function rotateDirection(
     };
 }
 
-function clamp(
-    value,
-    minimum,
-    maximum
-) {
-    return Math.max(
-        minimum,
-        Math.min(
-            maximum,
-            value
-        )
-    );
-}
-
 function easeInOut(
     progress
 ) {
+    if (progress < 0.5) {
+        return (
+            2 *
+            progress *
+            progress
+        );
+    }
+
     return (
-        progress < 0.5
-            ? 2 *
-              progress *
-              progress
-            : 1 -
-              Math.pow(
-                  -2 *
-                  progress +
-                  2,
-                  2
-              ) /
-              2
+        1 -
+        Math.pow(
+            -2 *
+            progress +
+            2,
+            2
+        ) /
+        2
     );
 }
 
@@ -1563,7 +1474,7 @@ function rectangleCollision(
     radius,
     rectangle
 ) {
-    const closestX =
+    const nearestX =
         Math.max(
             rectangle.x,
             Math.min(
@@ -1573,7 +1484,7 @@ function rectangleCollision(
             )
         );
 
-    const closestY =
+    const nearestY =
         Math.max(
             rectangle.y,
             Math.min(
@@ -1583,18 +1494,37 @@ function rectangleCollision(
             )
         );
 
-    const dx =
-        x -
-        closestX;
+    const differenceX =
+        x - nearestX;
 
-    const dy =
-        y -
-        closestY;
+    const differenceY =
+        y - nearestY;
 
     return (
-        dx * dx +
-        dy * dy <
-        radius * radius
+        differenceX *
+        differenceX +
+        differenceY *
+        differenceY <
+        radius *
+        radius
+    );
+}
+
+function collidesWithCollection(
+    x,
+    y,
+    radius,
+    collection
+) {
+    return collection.some(
+        function(rectangle) {
+            return rectangleCollision(
+                x,
+                y,
+                radius,
+                rectangle
+            );
+        }
     );
 }
 
@@ -1603,15 +1533,11 @@ function collidesWithWall(
     y,
     radius
 ) {
-    return walls.some(
-        function(wall) {
-            return rectangleCollision(
-                x,
-                y,
-                radius,
-                wall
-            );
-        }
+    return collidesWithCollection(
+        x,
+        y,
+        radius,
+        walls
     );
 }
 
@@ -1620,15 +1546,24 @@ function collidesWithWater(
     y,
     radius
 ) {
-    return waterPools.some(
-        function(water) {
-            return rectangleCollision(
-                x,
-                y,
-                radius,
-                water
-            );
-        }
+    return collidesWithCollection(
+        x,
+        y,
+        radius,
+        waterPools
+    );
+}
+
+function collidesWithBush(
+    x,
+    y,
+    radius
+) {
+    return collidesWithCollection(
+        x,
+        y,
+        radius,
+        bushes
     );
 }
 
@@ -1657,26 +1592,36 @@ function isSafeSpawn(
     radius = 40
 ) {
     if (
-        x <
-        radius + 70 ||
-        y <
-        radius + 70 ||
+        x < radius + 110 ||
+        y < radius + 110 ||
         x >
         WORLD_WIDTH -
         radius -
-        70 ||
+        110 ||
         y >
         WORLD_HEIGHT -
         radius -
-        70
+        110
     ) {
         return false;
     }
 
-    return !isBlocked(
-        x,
-        y,
-        radius
+    return (
+        !collidesWithWall(
+            x,
+            y,
+            radius
+        ) &&
+        !collidesWithWater(
+            x,
+            y,
+            radius
+        ) &&
+        !collidesWithBush(
+            x,
+            y,
+            radius
+        )
     );
 }
 
@@ -1696,15 +1641,14 @@ function getSafeSpawn(
     }
 
     for (
-        let searchRadius = 40;
-        searchRadius <= 600;
-        searchRadius += 40
+        let searchRadius = 50;
+        searchRadius <= 850;
+        searchRadius += 50
     ) {
         for (
             let angle = 0;
-            angle <
-            Math.PI * 2;
-            angle += 0.25
+            angle < Math.PI * 2;
+            angle += 0.22
         ) {
             const x =
                 position.x +
@@ -1731,45 +1675,28 @@ function getSafeSpawn(
     }
 
     return {
-        x:
-            WORLD_WIDTH / 2,
-
-        y:
-            WORLD_HEIGHT / 2
+        x: 2500,
+        y: 2500
     };
 }
 
-function getCharacterStats(
+function getStats(
     heroId
 ) {
     return (
-        HERO_STATS[
-            heroId
-        ] ||
+        HERO_STATS[heroId] ||
         HERO_STATS.farmer
-    );
-}
-
-function getAliveContestants() {
-    return fighters.filter(
-        function(fighter) {
-            return (
-                fighter.alive &&
-                !fighter.isSummon
-            );
-        }
     );
 }
 
 function createFighter(
     hero,
-    x,
-    y,
+    position,
     isPlayer,
     number
 ) {
     const stats =
-        getCharacterStats(
+        getStats(
             hero.id
         );
 
@@ -1777,14 +1704,12 @@ function createFighter(
         id:
             isPlayer
                 ? "player"
-                : "bot-" +
-                  number,
+                : "bot-" + number,
 
         name:
             isPlayer
                 ? "TY"
-                : "BOT " +
-                  number,
+                : "BOT " + number,
 
         heroId:
             hero.id,
@@ -1795,8 +1720,11 @@ function createFighter(
         icon:
             hero.ikona,
 
-        x: x,
-        y: y,
+        x:
+            position.x,
+
+        y:
+            position.y,
 
         radius: 28,
 
@@ -1822,16 +1750,13 @@ function createFighter(
             stats.cooldown,
 
         projectileSpeed:
-            stats.projectileSpeed ||
-            0,
+            stats.projectileSpeed || 0,
 
         projectileWidth:
-            stats.projectileWidth ||
-            0,
+            stats.projectileWidth || 0,
 
         projectileLife:
-            stats.projectileLife ||
-            0,
+            stats.projectileLife || 0,
 
         melee:
             Boolean(
@@ -1843,28 +1768,10 @@ function createFighter(
                 stats.canPassWalls
             ),
 
-        tripleShot:
-            Boolean(
-                stats.tripleShot
-            ),
-
         farmerThirdAttack:
             Boolean(
                 stats.farmerThirdAttack
             ),
-
-        lowHpShield:
-            Boolean(
-                stats.lowHpShield
-            ),
-
-        shieldThreshold:
-            stats.shieldThreshold ||
-            0,
-
-        shieldReduction:
-            stats.shieldReduction ||
-            0,
 
         fastThirdArrow:
             Boolean(
@@ -1872,8 +1779,18 @@ function createFighter(
             ),
 
         fastArrowMultiplier:
-            stats.fastArrowMultiplier ||
-            1,
+            stats.fastArrowMultiplier || 1,
+
+        lowHpShield:
+            Boolean(
+                stats.lowHpShield
+            ),
+
+        shieldThreshold:
+            stats.shieldThreshold || 0,
+
+        shieldReduction:
+            stats.shieldReduction || 0,
 
         lowHpDamageBonus:
             Boolean(
@@ -1881,36 +1798,10 @@ function createFighter(
             ),
 
         damageBonusThreshold:
-            stats.damageBonusThreshold ||
-            0,
+            stats.damageBonusThreshold || 0,
 
         damageBonusMultiplier:
-            stats.damageBonusMultiplier ||
-            1,
-
-        shockwaveEvery:
-            stats.shockwaveEvery ||
-            0,
-
-        attackShockwaveRadius:
-            stats.attackShockwaveRadius ||
-            0,
-
-        attackShockwaveDamage:
-            stats.attackShockwaveDamage ||
-            0,
-
-        curseEvery:
-            stats.curseEvery ||
-            0,
-
-        curseDuration:
-            stats.curseDuration ||
-            0,
-
-        curseMultiplier:
-            stats.curseMultiplier ||
-            1,
+            stats.damageBonusMultiplier || 1,
 
         summonsGhosts:
             Boolean(
@@ -1918,12 +1809,10 @@ function createFighter(
             ),
 
         summonCooldown:
-            stats.summonCooldown ||
-            0,
+            stats.summonCooldown || 0,
 
         maximumSummons:
-            stats.maximumSummons ||
-            0,
+            stats.maximumSummons || 0,
 
         lastSummon:
             performance.now(),
@@ -1934,16 +1823,36 @@ function createFighter(
             ),
 
         ultraEvery:
-            stats.ultraEvery ||
-            0,
+            stats.ultraEvery || 0,
 
         ultraSpeedMultiplier:
-            stats.ultraSpeedMultiplier ||
-            1,
+            stats.ultraSpeedMultiplier || 1,
 
         ultraStunDuration:
-            stats.ultraStunDuration ||
-            0,
+            stats.ultraStunDuration || 0,
+
+        shockwaveEvery:
+            stats.shockwaveEvery || 0,
+
+        attackShockwaveRadius:
+            stats.attackShockwaveRadius || 0,
+
+        attackShockwaveDamage:
+            stats.attackShockwaveDamage || 0,
+
+        curseEvery:
+            stats.curseEvery || 0,
+
+        curseDuration:
+            stats.curseDuration || 0,
+
+        curseMultiplier:
+            stats.curseMultiplier || 1,
+
+        tripleShot:
+            Boolean(
+                stats.tripleShot
+            ),
 
         vampire:
             Boolean(
@@ -1951,20 +1860,16 @@ function createFighter(
             ),
 
         transformationDuration:
-            stats.transformationDuration ||
-            0,
+            stats.transformationDuration || 0,
 
         transformationCooldown:
-            stats.transformationCooldown ||
-            0,
+            stats.transformationCooldown || 0,
 
         batSpeedMultiplier:
-            stats.batSpeedMultiplier ||
-            1,
+            stats.batSpeedMultiplier || 1,
 
         vampireHealing:
-            stats.vampireHealing ||
-            0,
+            stats.vampireHealing || 0,
 
         transformed: false,
 
@@ -1978,11 +1883,11 @@ function createFighter(
 
         attackCounter: 0,
 
+        stunnedUntil: 0,
+
         cursedUntil: 0,
 
         receivedDamageMultiplier: 1,
-
-        stunnedUntil: 0,
 
         isPlayer:
             isPlayer,
@@ -1999,8 +1904,7 @@ function createFighter(
 
         target: null,
 
-        behavior:
-            "wander",
+        behavior: "wander",
 
         directionX:
             randomNumber(
@@ -2017,154 +1921,26 @@ function createFighter(
         nextDecision:
             performance.now() +
             randomNumber(
-                700,
-                2200
+                600,
+                1800
             ),
 
         color:
             isPlayer
                 ? "#36a9ff"
-                : `hsl(
-                    ${
-                        Math.random() *
-                        360
-                    },
-                    70%,
-                    55%
-                )`
+                : `hsl(${Math.random() * 360}, 70%, 55%)`
     };
 }
 
-function createSummonedGhost(
-    priest
-) {
-    summonNumber++;
-
-    const position =
-        getSafeSpawn({
-            x:
-                priest.x +
-                randomNumber(
-                    -80,
-                    80
-                ),
-
-            y:
-                priest.y +
-                randomNumber(
-                    -80,
-                    80
-                )
-        });
-
-    const ghost = {
-        id:
-            "summon-" +
-            summonNumber,
-
-        name:
-            "DUCH",
-
-        heroId:
-            "summoned-ghost",
-
-        heroName:
-            "Przywołany Duch",
-
-        icon:
-            "👻",
-
-        x:
-            position.x,
-
-        y:
-            position.y,
-
-        radius: 20,
-
-        hp: 18,
-        maxHp: 18,
-
-        damage: 8,
-
-        speed: 1.8,
-        normalSpeed: 1.8,
-
-        range: 65,
-        cooldown: 650,
-
-        projectileSpeed: 0,
-        projectileWidth: 0,
-        projectileLife: 0,
-
-        melee: true,
-        canPassWalls: true,
-
-        tripleShot: false,
-        farmerThirdAttack: false,
-        lowHpShield: false,
-        fastThirdArrow: false,
-        lowHpDamageBonus: false,
-
-        shockwaveEvery: 0,
-        curseEvery: 0,
-
-        summonsGhosts: false,
-        electricWave: false,
-        vampire: false,
-
-        transformed: false,
-
-        transformationHits:
-            new Set(),
-
-        attackCounter: 0,
-
-        cursedUntil: 0,
-
-        receivedDamageMultiplier: 1,
-
-        stunnedUntil: 0,
-
-        isPlayer: false,
-        isSummon: true,
-
-        summoner:
-            priest,
-
-        alive: true,
-        hidden: false,
-
-        lastAttack: 0,
-
-        target: null,
-
-        behavior:
-            "attack",
-
-        directionX: 0,
-        directionY: 0,
-
-        nextDecision: 0,
-
-        color:
-            "#9cecff"
-    };
-
-    fighters.push(
-        ghost
+function getAlivePlayers() {
+    return fighters.filter(
+        function(fighter) {
+            return (
+                fighter.alive &&
+                !fighter.isSummon
+            );
+        }
     );
-
-    createTextEffect(
-        priest.x,
-        priest.y - 60,
-        "PRZYWOŁANIE!",
-        "#c9f7ff"
-    );
-}
-
-function restartGame() {
-    location.reload();
 }
 
 function prepareGame() {
@@ -2186,7 +1962,7 @@ function prepareGame() {
 
     document
         .getElementById(
-            "loadingMapName"
+            "loadingMap"
         )
         .textContent =
         selectedMap.name;
@@ -2204,35 +1980,20 @@ function prepareGame() {
             BOHATEROWIE[0];
     }
 
-    fighters = [];
-    projectiles = [];
-    electricWaves = [];
-    effects = [];
-
-    winner = null;
-
-    matchFinished = false;
-    trophiesAwarded = false;
-
-    summonNumber = 0;
-
-    mouse.down = false;
-
-    const shuffledSpawns =
-        shuffleArray(
+    const randomizedSpawns =
+        shuffle(
             spawnPoints
         );
 
     const playerSpawn =
         getSafeSpawn(
-            shuffledSpawns[0]
+            randomizedSpawns[0]
         );
 
     player =
         createFighter(
             selectedHero,
-            playerSpawn.x,
-            playerSpawn.y,
+            playerSpawn,
             true,
             0
         );
@@ -2242,67 +2003,66 @@ function prepareGame() {
     );
 
     for (
-        let i = 1;
-        i < TOTAL_PLAYERS;
-        i++
+        let index = 1;
+        index < TOTAL_PLAYERS;
+        index++
     ) {
-        const randomHero =
+        const hero =
             randomItem(
                 BOHATEROWIE
             );
 
-        const spawn =
+        const position =
             getSafeSpawn(
-                shuffledSpawns[i]
+                randomizedSpawns[index]
             );
 
         fighters.push(
             createFighter(
-                randomHero,
-                spawn.x,
-                spawn.y,
+                hero,
+                position,
                 false,
-                i
+                index
             )
         );
     }
 
-    playerCameraTarget = {
+    introTargetCamera = {
         x:
             clamp(
                 player.x -
-                CAMERA_WIDTH / 2,
+                canvas.width / 2,
 
                 0,
 
                 WORLD_WIDTH -
-                CAMERA_WIDTH
+                canvas.width
             ),
 
         y:
             clamp(
                 player.y -
-                CAMERA_HEIGHT / 2,
+                canvas.height / 2,
 
                 0,
 
                 WORLD_HEIGHT -
-                CAMERA_HEIGHT
+                canvas.height
             )
     };
 
+    introStartCamera = {
+        x:
+            introTargetCamera.x,
+
+        y: 0
+    };
+
     camera.x =
-        clamp(
-            player.x -
-            CAMERA_WIDTH / 2,
+        introStartCamera.x;
 
-            0,
-
-            WORLD_WIDTH -
-            CAMERA_WIDTH
-        );
-
-    camera.y = 0;
+    camera.y =
+        introStartCamera.y;
 
     updateBushStatus();
     updateInformation();
@@ -2311,28 +2071,27 @@ function prepareGame() {
 }
 
 function startLoading() {
-    gamePhase =
-        "loading";
+    phase = "loading";
 
-    const loadingFill =
+    let progress = 0;
+
+    const fill =
         document.getElementById(
             "loadingFill"
         );
 
-    const loadingPercent =
+    const percent =
         document.getElementById(
             "loadingPercent"
         );
 
-    let progress = 0;
-
-    const loadingInterval =
+    const interval =
         setInterval(
             function() {
                 progress +=
                     randomNumber(
-                        4,
-                        12
+                        5,
+                        13
                     );
 
                 progress =
@@ -2341,10 +2100,10 @@ function startLoading() {
                         progress
                     );
 
-                loadingFill.style.width =
+                fill.style.width =
                     progress + "%";
 
-                loadingPercent.textContent =
+                percent.textContent =
                     Math.floor(
                         progress
                     ) + "%";
@@ -2353,7 +2112,7 @@ function startLoading() {
                     progress >= 100
                 ) {
                     clearInterval(
-                        loadingInterval
+                        interval
                     );
 
                     setTimeout(
@@ -2362,7 +2121,7 @@ function startLoading() {
                     );
                 }
             },
-            110
+            115
         );
 }
 
@@ -2372,23 +2131,22 @@ function startIntro() {
             "loadingScreen"
         );
 
-    const introCover =
+    const introShade =
         document.getElementById(
-            "introCover"
+            "introShade"
         );
 
     loadingScreen.classList.add(
         "hidden"
     );
 
-    introCover.classList.add(
+    introShade.classList.add(
         "visible"
     );
 
-    gamePhase =
-        "intro";
+    phase = "intro";
 
-    introStartTime =
+    introStart =
         performance.now();
 
     setTimeout(
@@ -2396,80 +2154,64 @@ function startIntro() {
             loadingScreen.style.display =
                 "none";
         },
-        550
+        500
     );
 }
 
 function updateIntro(
     currentTime
 ) {
-    const duration = 2600;
+    const duration = 2800;
 
-    const elapsed =
-        currentTime -
-        introStartTime;
-
-    const rawProgress =
+    const progress =
         Math.min(
             1,
-            elapsed /
+            (
+                currentTime -
+                introStart
+            ) /
             duration
         );
 
-    const progress =
+    const eased =
         easeInOut(
-            rawProgress
+            progress
         );
-
-    const startingX =
-        clamp(
-            player.x -
-            CAMERA_WIDTH / 2,
-
-            0,
-
-            WORLD_WIDTH -
-            CAMERA_WIDTH
-        );
-
-    const startingY = 0;
 
     camera.x =
-        startingX +
+        introStartCamera.x +
         (
-            playerCameraTarget.x -
-            startingX
+            introTargetCamera.x -
+            introStartCamera.x
         ) *
-        progress;
+        eased;
 
     camera.y =
-        startingY +
+        introStartCamera.y +
         (
-            playerCameraTarget.y -
-            startingY
+            introTargetCamera.y -
+            introStartCamera.y
         ) *
-        progress;
+        eased;
 
-    const introCover =
+    const introShade =
         document.getElementById(
-            "introCover"
+            "introShade"
         );
 
-    introCover.style.opacity =
+    introShade.style.opacity =
         String(
-            0.85 -
-            progress *
-            0.85
+            0.88 -
+            eased *
+            0.88
         );
 
-    if (
-        rawProgress >= 1
-    ) {
-        introCover.classList.remove(
+    if (progress >= 1) {
+        introShade.classList.remove(
             "visible"
         );
 
-        introCover.style.opacity =
+        introShade.style.opacity =
             "";
 
         showBattleText();
@@ -2477,8 +2219,7 @@ function updateIntro(
 }
 
 function showBattleText() {
-    gamePhase =
-        "battle-text";
+    phase = "battle";
 
     const battleText =
         document.getElementById(
@@ -2495,148 +2236,16 @@ function showBattleText() {
                 "visible"
             );
 
-            gamePhase =
-                "playing";
+            phase = "playing";
         },
-        1100
+        1150
     );
-}
-
-function updateInformation() {
-    const alive =
-        getAliveContestants()
-            .length;
-
-    document
-        .getElementById(
-            "aliveCounter"
-        )
-        .textContent =
-        "Pozostało: " +
-        alive;
-
-    if (!player) {
-        return;
-    }
-
-    let extra = "";
-
-    if (player.hidden) {
-        extra +=
-            " | 🌿 UKRYTY";
-    }
-
-    if (
-        player.stunnedUntil >
-        performance.now()
-    ) {
-        extra +=
-            " | ⚡ ZATRZYMANY";
-    }
-
-    if (
-        player.lowHpShield &&
-        player.hp <=
-        player.maxHp *
-        player.shieldThreshold
-    ) {
-        extra +=
-            " | 🛡️ TARCZA";
-    }
-
-    if (
-        player.cursedUntil >
-        performance.now()
-    ) {
-        extra +=
-            " | 🔮 KLĄTWA";
-    }
-
-    if (
-        player.canPassWalls
-    ) {
-        extra +=
-            " | 🧱 PRZENIKANIE";
-    }
-
-    if (
-        player.summonsGhosts
-    ) {
-        const summons =
-            fighters.filter(
-                function(fighter) {
-                    return (
-                        fighter.alive &&
-                        fighter.isSummon &&
-                        fighter.summoner ===
-                        player
-                    );
-                }
-            ).length;
-
-        extra +=
-            " | 👻 " +
-            summons +
-            "/" +
-            player.maximumSummons;
-    }
-
-    if (player.vampire) {
-        if (
-            player.transformed
-        ) {
-            extra +=
-                " | 🦇 NIETOPERZE";
-        } else {
-            const remaining =
-                Math.max(
-                    0,
-
-                    player
-                        .transformationCooldown -
-                    (
-                        performance.now() -
-                        player
-                            .lastTransformation
-                    )
-                );
-
-            extra +=
-                " | 🦇 " +
-                (
-                    remaining <= 0
-                        ? "GOTOWE"
-                        : (
-                            remaining /
-                            1000
-                        ).toFixed(1) +
-                          "s"
-                );
-        }
-    }
-
-    document
-        .getElementById(
-            "playerInfo"
-        )
-        .textContent =
-        player.icon +
-        " " +
-        player.heroName +
-        " | ❤️ " +
-        Math.max(
-            0,
-            Math.ceil(
-                player.hp
-            )
-        ) +
-        extra;
 }
 
 function updateCamera() {
     if (
         !player ||
-        gamePhase === "intro"
+        phase === "intro"
     ) {
         return;
     }
@@ -2644,30 +2253,30 @@ function updateCamera() {
     camera.x =
         clamp(
             player.x -
-            CAMERA_WIDTH / 2,
+            canvas.width / 2,
 
             0,
 
             WORLD_WIDTH -
-            CAMERA_WIDTH
+            canvas.width
         );
 
     camera.y =
         clamp(
             player.y -
-            CAMERA_HEIGHT / 2,
+            canvas.height / 2,
 
             0,
 
             WORLD_HEIGHT -
-            CAMERA_HEIGHT
+            canvas.height
         );
 }
 
 function moveFighter(
     fighter,
-    dx,
-    dy
+    movementX,
+    movementY
 ) {
     if (
         fighter.stunnedUntil >
@@ -2676,13 +2285,14 @@ function moveFighter(
         return;
     }
 
-    const passesObstacles =
+    const passesWalls =
         fighter.canPassWalls ||
         fighter.transformed;
 
     const nextX =
         clamp(
-            fighter.x + dx,
+            fighter.x +
+            movementX,
 
             fighter.radius,
 
@@ -2691,7 +2301,7 @@ function moveFighter(
         );
 
     if (
-        passesObstacles ||
+        passesWalls ||
         !isBlocked(
             nextX,
             fighter.y,
@@ -2704,7 +2314,8 @@ function moveFighter(
 
     const nextY =
         clamp(
-            fighter.y + dy,
+            fighter.y +
+            movementY,
 
             fighter.radius,
 
@@ -2713,7 +2324,7 @@ function moveFighter(
         );
 
     if (
-        passesObstacles ||
+        passesWalls ||
         !isBlocked(
             fighter.x,
             nextY,
@@ -2761,45 +2372,27 @@ function updateBushStatus() {
     );
 }
 
-function canSeeFighter(
-    observer,
-    target
-) {
-    if (!target.hidden) {
-        return true;
-    }
-
-    return (
-        distance(
-            observer,
-            target
-        ) < 170
-    );
-}
-
 function isEnemy(
     observer,
     target
 ) {
     if (
-        !target.alive ||
-        target === observer
+        observer === target ||
+        !target.alive
     ) {
         return false;
     }
 
     if (
         observer.isSummon &&
-        target ===
-        observer.summoner
+        observer.summoner === target
     ) {
         return false;
     }
 
     if (
         target.isSummon &&
-        target.summoner ===
-        observer
+        target.summoner === observer
     ) {
         return false;
     }
@@ -2816,89 +2409,23 @@ function isEnemy(
     return true;
 }
 
-function movePlayer() {
-    if (
-        gamePhase !== "playing" ||
-        !player ||
-        !player.alive ||
-        matchFinished
-    ) {
-        return;
+function canSee(
+    observer,
+    target
+) {
+    if (!target.hidden) {
+        return true;
     }
 
-    if (
-        player.stunnedUntil >
-        performance.now()
-    ) {
-        return;
-    }
-
-    let dx = 0;
-    let dy = 0;
-
-    if (
-        keys["w"] ||
-        keys["arrowup"]
-    ) {
-        dy -= 1;
-    }
-
-    if (
-        keys["s"] ||
-        keys["arrowdown"]
-    ) {
-        dy += 1;
-    }
-
-    if (
-        keys["a"] ||
-        keys["arrowleft"]
-    ) {
-        dx -= 1;
-    }
-
-    if (
-        keys["d"] ||
-        keys["arrowright"]
-    ) {
-        dx += 1;
-    }
-
-    if (
-        dx !== 0 ||
-        dy !== 0
-    ) {
-        const direction =
-            normalize(
-                dx,
-                dy
-            );
-
-        moveFighter(
-            player,
-
-            direction.x *
-            player.speed,
-
-            direction.y *
-            player.speed
-        );
-    }
-
-    if (mouse.down) {
-        attackTowards(
-            player,
-
-            mouse.x +
-            camera.x,
-
-            mouse.y +
-            camera.y
-        );
-    }
+    return (
+        distance(
+            observer,
+            target
+        ) < 170
+    );
 }
 
-function getPossibleTargets(
+function getTargets(
     fighter
 ) {
     return fighters.filter(
@@ -2908,7 +2435,7 @@ function getPossibleTargets(
                     fighter,
                     other
                 ) &&
-                canSeeFighter(
+                canSee(
                     fighter,
                     other
                 )
@@ -2921,15 +2448,9 @@ function getNearestTarget(
     fighter
 ) {
     const targets =
-        getPossibleTargets(
+        getTargets(
             fighter
         );
-
-    if (
-        targets.length === 0
-    ) {
-        return null;
-    }
 
     targets.sort(
         function(first, second) {
@@ -2946,14 +2467,87 @@ function getNearestTarget(
         }
     );
 
-    return targets[0];
+    return targets[0] || null;
+}
+
+function movePlayer() {
+    if (
+        phase !== "playing" ||
+        !player ||
+        !player.alive ||
+        matchFinished
+    ) {
+        return;
+    }
+
+    let movementX = 0;
+    let movementY = 0;
+
+    if (
+        keys["w"] ||
+        keys["arrowup"]
+    ) {
+        movementY -= 1;
+    }
+
+    if (
+        keys["s"] ||
+        keys["arrowdown"]
+    ) {
+        movementY += 1;
+    }
+
+    if (
+        keys["a"] ||
+        keys["arrowleft"]
+    ) {
+        movementX -= 1;
+    }
+
+    if (
+        keys["d"] ||
+        keys["arrowright"]
+    ) {
+        movementX += 1;
+    }
+
+    if (
+        movementX !== 0 ||
+        movementY !== 0
+    ) {
+        const direction =
+            normalize(
+                movementX,
+                movementY
+            );
+
+        moveFighter(
+            player,
+            direction.x *
+            player.speed,
+
+            direction.y *
+            player.speed
+        );
+    }
+
+    if (mouse.down) {
+        attackTowards(
+            player,
+            mouse.x +
+            camera.x,
+
+            mouse.y +
+            camera.y
+        );
+    }
 }
 
 function chooseBotDecision(
     bot
 ) {
     const targets =
-        getPossibleTargets(
+        getTargets(
             bot
         );
 
@@ -2961,6 +2555,7 @@ function chooseBotDecision(
         targets.length === 0
     ) {
         bot.target = null;
+
         bot.behavior =
             "wander";
     } else {
@@ -2969,7 +2564,7 @@ function chooseBotDecision(
                 targets
             );
 
-        const roll =
+        const random =
             Math.random();
 
         if (
@@ -2978,23 +2573,14 @@ function chooseBotDecision(
             0.3
         ) {
             bot.behavior =
-                Math.random() <
-                0.72
+                random < 0.7
                     ? "flee"
                     : "attack";
-        } else if (
-            roll < 0.62
-        ) {
-            bot.behavior =
-                "attack";
-        } else if (
-            roll < 0.84
-        ) {
-            bot.behavior =
-                "wander";
         } else {
             bot.behavior =
-                "flee";
+                random < 0.72
+                    ? "attack"
+                    : "wander";
         }
     }
 
@@ -3013,8 +2599,8 @@ function chooseBotDecision(
     bot.nextDecision =
         performance.now() +
         randomNumber(
-            700,
-            2200
+            650,
+            1900
         );
 }
 
@@ -3023,17 +2609,10 @@ function updateBot(
     currentTime
 ) {
     if (
-        gamePhase !== "playing" ||
+        phase !== "playing" ||
         !bot.alive ||
-        matchFinished ||
-        bot.isSummon
-    ) {
-        return;
-    }
-
-    if (
-        bot.stunnedUntil >
-        currentTime
+        bot.isSummon ||
+        matchFinished
     ) {
         return;
     }
@@ -3044,10 +2623,6 @@ function updateBot(
         !bot.target ||
         !bot.target.alive ||
         !isEnemy(
-            bot,
-            bot.target
-        ) ||
-        !canSeeFighter(
             bot,
             bot.target
         )
@@ -3084,32 +2659,14 @@ function updateBot(
 
         moveFighter(
             bot,
-
             direction.x *
             bot.speed *
-            0.58,
+            0.65,
 
             direction.y *
             bot.speed *
-            0.58
+            0.65
         );
-
-        if (
-            Math.random() <
-            0.015
-        ) {
-            bot.directionX =
-                randomNumber(
-                    -1,
-                    1
-                );
-
-            bot.directionY =
-                randomNumber(
-                    -1,
-                    1
-                );
-        }
 
         return;
     }
@@ -3139,25 +2696,12 @@ function updateBot(
     ) {
         moveFighter(
             bot,
-
             -direction.x *
             bot.speed,
 
             -direction.y *
             bot.speed
         );
-
-        if (
-            !bot.vampire &&
-            Math.random() <
-            0.035
-        ) {
-            attackTowards(
-                bot,
-                bot.target.x,
-                bot.target.y
-            );
-        }
 
         return;
     }
@@ -3168,7 +2712,6 @@ function updateBot(
         ) {
             moveFighter(
                 bot,
-
                 direction.x *
                 bot.speed,
 
@@ -3182,14 +2725,11 @@ function updateBot(
 
     const preferredDistance =
         bot.melee
-            ? bot.range *
-              0.7
+            ? bot.range * 0.75
             : Math.min(
-                  bot.range *
-                  0.58,
-
-                  500
-              );
+                bot.range * 0.58,
+                520
+            );
 
     if (
         targetDistance >
@@ -3197,28 +2737,26 @@ function updateBot(
     ) {
         moveFighter(
             bot,
-
             direction.x *
             bot.speed *
-            0.78,
+            0.8,
 
             direction.y *
             bot.speed *
-            0.78
+            0.8
         );
     } else if (
         !bot.melee
     ) {
         moveFighter(
             bot,
-
             -direction.x *
             bot.speed *
-            0.24,
+            0.2,
 
             -direction.y *
             bot.speed *
-            0.24
+            0.2
         );
     }
 
@@ -3229,184 +2767,32 @@ function updateBot(
     );
 }
 
-function updateSummon(
-    summon
-) {
-    if (
-        gamePhase !== "playing" ||
-        !summon.alive ||
-        matchFinished
-    ) {
-        return;
-    }
-
-    if (
-        !summon.summoner ||
-        !summon.summoner.alive
-    ) {
-        summon.alive =
-            false;
-
-        return;
-    }
-
-    if (
-        !summon.target ||
-        !summon.target.alive ||
-        !isEnemy(
-            summon,
-            summon.target
-        )
-    ) {
-        summon.target =
-            getNearestTarget(
-                summon
-            );
-    }
-
-    if (!summon.target) {
-        return;
-    }
-
-    const direction =
-        normalize(
-            summon.target.x -
-            summon.x,
-
-            summon.target.y -
-            summon.y
-        );
-
-    if (
-        distance(
-            summon,
-            summon.target
-        ) >
-        summon.range *
-        0.72
-    ) {
-        moveFighter(
-            summon,
-
-            direction.x *
-            summon.speed,
-
-            direction.y *
-            summon.speed
-        );
-    }
-
-    attackTowards(
-        summon,
-        summon.target.x,
-        summon.target.y
-    );
-}
-
-function updatePriestSummons(
-    currentTime
-) {
-    if (
-        gamePhase !== "playing"
-    ) {
-        return;
-    }
-
-    fighters
-        .slice()
-        .forEach(
-            function(fighter) {
-                if (
-                    !fighter.alive ||
-                    fighter.isSummon ||
-                    !fighter.summonsGhosts
-                ) {
-                    return;
-                }
-
-                const summons =
-                    fighters.filter(
-                        function(other) {
-                            return (
-                                other.alive &&
-                                other.isSummon &&
-                                other.summoner ===
-                                fighter
-                            );
-                        }
-                    );
-
-                if (
-                    summons.length >=
-                    fighter.maximumSummons
-                ) {
-                    return;
-                }
-
-                if (
-                    currentTime -
-                    fighter.lastSummon <
-                    fighter.summonCooldown
-                ) {
-                    return;
-                }
-
-                fighter.lastSummon =
-                    currentTime;
-
-                createSummonedGhost(
-                    fighter
-                );
-            }
-        );
-}
-
-function findTargetNearPoint(
+function findMeleeTarget(
     attacker,
     targetX,
     targetY
 ) {
     const targets =
-        fighters.filter(
-            function(fighter) {
-                return (
-                    isEnemy(
-                        attacker,
-                        fighter
-                    ) &&
-                    canSeeFighter(
-                        attacker,
-                        fighter
-                    )
-                );
-            }
+        getTargets(
+            attacker
         );
 
     targets.sort(
         function(first, second) {
             return (
                 Math.hypot(
-                    first.x -
-                    targetX,
-
-                    first.y -
-                    targetY
+                    first.x - targetX,
+                    first.y - targetY
                 ) -
                 Math.hypot(
-                    second.x -
-                    targetX,
-
-                    second.y -
-                    targetY
+                    second.x - targetX,
+                    second.y - targetY
                 )
             );
         }
     );
 
-    return (
-        targets[0] ||
-        null
-    );
+    return targets[0] || null;
 }
 
 function attackTowards(
@@ -3415,11 +2801,9 @@ function attackTowards(
     targetY
 ) {
     if (
-        gamePhase !== "playing" ||
+        phase !== "playing" ||
         !attacker.alive ||
-        matchFinished ||
-        attacker.stunnedUntil >
-        performance.now()
+        matchFinished
     ) {
         return;
     }
@@ -3445,6 +2829,14 @@ function attackTowards(
         return;
     }
 
+    attacker.lastAttack =
+        currentTime;
+
+    attacker.attackCounter++;
+
+    attacker.hidden =
+        false;
+
     const direction =
         normalize(
             targetX -
@@ -3454,15 +2846,7 @@ function attackTowards(
             attacker.y
         );
 
-    attacker.lastAttack =
-        currentTime;
-
-    attacker.hidden =
-        false;
-
-    attacker.attackCounter++;
-
-    let attackDamage =
+    let damage =
         attacker.damage;
 
     if (
@@ -3470,12 +2854,11 @@ function attackTowards(
         attacker.attackCounter %
         3 === 0
     ) {
-        attackDamage *=
-            1.5;
+        damage *= 1.5;
 
         createTextEffect(
             attacker.x,
-            attacker.y - 50,
+            attacker.y - 55,
             "WZMOCNIONY!",
             "#ffd93d"
         );
@@ -3487,18 +2870,18 @@ function attackTowards(
         attacker.maxHp *
         attacker.damageBonusThreshold
     ) {
-        attackDamage *=
+        damage *=
             attacker.damageBonusMultiplier;
     }
 
-    attackDamage =
+    damage =
         Math.round(
-            attackDamage
+            damage
         );
 
     if (attacker.melee) {
         const target =
-            findTargetNearPoint(
+            findMeleeTarget(
                 attacker,
                 targetX,
                 targetY
@@ -3509,18 +2892,28 @@ function attackTowards(
             distance(
                 attacker,
                 target
-            ) <=
-            attacker.range
+            ) <= attacker.range
         ) {
             damageFighter(
                 target,
-                attackDamage,
+                damage,
                 attacker
             );
 
-            createMeleeEffect(
-                attacker,
-                direction
+            createCircleEffect(
+                attacker.x +
+                direction.x *
+                35,
+
+                attacker.y +
+                direction.y *
+                35,
+
+                20,
+                attacker.range,
+                "#ffffff",
+                180,
+                10
             );
         }
 
@@ -3533,7 +2926,7 @@ function attackTowards(
         createElectricWave(
             attacker,
             direction,
-            attackDamage
+            damage
         );
 
         return;
@@ -3558,21 +2951,21 @@ function attackTowards(
             attacker,
             direction,
             -0.14,
-            attackDamage
+            damage
         );
 
         createProjectile(
             attacker,
             direction,
             0,
-            attackDamage
+            damage
         );
 
         createProjectile(
             attacker,
             direction,
             0.14,
-            attackDamage
+            damage
         );
 
         return;
@@ -3582,7 +2975,267 @@ function attackTowards(
         attacker,
         direction,
         0,
-        attackDamage
+        damage
+    );
+}
+
+function createProjectile(
+    attacker,
+    direction,
+    angle,
+    damage
+) {
+    const rotated =
+        rotateDirection(
+            direction,
+            angle
+        );
+
+    let color = "#f9eda2";
+    let speedMultiplier = 1;
+    let curse = false;
+
+    if (
+        attacker.heroId ===
+        "farmer"
+    ) {
+        color = "#6b4327";
+    }
+
+    if (
+        attacker.heroId ===
+        "lucznik"
+    ) {
+        color = "#f5ecb0";
+
+        if (
+            attacker.fastThirdArrow &&
+            attacker.attackCounter %
+            3 === 0
+        ) {
+            color = "#ffffff";
+
+            speedMultiplier =
+                attacker
+                    .fastArrowMultiplier;
+        }
+    }
+
+    if (
+        attacker.heroId ===
+        "ksiadz"
+    ) {
+        color = "#e9f4ff";
+    }
+
+    if (
+        attacker.heroId ===
+        "golem"
+    ) {
+        color = "#897567";
+    }
+
+    if (
+        attacker.heroId ===
+        "czarodziej"
+    ) {
+        color = "#d851ff";
+
+        if (
+            attacker.curseEvery >
+            0 &&
+            attacker.attackCounter %
+            attacker.curseEvery ===
+            0
+        ) {
+            color = "#721cff";
+
+            curse = true;
+        }
+    }
+
+    if (
+        attacker.heroId ===
+        "krol"
+    ) {
+        color = "#ffd638";
+    }
+
+    if (
+        attacker.heroId ===
+        "wiedzma"
+    ) {
+        color = "#FFCC33";
+    }
+
+    projectiles.push({
+        x:
+            attacker.x +
+            rotated.x *
+            35,
+
+        y:
+            attacker.y +
+            rotated.y *
+            35,
+
+        vx:
+            rotated.x *
+            attacker.projectileSpeed *
+            speedMultiplier,
+
+        vy:
+            rotated.y *
+            attacker.projectileSpeed *
+            speedMultiplier,
+
+        radius:
+            attacker.projectileWidth,
+
+        damage:
+            damage,
+
+        owner:
+            attacker,
+
+        color:
+            color,
+
+        born:
+            performance.now(),
+
+        life:
+            attacker.projectileLife,
+
+        curse:
+            curse,
+
+        curseDuration:
+            attacker.curseDuration,
+
+        curseMultiplier:
+            attacker.curseMultiplier
+    });
+}
+
+function createElectricWave(
+    attacker,
+    direction,
+    damage
+) {
+    const ultra =
+        attacker.ultraEvery >
+        0 &&
+        attacker.attackCounter %
+        attacker.ultraEvery ===
+        0;
+
+    electricWaves.push({
+        x:
+            attacker.x,
+
+        y:
+            attacker.y,
+
+        directionX:
+            direction.x,
+
+        directionY:
+            direction.y,
+
+        speed:
+            attacker.projectileSpeed *
+            (
+                ultra
+                    ? attacker
+                          .ultraSpeedMultiplier
+                    : 1
+            ),
+
+        damage:
+            damage,
+
+        owner:
+            attacker,
+
+        born:
+            performance.now(),
+
+        life:
+            attacker.projectileLife,
+
+        traveled: 0,
+
+        minimumWidth: 12,
+
+        spread: 0.18,
+
+        ultra:
+            ultra,
+
+        color:
+            ultra
+                ? "#ffd92f"
+                : "#80eaff",
+
+        stunDuration:
+            ultra
+                ? attacker
+                      .ultraStunDuration
+                : 0
+    });
+
+    if (ultra) {
+        createTextEffect(
+            attacker.x,
+            attacker.y - 55,
+            "ULTRA!",
+            "#ffe747"
+        );
+    }
+}
+
+function createGolemShockwave(
+    attacker
+) {
+    fighters.forEach(
+        function(target) {
+            if (
+                !isEnemy(
+                    attacker,
+                    target
+                )
+            ) {
+                return;
+            }
+
+            if (
+                distance(
+                    attacker,
+                    target
+                ) <=
+                attacker
+                    .attackShockwaveRadius
+            ) {
+                damageFighter(
+                    target,
+                    attacker
+                        .attackShockwaveDamage,
+                    attacker
+                );
+            }
+        }
+    );
+
+    createCircleEffect(
+        attacker.x,
+        attacker.y,
+        20,
+        attacker
+            .attackShockwaveRadius,
+        "#d3c0a0",
+        550,
+        18
     );
 }
 
@@ -3643,12 +3296,6 @@ function startVampireTransformation(
 function updateVampires(
     currentTime
 ) {
-    if (
-        gamePhase !== "playing"
-    ) {
-        return;
-    }
-
     fighters.forEach(
         function(vampire) {
             if (
@@ -3688,19 +3335,15 @@ function updateVampires(
                         vampire.target.y -
                         vampire.y
                     );
-            }
 
-            if (
-                !vampire.isPlayer &&
-                vampire.batDirection
-            ) {
                 moveFighter(
                     vampire,
-
-                    vampire.batDirection.x *
+                    vampire
+                        .batDirection.x *
                     vampire.speed,
 
-                    vampire.batDirection.y *
+                    vampire
+                        .batDirection.y *
                     vampire.speed
                 );
             }
@@ -3749,19 +3392,18 @@ function updateVampires(
                         vampire.hp =
                             Math.min(
                                 vampire.maxHp,
-
                                 vampire.hp +
                                 healing
                             );
 
                         createTextEffect(
                             vampire.x,
-                            vampire.y - 42,
+                            vampire.y - 45,
                             "+" +
                             Math.round(
                                 healing
                             ),
-                            "#6dff75"
+                            "#65ff72"
                         );
                     }
                 }
@@ -3770,381 +3412,239 @@ function updateVampires(
     );
 }
 
-function createElectricWave(
-    attacker,
-    direction,
-    attackDamage
+function createSummonedGhost(
+    priest
 ) {
-    const ultra =
-        attacker.ultraEvery >
-        0 &&
-        attacker.attackCounter %
-        attacker.ultraEvery ===
-        0;
+    summonCounter++;
 
-    const speed =
-        attacker.projectileSpeed *
-        (
-            ultra
-                ? attacker
-                      .ultraSpeedMultiplier
-                : 1
-        );
+    const position =
+        getSafeSpawn({
+            x:
+                priest.x +
+                randomNumber(
+                    -90,
+                    90
+                ),
 
-    electricWaves.push({
-        x:
-            attacker.x,
-
-        y:
-            attacker.y,
-
-        directionX:
-            direction.x,
-
-        directionY:
-            direction.y,
-
-        speed:
-            speed,
-
-        damage:
-            attackDamage,
-
-        owner:
-            attacker,
-
-        born:
-            performance.now(),
-
-        life:
-            attacker.projectileLife,
-
-        traveled: 0,
-
-        minimumWidth: 12,
-
-        spread: 0.17,
-
-        ultra:
-            ultra,
-
-        color:
-            ultra
-                ? "#ffd92f"
-                : "#80eaff",
-
-        stunDuration:
-            ultra
-                ? attacker
-                      .ultraStunDuration
-                : 0
-    });
-
-    if (ultra) {
-        createTextEffect(
-            attacker.x,
-            attacker.y - 55,
-            "ULTRA!",
-            "#ffe747"
-        );
-    }
-}
-
-function createProjectile(
-    attacker,
-    direction,
-    angle,
-    attackDamage
-) {
-    const rotated =
-        rotateDirection(
-            direction,
-            angle
-        );
-
-    let color =
-        "#f9eda2";
-
-    let speedMultiplier =
-        1;
-
-    let appliesCurse =
-        false;
-
-    if (
-        attacker.heroId ===
-        "farmer"
-    ) {
-        color =
-            "#6b4327";
-    }
-
-    if (
-        attacker.heroId ===
-        "lucznik"
-    ) {
-        color =
-            "#f3e6a2";
-
-        if (
-            attacker.fastThirdArrow &&
-            attacker.attackCounter %
-            3 === 0
-        ) {
-            speedMultiplier =
-                attacker
-                    .fastArrowMultiplier;
-
-            color =
-                "#ffffff";
-        }
-    }
-
-    if (
-        attacker.heroId ===
-        "ksiadz"
-    ) {
-        color =
-            "#e9f4ff";
-    }
-
-    if (
-        attacker.heroId ===
-        "golem"
-    ) {
-        color =
-            "#8b7566";
-    }
-
-    if (
-        attacker.heroId ===
-        "czarodziej"
-    ) {
-        color =
-            "#d851ff";
-
-        if (
-            attacker.curseEvery >
-            0 &&
-            attacker.attackCounter %
-            attacker.curseEvery ===
-            0
-        ) {
-            appliesCurse =
-                true;
-
-            color =
-                "#741cff";
-        }
-    }
-
-    if (
-        attacker.heroId ===
-        "krol"
-    ) {
-        color =
-            "#ffd638";
-    }
-
-    if (
-        attacker.heroId ===
-        "wiedzma"
-    ) {
-        color =
-            "#FFCC33";
-    }
-
-    projectiles.push({
-        x:
-            attacker.x +
-            rotated.x *
-            34,
-
-        y:
-            attacker.y +
-            rotated.y *
-            34,
-
-        vx:
-            rotated.x *
-            attacker.projectileSpeed *
-            speedMultiplier,
-
-        vy:
-            rotated.y *
-            attacker.projectileSpeed *
-            speedMultiplier,
-
-        radius:
-            attacker.projectileWidth,
-
-        damage:
-            attackDamage,
-
-        owner:
-            attacker,
-
-        color:
-            color,
-
-        born:
-            performance.now(),
-
-        life:
-            attacker.projectileLife,
-
-        appliesCurse:
-            appliesCurse,
-
-        curseDuration:
-            attacker.curseDuration,
-
-        curseMultiplier:
-            attacker.curseMultiplier
-    });
-}
-
-function createMeleeEffect(
-    attacker,
-    direction
-) {
-    effects.push({
-        type:
-            "circle",
-
-        x:
-            attacker.x +
-            direction.x *
-            38,
-
-        y:
-            attacker.y +
-            direction.y *
-            38,
-
-        radius: 25,
-
-        maximumRadius:
-            attacker.range,
-
-        color:
-            attacker.isSummon ||
-            attacker.heroId ===
-            "duch"
-                ? "#bdefff"
-                : "#ffffff",
-
-        born:
-            performance.now(),
-
-        life: 180,
-
-        lineWidth: 12
-    });
-}
-
-function createGolemShockwave(
-    attacker
-) {
-    fighters.forEach(
-        function(target) {
-            if (
-                !isEnemy(
-                    attacker,
-                    target
+            y:
+                priest.y +
+                randomNumber(
+                    -90,
+                    90
                 )
-            ) {
-                return;
-            }
+        });
 
-            if (
-                distance(
-                    attacker,
-                    target
-                ) <=
-                attacker
-                    .attackShockwaveRadius
-            ) {
-                damageFighter(
-                    target,
+    fighters.push({
+        id:
+            "summon-" +
+            summonCounter,
 
-                    attacker
-                        .attackShockwaveDamage,
+        name:
+            "DUCH",
 
-                    attacker
-                );
-            }
-        }
-    );
+        heroId:
+            "summoned-ghost",
 
-    effects.push({
-        type:
-            "circle",
+        heroName:
+            "Przywołany Duch",
+
+        icon:
+            "👻",
 
         x:
-            attacker.x,
+            position.x,
 
         y:
-            attacker.y,
+            position.y,
 
         radius: 20,
 
-        maximumRadius:
-            attacker
-                .attackShockwaveRadius,
+        hp: 18,
+        maxHp: 18,
+
+        damage: 8,
+
+        speed: 1.8,
+        normalSpeed: 1.8,
+
+        range: 65,
+        cooldown: 650,
+
+        projectileSpeed: 0,
+        projectileWidth: 0,
+        projectileLife: 0,
+
+        melee: true,
+        canPassWalls: true,
+
+        farmerThirdAttack: false,
+        fastThirdArrow: false,
+        lowHpShield: false,
+        lowHpDamageBonus: false,
+        summonsGhosts: false,
+        electricWave: false,
+        shockwaveEvery: 0,
+        curseEvery: 0,
+        tripleShot: false,
+        vampire: false,
+
+        transformed: false,
+
+        attackCounter: 0,
+
+        stunnedUntil: 0,
+        cursedUntil: 0,
+
+        receivedDamageMultiplier: 1,
+
+        isPlayer: false,
+        isSummon: true,
+
+        summoner:
+            priest,
+
+        alive: true,
+        hidden: false,
+
+        lastAttack: 0,
+
+        target: null,
+
+        behavior:
+            "attack",
+
+        directionX: 0,
+        directionY: 0,
+
+        nextDecision: 0,
 
         color:
-            "#d3c0a0",
-
-        born:
-            performance.now(),
-
-        life: 550,
-
-        lineWidth: 18
+            "#9cecff"
     });
+
+    createTextEffect(
+        priest.x,
+        priest.y - 60,
+        "PRZYWOŁANIE!",
+        "#c9f7ff"
+    );
 }
 
-function createTextEffect(
-    x,
-    y,
-    text,
-    color
+function updatePriestSummons(
+    currentTime
 ) {
-    effects.push({
-        type:
-            "text",
+    fighters
+        .slice()
+        .forEach(
+            function(fighter) {
+                if (
+                    !fighter.alive ||
+                    fighter.isSummon ||
+                    !fighter.summonsGhosts
+                ) {
+                    return;
+                }
 
-        x: x,
-        y: y,
+                const summons =
+                    fighters.filter(
+                        function(other) {
+                            return (
+                                other.alive &&
+                                other.isSummon &&
+                                other.summoner ===
+                                fighter
+                            );
+                        }
+                    );
 
-        text: text,
+                if (
+                    summons.length >=
+                    fighter.maximumSummons
+                ) {
+                    return;
+                }
 
-        color:
-            color,
+                if (
+                    currentTime -
+                    fighter.lastSummon <
+                    fighter.summonCooldown
+                ) {
+                    return;
+                }
 
-        born:
-            performance.now(),
+                fighter.lastSummon =
+                    currentTime;
 
-        life: 700
-    });
-}
-
-function removeSummonsOf(
-    summoner
-) {
-    fighters.forEach(
-        function(fighter) {
-            if (
-                fighter.alive &&
-                fighter.isSummon &&
-                fighter.summoner ===
-                summoner
-            ) {
-                fighter.alive =
-                    false;
+                createSummonedGhost(
+                    fighter
+                );
             }
-        }
+        );
+}
+
+function updateSummon(
+    summon
+) {
+    if (
+        !summon.alive ||
+        !summon.summoner ||
+        !summon.summoner.alive
+    ) {
+        summon.alive =
+            false;
+
+        return;
+    }
+
+    if (
+        !summon.target ||
+        !summon.target.alive ||
+        !isEnemy(
+            summon,
+            summon.target
+        )
+    ) {
+        summon.target =
+            getNearestTarget(
+                summon
+            );
+    }
+
+    if (!summon.target) {
+        return;
+    }
+
+    const direction =
+        normalize(
+            summon.target.x -
+            summon.x,
+
+            summon.target.y -
+            summon.y
+        );
+
+    if (
+        distance(
+            summon,
+            summon.target
+        ) >
+        summon.range *
+        0.75
+    ) {
+        moveFighter(
+            summon,
+            direction.x *
+            summon.speed,
+
+            direction.y *
+            summon.speed
+        );
+    }
+
+    attackTowards(
+        summon,
+        summon.target.x,
+        summon.target.y
     );
 }
 
@@ -4201,37 +3701,29 @@ function damageFighter(
 
     createTextEffect(
         target.x,
-        target.y - 35,
-        "-" +
-        finalDamage,
-        "#ff6464"
+        target.y - 38,
+        "-" + finalDamage,
+        "#ff6666"
     );
 
     if (
         target.hp <= 0
     ) {
         target.hp = 0;
+
         target.alive =
             false;
 
         if (
-            target.summonsGhosts
-        ) {
-            removeSummonsOf(
-                target
-            );
-        }
-
-        if (
             target === player
         ) {
-            const aliveAfterDeath =
-                getAliveContestants()
-                    .length;
+            const placement =
+                getAlivePlayers()
+                    .length +
+                1;
 
             awardTrophies(
-                aliveAfterDeath +
-                1
+                placement
             );
 
             showDeathScreen(
@@ -4244,43 +3736,19 @@ function damageFighter(
     updateInformation();
 }
 
-function projectileHitsObstacle(
-    projectile
-) {
-    return (
-        collidesWithWall(
-            projectile.x,
-            projectile.y,
-            projectile.radius
-        ) ||
-        collidesWithWater(
-            projectile.x,
-            projectile.y,
-            projectile.radius
-        )
-    );
-}
-
 function updateProjectiles(
     currentTime
 ) {
-    if (
-        gamePhase !== "playing"
-    ) {
-        return;
-    }
-
     for (
-        let i =
-            projectiles.length -
-            1;
+        let index =
+            projectiles.length - 1;
 
-        i >= 0;
+        index >= 0;
 
-        i--
+        index--
     ) {
         const projectile =
-            projectiles[i];
+            projectiles[index];
 
         projectile.x +=
             projectile.vx;
@@ -4288,16 +3756,14 @@ function updateProjectiles(
         projectile.y +=
             projectile.vy;
 
-        let remove =
-            false;
+        let remove = false;
 
         if (
             currentTime -
             projectile.born >
             projectile.life
         ) {
-            remove =
-                true;
+            remove = true;
         }
 
         if (
@@ -4308,18 +3774,18 @@ function updateProjectiles(
             projectile.y >
             WORLD_HEIGHT
         ) {
-            remove =
-                true;
+            remove = true;
         }
 
         if (
             !remove &&
-            projectileHitsObstacle(
-                projectile
+            isBlocked(
+                projectile.x,
+                projectile.y,
+                projectile.radius
             )
         ) {
-            remove =
-                true;
+            remove = true;
         }
 
         if (!remove) {
@@ -4336,57 +3802,50 @@ function updateProjectiles(
                     continue;
                 }
 
-                const hit =
-                    Math.hypot(
-                        projectile.x -
-                        fighter.x,
-
-                        projectile.y -
-                        fighter.y
+                if (
+                    distance(
+                        projectile,
+                        fighter
                     ) <
                     projectile.radius +
-                    fighter.radius;
-
-                if (!hit) {
-                    continue;
-                }
-
-                damageFighter(
-                    fighter,
-
-                    projectile.damage,
-
-                    projectile.owner
-                );
-
-                if (
-                    projectile.appliesCurse
+                    fighter.radius
                 ) {
-                    fighter.cursedUntil =
-                        performance.now() +
-                        projectile.curseDuration;
-
-                    fighter.receivedDamageMultiplier =
-                        projectile.curseMultiplier;
-
-                    createTextEffect(
-                        fighter.x,
-                        fighter.y - 60,
-                        "KLĄTWA!",
-                        "#b662ff"
+                    damageFighter(
+                        fighter,
+                        projectile.damage,
+                        projectile.owner
                     );
+
+                    if (
+                        projectile.curse
+                    ) {
+                        fighter.cursedUntil =
+                            performance.now() +
+                            projectile
+                                .curseDuration;
+
+                        fighter.receivedDamageMultiplier =
+                            projectile
+                                .curseMultiplier;
+
+                        createTextEffect(
+                            fighter.x,
+                            fighter.y - 62,
+                            "KLĄTWA!",
+                            "#bb62ff"
+                        );
+                    }
+
+                    remove = true;
+
+                    break;
                 }
-
-                remove =
-                    true;
-
-                break;
             }
         }
 
         if (remove) {
             projectiles.splice(
-                i,
+                index,
                 1
             );
         }
@@ -4396,23 +3855,16 @@ function updateProjectiles(
 function updateElectricWaves(
     currentTime
 ) {
-    if (
-        gamePhase !== "playing"
-    ) {
-        return;
-    }
-
     for (
-        let i =
-            electricWaves.length -
-            1;
+        let index =
+            electricWaves.length - 1;
 
-        i >= 0;
+        index >= 0;
 
-        i--
+        index--
     ) {
         const wave =
-            electricWaves[i];
+            electricWaves[index];
 
         wave.x +=
             wave.directionX *
@@ -4430,16 +3882,14 @@ function updateElectricWaves(
             wave.traveled *
             wave.spread;
 
-        let remove =
-            false;
+        let remove = false;
 
         if (
             currentTime -
             wave.born >
             wave.life
         ) {
-            remove =
-                true;
+            remove = true;
         }
 
         if (
@@ -4450,8 +3900,7 @@ function updateElectricWaves(
             wave.y >
             WORLD_HEIGHT
         ) {
-            remove =
-                true;
+            remove = true;
         }
 
         if (
@@ -4465,8 +3914,7 @@ function updateElectricWaves(
                 )
             )
         ) {
-            remove =
-                true;
+            remove = true;
         }
 
         if (!remove) {
@@ -4484,12 +3932,9 @@ function updateElectricWaves(
                 }
 
                 if (
-                    Math.hypot(
-                        wave.x -
-                        fighter.x,
-
-                        wave.y -
-                        fighter.y
+                    distance(
+                        wave,
+                        fighter
                     ) <=
                     width +
                     fighter.radius
@@ -4500,23 +3945,20 @@ function updateElectricWaves(
                         wave.owner
                     );
 
-                    if (
-                        wave.ultra
-                    ) {
+                    if (wave.ultra) {
                         fighter.stunnedUntil =
                             performance.now() +
                             wave.stunDuration;
 
                         createTextEffect(
                             fighter.x,
-                            fighter.y - 60,
+                            fighter.y - 62,
                             "ZATRZYMANY!",
                             "#ffe342"
                         );
                     }
 
-                    remove =
-                        true;
+                    remove = true;
 
                     break;
                 }
@@ -4525,43 +3967,115 @@ function updateElectricWaves(
 
         if (remove) {
             electricWaves.splice(
-                i,
+                index,
                 1
             );
         }
     }
 }
 
+function createCircleEffect(
+    x,
+    y,
+    startRadius,
+    endRadius,
+    color,
+    duration,
+    lineWidth
+) {
+    effects.push({
+        type:
+            "circle",
+
+        x:
+            x,
+
+        y:
+            y,
+
+        radius:
+            startRadius,
+
+        startRadius:
+            startRadius,
+
+        endRadius:
+            endRadius,
+
+        color:
+            color,
+
+        born:
+            performance.now(),
+
+        duration:
+            duration,
+
+        lineWidth:
+            lineWidth
+    });
+}
+
+function createTextEffect(
+    x,
+    y,
+    text,
+    color
+) {
+    effects.push({
+        type:
+            "text",
+
+        x:
+            x,
+
+        y:
+            y,
+
+        text:
+            text,
+
+        color:
+            color,
+
+        born:
+            performance.now(),
+
+        duration:
+            700
+    });
+}
+
 function updateEffects(
     currentTime
 ) {
     for (
-        let i =
+        let index =
             effects.length - 1;
 
-        i >= 0;
+        index >= 0;
 
-        i--
+        index--
     ) {
         const effect =
-            effects[i];
+            effects[index];
 
         const progress =
             (
                 currentTime -
                 effect.born
             ) /
-            effect.life;
+            effect.duration;
 
         if (
             effect.type ===
             "circle"
         ) {
             effect.radius =
-                20 +
+                effect.startRadius +
                 (
-                    effect.maximumRadius -
-                    20
+                    effect.endRadius -
+                    effect.startRadius
                 ) *
                 Math.min(
                     1,
@@ -4569,11 +4083,9 @@ function updateEffects(
                 );
         }
 
-        if (
-            progress >= 1
-        ) {
+        if (progress >= 1) {
             effects.splice(
-                i,
+                index,
                 1
             );
         }
@@ -4581,7 +4093,7 @@ function updateEffects(
 }
 
 function awardTrophies(
-    place
+    placement
 ) {
     if (
         trophiesAwarded ||
@@ -4593,20 +4105,18 @@ function awardTrophies(
     trophiesAwarded =
         true;
 
-    const safePlace =
-        Math.max(
+    const safePlacement =
+        clamp(
+            Math.floor(
+                placement
+            ),
             1,
-            Math.min(
-                10,
-                Math.floor(
-                    place
-                )
-            )
+            10
         );
 
     const reward =
         TROPHY_REWARDS[
-            safePlace
+            safePlacement
         ] || 0;
 
     const state =
@@ -4644,8 +4154,7 @@ function awardTrophies(
 
     state.heroTrophies[
         player.heroId
-    ] =
-        after;
+    ] = after;
 
     saveState(
         state
@@ -4662,7 +4171,7 @@ function awardTrophies(
         )
         .innerHTML =
         "Miejsce: <b>" +
-        safePlace +
+        safePlacement +
         "</b><br>" +
         "Zmiana pucharków: <b>" +
         sign +
@@ -4675,21 +4184,21 @@ function awardTrophies(
 }
 
 function checkWinner() {
-    const alive =
-        getAliveContestants();
+    const alivePlayers =
+        getAlivePlayers();
 
     if (
-        alive.length !== 1 ||
+        alivePlayers.length !== 1 ||
         matchFinished
     ) {
         return;
     }
 
-    winner =
-        alive[0];
-
     matchFinished =
         true;
+
+    const winner =
+        alivePlayers[0];
 
     if (
         winner === player
@@ -4732,27 +4241,20 @@ function checkWinner() {
         showDeathScreen(
             true
         );
-    } else if (
-        !player.alive
-    ) {
-        showDeathScreen(
-            false
-        );
     }
 }
 
 function showDeathScreen(
-    playerWon
+    victory
 ) {
-    gamePhase =
-        "finished";
+    phase = "finished";
 
     document
         .getElementById(
             "deathTitle"
         )
         .textContent =
-        playerWon
+        victory
             ? "ZWYCIĘSTWO!"
             : "POKONANY";
 
@@ -4765,13 +4267,116 @@ function showDeathScreen(
         );
 }
 
+function updateInformation() {
+    document
+        .getElementById(
+            "aliveCounter"
+        )
+        .textContent =
+        "Pozostało: " +
+        getAlivePlayers()
+            .length;
+
+    if (!player) {
+        return;
+    }
+
+    let information = "";
+
+    if (player.hidden) {
+        information +=
+            " | 🌿 UKRYTY";
+    }
+
+    if (
+        player.canPassWalls
+    ) {
+        information +=
+            " | 🧱 PRZENIKANIE";
+    }
+
+    if (
+        player.stunnedUntil >
+        performance.now()
+    ) {
+        information +=
+            " | ⚡ ZATRZYMANY";
+    }
+
+    if (
+        player.cursedUntil >
+        performance.now()
+    ) {
+        information +=
+            " | 🔮 KLĄTWA";
+    }
+
+    if (
+        player.lowHpShield &&
+        player.hp <=
+        player.maxHp *
+        player.shieldThreshold
+    ) {
+        information +=
+            " | 🛡️ TARCZA";
+    }
+
+    if (player.vampire) {
+        if (
+            player.transformed
+        ) {
+            information +=
+                " | 🦇 NIETOPERZE";
+        } else {
+            const remaining =
+                Math.max(
+                    0,
+                    player
+                        .transformationCooldown -
+                    (
+                        performance.now() -
+                        player
+                            .lastTransformation
+                    )
+                );
+
+            information +=
+                " | 🦇 " +
+                (
+                    remaining <= 0
+                        ? "GOTOWE"
+                        : (
+                            remaining /
+                            1000
+                        ).toFixed(1) +
+                          "s"
+                );
+        }
+    }
+
+    document
+        .getElementById(
+            "playerInfo"
+        )
+        .textContent =
+        player.icon +
+        " " +
+        player.heroName +
+        " | ❤️ " +
+        Math.max(
+            0,
+            Math.ceil(
+                player.hp
+            )
+        ) +
+        information;
+}
+
 function update() {
     const currentTime =
         performance.now();
 
-    if (
-        gamePhase === "intro"
-    ) {
+    if (phase === "intro") {
         updateIntro(
             currentTime
         );
@@ -4784,7 +4389,7 @@ function update() {
     }
 
     if (
-        gamePhase !== "playing" ||
+        phase !== "playing" ||
         matchFinished
     ) {
         updateEffects(
@@ -4800,9 +4405,7 @@ function update() {
         .slice()
         .forEach(
             function(fighter) {
-                if (
-                    fighter.isSummon
-                ) {
+                if (fighter.isSummon) {
                     updateSummon(
                         fighter
                     );
@@ -4840,51 +4443,47 @@ function update() {
     );
 
     updateCamera();
-
     updateInformation();
-
     checkWinner();
 }
 
 function worldToScreenX(
-    x
+    worldX
 ) {
     return (
-        x -
+        worldX -
         camera.x
     );
 }
 
 function worldToScreenY(
-    y
+    worldY
 ) {
     return (
-        y -
+        worldY -
         camera.y
     );
 }
 
-function objectVisible(
+function isVisible(
     x,
     y,
     width,
     height
 ) {
     return (
-        x + width >=
-        camera.x &&
+        x + width >= camera.x &&
         x <=
         camera.x +
         canvas.width &&
-        y + height >=
-        camera.y &&
+        y + height >= camera.y &&
         y <=
         camera.y +
         canvas.height
     );
 }
 
-function drawMap() {
+function drawGround() {
     ctx.fillStyle =
         selectedMap.ground;
 
@@ -4895,8 +4494,7 @@ function drawMap() {
         canvas.height
     );
 
-    const tileSize =
-        80;
+    const tileSize = 80;
 
     const startColumn =
         Math.floor(
@@ -4978,7 +4576,7 @@ function drawWater() {
     waterPools.forEach(
         function(water) {
             if (
-                !objectVisible(
+                !isVisible(
                     water.x,
                     water.y,
                     water.w,
@@ -5026,12 +4624,12 @@ function drawWater() {
                 let waveX = 15;
                 waveX <
                 water.w;
-                waveX += 45
+                waveX += 50
             ) {
                 ctx.fillRect(
                     x + waveX,
-                    y + 17,
-                    24,
+                    y + 18,
+                    26,
                     5
                 );
             }
@@ -5039,8 +4637,7 @@ function drawWater() {
             ctx.strokeStyle =
                 "#0f3558";
 
-            ctx.lineWidth =
-                4;
+            ctx.lineWidth = 4;
 
             ctx.strokeRect(
                 x,
@@ -5056,7 +4653,7 @@ function drawBushes() {
     bushes.forEach(
         function(bush) {
             if (
-                !objectVisible(
+                !isVisible(
                     bush.x,
                     bush.y,
                     bush.w,
@@ -5091,44 +4688,30 @@ function drawBushes() {
                     .bushLight;
 
             for (
-                let leafX = 10;
+                let leafX = 12;
                 leafX <
                 bush.w;
-                leafX += 32
+                leafX += 34
             ) {
                 for (
-                    let leafY = 10;
+                    let leafY = 12;
                     leafY <
                     bush.h;
-                    leafY += 32
+                    leafY += 34
                 ) {
                     ctx.beginPath();
 
                     ctx.arc(
                         x +
-                        leafX +
-                        Math.sin(
-                            (
-                                bush.x +
-                                leafX
-                            ) *
-                            12.345
-                        ) *
-                        4,
+                        leafX,
 
                         y +
-                        leafY +
-                        Math.sin(
-                            (
-                                bush.y +
-                                leafY
-                            ) *
-                            12.345
-                        ) *
-                        4,
+                        leafY,
 
                         15,
+
                         0,
+
                         Math.PI *
                         2
                     );
@@ -5140,8 +4723,7 @@ function drawBushes() {
             ctx.strokeStyle =
                 "#173b21";
 
-            ctx.lineWidth =
-                4;
+            ctx.lineWidth = 4;
 
             ctx.strokeRect(
                 x,
@@ -5157,7 +4739,7 @@ function drawWalls() {
     walls.forEach(
         function(wall) {
             if (
-                !objectVisible(
+                !isVisible(
                     wall.x,
                     wall.y,
                     wall.w,
@@ -5206,7 +4788,7 @@ function drawWalls() {
                 y,
                 wall.w,
                 Math.min(
-                    22,
+                    24,
                     wall.h
                 )
             );
@@ -5215,8 +4797,7 @@ function drawWalls() {
                 selectedMap
                     .brickLine;
 
-            ctx.lineWidth =
-                4;
+            ctx.lineWidth = 4;
 
             ctx.strokeRect(
                 x,
@@ -5230,8 +4811,8 @@ function drawWalls() {
 
 function drawHealthBar(
     fighter,
-    screenX,
-    screenY
+    x,
+    y
 ) {
     const width =
         fighter.isSummon
@@ -5243,12 +4824,12 @@ function drawHealthBar(
             ? 6
             : 9;
 
-    const x =
-        screenX -
+    const barX =
+        x -
         width / 2;
 
-    const y =
-        screenY -
+    const barY =
+        y -
         fighter.radius -
         27;
 
@@ -5256,8 +4837,8 @@ function drawHealthBar(
         "#281b20";
 
     ctx.fillRect(
-        x,
-        y,
+        barX,
+        barY,
         width,
         height
     );
@@ -5270,8 +4851,8 @@ function drawHealthBar(
                 : "#ef4d4d";
 
     ctx.fillRect(
-        x,
-        y,
+        barX,
+        barY,
 
         width *
         Math.max(
@@ -5286,12 +4867,11 @@ function drawHealthBar(
     ctx.strokeStyle =
         "#111827";
 
-    ctx.lineWidth =
-        2;
+    ctx.lineWidth = 2;
 
     ctx.strokeRect(
-        x,
-        y,
+        barX,
+        barY,
         width,
         height
     );
@@ -5299,8 +4879,8 @@ function drawHealthBar(
 
 function drawBatSwarm(
     fighter,
-    screenX,
-    screenY
+    x,
+    y
 ) {
     const time =
         performance.now() /
@@ -5316,36 +4896,35 @@ function drawBatSwarm(
         "middle";
 
     for (
-        let i = 0;
-        i < 6;
-        i++
+        let index = 0;
+        index < 6;
+        index++
     ) {
         const angle =
             time +
-            i *
+            index *
             Math.PI *
             2 /
             6;
 
         const radius =
-            23 +
+            25 +
             Math.sin(
-                time *
-                1.4 +
-                i
+                time +
+                index
             ) *
             7;
 
         ctx.fillText(
             "🦇",
 
-            screenX +
+            x +
             Math.cos(
                 angle
             ) *
             radius,
 
-            screenY +
+            y +
             Math.sin(
                 angle
             ) *
@@ -5361,31 +4940,34 @@ function drawFighter(
         return;
     }
 
-    const screenX =
+    const x =
         worldToScreenX(
             fighter.x
         );
 
-    const screenY =
+    const y =
         worldToScreenY(
             fighter.y
         );
 
     if (
-        screenX < -100 ||
-        screenY < -100 ||
-        screenX >
-        canvas.width + 100 ||
-        screenY >
-        canvas.height + 100
+        x < -100 ||
+        y < -100 ||
+        x >
+        canvas.width +
+        100 ||
+        y >
+        canvas.height +
+        100
     ) {
         return;
     }
 
-    const visibleToPlayer =
+    const visible =
         fighter === player ||
         !fighter.hidden ||
         (
+            player &&
             player.alive &&
             distance(
                 player,
@@ -5393,7 +4975,7 @@ function drawFighter(
             ) < 170
         );
 
-    if (!visibleToPlayer) {
+    if (!visible) {
         return;
     }
 
@@ -5415,25 +4997,21 @@ function drawFighter(
             0.78;
     }
 
-    if (
-        fighter.transformed
-    ) {
+    if (fighter.transformed) {
         drawBatSwarm(
             fighter,
-            screenX,
-            screenY
+            x,
+            y
         );
     } else {
         ctx.beginPath();
 
         ctx.arc(
-            screenX,
-            screenY,
-            fighter.radius +
-            7,
+            x,
+            y,
+            fighter.radius + 7,
             0,
-            Math.PI *
-            2
+            Math.PI * 2
         );
 
         ctx.fillStyle =
@@ -5468,8 +5046,8 @@ function drawFighter(
 
         ctx.fillText(
             fighter.icon,
-            screenX,
-            screenY
+            x,
+            y
         );
     }
 
@@ -5482,20 +5060,17 @@ function drawFighter(
         ctx.beginPath();
 
         ctx.arc(
-            screenX,
-            screenY,
-            fighter.radius +
-            13,
+            x,
+            y,
+            fighter.radius + 13,
             0,
-            Math.PI *
-            2
+            Math.PI * 2
         );
 
         ctx.strokeStyle =
             "#63d8ff";
 
-        ctx.lineWidth =
-            5;
+        ctx.lineWidth = 5;
 
         ctx.stroke();
     }
@@ -5507,20 +5082,17 @@ function drawFighter(
         ctx.beginPath();
 
         ctx.arc(
-            screenX,
-            screenY,
-            fighter.radius +
-            17,
+            x,
+            y,
+            fighter.radius + 17,
             0,
-            Math.PI *
-            2
+            Math.PI * 2
         );
 
         ctx.strokeStyle =
             "#b14cff";
 
-        ctx.lineWidth =
-            4;
+        ctx.lineWidth = 4;
 
         ctx.stroke();
     }
@@ -5534,9 +5106,8 @@ function drawFighter(
 
         ctx.fillText(
             "⚡",
-            screenX,
-            screenY -
-            50
+            x,
+            y - 50
         );
     }
 
@@ -5551,13 +5122,12 @@ function drawFighter(
     ctx.strokeStyle =
         "black";
 
-    ctx.lineWidth =
-        4;
+    ctx.lineWidth = 4;
 
     ctx.strokeText(
         fighter.name,
-        screenX,
-        screenY +
+        x,
+        y +
         fighter.radius +
         21
     );
@@ -5567,16 +5137,16 @@ function drawFighter(
 
     ctx.fillText(
         fighter.name,
-        screenX,
-        screenY +
+        x,
+        y +
         fighter.radius +
         21
     );
 
     drawHealthBar(
         fighter,
-        screenX,
-        screenY
+        x,
+        y
     );
 
     ctx.restore();
@@ -5585,36 +5155,24 @@ function drawFighter(
 function drawProjectiles() {
     projectiles.forEach(
         function(projectile) {
-            const screenX =
+            const x =
                 worldToScreenX(
                     projectile.x
                 );
 
-            const screenY =
+            const y =
                 worldToScreenY(
                     projectile.y
                 );
 
-            if (
-                screenX < -50 ||
-                screenY < -50 ||
-                screenX >
-                canvas.width + 50 ||
-                screenY >
-                canvas.height + 50
-            ) {
-                return;
-            }
-
             ctx.beginPath();
 
             ctx.arc(
-                screenX,
-                screenY,
+                x,
+                y,
                 projectile.radius,
                 0,
-                Math.PI *
-                2
+                Math.PI * 2
             );
 
             ctx.fillStyle =
@@ -5644,12 +5202,12 @@ function drawProjectiles() {
 function drawElectricWaves() {
     electricWaves.forEach(
         function(wave) {
-            const screenX =
+            const x =
                 worldToScreenX(
                     wave.x
                 );
 
-            const screenY =
+            const y =
                 worldToScreenY(
                     wave.y
                 );
@@ -5668,8 +5226,8 @@ function drawElectricWaves() {
             ctx.save();
 
             ctx.translate(
-                screenX,
-                screenY
+                x,
+                y
             );
 
             ctx.rotate(
@@ -5679,11 +5237,6 @@ function drawElectricWaves() {
             ctx.strokeStyle =
                 wave.color;
 
-            ctx.lineWidth =
-                wave.ultra
-                    ? 8
-                    : 6;
-
             ctx.shadowColor =
                 wave.color;
 
@@ -5692,34 +5245,26 @@ function drawElectricWaves() {
                     ? 18
                     : 10;
 
-            const sizes = [
-                width *
-                0.45,
+            ctx.lineWidth =
+                wave.ultra
+                    ? 8
+                    : 6;
 
-                width *
-                0.72,
-
+            [
+                width * 0.45,
+                width * 0.72,
                 width
-            ];
-
-            sizes.forEach(
-                function(
-                    size,
-                    index
-                ) {
+            ].forEach(
+                function(size, index) {
                     ctx.beginPath();
 
                     ctx.arc(
-                        -index *
-                        13,
-
+                        -index * 13,
                         0,
-
                         Math.max(
                             8,
                             size
                         ),
-
                         -0.65,
                         0.65
                     );
@@ -5734,7 +5279,7 @@ function drawElectricWaves() {
 }
 
 function drawEffects() {
-    const now =
+    const currentTime =
         performance.now();
 
     effects.forEach(
@@ -5742,27 +5287,23 @@ function drawEffects() {
             const progress =
                 Math.min(
                     1,
-
                     (
-                        now -
+                        currentTime -
                         effect.born
                     ) /
-                    effect.life
+                    effect.duration
                 );
 
-            const alpha =
-                Math.max(
-                    0,
-                    1 -
-                    progress
-                );
+            const opacity =
+                1 -
+                progress;
 
-            const screenX =
+            const x =
                 worldToScreenX(
                     effect.x
                 );
 
-            const screenY =
+            const y =
                 worldToScreenY(
                     effect.y
                 );
@@ -5770,7 +5311,7 @@ function drawEffects() {
             ctx.save();
 
             ctx.globalAlpha =
-                alpha;
+                opacity;
 
             if (
                 effect.type ===
@@ -5779,12 +5320,11 @@ function drawEffects() {
                 ctx.beginPath();
 
                 ctx.arc(
-                    screenX,
-                    screenY,
+                    x,
+                    y,
                     effect.radius,
                     0,
-                    Math.PI *
-                    2
+                    Math.PI * 2
                 );
 
                 ctx.strokeStyle =
@@ -5812,24 +5352,23 @@ function drawEffects() {
                 ctx.strokeStyle =
                     "black";
 
-                ctx.lineWidth =
-                    4;
+                ctx.lineWidth = 4;
 
-                const y =
-                    screenY -
+                const textY =
+                    y -
                     progress *
                     35;
 
                 ctx.strokeText(
                     effect.text,
-                    screenX,
-                    y
+                    x,
+                    textY
                 );
 
                 ctx.fillText(
                     effect.text,
-                    screenX,
-                    y
+                    x,
+                    textY
                 );
             }
 
@@ -5839,19 +5378,15 @@ function drawEffects() {
 }
 
 function drawMiniMap() {
-    const width =
-        190;
-
-    const height =
-        108;
+    const width = 190;
+    const height = 190;
 
     const x =
         canvas.width -
         width -
         16;
 
-    const y =
-        16;
+    const y = 16;
 
     ctx.fillStyle =
         "#111827dd";
@@ -5891,7 +5426,6 @@ function drawMiniMap() {
 
                 Math.max(
                     1,
-
                     wall.w /
                     WORLD_WIDTH *
                     (width - 10)
@@ -5899,7 +5433,6 @@ function drawMiniMap() {
 
                 Math.max(
                     1,
-
                     wall.h /
                     WORLD_HEIGHT *
                     (height - 10)
@@ -5914,13 +5447,13 @@ function drawMiniMap() {
                 return;
             }
 
-            const dotX =
+            const pointX =
                 x + 5 +
                 fighter.x /
                 WORLD_WIDTH *
                 (width - 10);
 
-            const dotY =
+            const pointY =
                 y + 5 +
                 fighter.y /
                 WORLD_HEIGHT *
@@ -5929,8 +5462,8 @@ function drawMiniMap() {
             ctx.beginPath();
 
             ctx.arc(
-                dotX,
-                dotY,
+                pointX,
+                pointY,
 
                 fighter.isPlayer
                     ? 5
@@ -5939,8 +5472,7 @@ function drawMiniMap() {
                         : 3,
 
                 0,
-                Math.PI *
-                2
+                Math.PI * 2
             );
 
             ctx.fillStyle =
@@ -5957,8 +5489,7 @@ function drawMiniMap() {
     ctx.strokeStyle =
         "white";
 
-    ctx.lineWidth =
-        2;
+    ctx.lineWidth = 2;
 
     ctx.strokeRect(
         x,
@@ -5970,7 +5501,7 @@ function drawMiniMap() {
 
 function drawCrosshair() {
     if (
-        gamePhase !== "playing" ||
+        phase !== "playing" ||
         !player ||
         !player.alive ||
         matchFinished
@@ -5985,15 +5516,13 @@ function drawCrosshair() {
         mouse.y,
         13,
         0,
-        Math.PI *
-        2
+        Math.PI * 2
     );
 
     ctx.strokeStyle =
         "#ffffffcc";
 
-    ctx.lineWidth =
-        2;
+    ctx.lineWidth = 2;
 
     ctx.stroke();
 
@@ -6030,7 +5559,7 @@ function draw() {
         canvas.height
     );
 
-    drawMap();
+    drawGround();
     drawWater();
     drawBushes();
     drawWalls();
@@ -6055,8 +5584,26 @@ function gameLoop() {
     );
 }
 
-prepareGame();
-gameLoop();
+try {
+    prepareGame();
+    gameLoop();
+} catch (error) {
+    console.error(error);
+
+    document
+        .getElementById(
+            "loadingPercent"
+        )
+        .textContent =
+        "Błąd kodu";
+
+    document
+        .querySelector(
+            ".loading-text"
+        )
+        .textContent =
+        error.message;
+}
 </script>
 
 </body>
