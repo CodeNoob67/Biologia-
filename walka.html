@@ -2993,14 +2993,17 @@ function drawProjectiles() {
                 Math.PI * 2
             );
 
-            ctx.fillStyle =
-                projectile.color;
+           if (projectile.owner.heroId === "wiedzma") {
+    ctx.fillStyle = "#FFCC33";
+} else {
+    ctx.fillStyle = projectile.color;
+}
 
-            ctx.fill();
+ctx.fill();
             
 if (projectile.owner.heroId === "wiedzma") {
     ctx.strokeStyle = "#000000";   // kolor obramowania
-    ctx.lineWidth = 4;             // grubość
+    ctx.lineWidth = 3;             // grubość
 } else {
     ctx.strokeStyle = "#111827";
     ctx.lineWidth = 2;
