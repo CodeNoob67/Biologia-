@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Bitwa Królestw</title>
 
     <style>
@@ -223,7 +224,7 @@
 </div>
 
 <div class="controls">
-    WASD lub strzałki — ruch | LPM — atak | krzaki — ukrycie
+    WASD lub strzałki — ruch | LPM — atak lub przemiana Wampira
 </div>
 
 <script src="dane.js"></script>
@@ -347,6 +348,22 @@ const HERO_STATS = {
         maximumSummons: 5
     },
 
+    tesla: {
+        hp: 150,
+        damage: 27,
+        speed: 1.7,
+        range: 620,
+        cooldown: 720,
+        projectileSpeed: 10,
+        projectileWidth: 8,
+        projectileLife: 1100,
+        melee: false,
+        electricWave: true,
+        ultraEvery: 5,
+        ultraSpeedMultiplier: 1.65,
+        ultraStunDuration: 1000
+    },
+
     goblin: {
         hp: 105,
         damage: 28,
@@ -399,6 +416,20 @@ const HERO_STATS = {
         curseMultiplier: 1.2
     },
 
+    wampir: {
+        hp: 135,
+        damage: 32,
+        speed: 1.65,
+        range: 75,
+        cooldown: 4000,
+        melee: false,
+        vampire: true,
+        transformationDuration: 1200,
+        transformationCooldown: 4000,
+        batSpeedMultiplier: 2.6,
+        vampireHealing: 0.25
+    },
+
     krol: {
         hp: 155,
         damage: 32,
@@ -425,6 +456,129 @@ const HERO_STATS = {
     }
 };
 
+const borderWalls = [
+    { x: 110, y: 110, w: 1080, h: 70 },
+    { x: 1510, y: 110, w: 1080, h: 70 },
+    { x: 110, y: 2520, w: 1080, h: 70 },
+    { x: 1510, y: 2520, w: 1080, h: 70 },
+
+    { x: 110, y: 110, w: 70, h: 1080 },
+    { x: 110, y: 1510, w: 70, h: 1080 },
+    { x: 2520, y: 110, w: 70, h: 1080 },
+    { x: 2520, y: 1510, w: 70, h: 1080 },
+
+    { x: 1100, y: 110, w: 170, h: 130 },
+    { x: 1430, y: 110, w: 170, h: 130 },
+    { x: 1100, y: 2460, w: 170, h: 130 },
+    { x: 1430, y: 2460, w: 170, h: 130 },
+
+    { x: 110, y: 1100, w: 130, h: 170 },
+    { x: 110, y: 1430, w: 130, h: 170 },
+    { x: 2460, y: 1100, w: 130, h: 170 },
+    { x: 2460, y: 1430, w: 130, h: 170 }
+];
+
+const innerWalls = [
+    { x: 500, y: 470, w: 260, h: 70 },
+    { x: 1940, y: 470, w: 260, h: 70 },
+    { x: 500, y: 2160, w: 260, h: 70 },
+    { x: 1940, y: 2160, w: 260, h: 70 },
+
+    { x: 420, y: 630, w: 70, h: 250 },
+    { x: 2210, y: 630, w: 70, h: 250 },
+    { x: 420, y: 1820, w: 70, h: 250 },
+    { x: 2210, y: 1820, w: 70, h: 250 },
+
+    { x: 830, y: 890, w: 290, h: 75 },
+    { x: 1580, y: 890, w: 290, h: 75 },
+    { x: 830, y: 1735, w: 290, h: 75 },
+    { x: 1580, y: 1735, w: 290, h: 75 },
+
+    { x: 730, y: 1020, w: 70, h: 250 },
+    { x: 1900, y: 1020, w: 70, h: 250 },
+    { x: 730, y: 1430, w: 70, h: 250 },
+    { x: 1900, y: 1430, w: 70, h: 250 },
+
+    { x: 1110, y: 570, w: 480, h: 65 },
+    { x: 1110, y: 2065, w: 480, h: 65 },
+
+    { x: 1070, y: 1150, w: 180, h: 65 },
+    { x: 1450, y: 1150, w: 180, h: 65 },
+    { x: 1070, y: 1485, w: 180, h: 65 },
+    { x: 1450, y: 1485, w: 180, h: 65 },
+
+    { x: 1280, y: 1265, w: 140, h: 170 }
+];
+
+const walls = [
+    ...borderWalls,
+    ...innerWalls
+];
+
+const waterPools = [
+    { x: 1250, y: 250, w: 200, h: 100 },
+    { x: 1250, y: 2350, w: 200, h: 100 },
+
+    { x: 770, y: 570, w: 180, h: 160 },
+    { x: 1750, y: 570, w: 180, h: 160 },
+    { x: 770, y: 1970, w: 180, h: 160 },
+    { x: 1750, y: 1970, w: 180, h: 160 },
+
+    { x: 1180, y: 790, w: 340, h: 90 },
+    { x: 1180, y: 1820, w: 340, h: 90 }
+];
+
+const bushes = [
+    { x: 260, y: 260, w: 230, h: 150 },
+    { x: 2210, y: 260, w: 230, h: 150 },
+    { x: 260, y: 2290, w: 230, h: 150 },
+    { x: 2210, y: 2290, w: 230, h: 150 },
+
+    { x: 440, y: 420, w: 320, h: 70 },
+    { x: 1940, y: 420, w: 320, h: 70 },
+    { x: 440, y: 2210, w: 320, h: 70 },
+    { x: 1940, y: 2210, w: 320, h: 70 },
+
+    { x: 360, y: 650, w: 100, h: 260 },
+    { x: 2240, y: 650, w: 100, h: 260 },
+    { x: 360, y: 1790, w: 100, h: 260 },
+    { x: 2240, y: 1790, w: 100, h: 260 },
+
+    { x: 770, y: 820, w: 360, h: 70 },
+    { x: 1570, y: 820, w: 360, h: 70 },
+    { x: 770, y: 1810, w: 360, h: 70 },
+    { x: 1570, y: 1810, w: 360, h: 70 },
+
+    { x: 680, y: 1050, w: 90, h: 240 },
+    { x: 1930, y: 1050, w: 90, h: 240 },
+    { x: 680, y: 1410, w: 90, h: 240 },
+    { x: 1930, y: 1410, w: 90, h: 240 },
+
+    { x: 1030, y: 1090, w: 220, h: 70 },
+    { x: 1450, y: 1090, w: 220, h: 70 },
+    { x: 1030, y: 1540, w: 220, h: 70 },
+    { x: 1450, y: 1540, w: 220, h: 70 },
+
+    { x: 1150, y: 500, w: 400, h: 60 },
+    { x: 1150, y: 2140, w: 400, h: 60 },
+
+    { x: 1240, y: 1200, w: 220, h: 70 },
+    { x: 1240, y: 1430, w: 220, h: 70 }
+];
+
+const spawnPositions = [
+    { x: 350, y: 350 },
+    { x: 1350, y: 420 },
+    { x: 2350, y: 350 },
+    { x: 330, y: 1350 },
+    { x: 2370, y: 1350 },
+    { x: 330, y: 2050 },
+    { x: 2370, y: 2050 },
+    { x: 350, y: 2350 },
+    { x: 1350, y: 2280 },
+    { x: 2350, y: 2350 }
+];
+
 const keys = {};
 
 let mouse = {
@@ -441,158 +595,19 @@ let camera = {
 let selectedMap = MAPS.green;
 let fighters = [];
 let projectiles = [];
+let electricWaves = [];
 let effects = [];
 
 let player = null;
 let winner = null;
+
 let matchFinished = false;
 let trophiesAwarded = false;
 let summonNumber = 0;
 
-const borderWalls = [
-    { x: 110, y: 110, w: 1080, h: 70 },
-    { x: 1510, y: 110, w: 1080, h: 70 },
-
-    { x: 110, y: 2520, w: 1080, h: 70 },
-    { x: 1510, y: 2520, w: 1080, h: 70 },
-
-    { x: 110, y: 110, w: 70, h: 1080 },
-    { x: 110, y: 1510, w: 70, h: 1080 },
-
-    { x: 2520, y: 110, w: 70, h: 1080 },
-    { x: 2520, y: 1510, w: 70, h: 1080 },
-
-    { x: 1100, y: 110, w: 170, h: 130 },
-    { x: 1430, y: 110, w: 170, h: 130 },
-
-    { x: 1100, y: 2460, w: 170, h: 130 },
-    { x: 1430, y: 2460, w: 170, h: 130 },
-
-    { x: 110, y: 1100, w: 130, h: 170 },
-    { x: 110, y: 1430, w: 130, h: 170 },
-
-    { x: 2460, y: 1100, w: 130, h: 170 },
-    { x: 2460, y: 1430, w: 130, h: 170 }
-];
-
-const innerWalls = [
-    { x: 500, y: 470, w: 260, h: 70 },
-    { x: 1940, y: 470, w: 260, h: 70 },
-
-    { x: 500, y: 2160, w: 260, h: 70 },
-    { x: 1940, y: 2160, w: 260, h: 70 },
-
-    { x: 420, y: 630, w: 70, h: 250 },
-    { x: 2210, y: 630, w: 70, h: 250 },
-
-    { x: 420, y: 1820, w: 70, h: 250 },
-    { x: 2210, y: 1820, w: 70, h: 250 },
-
-    { x: 830, y: 890, w: 290, h: 75 },
-    { x: 1580, y: 890, w: 290, h: 75 },
-
-    { x: 830, y: 1735, w: 290, h: 75 },
-    { x: 1580, y: 1735, w: 290, h: 75 },
-
-    { x: 730, y: 1020, w: 70, h: 250 },
-    { x: 1900, y: 1020, w: 70, h: 250 },
-
-    { x: 730, y: 1430, w: 70, h: 250 },
-    { x: 1900, y: 1430, w: 70, h: 250 },
-
-    { x: 1110, y: 570, w: 480, h: 65 },
-    { x: 1110, y: 2065, w: 480, h: 65 },
-
-    { x: 1070, y: 1150, w: 180, h: 65 },
-    { x: 1450, y: 1150, w: 180, h: 65 },
-
-    { x: 1070, y: 1485, w: 180, h: 65 },
-    { x: 1450, y: 1485, w: 180, h: 65 },
-
-    { x: 1280, y: 1265, w: 140, h: 170 }
-];
-
-const waterPools = [
-    { x: 1250, y: 250, w: 200, h: 100 },
-    { x: 1250, y: 2350, w: 200, h: 100 },
-
-    { x: 770, y: 570, w: 180, h: 160 },
-    { x: 1750, y: 570, w: 180, h: 160 },
-
-    { x: 770, y: 1970, w: 180, h: 160 },
-    { x: 1750, y: 1970, w: 180, h: 160 },
-
-    { x: 1180, y: 790, w: 340, h: 90 },
-    { x: 1180, y: 1820, w: 340, h: 90 }
-];
-
-const bushes = [
-    { x: 260, y: 260, w: 230, h: 150 },
-    { x: 2210, y: 260, w: 230, h: 150 },
-
-    { x: 260, y: 2290, w: 230, h: 150 },
-    { x: 2210, y: 2290, w: 230, h: 150 },
-
-    { x: 440, y: 420, w: 320, h: 70 },
-    { x: 1940, y: 420, w: 320, h: 70 },
-
-    { x: 440, y: 2210, w: 320, h: 70 },
-    { x: 1940, y: 2210, w: 320, h: 70 },
-
-    { x: 360, y: 650, w: 100, h: 260 },
-    { x: 2240, y: 650, w: 100, h: 260 },
-
-    { x: 360, y: 1790, w: 100, h: 260 },
-    { x: 2240, y: 1790, w: 100, h: 260 },
-
-    { x: 770, y: 820, w: 360, h: 70 },
-    { x: 1570, y: 820, w: 360, h: 70 },
-
-    { x: 770, y: 1810, w: 360, h: 70 },
-    { x: 1570, y: 1810, w: 360, h: 70 },
-
-    { x: 680, y: 1050, w: 90, h: 240 },
-    { x: 1930, y: 1050, w: 90, h: 240 },
-
-    { x: 680, y: 1410, w: 90, h: 240 },
-    { x: 1930, y: 1410, w: 90, h: 240 },
-
-    { x: 1030, y: 1090, w: 220, h: 70 },
-    { x: 1450, y: 1090, w: 220, h: 70 },
-
-    { x: 1030, y: 1540, w: 220, h: 70 },
-    { x: 1450, y: 1540, w: 220, h: 70 },
-
-    { x: 1150, y: 500, w: 400, h: 60 },
-    { x: 1150, y: 2140, w: 400, h: 60 },
-
-    { x: 1240, y: 1200, w: 220, h: 70 },
-    { x: 1240, y: 1430, w: 220, h: 70 }
-];
-
-const walls = [
-    ...borderWalls,
-    ...innerWalls
-];
-
-const spawnPositions = [
-    { x: 350, y: 350 },
-    { x: 1350, y: 420 },
-    { x: 2350, y: 350 },
-
-    { x: 330, y: 1350 },
-    { x: 2370, y: 1350 },
-
-    { x: 330, y: 2050 },
-    { x: 2370, y: 2050 },
-
-    { x: 350, y: 2350 },
-    { x: 1350, y: 2280 },
-    { x: 2350, y: 2350 }
-];
-
 window.addEventListener("keydown", function(event) {
     const key = event.key.toLowerCase();
+
     keys[key] = true;
 
     if (
@@ -640,11 +655,20 @@ canvas.addEventListener("contextmenu", function(event) {
 });
 
 function randomNumber(minimum, maximum) {
-    return Math.random() * (maximum - minimum) + minimum;
+    return (
+        Math.random() *
+        (maximum - minimum) +
+        minimum
+    );
 }
 
 function randomItem(array) {
-    return array[Math.floor(Math.random() * array.length)];
+    return array[
+        Math.floor(
+            Math.random() *
+            array.length
+        )
+    ];
 }
 
 function distance(first, second) {
@@ -678,29 +702,48 @@ function rotateDirection(direction, angle) {
 function rectangleCollision(x, y, radius, rectangle) {
     const closestX = Math.max(
         rectangle.x,
-        Math.min(x, rectangle.x + rectangle.w)
+        Math.min(
+            x,
+            rectangle.x + rectangle.w
+        )
     );
 
     const closestY = Math.max(
         rectangle.y,
-        Math.min(y, rectangle.y + rectangle.h)
+        Math.min(
+            y,
+            rectangle.y + rectangle.h
+        )
     );
 
     const dx = x - closestX;
     const dy = y - closestY;
 
-    return dx * dx + dy * dy < radius * radius;
+    return (
+        dx * dx + dy * dy <
+        radius * radius
+    );
 }
 
 function collidesWithWall(x, y, radius) {
     return walls.some(function(wall) {
-        return rectangleCollision(x, y, radius, wall);
+        return rectangleCollision(
+            x,
+            y,
+            radius,
+            wall
+        );
     });
 }
 
 function collidesWithWater(x, y, radius) {
     return waterPools.some(function(water) {
-        return rectangleCollision(x, y, radius, water);
+        return rectangleCollision(
+            x,
+            y,
+            radius,
+            water
+        );
     });
 }
 
@@ -725,19 +768,34 @@ function isSafeSpawn(x, y, radius = 35) {
 }
 
 function getSafeSpawn(position) {
-    if (isSafeSpawn(position.x, position.y)) {
+    if (
+        isSafeSpawn(
+            position.x,
+            position.y
+        )
+    ) {
         return position;
     }
 
-    for (let radius = 60; radius <= 600; radius += 50) {
-        for (let angle = 0; angle < Math.PI * 2; angle += 0.35) {
+    for (
+        let searchRadius = 60;
+        searchRadius <= 650;
+        searchRadius += 45
+    ) {
+        for (
+            let angle = 0;
+            angle < Math.PI * 2;
+            angle += 0.3
+        ) {
             const x =
                 position.x +
-                Math.cos(angle) * radius;
+                Math.cos(angle) *
+                searchRadius;
 
             const y =
                 position.y +
-                Math.sin(angle) * radius;
+                Math.sin(angle) *
+                searchRadius;
 
             if (isSafeSpawn(x, y)) {
                 return { x, y };
@@ -752,12 +810,18 @@ function getSafeSpawn(position) {
 }
 
 function getCharacterStats(heroId) {
-    return HERO_STATS[heroId] || HERO_STATS.farmer;
+    return (
+        HERO_STATS[heroId] ||
+        HERO_STATS.farmer
+    );
 }
 
 function getAliveContestants() {
     return fighters.filter(function(fighter) {
-        return fighter.alive && !fighter.isSummon;
+        return (
+            fighter.alive &&
+            !fighter.isSummon
+        );
     });
 }
 
@@ -765,8 +829,15 @@ function createFighter(hero, x, y, isPlayer, number) {
     const stats = getCharacterStats(hero.id);
 
     return {
-        id: isPlayer ? "player" : "bot-" + number,
-        name: isPlayer ? "TY" : "BOT " + number,
+        id:
+            isPlayer
+                ? "player"
+                : "bot-" + number,
+
+        name:
+            isPlayer
+                ? "TY"
+                : "BOT " + number,
 
         heroId: hero.id,
         heroName: hero.nazwa,
@@ -782,46 +853,124 @@ function createFighter(hero, x, y, isPlayer, number) {
 
         damage: stats.damage,
         speed: stats.speed,
+        normalSpeed: stats.speed,
+
         range: stats.range,
         cooldown: stats.cooldown,
 
-        projectileSpeed: stats.projectileSpeed || 0,
-        projectileWidth: stats.projectileWidth || 0,
-        projectileLife: stats.projectileLife || 0,
+        projectileSpeed:
+            stats.projectileSpeed || 0,
 
-        melee: Boolean(stats.melee),
-        canPassWalls: Boolean(stats.canPassWalls),
-        tripleShot: Boolean(stats.tripleShot),
+        projectileWidth:
+            stats.projectileWidth || 0,
 
-        farmerThirdAttack: Boolean(stats.farmerThirdAttack),
+        projectileLife:
+            stats.projectileLife || 0,
 
-        lowHpShield: Boolean(stats.lowHpShield),
-        shieldThreshold: stats.shieldThreshold || 0,
-        shieldReduction: stats.shieldReduction || 0,
+        melee:
+            Boolean(stats.melee),
 
-        fastThirdArrow: Boolean(stats.fastThirdArrow),
-        fastArrowMultiplier: stats.fastArrowMultiplier || 1,
+        canPassWalls:
+            Boolean(stats.canPassWalls),
 
-        lowHpDamageBonus: Boolean(stats.lowHpDamageBonus),
-        damageBonusThreshold: stats.damageBonusThreshold || 0,
-        damageBonusMultiplier: stats.damageBonusMultiplier || 1,
+        tripleShot:
+            Boolean(stats.tripleShot),
 
-        shockwaveEvery: stats.shockwaveEvery || 0,
-        attackShockwaveRadius: stats.attackShockwaveRadius || 0,
-        attackShockwaveDamage: stats.attackShockwaveDamage || 0,
+        farmerThirdAttack:
+            Boolean(stats.farmerThirdAttack),
 
-        curseEvery: stats.curseEvery || 0,
-        curseDuration: stats.curseDuration || 0,
-        curseMultiplier: stats.curseMultiplier || 1,
+        lowHpShield:
+            Boolean(stats.lowHpShield),
 
-        summonsGhosts: Boolean(stats.summonsGhosts),
-        summonCooldown: stats.summonCooldown || 0,
-        maximumSummons: stats.maximumSummons || 0,
-        lastSummon: performance.now(),
+        shieldThreshold:
+            stats.shieldThreshold || 0,
+
+        shieldReduction:
+            stats.shieldReduction || 0,
+
+        fastThirdArrow:
+            Boolean(stats.fastThirdArrow),
+
+        fastArrowMultiplier:
+            stats.fastArrowMultiplier || 1,
+
+        lowHpDamageBonus:
+            Boolean(stats.lowHpDamageBonus),
+
+        damageBonusThreshold:
+            stats.damageBonusThreshold || 0,
+
+        damageBonusMultiplier:
+            stats.damageBonusMultiplier || 1,
+
+        shockwaveEvery:
+            stats.shockwaveEvery || 0,
+
+        attackShockwaveRadius:
+            stats.attackShockwaveRadius || 0,
+
+        attackShockwaveDamage:
+            stats.attackShockwaveDamage || 0,
+
+        curseEvery:
+            stats.curseEvery || 0,
+
+        curseDuration:
+            stats.curseDuration || 0,
+
+        curseMultiplier:
+            stats.curseMultiplier || 1,
+
+        summonsGhosts:
+            Boolean(stats.summonsGhosts),
+
+        summonCooldown:
+            stats.summonCooldown || 0,
+
+        maximumSummons:
+            stats.maximumSummons || 0,
+
+        lastSummon:
+            performance.now(),
+
+        electricWave:
+            Boolean(stats.electricWave),
+
+        ultraEvery:
+            stats.ultraEvery || 0,
+
+        ultraSpeedMultiplier:
+            stats.ultraSpeedMultiplier || 1,
+
+        ultraStunDuration:
+            stats.ultraStunDuration || 0,
+
+        vampire:
+            Boolean(stats.vampire),
+
+        transformationDuration:
+            stats.transformationDuration || 0,
+
+        transformationCooldown:
+            stats.transformationCooldown || 0,
+
+        batSpeedMultiplier:
+            stats.batSpeedMultiplier || 1,
+
+        vampireHealing:
+            stats.vampireHealing || 0,
+
+        transformed: false,
+        transformationEnd: 0,
+        lastTransformation: -999999,
+        transformationHits: new Set(),
 
         attackCounter: 0,
+
         cursedUntil: 0,
         receivedDamageMultiplier: 1,
+
+        stunnedUntil: 0,
 
         isPlayer,
         isSummon: false,
@@ -875,6 +1024,8 @@ function createSummonedGhost(priest) {
 
         damage: 8,
         speed: 1.8,
+        normalSpeed: 1.8,
+
         range: 65,
         cooldown: 650,
 
@@ -884,8 +1035,8 @@ function createSummonedGhost(priest) {
 
         melee: true,
         canPassWalls: true,
-        tripleShot: false,
 
+        tripleShot: false,
         farmerThirdAttack: false,
         lowHpShield: false,
         fastThirdArrow: false,
@@ -893,12 +1044,17 @@ function createSummonedGhost(priest) {
 
         shockwaveEvery: 0,
         curseEvery: 0,
-
         summonsGhosts: false,
+        electricWave: false,
+        vampire: false,
+
+        transformed: false,
+        transformationHits: new Set(),
 
         attackCounter: 0,
         cursedUntil: 0,
         receivedDamageMultiplier: 1,
+        stunnedUntil: 0,
 
         isPlayer: false,
         isSummon: true,
@@ -914,6 +1070,7 @@ function createSummonedGhost(priest) {
 
         directionX: 0,
         directionY: 0,
+
         nextDecision: 0,
 
         color: "#9cecff"
@@ -927,18 +1084,6 @@ function createSummonedGhost(priest) {
         "PRZYWOŁANIE!",
         "#c9f7ff"
     );
-
-    effects.push({
-        type: "circle",
-        x: ghost.x,
-        y: ghost.y,
-        radius: 10,
-        maximumRadius: 65,
-        color: "#a9efff",
-        born: performance.now(),
-        life: 450,
-        lineWidth: 8
-    });
 }
 
 function startGame() {
@@ -950,7 +1095,9 @@ function startGame() {
         MAPS[mapId] ||
         MAPS.green;
 
-    document.getElementById("mapName").textContent =
+    document
+        .getElementById("mapName")
+        .textContent =
         selectedMap.name;
 
     const state = getState();
@@ -968,6 +1115,7 @@ function startGame() {
 
     fighters = [];
     projectiles = [];
+    electricWaves = [];
     effects = [];
 
     winner = null;
@@ -981,9 +1129,14 @@ function startGame() {
         .getElementById("deathScreen")
         .classList.remove("visible");
 
-    document.getElementById("matchResult").innerHTML = "";
+    document
+        .getElementById("matchResult")
+        .innerHTML = "";
 
-    const playerSpawn = getSafeSpawn(spawnPositions[8]);
+    const playerSpawn =
+        getSafeSpawn(
+            spawnPositions[8]
+        );
 
     player = createFighter(
         selectedHero,
@@ -995,13 +1148,17 @@ function startGame() {
 
     fighters.push(player);
 
-    const botSpawns = spawnPositions.filter(function(_, index) {
-        return index !== 8;
-    });
+    const botSpawns =
+        spawnPositions.filter(function(_, index) {
+            return index !== 8;
+        });
 
     for (let i = 0; i < 9; i++) {
-        const randomHero = randomItem(BOHATEROWIE);
-        const safePosition = getSafeSpawn(botSpawns[i]);
+        const randomHero =
+            randomItem(BOHATEROWIE);
+
+        const safePosition =
+            getSafeSpawn(botSpawns[i]);
 
         fighters.push(
             createFighter(
@@ -1020,9 +1177,12 @@ function startGame() {
 }
 
 function updateInformation() {
-    const alive = getAliveContestants().length;
+    const alive =
+        getAliveContestants().length;
 
-    document.getElementById("aliveCounter").textContent =
+    document
+        .getElementById("aliveCounter")
+        .textContent =
         "Pozostało: " + alive;
 
     if (!player) {
@@ -1030,6 +1190,10 @@ function updateInformation() {
     }
 
     let extra = "";
+
+    if (player.hidden) {
+        extra += " | 🌿 UKRYTY";
+    }
 
     if (
         player.lowHpShield &&
@@ -1040,22 +1204,29 @@ function updateInformation() {
         extra += " | 🛡️ TARCZA";
     }
 
-    if (player.cursedUntil > performance.now()) {
+    if (
+        player.cursedUntil >
+        performance.now()
+    ) {
         extra += " | 🔮 KLĄTWA";
     }
 
-    if (player.hidden) {
-        extra += " | 🌿 UKRYTY";
+    if (
+        player.stunnedUntil >
+        performance.now()
+    ) {
+        extra += " | ⚡ ZATRZYMANY";
     }
 
     if (player.summonsGhosts) {
-        const summons = fighters.filter(function(fighter) {
-            return (
-                fighter.alive &&
-                fighter.isSummon &&
-                fighter.summoner === player
-            );
-        }).length;
+        const summons =
+            fighters.filter(function(fighter) {
+                return (
+                    fighter.alive &&
+                    fighter.isSummon &&
+                    fighter.summoner === player
+                );
+            }).length;
 
         extra +=
             " | 👻 " +
@@ -1068,12 +1239,43 @@ function updateInformation() {
         extra += " | 🧱 PRZENIKANIE";
     }
 
-    document.getElementById("playerInfo").textContent =
+    if (player.vampire) {
+        if (player.transformed) {
+            extra += " | 🦇 NIETOPERZE";
+        } else {
+            const remaining =
+                Math.max(
+                    0,
+                    player.transformationCooldown -
+                    (
+                        performance.now() -
+                        player.lastTransformation
+                    )
+                );
+
+            extra +=
+                " | 🦇 " +
+                (
+                    remaining <= 0
+                        ? "GOTOWE"
+                        : (
+                            remaining / 1000
+                        ).toFixed(1) + "s"
+                );
+        }
+    }
+
+    document
+        .getElementById("playerInfo")
+        .textContent =
         player.icon +
         " " +
         player.heroName +
         " | ❤️ " +
-        Math.max(0, Math.ceil(player.hp)) +
+        Math.max(
+            0,
+            Math.ceil(player.hp)
+        ) +
         extra;
 }
 
@@ -1108,6 +1310,17 @@ function updateCamera() {
 }
 
 function moveFighter(fighter, dx, dy) {
+    if (
+        fighter.stunnedUntil >
+        performance.now()
+    ) {
+        return;
+    }
+
+    const passObstacles =
+        fighter.canPassWalls ||
+        fighter.transformed;
+
     const nextX = Math.max(
         fighter.radius,
         Math.min(
@@ -1117,7 +1330,7 @@ function moveFighter(fighter, dx, dy) {
     );
 
     if (
-        fighter.canPassWalls ||
+        passObstacles ||
         !isBlocked(
             nextX,
             fighter.y,
@@ -1136,7 +1349,7 @@ function moveFighter(fighter, dx, dy) {
     );
 
     if (
-        fighter.canPassWalls ||
+        passObstacles ||
         !isBlocked(
             fighter.x,
             nextY,
@@ -1160,6 +1373,7 @@ function updateBushStatus() {
     fighters.forEach(function(fighter) {
         fighter.hidden =
             fighter.alive &&
+            !fighter.transformed &&
             bushes.some(function(bush) {
                 return pointInsideRectangle(
                     fighter.x,
@@ -1175,7 +1389,10 @@ function canSeeFighter(observer, target) {
         return true;
     }
 
-    return distance(observer, target) < 170;
+    return (
+        distance(observer, target) <
+        170
+    );
 }
 
 function isEnemy(observer, target) {
@@ -1203,7 +1420,8 @@ function isEnemy(observer, target) {
     if (
         observer.isSummon &&
         target.isSummon &&
-        observer.summoner === target.summoner
+        observer.summoner ===
+            target.summoner
     ) {
         return false;
     }
@@ -1220,27 +1438,50 @@ function movePlayer() {
         return;
     }
 
+    if (
+        player.stunnedUntil >
+        performance.now()
+    ) {
+        return;
+    }
+
     let dx = 0;
     let dy = 0;
 
-    if (keys["w"] || keys["arrowup"]) {
+    if (
+        keys["w"] ||
+        keys["arrowup"]
+    ) {
         dy -= 1;
     }
 
-    if (keys["s"] || keys["arrowdown"]) {
+    if (
+        keys["s"] ||
+        keys["arrowdown"]
+    ) {
         dy += 1;
     }
 
-    if (keys["a"] || keys["arrowleft"]) {
+    if (
+        keys["a"] ||
+        keys["arrowleft"]
+    ) {
         dx -= 1;
     }
 
-    if (keys["d"] || keys["arrowright"]) {
+    if (
+        keys["d"] ||
+        keys["arrowright"]
+    ) {
         dx += 1;
     }
 
-    if (dx !== 0 || dy !== 0) {
-        const direction = normalize(dx, dy);
+    if (
+        dx !== 0 ||
+        dy !== 0
+    ) {
+        const direction =
+            normalize(dx, dy);
 
         moveFighter(
             player,
@@ -1268,7 +1509,8 @@ function getPossibleTargets(fighter) {
 }
 
 function getNearestTarget(fighter) {
-    const targets = getPossibleTargets(fighter);
+    const targets =
+        getPossibleTargets(fighter);
 
     if (targets.length === 0) {
         return null;
@@ -1285,17 +1527,22 @@ function getNearestTarget(fighter) {
 }
 
 function chooseBotDecision(bot) {
-    const targets = getPossibleTargets(bot);
+    const targets =
+        getPossibleTargets(bot);
 
     if (targets.length === 0) {
         bot.target = null;
         bot.behavior = "wander";
     } else {
-        bot.target = randomItem(targets);
+        bot.target =
+            randomItem(targets);
 
         const roll = Math.random();
 
-        if (bot.hp < bot.maxHp * 0.3) {
+        if (
+            bot.hp <
+            bot.maxHp * 0.3
+        ) {
             bot.behavior =
                 Math.random() < 0.72
                     ? "flee"
@@ -1309,8 +1556,11 @@ function chooseBotDecision(bot) {
         }
     }
 
-    bot.directionX = randomNumber(-1, 1);
-    bot.directionY = randomNumber(-1, 1);
+    bot.directionX =
+        randomNumber(-1, 1);
+
+    bot.directionY =
+        randomNumber(-1, 1);
 
     bot.nextDecision =
         performance.now() +
@@ -1327,6 +1577,13 @@ function updateBot(bot, currentTime) {
     }
 
     if (
+        bot.stunnedUntil >
+        currentTime
+    ) {
+        return;
+    }
+
+    if (
         currentTime >= bot.nextDecision ||
         !bot.target ||
         !bot.target.alive ||
@@ -1336,21 +1593,46 @@ function updateBot(bot, currentTime) {
         chooseBotDecision(bot);
     }
 
+    if (bot.vampire) {
+        if (
+            bot.target &&
+            !bot.transformed &&
+            currentTime -
+            bot.lastTransformation >=
+            bot.transformationCooldown
+        ) {
+            startVampireTransformation(
+                bot,
+                bot.target.x,
+                bot.target.y
+            );
+        }
+    }
+
     if (bot.behavior === "wander") {
-        const direction = normalize(
-            bot.directionX,
-            bot.directionY
-        );
+        const direction =
+            normalize(
+                bot.directionX,
+                bot.directionY
+            );
 
         moveFighter(
             bot,
-            direction.x * bot.speed * 0.58,
-            direction.y * bot.speed * 0.58
+            direction.x *
+            bot.speed *
+            0.58,
+
+            direction.y *
+            bot.speed *
+            0.58
         );
 
         if (Math.random() < 0.015) {
-            bot.directionX = randomNumber(-1, 1);
-            bot.directionY = randomNumber(-1, 1);
+            bot.directionX =
+                randomNumber(-1, 1);
+
+            bot.directionY =
+                randomNumber(-1, 1);
         }
 
         return;
@@ -1360,12 +1642,14 @@ function updateBot(bot, currentTime) {
         return;
     }
 
-    const direction = normalize(
-        bot.target.x - bot.x,
-        bot.target.y - bot.y
-    );
+    const direction =
+        normalize(
+            bot.target.x - bot.x,
+            bot.target.y - bot.y
+        );
 
-    const targetDistance = distance(bot, bot.target);
+    const targetDistance =
+        distance(bot, bot.target);
 
     if (bot.behavior === "flee") {
         moveFighter(
@@ -1374,7 +1658,10 @@ function updateBot(bot, currentTime) {
             -direction.y * bot.speed
         );
 
-        if (Math.random() < 0.035) {
+        if (
+            !bot.vampire &&
+            Math.random() < 0.035
+        ) {
             attackTowards(
                 bot,
                 bot.target.x,
@@ -1385,22 +1672,50 @@ function updateBot(bot, currentTime) {
         return;
     }
 
+    if (bot.vampire) {
+        if (bot.transformed) {
+            moveFighter(
+                bot,
+                direction.x * bot.speed,
+                direction.y * bot.speed
+            );
+        }
+
+        return;
+    }
+
     const preferredDistance =
         bot.melee
             ? bot.range * 0.7
-            : Math.min(bot.range * 0.58, 500);
+            : Math.min(
+                bot.range * 0.58,
+                500
+            );
 
-    if (targetDistance > preferredDistance) {
+    if (
+        targetDistance >
+        preferredDistance
+    ) {
         moveFighter(
             bot,
-            direction.x * bot.speed * 0.78,
-            direction.y * bot.speed * 0.78
+            direction.x *
+            bot.speed *
+            0.78,
+
+            direction.y *
+            bot.speed *
+            0.78
         );
     } else if (!bot.melee) {
         moveFighter(
             bot,
-            -direction.x * bot.speed * 0.24,
-            -direction.y * bot.speed * 0.24
+            -direction.x *
+            bot.speed *
+            0.24,
+
+            -direction.y *
+            bot.speed *
+            0.24
         );
     }
 
@@ -1428,28 +1743,44 @@ function updateSummon(summon) {
     }
 
     if (
+        summon.stunnedUntil >
+        performance.now()
+    ) {
+        return;
+    }
+
+    if (
         !summon.target ||
         !summon.target.alive ||
-        !isEnemy(summon, summon.target)
+        !isEnemy(
+            summon,
+            summon.target
+        )
     ) {
-        summon.target = getNearestTarget(summon);
+        summon.target =
+            getNearestTarget(summon);
     }
 
     if (!summon.target) {
         return;
     }
 
-    const direction = normalize(
-        summon.target.x - summon.x,
-        summon.target.y - summon.y
-    );
+    const direction =
+        normalize(
+            summon.target.x - summon.x,
+            summon.target.y - summon.y
+        );
 
-    const targetDistance = distance(
-        summon,
-        summon.target
-    );
+    const targetDistance =
+        distance(
+            summon,
+            summon.target
+        );
 
-    if (targetDistance > summon.range * 0.72) {
+    if (
+        targetDistance >
+        summon.range * 0.72
+    ) {
         moveFighter(
             summon,
             direction.x * summon.speed,
@@ -1474,13 +1805,14 @@ function updatePriestSummons(currentTime) {
             return;
         }
 
-        const summons = fighters.filter(function(other) {
-            return (
-                other.alive &&
-                other.isSummon &&
-                other.summoner === fighter
-            );
-        });
+        const summons =
+            fighters.filter(function(other) {
+                return (
+                    other.alive &&
+                    other.isSummon &&
+                    other.summoner === fighter
+                );
+            });
 
         if (
             summons.length >=
@@ -1497,7 +1829,9 @@ function updatePriestSummons(currentTime) {
             return;
         }
 
-        fighter.lastSummon = currentTime;
+        fighter.lastSummon =
+            currentTime;
+
         createSummonedGhost(fighter);
     });
 }
@@ -1507,12 +1841,13 @@ function findTargetNearPoint(
     targetX,
     targetY
 ) {
-    const targets = fighters.filter(function(fighter) {
-        return (
-            isEnemy(attacker, fighter) &&
-            canSeeFighter(attacker, fighter)
-        );
-    });
+    const targets =
+        fighters.filter(function(fighter) {
+            return (
+                isEnemy(attacker, fighter) &&
+                canSeeFighter(attacker, fighter)
+            );
+        });
 
     targets.sort(function(first, second) {
         return (
@@ -1537,12 +1872,25 @@ function attackTowards(
 ) {
     if (
         !attacker.alive ||
-        matchFinished
+        matchFinished ||
+        attacker.stunnedUntil >
+            performance.now()
     ) {
         return;
     }
 
-    const currentTime = performance.now();
+    if (attacker.vampire) {
+        startVampireTransformation(
+            attacker,
+            targetX,
+            targetY
+        );
+
+        return;
+    }
+
+    const currentTime =
+        performance.now();
 
     if (
         currentTime -
@@ -1552,16 +1900,20 @@ function attackTowards(
         return;
     }
 
-    const direction = normalize(
-        targetX - attacker.x,
-        targetY - attacker.y
-    );
+    const direction =
+        normalize(
+            targetX - attacker.x,
+            targetY - attacker.y
+        );
 
-    attacker.lastAttack = currentTime;
+    attacker.lastAttack =
+        currentTime;
+
     attacker.hidden = false;
     attacker.attackCounter++;
 
-    let attackDamage = attacker.damage;
+    let attackDamage =
+        attacker.damage;
 
     if (
         attacker.farmerThirdAttack &&
@@ -1587,18 +1939,21 @@ function attackTowards(
             attacker.damageBonusMultiplier;
     }
 
-    attackDamage = Math.round(attackDamage);
+    attackDamage =
+        Math.round(attackDamage);
 
     if (attacker.melee) {
-        const target = findTargetNearPoint(
-            attacker,
-            targetX,
-            targetY
-        );
+        const target =
+            findTargetNearPoint(
+                attacker,
+                targetX,
+                targetY
+            );
 
         if (
             target &&
-            distance(attacker, target) <= attacker.range
+            distance(attacker, target) <=
+            attacker.range
         ) {
             damageFighter(
                 target,
@@ -1615,11 +1970,20 @@ function attackTowards(
         return;
     }
 
+    if (attacker.electricWave) {
+        createElectricWave(
+            attacker,
+            direction,
+            attackDamage
+        );
+
+        return;
+    }
+
     if (
         attacker.shockwaveEvery > 0 &&
         attacker.attackCounter %
-            attacker.shockwaveEvery ===
-            0
+        attacker.shockwaveEvery === 0
     ) {
         createGolemShockwave(attacker);
     }
@@ -1657,16 +2021,231 @@ function attackTowards(
     );
 }
 
+function startVampireTransformation(
+    vampire,
+    targetX,
+    targetY
+) {
+    const currentTime =
+        performance.now();
+
+    if (
+        vampire.transformed ||
+        currentTime -
+        vampire.lastTransformation <
+        vampire.transformationCooldown
+    ) {
+        return;
+    }
+
+    vampire.transformed = true;
+
+    vampire.lastTransformation =
+        currentTime;
+
+    vampire.transformationEnd =
+        currentTime +
+        vampire.transformationDuration;
+
+    vampire.transformationHits =
+        new Set();
+
+    vampire.speed =
+        vampire.normalSpeed *
+        vampire.batSpeedMultiplier;
+
+    vampire.hidden = false;
+
+    vampire.batDirection =
+        normalize(
+            targetX - vampire.x,
+            targetY - vampire.y
+        );
+
+    createTextEffect(
+        vampire.x,
+        vampire.y - 55,
+        "NOCNY RÓJ!",
+        "#ca8cff"
+    );
+}
+
+function updateVampires(currentTime) {
+    fighters.forEach(function(vampire) {
+        if (
+            !vampire.alive ||
+            !vampire.vampire ||
+            !vampire.transformed
+        ) {
+            return;
+        }
+
+        if (
+            currentTime >=
+            vampire.transformationEnd
+        ) {
+            vampire.transformed = false;
+            vampire.speed =
+                vampire.normalSpeed;
+
+            vampire.transformationHits =
+                new Set();
+
+            return;
+        }
+
+        if (
+            !vampire.isPlayer &&
+            vampire.target &&
+            vampire.target.alive
+        ) {
+            vampire.batDirection =
+                normalize(
+                    vampire.target.x -
+                    vampire.x,
+
+                    vampire.target.y -
+                    vampire.y
+                );
+        }
+
+        if (
+            !vampire.isPlayer &&
+            vampire.batDirection
+        ) {
+            moveFighter(
+                vampire,
+
+                vampire.batDirection.x *
+                vampire.speed,
+
+                vampire.batDirection.y *
+                vampire.speed
+            );
+        }
+
+        fighters.forEach(function(target) {
+            if (
+                !isEnemy(vampire, target) ||
+                vampire
+                    .transformationHits
+                    .has(target.id)
+            ) {
+                return;
+            }
+
+            if (
+                distance(vampire, target) <=
+                vampire.radius +
+                target.radius +
+                12
+            ) {
+                vampire
+                    .transformationHits
+                    .add(target.id);
+
+                damageFighter(
+                    target,
+                    vampire.damage,
+                    vampire
+                );
+
+                const healing =
+                    vampire.damage *
+                    vampire.vampireHealing;
+
+                vampire.hp =
+                    Math.min(
+                        vampire.maxHp,
+                        vampire.hp + healing
+                    );
+
+                createTextEffect(
+                    vampire.x,
+                    vampire.y - 42,
+                    "+" + Math.round(healing),
+                    "#6dff75"
+                );
+            }
+        });
+    });
+}
+
+function createElectricWave(
+    attacker,
+    direction,
+    attackDamage
+) {
+    const ultra =
+        attacker.ultraEvery > 0 &&
+        attacker.attackCounter %
+        attacker.ultraEvery === 0;
+
+    const speed =
+        attacker.projectileSpeed *
+        (
+            ultra
+                ? attacker.ultraSpeedMultiplier
+                : 1
+        );
+
+    electricWaves.push({
+        x: attacker.x,
+        y: attacker.y,
+
+        startX: attacker.x,
+        startY: attacker.y,
+
+        directionX: direction.x,
+        directionY: direction.y,
+
+        speed,
+        damage: attackDamage,
+
+        owner: attacker,
+
+        born: performance.now(),
+        life: attacker.projectileLife,
+
+        traveled: 0,
+
+        minimumWidth: 12,
+        spread: 0.17,
+
+        ultra,
+
+        color:
+            ultra
+                ? "#ffd92f"
+                : "#80eaff",
+
+        stunDuration:
+            ultra
+                ? attacker.ultraStunDuration
+                : 0
+    });
+
+    if (ultra) {
+        createTextEffect(
+            attacker.x,
+            attacker.y - 55,
+            "ULTRA!",
+            "#ffe747"
+        );
+    }
+}
+
 function createProjectile(
     attacker,
     direction,
     angle,
     attackDamage
 ) {
-    const rotated = rotateDirection(
-        direction,
-        angle
-    );
+    const rotated =
+        rotateDirection(
+            direction,
+            angle
+        );
 
     let color = "#f9eda2";
     let speedMultiplier = 1;
@@ -1704,8 +2283,7 @@ function createProjectile(
         if (
             attacker.curseEvery > 0 &&
             attacker.attackCounter %
-                attacker.curseEvery ===
-                0
+            attacker.curseEvery === 0
         ) {
             appliesCurse = true;
             color = "#741cff";
@@ -1739,17 +2317,30 @@ function createProjectile(
             attacker.projectileSpeed *
             speedMultiplier,
 
-        radius: attacker.projectileWidth,
-        damage: attackDamage,
-        owner: attacker,
+        radius:
+            attacker.projectileWidth,
+
+        damage:
+            attackDamage,
+
+        owner:
+            attacker,
+
         color,
 
-        born: performance.now(),
-        life: attacker.projectileLife,
+        born:
+            performance.now(),
+
+        life:
+            attacker.projectileLife,
 
         appliesCurse,
-        curseDuration: attacker.curseDuration,
-        curseMultiplier: attacker.curseMultiplier
+
+        curseDuration:
+            attacker.curseDuration,
+
+        curseMultiplier:
+            attacker.curseMultiplier
     });
 }
 
@@ -1766,7 +2357,9 @@ function createMeleeEffect(attacker, direction) {
             direction.y * 38,
 
         radius: 25,
-        maximumRadius: attacker.range,
+
+        maximumRadius:
+            attacker.range,
 
         color:
             attacker.isSummon ||
@@ -1774,7 +2367,9 @@ function createMeleeEffect(attacker, direction) {
                 ? "#bdefff"
                 : "#ffffff",
 
-        born: performance.now(),
+        born:
+            performance.now(),
+
         life: 180,
         lineWidth: 12
     });
@@ -1800,12 +2395,20 @@ function createGolemShockwave(attacker) {
 
     effects.push({
         type: "circle",
+
         x: attacker.x,
         y: attacker.y,
+
         radius: 20,
-        maximumRadius: attacker.attackShockwaveRadius,
+
+        maximumRadius:
+            attacker.attackShockwaveRadius,
+
         color: "#d3c0a0",
-        born: performance.now(),
+
+        born:
+            performance.now(),
+
         life: 550,
         lineWidth: 18
     });
@@ -1840,7 +2443,8 @@ function damageFighter(target, damage, attacker) {
         return;
     }
 
-    let finalDamage = Number(damage) || 0;
+    let finalDamage =
+        Number(damage) || 0;
 
     if (
         target.cursedUntil >
@@ -1862,10 +2466,11 @@ function damageFighter(target, damage, attacker) {
             1 - target.shieldReduction;
     }
 
-    finalDamage = Math.max(
-        1,
-        Math.round(finalDamage)
-    );
+    finalDamage =
+        Math.max(
+            1,
+            Math.round(finalDamage)
+        );
 
     target.hp -= finalDamage;
     target.hidden = false;
@@ -1928,7 +2533,8 @@ function updateProjectiles(currentTime) {
         i >= 0;
         i--
     ) {
-        const projectile = projectiles[i];
+        const projectile =
+            projectiles[i];
 
         projectile.x += projectile.vx;
         projectile.y += projectile.vy;
@@ -2015,6 +2621,123 @@ function updateProjectiles(currentTime) {
     }
 }
 
+function updateElectricWaves(currentTime) {
+    for (
+        let i = electricWaves.length - 1;
+        i >= 0;
+        i--
+    ) {
+        const wave = electricWaves[i];
+
+        const movement =
+            wave.speed;
+
+        wave.x +=
+            wave.directionX *
+            movement;
+
+        wave.y +=
+            wave.directionY *
+            movement;
+
+        wave.traveled +=
+            movement;
+
+        const width =
+            wave.minimumWidth +
+            wave.traveled *
+            wave.spread;
+
+        let remove = false;
+
+        if (
+            currentTime -
+            wave.born >
+            wave.life
+        ) {
+            remove = true;
+        }
+
+        if (
+            wave.x < 0 ||
+            wave.y < 0 ||
+            wave.x > WORLD_WIDTH ||
+            wave.y > WORLD_HEIGHT
+        ) {
+            remove = true;
+        }
+
+        if (
+            !remove &&
+            (
+                collidesWithWall(
+                    wave.x,
+                    wave.y,
+                    Math.min(width, 55)
+                ) ||
+                collidesWithWater(
+                    wave.x,
+                    wave.y,
+                    Math.min(width, 55)
+                )
+            )
+        ) {
+            remove = true;
+        }
+
+        if (!remove) {
+            for (const fighter of fighters) {
+                if (
+                    !isEnemy(
+                        wave.owner,
+                        fighter
+                    )
+                ) {
+                    continue;
+                }
+
+                const hitDistance =
+                    Math.hypot(
+                        wave.x - fighter.x,
+                        wave.y - fighter.y
+                    );
+
+                if (
+                    hitDistance <=
+                    width +
+                    fighter.radius
+                ) {
+                    damageFighter(
+                        fighter,
+                        wave.damage,
+                        wave.owner
+                    );
+
+                    if (wave.ultra) {
+                        fighter.stunnedUntil =
+                            performance.now() +
+                            wave.stunDuration;
+
+                        createTextEffect(
+                            fighter.x,
+                            fighter.y - 60,
+                            "ZATRZYMANY!",
+                            "#ffe342"
+                        );
+                    }
+
+                    remove = true;
+                    break;
+                }
+            }
+        }
+
+        if (remove) {
+            electricWaves.splice(i, 1);
+        }
+    }
+}
+
 function updateEffects(currentTime) {
     for (
         let i = effects.length - 1;
@@ -2024,7 +2747,10 @@ function updateEffects(currentTime) {
         const effect = effects[i];
 
         const progress =
-            (currentTime - effect.born) /
+            (
+                currentTime -
+                effect.born
+            ) /
             effect.life;
 
         if (effect.type === "circle") {
@@ -2087,10 +2813,12 @@ function awardTrophies(place) {
         before + reward
     );
 
-    const realChange = after - before;
+    const realChange =
+        after - before;
 
-    state.heroTrophies[player.heroId] =
-        after;
+    state.heroTrophies[
+        player.heroId
+    ] = after;
 
     saveState(state);
 
@@ -2099,7 +2827,9 @@ function awardTrophies(place) {
             ? "+"
             : "";
 
-    document.getElementById("matchResult").innerHTML =
+    document
+        .getElementById("matchResult")
+        .innerHTML =
         "Miejsce: <b>" +
         safePlace +
         "</b><br>" +
@@ -2114,7 +2844,8 @@ function awardTrophies(place) {
 }
 
 function checkWinner() {
-    const alive = getAliveContestants();
+    const alive =
+        getAliveContestants();
 
     if (
         alive.length !== 1 ||
@@ -2144,6 +2875,7 @@ function checkWinner() {
             1;
 
         saveState(state);
+
         showDeathScreen(true);
     } else if (!player.alive) {
         showDeathScreen(false);
@@ -2151,7 +2883,9 @@ function checkWinner() {
 }
 
 function showDeathScreen(playerWon) {
-    document.getElementById("deathTitle").textContent =
+    document
+        .getElementById("deathTitle")
+        .textContent =
         playerWon
             ? "ZWYCIĘSTWO!"
             : "POKONANY";
@@ -2168,19 +2902,25 @@ function update() {
 
     movePlayer();
 
-    const currentTime = performance.now();
+    const currentTime =
+        performance.now();
 
     fighters.slice().forEach(function(fighter) {
         if (fighter.isSummon) {
             updateSummon(fighter);
         } else if (!fighter.isPlayer) {
-            updateBot(fighter, currentTime);
+            updateBot(
+                fighter,
+                currentTime
+            );
         }
     });
 
     updatePriestSummons(currentTime);
+    updateVampires(currentTime);
     updateBushStatus();
     updateProjectiles(currentTime);
+    updateElectricWaves(currentTime);
     updateEffects(currentTime);
     updateCamera();
     updateInformation();
@@ -2205,7 +2945,8 @@ function objectVisible(x, y, width, height) {
 }
 
 function drawMap() {
-    ctx.fillStyle = selectedMap.ground;
+    ctx.fillStyle =
+        selectedMap.ground;
 
     ctx.fillRect(
         0,
@@ -2216,23 +2957,33 @@ function drawMap() {
 
     const tileSize = 80;
 
-    const startColumn = Math.floor(
-        camera.x / tileSize
-    );
+    const startColumn =
+        Math.floor(
+            camera.x / tileSize
+        );
 
-    const endColumn = Math.ceil(
-        (camera.x + canvas.width) /
-        tileSize
-    );
+    const endColumn =
+        Math.ceil(
+            (
+                camera.x +
+                canvas.width
+            ) /
+            tileSize
+        );
 
-    const startRow = Math.floor(
-        camera.y / tileSize
-    );
+    const startRow =
+        Math.floor(
+            camera.y / tileSize
+        );
 
-    const endRow = Math.ceil(
-        (camera.y + canvas.height) /
-        tileSize
-    );
+    const endRow =
+        Math.ceil(
+            (
+                camera.y +
+                canvas.height
+            ) /
+            tileSize
+        );
 
     for (
         let column = startColumn;
@@ -2244,15 +2995,20 @@ function drawMap() {
             row <= endRow;
             row++
         ) {
-            if ((column + row) % 2 === 0) {
+            if (
+                (column + row) %
+                2 === 0
+            ) {
                 ctx.fillStyle =
                     selectedMap.groundDark;
 
                 ctx.fillRect(
-                    column * tileSize -
+                    column *
+                    tileSize -
                     camera.x,
 
-                    row * tileSize -
+                    row *
+                    tileSize -
                     camera.y,
 
                     tileSize,
@@ -2276,8 +3032,11 @@ function drawWater() {
             return;
         }
 
-        const x = worldToScreenX(water.x);
-        const y = worldToScreenY(water.y);
+        const x =
+            worldToScreenX(water.x);
+
+        const y =
+            worldToScreenY(water.y);
 
         ctx.fillStyle = "#153e68";
 
@@ -2288,7 +3047,8 @@ function drawWater() {
             water.h + 12
         );
 
-        ctx.fillStyle = selectedMap.water;
+        ctx.fillStyle =
+            selectedMap.water;
 
         ctx.fillRect(
             x,
@@ -2338,10 +3098,14 @@ function drawBushes() {
             return;
         }
 
-        const x = worldToScreenX(bush.x);
-        const y = worldToScreenY(bush.y);
+        const x =
+            worldToScreenX(bush.x);
 
-        ctx.fillStyle = selectedMap.bush;
+        const y =
+            worldToScreenY(bush.y);
+
+        ctx.fillStyle =
+            selectedMap.bush;
 
         ctx.fillRect(
             x,
@@ -2369,7 +3133,10 @@ function drawBushes() {
                     x +
                     leafX +
                     Math.sin(
-                        (bush.x + leafX) *
+                        (
+                            bush.x +
+                            leafX
+                        ) *
                         12.345
                     ) *
                     4,
@@ -2377,7 +3144,10 @@ function drawBushes() {
                     y +
                     leafY +
                     Math.sin(
-                        (bush.y + leafY) *
+                        (
+                            bush.y +
+                            leafY
+                        ) *
                         12.345
                     ) *
                     4,
@@ -2416,8 +3186,11 @@ function drawWalls() {
             return;
         }
 
-        const x = worldToScreenX(wall.x);
-        const y = worldToScreenY(wall.y);
+        const x =
+            worldToScreenX(wall.x);
+
+        const y =
+            worldToScreenY(wall.y);
 
         ctx.fillStyle = "#00000044";
 
@@ -2428,7 +3201,8 @@ function drawWalls() {
             wall.h
         );
 
-        ctx.fillStyle = selectedMap.wall;
+        ctx.fillStyle =
+            selectedMap.wall;
 
         ctx.fillRect(
             x,
@@ -2437,7 +3211,8 @@ function drawWalls() {
             wall.h
         );
 
-        ctx.fillStyle = selectedMap.wallTop;
+        ctx.fillStyle =
+            selectedMap.wallTop;
 
         ctx.fillRect(
             x,
@@ -2457,50 +3232,14 @@ function drawWalls() {
             wall.w,
             wall.h
         );
-
-        for (
-            let brickX = 25;
-            brickX < wall.w;
-            brickX += 50
-        ) {
-            ctx.beginPath();
-
-            ctx.moveTo(
-                x + brickX,
-                y
-            );
-
-            ctx.lineTo(
-                x + brickX,
-                y + Math.min(22, wall.h)
-            );
-
-            ctx.stroke();
-        }
-
-        for (
-            let brickY = 45;
-            brickY < wall.h;
-            brickY += 45
-        ) {
-            ctx.beginPath();
-
-            ctx.moveTo(
-                x,
-                y + brickY
-            );
-
-            ctx.lineTo(
-                x + wall.w,
-                y + brickY
-            );
-
-            ctx.stroke();
-        }
     });
 }
 
-function drawHealthBar(fighter, screenX, screenY) {
+function drawHealthBar(
+    fighter,
+    screenX,
+    screenY
+) {
     const width =
         fighter.isSummon
             ? 42
@@ -2561,19 +3300,64 @@ function drawHealthBar(fighter, screenX, screenY) {
     );
 }
 
+function drawBatSwarm(
+    fighter,
+    screenX,
+    screenY
+) {
+    const time =
+        performance.now() / 120;
+
+    ctx.font = "24px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    for (let i = 0; i < 6; i++) {
+        const angle =
+            time +
+            i *
+            Math.PI *
+            2 / 6;
+
+        const radius =
+            23 +
+            Math.sin(
+                time * 1.4 + i
+            ) *
+            7;
+
+        ctx.fillText(
+            "🦇",
+
+            screenX +
+            Math.cos(angle) *
+            radius,
+
+            screenY +
+            Math.sin(angle) *
+            radius
+        );
+    }
+}
+
 function drawFighter(fighter) {
     if (!fighter.alive) {
         return;
     }
 
-    const screenX = worldToScreenX(fighter.x);
-    const screenY = worldToScreenY(fighter.y);
+    const screenX =
+        worldToScreenX(fighter.x);
+
+    const screenY =
+        worldToScreenY(fighter.y);
 
     if (
         screenX < -80 ||
         screenY < -80 ||
-        screenX > canvas.width + 80 ||
-        screenY > canvas.height + 80
+        screenX >
+        canvas.width + 80 ||
+        screenY >
+        canvas.height + 80
     ) {
         return;
     }
@@ -2583,7 +3367,8 @@ function drawFighter(fighter) {
         !fighter.hidden ||
         (
             player.alive &&
-            distance(player, fighter) < 170
+            distance(player, fighter) <
+            170
         );
 
     if (!visibleToPlayer) {
@@ -2606,32 +3391,58 @@ function drawFighter(fighter) {
         ctx.globalAlpha *= 0.78;
     }
 
-    ctx.beginPath();
+    if (fighter.transformed) {
+        ctx.globalAlpha = 0.9;
 
-    ctx.arc(
-        screenX,
-        screenY,
-        fighter.radius + 7,
-        0,
-        Math.PI * 2
-    );
+        drawBatSwarm(
+            fighter,
+            screenX,
+            screenY
+        );
+    } else {
+        ctx.beginPath();
 
-    ctx.fillStyle = fighter.color;
-    ctx.fill();
+        ctx.arc(
+            screenX,
+            screenY,
+            fighter.radius + 7,
+            0,
+            Math.PI * 2
+        );
 
-    ctx.strokeStyle =
-        fighter.isPlayer
-            ? "white"
-            : fighter.isSummon
-                ? "#c9f6ff"
-                : "#111827";
+        ctx.fillStyle =
+            fighter.color;
 
-    ctx.lineWidth =
-        fighter.isPlayer
-            ? 5
-            : 3;
+        ctx.fill();
 
-    ctx.stroke();
+        ctx.strokeStyle =
+            fighter.isPlayer
+                ? "white"
+                : fighter.isSummon
+                    ? "#c9f6ff"
+                    : "#111827";
+
+        ctx.lineWidth =
+            fighter.isPlayer
+                ? 5
+                : 3;
+
+        ctx.stroke();
+
+        ctx.font =
+            fighter.isSummon
+                ? "31px Arial"
+                : "43px Arial";
+
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        ctx.fillText(
+            fighter.icon,
+            screenX,
+            screenY
+        );
+    }
 
     if (
         fighter.lowHpShield &&
@@ -2673,24 +3484,25 @@ function drawFighter(fighter) {
         ctx.stroke();
     }
 
-    ctx.font =
-        fighter.isSummon
-            ? "31px Arial"
-            : "43px Arial";
+    if (
+        fighter.stunnedUntil >
+        performance.now()
+    ) {
+        ctx.font = "22px Arial";
 
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-
-    ctx.fillText(
-        fighter.icon,
-        screenX,
-        screenY
-    );
+        ctx.fillText(
+            "⚡",
+            screenX,
+            screenY - 50
+        );
+    }
 
     ctx.font =
         fighter.isSummon
             ? "bold 10px Arial"
             : "bold 13px Arial";
+
+    ctx.textAlign = "center";
 
     ctx.strokeStyle = "black";
     ctx.lineWidth = 4;
@@ -2724,19 +3536,23 @@ function drawFighter(fighter) {
 
 function drawProjectiles() {
     projectiles.forEach(function(projectile) {
-        const screenX = worldToScreenX(
-            projectile.x
-        );
+        const screenX =
+            worldToScreenX(
+                projectile.x
+            );
 
-        const screenY = worldToScreenY(
-            projectile.y
-        );
+        const screenY =
+            worldToScreenY(
+                projectile.y
+            );
 
         if (
             screenX < -50 ||
             screenY < -50 ||
-            screenX > canvas.width + 50 ||
-            screenY > canvas.height + 50
+            screenX >
+            canvas.width + 50 ||
+            screenY >
+            canvas.height + 50
         ) {
             return;
         }
@@ -2751,7 +3567,9 @@ function drawProjectiles() {
             Math.PI * 2
         );
 
-        ctx.fillStyle = projectile.color;
+        ctx.fillStyle =
+            projectile.color;
+
         ctx.fill();
 
         if (
@@ -2769,23 +3587,100 @@ function drawProjectiles() {
     });
 }
 
+function drawElectricWaves() {
+    electricWaves.forEach(function(wave) {
+        const screenX =
+            worldToScreenX(wave.x);
+
+        const screenY =
+            worldToScreenY(wave.y);
+
+        const angle =
+            Math.atan2(
+                wave.directionY,
+                wave.directionX
+            );
+
+        const width =
+            wave.minimumWidth +
+            wave.traveled *
+            wave.spread;
+
+        ctx.save();
+
+        ctx.translate(
+            screenX,
+            screenY
+        );
+
+        ctx.rotate(angle);
+
+        ctx.strokeStyle =
+            wave.color;
+
+        ctx.lineWidth =
+            wave.ultra
+                ? 8
+                : 6;
+
+        ctx.shadowColor =
+            wave.color;
+
+        ctx.shadowBlur =
+            wave.ultra
+                ? 18
+                : 10;
+
+        const sizes = [
+            width * 0.45,
+            width * 0.72,
+            width
+        ];
+
+        sizes.forEach(function(size, index) {
+            ctx.beginPath();
+
+            ctx.arc(
+                -index * 13,
+                0,
+                Math.max(8, size),
+                -0.65,
+                0.65
+            );
+
+            ctx.stroke();
+        });
+
+        ctx.restore();
+    });
+}
+
 function drawEffects() {
-    const now = performance.now();
+    const now =
+        performance.now();
 
     effects.forEach(function(effect) {
-        const progress = Math.min(
-            1,
-            (now - effect.born) /
-            effect.life
-        );
+        const progress =
+            Math.min(
+                1,
+                (
+                    now -
+                    effect.born
+                ) /
+                effect.life
+            );
 
-        const alpha = Math.max(
-            0,
-            1 - progress
-        );
+        const alpha =
+            Math.max(
+                0,
+                1 - progress
+            );
 
-        const screenX = worldToScreenX(effect.x);
-        const screenY = worldToScreenY(effect.y);
+        const screenX =
+            worldToScreenX(effect.x);
+
+        const screenY =
+            worldToScreenY(effect.y);
 
         ctx.save();
         ctx.globalAlpha = alpha;
@@ -2801,13 +3696,19 @@ function drawEffects() {
                 Math.PI * 2
             );
 
-            ctx.strokeStyle = effect.color;
-            ctx.lineWidth = effect.lineWidth;
+            ctx.strokeStyle =
+                effect.color;
+
+            ctx.lineWidth =
+                effect.lineWidth;
+
             ctx.stroke();
         }
 
         if (effect.type === "text") {
-            ctx.font = "bold 19px Arial";
+            ctx.font =
+                "bold 19px Arial";
+
             ctx.textAlign = "center";
             ctx.fillStyle = effect.color;
             ctx.strokeStyle = "black";
@@ -2854,7 +3755,8 @@ function drawMiniMap() {
         height
     );
 
-    ctx.fillStyle = selectedMap.ground;
+    ctx.fillStyle =
+        selectedMap.ground;
 
     ctx.fillRect(
         x + 5,
@@ -2864,7 +3766,8 @@ function drawMiniMap() {
     );
 
     walls.forEach(function(wall) {
-        ctx.fillStyle = selectedMap.wall;
+        ctx.fillStyle =
+            selectedMap.wall;
 
         ctx.fillRect(
             x + 5 +
@@ -2893,36 +3796,6 @@ function drawMiniMap() {
         );
     });
 
-    waterPools.forEach(function(water) {
-        ctx.fillStyle = selectedMap.water;
-
-        ctx.fillRect(
-            x + 5 +
-            water.x /
-            WORLD_WIDTH *
-            (width - 10),
-
-            y + 5 +
-            water.y /
-            WORLD_HEIGHT *
-            (height - 10),
-
-            Math.max(
-                2,
-                water.w /
-                WORLD_WIDTH *
-                (width - 10)
-            ),
-
-            Math.max(
-                2,
-                water.h /
-                WORLD_HEIGHT *
-                (height - 10)
-            )
-        );
-    });
-
     fighters.forEach(function(fighter) {
         if (!fighter.alive) {
             return;
@@ -2945,11 +3818,13 @@ function drawMiniMap() {
         ctx.arc(
             dotX,
             dotY,
+
             fighter.isPlayer
                 ? 5
                 : fighter.isSummon
                     ? 2
                     : 3,
+
             0,
             Math.PI * 2
         );
@@ -3039,6 +3914,7 @@ function draw() {
     fighters.forEach(drawFighter);
 
     drawProjectiles();
+    drawElectricWaves();
     drawEffects();
     drawMiniMap();
     drawCrosshair();
