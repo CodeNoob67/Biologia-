@@ -38,7 +38,7 @@ const BOHATEROWIE = [
         rzadkosc: "rzadki",
         moc: "Błyskawiczna strzała",
         opis:
-            "Łucznik atakuje z dużego dystansu. Co trzecia strzała porusza się znacznie szybciej.",
+            "Łucznik strzela z dużego dystansu. Co trzecia strzała porusza się znacznie szybciej.",
         hp: 145,
         damage: 30,
         speed: 3.4,
@@ -54,7 +54,7 @@ const BOHATEROWIE = [
         rzadkosc: "bardzo-rzadki",
         moc: "Przywołanie ducha",
         opis:
-            "Co 3 sekundy przywołuje słabszego ducha, który ściga najbliższego wroga i atakuje go.",
+            "Co 3 sekundy przywołuje słabszego Ducha, który ściga przeciwników.",
         hp: 185,
         damage: 25,
         speed: 3.4,
@@ -64,19 +64,67 @@ const BOHATEROWIE = [
     },
 
     {
+        id: "muzyk",
+        nazwa: "Muzyk",
+        ikona: "🎵",
+        rzadkosc: "bardzo-rzadki",
+        moc: "Fala dźwiękowa",
+        opis:
+            "Muzyk strzela rozszerzającymi się falami dźwiękowymi. Co piąta fala jest żółtym Ultra i zatrzymuje trafionego przeciwnika na 1 sekundę.",
+        hp: 150,
+        damage: 27,
+        speed: 3.4,
+        range: 620,
+        cooldown: 720,
+        ticketCost: 20
+    },
+
+    {
+        id: "alchemik",
+        nazwa: "Alchemik",
+        ikona: "🧪",
+        rzadkosc: "bardzo-rzadki",
+        moc: "Losowa mikstura",
+        opis:
+            "Rzuca losowymi miksturami: leczącą, wybuchową, zatrzymującą albo przyspieszającą.",
+        hp: 150,
+        damage: 28,
+        speed: 3.3,
+        range: 600,
+        cooldown: 850,
+        ticketCost: 24
+    },
+
+    {
+        id: "szermierz",
+        nazwa: "Szermierz",
+        ikona: "⚔️",
+        rzadkosc: "bardzo-rzadki",
+        moc: "Wirujące ostrze",
+        opis:
+            "Nie ma zwykłego ataku. Podczas ruchu obraca się z mieczem i automatycznie zadaje obrażenia pobliskim przeciwnikom.",
+        hp: 155,
+        damage: 24,
+        speed: 4.2,
+        range: 105,
+        cooldown: 450,
+        ticketCost: 28
+    },
+
+    {
         id: "goblin",
         nazwa: "Goblin",
         ikona: "👺",
         rzadkosc: "epicki",
         moc: "Desperacki atak",
         opis:
-            "Goblin jest szybkim wojownikiem walczącym wręcz. Poniżej 50% życia zadaje 25% więcej obrażeń.",
+            "Goblin walczy wręcz. Poniżej 50% życia zadaje 25% więcej obrażeń.",
         hp: 105,
         damage: 28,
         speed: 4.4,
         range: 76,
         cooldown: 480,
-        ticketCost: 18
+        ticketCost: 30
     },
 
     {
@@ -86,13 +134,13 @@ const BOHATEROWIE = [
         rzadkosc: "epicki",
         moc: "Kamienna fala",
         opis:
-            "Golem jest bardzo wytrzymały i powolny. Co piąty atak tworzy falę uderzeniową.",
+            "Co piąty atak Golema tworzy falę uderzeniową zadającą obrażenia pobliskim wrogom.",
         hp: 330,
         damage: 38,
         speed: 2.1,
         range: 350,
         cooldown: 950,
-        ticketCost: 26
+        ticketCost: 34
     },
 
     {
@@ -102,13 +150,13 @@ const BOHATEROWIE = [
         rzadkosc: "epicki",
         moc: "Przenikanie",
         opis:
-            "Duch jest szybkim wojownikiem walczącym wręcz i może przechodzić przez ściany.",
+            "Duch walczy wręcz i może przechodzić przez ściany oraz wodę.",
         hp: 90,
         damage: 40,
         speed: 4.5,
         range: 78,
         cooldown: 520,
-        ticketCost: 30
+        ticketCost: 38
     },
 
     {
@@ -118,13 +166,13 @@ const BOHATEROWIE = [
         rzadkosc: "mityczny",
         moc: "Magiczna klątwa",
         opis:
-            "Co czwarty atak nakłada klątwę. Przeklęty przeciwnik przez 3 sekundy otrzymuje 20% więcej obrażeń.",
+            "Co czwarty atak nakłada klątwę. Przeklęty przeciwnik otrzymuje więcej obrażeń.",
         hp: 145,
         damage: 39,
         speed: 3.4,
         range: 690,
         cooldown: 820,
-        ticketCost: 34
+        ticketCost: 42
     },
 
     {
@@ -134,29 +182,13 @@ const BOHATEROWIE = [
         rzadkosc: "mityczny",
         moc: "Nocny rój",
         opis:
-            "Wampir nie ma normalnego ataku. Co 4 sekundy może zamienić się w szybką grupę nietoperzy, która przechodzi przez ściany i zadaje obrażenia przy dotknięciu. Wampir leczy się o 25% zadanych obrażeń.",
+            "Co 4 sekundy może zmienić się w szybki rój nietoperzy, przenikać przez ściany i leczyć się za zadane obrażenia.",
         hp: 135,
         damage: 32,
         speed: 3.3,
-        range: 70,
+        range: 75,
         cooldown: 4000,
-        ticketCost: 38
-    },
-
-       {
-        id: "Muzyk",
-        nazwa: "Muzyk",
-        ikona: "🎵",
-        rzadkosc: "mityczny",
-        moc: "Muzyczne Ultra",
-        opis:
-            "Muzyk strzela szerokimi falami elektryczności, które rozszerzają się wraz z odległością. Co piąty atak jest żółtym Ultra, które porusza się szybciej i zatrzymuje trafionych wrogów na 1 sekundę.",
-        hp: 150,
-        damage: 27,
-        speed: 3.4,
-        range: 620,
-        cooldown: 720,
-        ticketCost: 22
+        ticketCost: 46
     },
 
     {
@@ -172,13 +204,13 @@ const BOHATEROWIE = [
         speed: 3,
         range: 580,
         cooldown: 850,
-        ticketCost: 42
+        ticketCost: 52
     },
 
     {
         id: "wiedzma",
         nazwa: "Wiedźma",
-        ikona: "🧙‍♀️",
+        ikona: "🧙",
         rzadkosc: "legendarny",
         moc: "Magiczny strumień",
         opis:
@@ -188,6 +220,6 @@ const BOHATEROWIE = [
         speed: 4,
         range: 750,
         cooldown: 50,
-        ticketCost: 50
+        ticketCost: 58
     }
 ];
