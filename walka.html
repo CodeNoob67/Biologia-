@@ -508,14 +508,130 @@
     <div id="introShade" class="intro-shade"></div>
     <div id="battleText" class="battle-text">BITWA!</div>
 
-    <div id="deathScreen" class="death-screen">
-        <div id="deathTitle" class="death-title">POKONANY</div>
-        <div id="matchResult" class="match-result"></div>
+    <div id="deathScreen" class="result-screen">
 
-        <button class="return-button" onclick="location.href='gra.html'">
-            POWRÓT
-        </button>
+    <div class="result-header">
+        <span id="resultStatus">PORAŻKA</span>
+        <span id="resultTrophyChange">🏆 -3</span>
     </div>
+
+    <div class="result-layout">
+
+        <section class="result-character-panel">
+
+            <div
+                id="resultHeroIcon"
+                class="result-hero-icon"
+            >
+                🧑‍🌾
+            </div>
+
+            <div
+                id="resultHeroName"
+                class="result-hero-name"
+            >
+                Farmer
+            </div>
+
+            <div class="result-player-name">
+                Gracz:
+                <b id="resultPlayerName">Oskar</b>
+            </div>
+
+            <div class="result-rank-box">
+                <span id="resultTier">TIER 1</span>
+
+                <div class="result-trophies">
+                    🏆
+                    <span id="resultHeroTrophies">0</span>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="result-middle-panel">
+
+            <div class="result-box">
+
+                <h2>WYNIK</h2>
+
+                <div class="result-row">
+                    <span>Miejsce</span>
+                    <b id="resultPlacement">10</b>
+                </div>
+
+                <div class="result-row">
+                    <span>Zmiana pucharków</span>
+                    <b id="resultTrophyChangeMiddle">-3</b>
+                </div>
+
+                <div class="result-row">
+                    <span>Pucharki postaci</span>
+                    <b id="resultTotalTrophies">0</b>
+                </div>
+
+            </div>
+
+            <div class="result-box">
+
+                <h2>NAGRODY</h2>
+
+                <div class="result-row">
+                    <span>🪙 Monety</span>
+                    <b id="resultCoins">0</b>
+                </div>
+
+                <div class="result-row">
+                    <span>🎟️ Bilety</span>
+                    <b id="resultTickets">0</b>
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="result-stats-panel">
+
+            <h2>STATYSTYKI</h2>
+
+            <div class="result-stat">
+                <span>ZADANE OBRAŻENIA</span>
+                <b id="resultDamageDealt">0</b>
+            </div>
+
+            <div class="result-stat">
+                <span>ODZYSKANE ŻYCIE</span>
+                <b id="resultHealing">0</b>
+            </div>
+
+            <div class="result-stat">
+                <span>OTRZYMANE OBRAŻENIA</span>
+                <b id="resultDamageTaken">0</b>
+            </div>
+
+        </section>
+
+    </div>
+
+    <div class="result-buttons">
+
+        <button
+            class="play-again-button"
+            onclick="location.reload()"
+        >
+            ZAGRAJ PONOWNIE
+        </button>
+
+        <button
+            class="exit-button"
+            onclick="location.href='gra.html'"
+        >
+            WYJDŹ
+        </button>
+
+    </div>
+
+</div>
 
     <div class="screen-controls">
         <div class="movement-controls">
