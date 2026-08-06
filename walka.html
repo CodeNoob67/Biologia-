@@ -2,7 +2,12 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
     <title>Bitwa Królestw</title>
 
     <style>
@@ -14,10 +19,17 @@
             margin: 0;
             min-height: 100vh;
             overflow: hidden;
+
             color: white;
             font-family: Arial, sans-serif;
             text-align: center;
-            background: radial-gradient(circle at top, #34405a, #101621);
+
+            background:
+                radial-gradient(
+                    circle at top,
+                    #34405a,
+                    #101621
+                );
         }
 
         button,
@@ -27,11 +39,14 @@
 
         .topbar {
             height: 72px;
+
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
+
             padding: 10px 18px;
+
             background: #111827;
             border-bottom: 4px solid #050912;
         }
@@ -50,12 +65,16 @@
         button,
         .back-button {
             padding: 10px 15px;
+
             color: white;
             font-weight: 1000;
             text-decoration: none;
+
             background: #35445e;
+
             border: 3px solid #080d16;
             border-radius: 10px;
+
             cursor: pointer;
         }
 
@@ -65,38 +84,51 @@
 
         .game-info {
             min-height: 58px;
+
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
             flex-wrap: wrap;
+
             padding: 7px;
         }
 
         .info-box {
             padding: 7px 13px;
+
             background: #26344b;
+
             border: 3px solid #101722;
             border-radius: 10px;
+
             font-weight: 1000;
         }
 
         .game-container {
             position: relative;
+
             width: min(96vw, 1300px);
             aspect-ratio: 12 / 7;
+
             max-height: calc(100vh - 150px);
+
             margin: 0 auto;
         }
 
         canvas {
             width: 100%;
             height: 100%;
+
             display: block;
+
             background: #58ad58;
+
             border: 7px solid #111827;
             border-radius: 12px;
+
             box-shadow: 0 15px 40px #00000099;
+
             cursor: crosshair;
         }
 
@@ -104,13 +136,23 @@
             position: absolute;
             inset: 7px;
             z-index: 500;
+
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+
             padding: 30px;
-            background: radial-gradient(circle, #263b5b, #080e18);
+
+            background:
+                radial-gradient(
+                    circle,
+                    #263b5b,
+                    #080e18
+                );
+
             border-radius: 5px;
+
             transition: opacity 0.45s ease;
         }
 
@@ -120,38 +162,54 @@
         }
 
         .loading-icon {
-            font-size: 70px;
-            animation: swordMove 1.1s ease-in-out infinite;
+            font-size: 72px;
+
+            animation:
+                swordMove 1.1s
+                ease-in-out infinite;
         }
 
         @keyframes swordMove {
             0%,
             100% {
-                transform: translateY(0) rotate(-8deg);
+                transform:
+                    translateY(0)
+                    rotate(-8deg);
             }
 
             50% {
-                transform: translateY(-14px) rotate(8deg);
+                transform:
+                    translateY(-14px)
+                    rotate(8deg);
             }
         }
 
         .loading-title {
             margin-top: 10px;
+
             color: #ffd43b;
-            font-size: clamp(34px, 6vw, 65px);
+
+            font-size:
+                clamp(34px, 6vw, 65px);
+
             font-weight: 1000;
-            text-shadow: 5px 5px black;
+
+            text-shadow:
+                5px 5px black;
         }
 
         .loading-map {
             margin-top: 8px;
+
             color: #73dcff;
+
             font-size: 22px;
             font-weight: 1000;
         }
 
         .loading-text {
             margin-top: 28px;
+
             font-size: 17px;
             font-weight: 1000;
         }
@@ -159,22 +217,35 @@
         .loading-bar {
             width: min(540px, 85%);
             height: 38px;
+
             margin-top: 12px;
+
             overflow: hidden;
+
             background: #080d16;
+
             border: 5px solid #00050b;
             border-radius: 12px;
-            box-shadow: inset 0 0 12px black;
+
+            box-shadow:
+                inset 0 0 12px black;
         }
 
         .loading-fill {
             width: 0;
             height: 100%;
-            background: linear-gradient(90deg, #e36d18, #ffb42b);
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #e36d18,
+                    #ffb42b
+                );
         }
 
         .loading-percent {
             margin-top: 10px;
+
             font-size: 19px;
             font-weight: 1000;
         }
@@ -183,10 +254,15 @@
             position: absolute;
             inset: 7px;
             z-index: 300;
+
             display: none;
+
             pointer-events: none;
+
             background: #4a4d55;
+
             opacity: 0.88;
+
             border-radius: 5px;
         }
 
@@ -199,247 +275,525 @@
             left: 50%;
             top: 50%;
             z-index: 350;
+
             display: none;
-            transform: translate(-50%, -50%);
+
+            transform:
+                translate(-50%, -50%);
+
             color: white;
-            font-size: clamp(65px, 11vw, 145px);
+
+            font-size:
+                clamp(65px, 11vw, 145px);
+
             font-weight: 1000;
-            text-shadow: 6px 6px #111827, 11px 11px #00000077;
+
+            text-shadow:
+                6px 6px #111827,
+                11px 11px #00000077;
         }
 
         .battle-text.visible {
             display: block;
-            animation: battleAppear 1.15s ease forwards;
+
+            animation:
+                battleAppear 1.15s
+                ease forwards;
         }
 
         @keyframes battleAppear {
             0% {
                 opacity: 0;
-                transform: translate(-50%, -50%) scale(0.25) rotate(-10deg);
+
+                transform:
+                    translate(-50%, -50%)
+                    scale(0.25);
             }
 
             35% {
                 opacity: 1;
-                transform: translate(-50%, -50%) scale(1.2) rotate(3deg);
+
+                transform:
+                    translate(-50%, -50%)
+                    scale(1.2);
             }
 
             70% {
                 opacity: 1;
-                transform: translate(-50%, -50%) scale(1);
+
+                transform:
+                    translate(-50%, -50%)
+                    scale(1);
             }
 
             100% {
                 opacity: 0;
-                transform: translate(-50%, -50%) scale(1.35);
+
+                transform:
+                    translate(-50%, -50%)
+                    scale(1.35);
             }
         }
 
-        .death-screen {
+        .screen-controls {
             position: absolute;
-            inset: 7px;
-            z-index: 600;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 17px;
-            padding: 25px;
-            background: #000000c7;
-            border-radius: 5px;
+
+            left: 13%;
+            right: 13%;
+            bottom: 32px;
+
+            z-index: 200;
+
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+
+            pointer-events: none;
         }
 
-        .death-screen.visible {
+        .movement-controls {
+            position: relative;
+
+            width: 175px;
+            height: 145px;
+
+            pointer-events: auto;
+        }
+
+        .movement-key {
+            position: absolute;
+
+            width: 56px;
+            height: 56px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 0;
+
+            color: #111827;
+
+            font-size: 25px;
+            font-weight: 1000;
+
+            background:
+                linear-gradient(
+                    #e5e7eb,
+                    #9ca3af
+                );
+
+            border: 4px solid #111827;
+            border-radius: 8px;
+
+            box-shadow:
+                0 5px 0 #00000088;
+
+            touch-action: none;
+            user-select: none;
+        }
+
+        .movement-key.active {
+            color: white;
+
+            background:
+                linear-gradient(
+                    #555b66,
+                    #252a33
+                );
+
+            transform:
+                translateY(4px);
+
+            box-shadow:
+                0 1px 0 #00000088;
+        }
+
+        .key-w {
+            left: 59px;
+            top: 0;
+        }
+
+        .key-a {
+            left: 0;
+            top: 59px;
+        }
+
+        .key-s {
+            left: 59px;
+            top: 59px;
+        }
+
+        .key-d {
+            left: 118px;
+            top: 59px;
+        }
+
+        .attack-joystick {
+            position: relative;
+
+            width: 165px;
+            height: 165px;
+
+            pointer-events: auto;
+
+            background:
+                radial-gradient(
+                    circle,
+                    #32c4ff,
+                    #0788c4
+                );
+
+            border: 5px solid #07131d;
+            border-radius: 50%;
+
+            box-shadow:
+                inset 0 0 22px #ffffff55,
+                0 7px 0 #00000066;
+
+            touch-action: none;
+            user-select: none;
+        }
+
+        .attack-stick {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+
+            width: 78px;
+            height: 78px;
+
+            transform:
+                translate(-50%, -50%);
+
+            background:
+                radial-gradient(
+                    circle,
+                    #5864e8,
+                    #303cae
+                );
+
+            border: 5px solid #111827;
+            border-radius: 50%;
+
+            pointer-events: none;
+        }
+
+        .attack-label {
+            position: absolute;
+            left: 50%;
+            bottom: -24px;
+
+            transform:
+                translateX(-50%);
+
+            font-size: 13px;
+            font-weight: 1000;
+
+            text-shadow:
+                2px 2px black;
+        }
+
+        .result-screen {
+            position: absolute;
+            inset: 7px;
+            z-index: 700;
+
+            display: none;
+            flex-direction: column;
+
+            padding: 18px;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0a3e78,
+                    #1765ad
+                );
+
+            border-radius: 6px;
+        }
+
+        .result-screen.visible {
             display: flex;
         }
 
-        .death-title {
-            font-size: clamp(48px, 8vw, 90px);
-            font-weight: 1000;
-            text-shadow: 5px 5px black;
-        }
+        .result-header {
+            min-height: 58px;
 
-        .match-result {
-            padding: 14px 24px;
-            font-size: 20px;
-            font-weight: 1000;
-            line-height: 1.5;
-            background: #111827e8;
-            border: 4px solid #050912;
-            border-radius: 12px;
-        }
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
 
-        .return-button {
-            min-width: 230px;
-            padding: 18px 30px;
-            color: #111827;
+            padding: 8px 18px;
+
             font-size: 28px;
             font-weight: 1000;
-            background: linear-gradient(#ffd93d, #f0a500);
-            border: 5px solid #111827;
-            border-radius: 14px;
+
+            background: #082c59;
+
+            border: 4px solid #031b38;
+            border-radius: 8px;
+
+            text-shadow:
+                3px 3px black;
         }
 
-        .screen-controls {
-    position: absolute;
-    left: 13%;
-    right: 13%;
-    bottom: 35px;
-    z-index: 200;
+        .result-layout {
+            flex: 1;
 
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
+            display: grid;
 
-    pointer-events: none;
-}
+            grid-template-columns:
+                1.15fr
+                0.9fr
+                0.95fr;
 
-.movement-controls {
-    position: relative;
-    width: 175px;
-    height: 145px;
-    pointer-events: auto;
-}
+            gap: 14px;
 
-.movement-key {
-    position: absolute;
+            min-height: 0;
 
-    width: 56px;
-    height: 56px;
+            margin-top: 14px;
+        }
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+        .result-character-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
 
-    padding: 0;
+            padding: 15px;
 
-    color: #111827;
-    font-size: 25px;
-    font-weight: 1000;
+            background:
+                linear-gradient(
+                    #267ac2,
+                    #155898
+                );
 
-    background: linear-gradient(
-        #e5e7eb,
-        #9ca3af
-    );
+            border: 5px solid #072b55;
+            border-radius: 8px;
+        }
 
-    border: 4px solid #111827;
-    border-radius: 8px;
+        .result-hero-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
-    box-shadow: 0 5px 0 #00000088;
+            width: 170px;
+            height: 170px;
 
-    touch-action: none;
-    user-select: none;
-}
+            font-size: 110px;
 
-.movement-key.active {
-    color: white;
+            background:
+                radial-gradient(
+                    circle,
+                    #72d5ff,
+                    #2387c7
+                );
 
-    background: linear-gradient(
-        #555b66,
-        #252a33
-    );
+            border: 6px solid #071f3e;
+            border-radius: 50%;
+        }
 
-    transform: translateY(4px);
+        .result-hero-name {
+            margin-top: 12px;
 
-    box-shadow: 0 1px 0 #00000088;
-}
+            font-size: 31px;
+            font-weight: 1000;
 
-.key-w {
-    left: 59px;
-    top: 0;
-}
+            text-transform: uppercase;
 
-.key-a {
-    left: 0;
-    top: 59px;
-}
+            text-shadow:
+                3px 3px black;
+        }
 
-.key-s {
-    left: 59px;
-    top: 59px;
-}
+        .result-player-name {
+            margin-top: 5px;
 
-.key-d {
-    left: 118px;
-    top: 59px;
-}
+            font-size: 17px;
+        }
 
-.attack-joystick {
-    position: relative;
+        .result-rank-box {
+            width: 90%;
 
-    width: 165px;
-    height: 165px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
 
-    pointer-events: auto;
+            margin-top: 13px;
+            padding: 10px 14px;
 
-    background: radial-gradient(
-        circle,
-        #32c4ff,
-        #0788c4
-    );
+            background: #5d0d48;
 
-    border: 5px solid #07131d;
-    border-radius: 50%;
+            border: 5px solid #18071a;
+            border-radius: 6px;
 
-    box-shadow:
-        inset 0 0 22px #ffffff55,
-        0 7px 0 #00000066;
+            font-size: 18px;
+            font-weight: 1000;
+        }
 
-    touch-action: none;
-    user-select: none;
-}
+        .result-trophies {
+            color: #ffd33d;
+        }
 
-.attack-stick {
-    position: absolute;
-    left: 50%;
-    top: 50%;
+        .result-middle-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
 
-    width: 78px;
-    height: 78px;
+        .result-box,
+        .result-stats-panel {
+            padding: 14px;
 
-    transform: translate(-50%, -50%);
+            background:
+                linear-gradient(
+                    #145996,
+                    #0e447c
+                );
 
-    background: radial-gradient(
-        circle,
-        #5864e8,
-        #303cae
-    );
+            border: 5px solid #06274d;
+            border-radius: 8px;
+        }
 
-    border: 5px solid #111827;
-    border-radius: 50%;
+        .result-box {
+            flex: 1;
+        }
 
-    pointer-events: none;
-}
+        .result-box h2,
+        .result-stats-panel h2 {
+            margin: 0 0 12px;
 
-.attack-label {
-    position: absolute;
-    left: 50%;
-    bottom: -24px;
+            font-size: 25px;
+            font-weight: 1000;
 
-    transform: translateX(-50%);
+            text-shadow:
+                3px 3px black;
+        }
 
-    font-size: 13px;
-    font-weight: 1000;
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
 
-    text-shadow: 2px 2px black;
-}
+            margin: 8px 0;
+            padding: 9px;
 
-@media (max-width: 800px) {
-    .screen-controls {
-        left: 6%;
-        right: 6%;
-        bottom: 18px;
-    }
+            background: #0b3767;
 
-    .movement-controls {
-        transform: scale(0.82);
-        transform-origin: bottom left;
-    }
+            border: 3px solid #052344;
+            border-radius: 5px;
 
-    .attack-joystick {
-        transform: scale(0.82);
-        transform-origin: bottom right;
-    }
-}
+            font-size: 16px;
+        }
+
+        .result-row b {
+            color: #ffd83d;
+        }
+
+        .result-stats-panel {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .result-stat {
+            flex: 1;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            margin: 6px 0;
+            padding: 9px;
+
+            background: #0b3767;
+
+            border: 3px solid #052344;
+            border-radius: 5px;
+        }
+
+        .result-stat span {
+            font-size: 14px;
+            font-weight: 1000;
+        }
+
+        .result-stat b {
+            margin-top: 4px;
+
+            font-size: 28px;
+            font-weight: 1000;
+
+            text-shadow:
+                3px 3px black;
+        }
+
+        .result-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+
+            margin-top: 14px;
+        }
+
+        .result-buttons button {
+            min-width: 230px;
+
+            padding: 14px 25px;
+
+            font-size: 20px;
+            font-weight: 1000;
+
+            border: 4px solid #071c36;
+            border-radius: 7px;
+
+            box-shadow:
+                0 6px 0 #00000066;
+        }
+
+        .play-again-button {
+            color: #14213d;
+
+            background:
+                linear-gradient(
+                    #ffe44d,
+                    #f5a900
+                );
+        }
+
+        .exit-button {
+            background:
+                linear-gradient(
+                    #42a2ff,
+                    #1165cd
+                );
+        }
+
+        @media (max-width: 850px) {
+            .result-layout {
+                grid-template-columns: 1fr;
+                overflow-y: auto;
+            }
+
+            .result-screen {
+                overflow-y: auto;
+            }
+
+            .result-buttons {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .result-hero-icon {
+                width: 120px;
+                height: 120px;
+
+                font-size: 78px;
+            }
+        }
+
+        @media (max-width: 800px) {
             .logo {
                 font-size: 17px;
             }
@@ -451,6 +805,7 @@
             .top-buttons button,
             .back-button {
                 padding: 7px;
+
                 font-size: 12px;
             }
 
@@ -459,9 +814,19 @@
             }
 
             .screen-controls {
-                left: 10px;
-                right: 10px;
-                bottom: 12px;
+                left: 6%;
+                right: 6%;
+                bottom: 18px;
+            }
+
+            .movement-controls {
+                transform: scale(0.82);
+                transform-origin: bottom left;
+            }
+
+            .attack-joystick {
+                transform: scale(0.82);
+                transform-origin: bottom right;
             }
         }
     </style>
@@ -470,182 +835,323 @@
 <body>
 
 <header class="topbar">
-    <div class="logo">⚔️ BITWA KRÓLESTW</div>
+
+    <div class="logo">
+        ⚔️ BITWA KRÓLESTW
+    </div>
 
     <div class="top-buttons">
-        <button class="restart-button" onclick="location.reload()">
+
+        <button
+            class="restart-button"
+            onclick="location.reload()"
+        >
             NOWA GRA
         </button>
 
-        <a class="back-button" href="gra.html">
+        <a
+            class="back-button"
+            href="gra.html"
+        >
             LOBBY
         </a>
+
     </div>
+
 </header>
 
 <div class="game-info">
-    <div id="mapName" class="info-box">Mapa</div>
-    <div id="aliveCounter" class="info-box">Pozostało: 10</div>
-    <div id="playerInfo" class="info-box">Gracz</div>
+
+    <div
+        id="mapName"
+        class="info-box"
+    >
+        Mapa
+    </div>
+
+    <div
+        id="aliveCounter"
+        class="info-box"
+    >
+        Pozostało: 10
+    </div>
+
+    <div
+        id="playerInfo"
+        class="info-box"
+    >
+        Gracz
+    </div>
+
 </div>
 
 <div class="game-container">
-    <canvas id="gameCanvas" width="1200" height="700"></canvas>
 
-    <div id="loadingScreen" class="loading-screen">
-        <div class="loading-icon">⚔️</div>
-        <div class="loading-title">BITWA KRÓLESTW</div>
-        <div id="loadingMap" class="loading-map">Zielona Dolina</div>
-        <div id="loadingText" class="loading-text">Ładowanie mapy...</div>
+    <canvas
+        id="gameCanvas"
+        width="1200"
+        height="700"
+    ></canvas>
+
+    <div
+        id="loadingScreen"
+        class="loading-screen"
+    >
+
+        <div class="loading-icon">
+            ⚔️
+        </div>
+
+        <div class="loading-title">
+            BITWA KRÓLESTW
+        </div>
+
+        <div
+            id="loadingMap"
+            class="loading-map"
+        >
+            Zielona Dolina
+        </div>
+
+        <div
+            id="loadingText"
+            class="loading-text"
+        >
+            Ładowanie mapy...
+        </div>
 
         <div class="loading-bar">
-            <div id="loadingFill" class="loading-fill"></div>
+
+            <div
+                id="loadingFill"
+                class="loading-fill"
+            ></div>
+
         </div>
 
-        <div id="loadingPercent" class="loading-percent">0%</div>
-    </div>
-
-    <div id="introShade" class="intro-shade"></div>
-    <div id="battleText" class="battle-text">BITWA!</div>
-
-    <div id="deathScreen" class="result-screen">
-
-    <div class="result-header">
-        <span id="resultStatus">PORAŻKA</span>
-        <span id="resultTrophyChange">🏆 -3</span>
-    </div>
-
-    <div class="result-layout">
-
-        <section class="result-character-panel">
-
-            <div
-                id="resultHeroIcon"
-                class="result-hero-icon"
-            >
-                🧑‍🌾
-            </div>
-
-            <div
-                id="resultHeroName"
-                class="result-hero-name"
-            >
-                Farmer
-            </div>
-
-            <div class="result-player-name">
-                Gracz:
-                <b id="resultPlayerName">Oskar</b>
-            </div>
-
-            <div class="result-rank-box">
-                <span id="resultTier">TIER 1</span>
-
-                <div class="result-trophies">
-                    🏆
-                    <span id="resultHeroTrophies">0</span>
-                </div>
-            </div>
-
-        </section>
-
-        <section class="result-middle-panel">
-
-            <div class="result-box">
-
-                <h2>WYNIK</h2>
-
-                <div class="result-row">
-                    <span>Miejsce</span>
-                    <b id="resultPlacement">10</b>
-                </div>
-
-                <div class="result-row">
-                    <span>Zmiana pucharków</span>
-                    <b id="resultTrophyChangeMiddle">-3</b>
-                </div>
-
-                <div class="result-row">
-                    <span>Pucharki postaci</span>
-                    <b id="resultTotalTrophies">0</b>
-                </div>
-
-            </div>
-
-            <div class="result-box">
-
-                <h2>NAGRODY</h2>
-
-                <div class="result-row">
-                    <span>🪙 Monety</span>
-                    <b id="resultCoins">0</b>
-                </div>
-
-                <div class="result-row">
-                    <span>🎟️ Bilety</span>
-                    <b id="resultTickets">0</b>
-                </div>
-
-            </div>
-
-        </section>
-
-        <section class="result-stats-panel">
-
-            <h2>STATYSTYKI</h2>
-
-            <div class="result-stat">
-                <span>ZADANE OBRAŻENIA</span>
-                <b id="resultDamageDealt">0</b>
-            </div>
-
-            <div class="result-stat">
-                <span>ODZYSKANE ŻYCIE</span>
-                <b id="resultHealing">0</b>
-            </div>
-
-            <div class="result-stat">
-                <span>OTRZYMANE OBRAŻENIA</span>
-                <b id="resultDamageTaken">0</b>
-            </div>
-
-        </section>
-
-    </div>
-
-    <div class="result-buttons">
-
-        <button
-            class="play-again-button"
-            onclick="location.reload()"
+        <div
+            id="loadingPercent"
+            class="loading-percent"
         >
-            ZAGRAJ PONOWNIE
-        </button>
-
-        <button
-            class="exit-button"
-            onclick="location.href='gra.html'"
-        >
-            WYJDŹ
-        </button>
+            0%
+        </div>
 
     </div>
 
-</div>
+    <div
+        id="introShade"
+        class="intro-shade"
+    ></div>
 
-    <div class="screen-controls">
+    <div
+        id="battleText"
+        class="battle-text"
+    >
+        BITWA!
+    </div>
+
+    <div
+        id="screenControls"
+        class="screen-controls"
+    >
+
         <div class="movement-controls">
-            <button id="controlW" class="movement-key key-w">W</button>
-            <button id="controlA" class="movement-key key-a">A</button>
-            <button id="controlS" class="movement-key key-s">S</button>
-            <button id="controlD" class="movement-key key-d">D</button>
+
+            <button
+                id="controlW"
+                class="movement-key key-w"
+                type="button"
+            >
+                W
+            </button>
+
+            <button
+                id="controlA"
+                class="movement-key key-a"
+                type="button"
+            >
+                A
+            </button>
+
+            <button
+                id="controlS"
+                class="movement-key key-s"
+                type="button"
+            >
+                S
+            </button>
+
+            <button
+                id="controlD"
+                class="movement-key key-d"
+                type="button"
+            >
+                D
+            </button>
+
         </div>
 
-        <div id="attackJoystick" class="attack-joystick">
-            <div id="attackStick" class="attack-stick"></div>
-            <div class="attack-label">ATAK</div>
+        <div
+            id="attackJoystick"
+            class="attack-joystick"
+        >
+
+            <div
+                id="attackStick"
+                class="attack-stick"
+            ></div>
+
+            <div class="attack-label">
+                ATAK
+            </div>
+
         </div>
+
     </div>
+
+    <div
+        id="deathScreen"
+        class="result-screen"
+    >
+
+        <div class="result-header">
+
+            <span id="resultStatus">
+                PORAŻKA
+            </span>
+
+            <span id="resultTrophyChange">
+                🏆 0
+            </span>
+
+        </div>
+
+        <div class="result-layout">
+
+            <section class="result-character-panel">
+
+                <div
+                    id="resultHeroIcon"
+                    class="result-hero-icon"
+                >
+                    🧑‍🌾
+                </div>
+
+                <div
+                    id="resultHeroName"
+                    class="result-hero-name"
+                >
+                    Farmer
+                </div>
+
+                <div class="result-player-name">
+                    Gracz:
+                    <b id="resultPlayerName">
+                        Gracz
+                    </b>
+                </div>
+
+                <div class="result-rank-box">
+
+                    <span id="resultTier">
+                        TIER 1
+                    </span>
+
+                    <div class="result-trophies">
+                        🏆
+                        <span id="resultHeroTrophies">
+                            0
+                        </span>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <section class="result-middle-panel">
+
+                <div class="result-box">
+
+                    <h2>WYNIK</h2>
+
+                    <div class="result-row">
+                        <span>Miejsce</span>
+                        <b id="resultPlacement">10</b>
+                    </div>
+
+                    <div class="result-row">
+                        <span>Zmiana pucharków</span>
+                        <b id="resultTrophyChangeMiddle">0</b>
+                    </div>
+
+                    <div class="result-row">
+                        <span>Pucharki postaci</span>
+                        <b id="resultTotalTrophies">0</b>
+                    </div>
+
+                </div>
+
+                <div class="result-box">
+
+                    <h2>NAGRODY</h2>
+
+                    <div class="result-row">
+                        <span>🪙 Monety</span>
+                        <b id="resultCoins">0</b>
+                    </div>
+
+                    <div class="result-row">
+                        <span>🎟️ Bilety</span>
+                        <b id="resultTickets">0</b>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <section class="result-stats-panel">
+
+                <h2>STATYSTYKI</h2>
+
+                <div class="result-stat">
+                    <span>ZADANE OBRAŻENIA</span>
+                    <b id="resultDamageDealt">0</b>
+                </div>
+
+                <div class="result-stat">
+                    <span>ODZYSKANE ŻYCIE</span>
+                    <b id="resultHealing">0</b>
+                </div>
+
+                <div class="result-stat">
+                    <span>OTRZYMANE OBRAŻENIA</span>
+                    <b id="resultDamageTaken">0</b>
+                </div>
+
+            </section>
+
+        </div>
+
+        <div class="result-buttons">
+
+            <button
+                class="play-again-button"
+                onclick="location.reload()"
+            >
+                ZAGRAJ PONOWNIE
+            </button>
+
+            <button
+                class="exit-button"
+                onclick="location.href='gra.html'"
+            >
+                WYJDŹ
+            </button>
+
+        </div>
+
+    </div>
+
 </div>
 
 <script src="dane.js"></script>
@@ -654,11 +1160,17 @@
 <script>
 "use strict";
 
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
+const canvas =
+    document.getElementById(
+        "gameCanvas"
+    );
+
+const ctx =
+    canvas.getContext("2d");
 
 const WORLD_WIDTH = 5000;
 const WORLD_HEIGHT = 5000;
+
 const TOTAL_PLAYERS = 10;
 
 const TROPHY_REWARDS = {
@@ -720,7 +1232,7 @@ const HERO_STATS = {
         range: 330,
         cooldown: 650,
         projectileSpeed: 8,
-        projectileWidth: 7,
+        projectileWidth: 8,
         projectileLife: 1100,
         farmerThirdAttack: true
     },
@@ -729,7 +1241,7 @@ const HERO_STATS = {
         hp: 205,
         damage: 31,
         speed: 1.4,
-        range: 75,
+        range: 82,
         cooldown: 650,
         melee: true,
         lowHpShield: true,
@@ -744,7 +1256,7 @@ const HERO_STATS = {
         range: 720,
         cooldown: 750,
         projectileSpeed: 11,
-        projectileWidth: 5,
+        projectileWidth: 6,
         projectileLife: 1650,
         fastThirdArrow: true,
         fastArrowMultiplier: 2.8
@@ -757,7 +1269,7 @@ const HERO_STATS = {
         range: 300,
         cooldown: 700,
         projectileSpeed: 7,
-        projectileWidth: 7,
+        projectileWidth: 8,
         projectileLife: 1000
     },
 
@@ -781,16 +1293,21 @@ const HERO_STATS = {
         range: 600,
         cooldown: 850,
         projectileSpeed: 8,
-        projectileWidth: 9,
+        projectileWidth: 10,
         projectileLife: 1200,
-        alchemist: true
+        alchemist: true,
+        potionHealing: 35,
+        potionDamage: 28,
+        potionStunDuration: 1000,
+        potionSpeedMultiplier: 1.5,
+        potionSpeedDuration: 1500
     },
 
     szermierz: {
         hp: 155,
-        damage: 50,
-        speed: 5.2,
-        range: 85,
+        damage: 24,
+        speed: 2.1,
+        range: 100,
         cooldown: 450,
         swordsman: true
     },
@@ -799,7 +1316,7 @@ const HERO_STATS = {
         hp: 105,
         damage: 28,
         speed: 2.2,
-        range: 70,
+        range: 76,
         cooldown: 480,
         melee: true
     },
@@ -811,7 +1328,7 @@ const HERO_STATS = {
         range: 350,
         cooldown: 950,
         projectileSpeed: 5,
-        projectileWidth: 11,
+        projectileWidth: 13,
         projectileLife: 1050
     },
 
@@ -819,7 +1336,7 @@ const HERO_STATS = {
         hp: 90,
         damage: 40,
         speed: 2.25,
-        range: 72,
+        range: 78,
         cooldown: 520,
         melee: true,
         canPassWalls: true
@@ -832,7 +1349,7 @@ const HERO_STATS = {
         range: 690,
         cooldown: 820,
         projectileSpeed: 8.5,
-        projectileWidth: 9,
+        projectileWidth: 10,
         projectileLife: 1500
     },
 
@@ -852,7 +1369,7 @@ const HERO_STATS = {
         range: 580,
         cooldown: 850,
         projectileSpeed: 8,
-        projectileWidth: 7,
+        projectileWidth: 9,
         projectileLife: 1450,
         tripleShot: true
     },
@@ -876,7 +1393,9 @@ const spawnPoints = [];
 
 const keys = {};
 
-let selectedMap = MAPS.green;
+let selectedMap =
+    MAPS.green;
+
 let fighters = [];
 let projectiles = [];
 let waves = [];
@@ -884,14 +1403,24 @@ let potions = [];
 let effects = [];
 
 let player = null;
-let playerDisplayName = "Gracz";
 
-let camera = { x: 0, y: 0 };
+let playerDisplayName =
+    "Gracz";
+
+let camera = {
+    x: 0,
+    y: 0
+};
 
 let mouse = {
-    x: canvas.width / 2,
-    y: canvas.height / 2,
-    down: false
+    x:
+        canvas.width / 2,
+
+    y:
+        canvas.height / 2,
+
+    down:
+        false
 };
 
 let joystickAttack = {
@@ -900,27 +1429,52 @@ let joystickAttack = {
     directionY: 0
 };
 
-let phase = "loading";
-let introStartTime = 0;
-let matchFinished = false;
-let trophiesAwarded = false;
+let phase =
+    "loading";
 
-function addRectangle(collection, x, y, w, h) {
-    collection.push({ x, y, w, h });
-}
+let introStartTime =
+    0;
 
-function addSymmetric(collection, x, y, w, h) {
-    addRectangle(collection, x, y, w, h);
-    addRectangle(collection, WORLD_WIDTH - x - w, y, w, h);
-    addRectangle(collection, x, WORLD_HEIGHT - y - h, w, h);
+let introStartCamera = {
+    x: 0,
+    y: 0
+};
 
-    addRectangle(
-        collection,
-        WORLD_WIDTH - x - w,
-        WORLD_HEIGHT - y - h,
-        w,
-        h
-    );
+let introTargetCamera = {
+    x: 0,
+    y: 0
+};
+
+let matchFinished =
+    false;
+
+let trophiesAwarded =
+    false;
+
+let matchStats = {
+    damageDealt: 0,
+    damageTaken: 0,
+    healing: 0,
+    placement: 10,
+    trophyChange: 0,
+    heroTrophies: 0,
+    coinsReward: 0,
+    ticketsReward: 0
+};
+
+function addRectangle(
+    collection,
+    x,
+    y,
+    width,
+    height
+) {
+    collection.push({
+        x: x,
+        y: y,
+        w: width,
+        h: height
+    });
 }
 
 function buildMap() {
@@ -929,285 +1483,847 @@ function buildMap() {
     waterPools.length = 0;
     spawnPoints.length = 0;
 
-    addRectangle(walls, 0, 0, WORLD_WIDTH, 100);
-    addRectangle(walls, 0, WORLD_HEIGHT - 100, WORLD_WIDTH, 100);
-    addRectangle(walls, 0, 0, 100, WORLD_HEIGHT);
-    addRectangle(walls, WORLD_WIDTH - 100, 0, 100, WORLD_HEIGHT);
+    const border =
+        100;
 
-    addSymmetric(walls, 430, 430, 650, 90);
-    addSymmetric(walls, 430, 820, 90, 560);
-    addSymmetric(walls, 1150, 900, 520, 90);
-    addSymmetric(walls, 900, 1520, 90, 520);
-    addSymmetric(walls, 1500, 1500, 480, 90);
+    addRectangle(
+        walls,
+        0,
+        0,
+        WORLD_WIDTH,
+        border
+    );
 
-    addRectangle(walls, 2150, 1850, 700, 90);
-    addRectangle(walls, 2150, 3060, 700, 90);
-    addRectangle(walls, 1850, 2150, 90, 700);
-    addRectangle(walls, 3060, 2150, 90, 700);
-    addRectangle(walls, 2340, 2340, 320, 320);
+    addRectangle(
+        walls,
+        0,
+        WORLD_HEIGHT - border,
+        WORLD_WIDTH,
+        border
+    );
 
-    addSymmetric(waterPools, 700, 1500, 380, 500);
-    addSymmetric(waterPools, 1550, 500, 530, 260);
-    addRectangle(waterPools, 2050, 1100, 900, 280);
-    addRectangle(waterPools, 2050, 3620, 900, 280);
+    addRectangle(
+        walls,
+        0,
+        0,
+        border,
+        WORLD_HEIGHT
+    );
 
-    addSymmetric(bushes, 180, 180, 620, 150);
-    addSymmetric(bushes, 520, 560, 520, 120);
-    addSymmetric(bushes, 620, 1040, 130, 620);
-    addSymmetric(bushes, 1170, 1080, 620, 120);
-    addSymmetric(bushes, 1300, 1760, 460, 120);
+    addRectangle(
+        walls,
+        WORLD_WIDTH - border,
+        0,
+        border,
+        WORLD_HEIGHT
+    );
+
+    const mapWalls = [
+        [500, 500, 600, 90],
+        [3900, 500, 600, 90],
+        [500, 4410, 600, 90],
+        [3900, 4410, 600, 90],
+
+        [500, 900, 90, 550],
+        [4410, 900, 90, 550],
+        [500, 3550, 90, 550],
+        [4410, 3550, 90, 550],
+
+        [1250, 850, 500, 90],
+        [3250, 850, 500, 90],
+        [1250, 4060, 500, 90],
+        [3250, 4060, 500, 90],
+
+        [850, 1700, 90, 500],
+        [4060, 1700, 90, 500],
+        [850, 2800, 90, 500],
+        [4060, 2800, 90, 500],
+
+        [1450, 1550, 550, 90],
+        [3000, 1550, 550, 90],
+        [1450, 3360, 550, 90],
+        [3000, 3360, 550, 90],
+
+        [2150, 1950, 700, 90],
+        [2150, 2960, 700, 90],
+
+        [1950, 2150, 90, 700],
+        [2960, 2150, 90, 700],
+
+        [2350, 2350, 300, 300]
+    ];
+
+    mapWalls.forEach(
+        function(item) {
+            addRectangle(
+                walls,
+                item[0],
+                item[1],
+                item[2],
+                item[3]
+            );
+        }
+    );
+
+    const mapWater = [
+        [1000, 1150, 420, 270],
+        [3580, 1150, 420, 270],
+        [1000, 3580, 420, 270],
+        [3580, 3580, 420, 270],
+
+        [1800, 650, 1400, 250],
+        [1800, 4100, 1400, 250],
+
+        [650, 1800, 250, 1400],
+        [4100, 1800, 250, 1400]
+    ];
+
+    mapWater.forEach(
+        function(item) {
+            addRectangle(
+                waterPools,
+                item[0],
+                item[1],
+                item[2],
+                item[3]
+            );
+        }
+    );
+
+    const mapBushes = [
+        [160, 160, 650, 140],
+        [4190, 160, 650, 140],
+        [160, 4700, 650, 140],
+        [4190, 4700, 650, 140],
+
+        [650, 650, 500, 120],
+        [3850, 650, 500, 120],
+        [650, 4230, 500, 120],
+        [3850, 4230, 500, 120],
+
+        [1150, 1200, 600, 120],
+        [3250, 1200, 600, 120],
+        [1150, 3680, 600, 120],
+        [3250, 3680, 600, 120],
+
+        [1200, 1900, 120, 650],
+        [3680, 1900, 120, 650],
+        [1200, 2750, 120, 650],
+        [3680, 2750, 120, 650],
+
+        [2050, 1750, 900, 120],
+        [2050, 3130, 900, 120],
+
+        [1750, 2050, 120, 900],
+        [3130, 2050, 120, 900]
+    ];
+
+    mapBushes.forEach(
+        function(item) {
+            addRectangle(
+                bushes,
+                item[0],
+                item[1],
+                item[2],
+                item[3]
+            );
+        }
+    );
 
     spawnPoints.push(
-        { x: 260, y: 260 },
-        { x: 1250, y: 270 },
-        { x: 2500, y: 270 },
-        { x: 3750, y: 270 },
-        { x: 4740, y: 260 },
-        { x: 260, y: 1250 },
-        { x: 4740, y: 1250 },
-        { x: 260, y: 2500 },
-        { x: 4740, y: 2500 },
-        { x: 260, y: 3750 },
-        { x: 4740, y: 3750 },
-        { x: 260, y: 4740 },
-        { x: 1250, y: 4730 },
-        { x: 2500, y: 4730 },
-        { x: 3750, y: 4730 },
-        { x: 4740, y: 4740 },
-        { x: 1150, y: 2500 },
-        { x: 3850, y: 2500 },
-        { x: 2500, y: 1150 },
-        { x: 2500, y: 3850 }
+        { x: 300, y: 300 },
+        { x: 1250, y: 350 },
+        { x: 2500, y: 350 },
+        { x: 3750, y: 350 },
+        { x: 4700, y: 300 },
+
+        { x: 300, y: 1250 },
+        { x: 4700, y: 1250 },
+
+        { x: 300, y: 2500 },
+        { x: 4700, y: 2500 },
+
+        { x: 300, y: 3750 },
+        { x: 4700, y: 3750 },
+
+        { x: 300, y: 4700 },
+        { x: 1250, y: 4650 },
+        { x: 2500, y: 4650 },
+        { x: 3750, y: 4650 },
+        { x: 4700, y: 4700 },
+
+        { x: 1500, y: 2500 },
+        { x: 3500, y: 2500 },
+
+        { x: 2500, y: 1500 },
+        { x: 2500, y: 3500 }
     );
 }
 
 buildMap();
 
-function clamp(value, minimum, maximum) {
-    return Math.max(minimum, Math.min(maximum, value));
+function clamp(
+    value,
+    minimum,
+    maximum
+) {
+    return Math.max(
+        minimum,
+        Math.min(
+            maximum,
+            value
+        )
+    );
 }
 
-function randomNumber(minimum, maximum) {
-    return Math.random() * (maximum - minimum) + minimum;
+function randomNumber(
+    minimum,
+    maximum
+) {
+    return (
+        Math.random() *
+        (
+            maximum -
+            minimum
+        ) +
+        minimum
+    );
 }
 
 function randomItem(array) {
-    return array[Math.floor(Math.random() * array.length)];
+    return array[
+        Math.floor(
+            Math.random() *
+            array.length
+        )
+    ];
 }
 
 function shuffle(array) {
-    const result = array.slice();
+    const copy =
+        array.slice();
 
-    for (let index = result.length - 1; index > 0; index--) {
-        const randomIndex = Math.floor(Math.random() * (index + 1));
+    for (
+        let index =
+            copy.length - 1;
 
-        [result[index], result[randomIndex]] = [
-            result[randomIndex],
-            result[index]
-        ];
+        index > 0;
+
+        index--
+    ) {
+        const randomIndex =
+            Math.floor(
+                Math.random() *
+                (index + 1)
+            );
+
+        const temporary =
+            copy[index];
+
+        copy[index] =
+            copy[randomIndex];
+
+        copy[randomIndex] =
+            temporary;
     }
 
-    return result;
+    return copy;
 }
 
-function normalize(x, y) {
-    const length = Math.hypot(x, y) || 1;
+function normalize(
+    x,
+    y
+) {
+    const length =
+        Math.hypot(
+            x,
+            y
+        ) || 1;
 
     return {
-        x: x / length,
-        y: y / length
+        x:
+            x / length,
+
+        y:
+            y / length
     };
 }
 
-function distance(first, second) {
-    return Math.hypot(first.x - second.x, first.y - second.y);
-}
+function distance(
+    first,
+    second
+) {
+    return Math.hypot(
+        first.x -
+        second.x,
 
-function rectangleCollision(x, y, radius, rectangle) {
-    const closestX = Math.max(
-        rectangle.x,
-        Math.min(x, rectangle.x + rectangle.w)
+        first.y -
+        second.y
     );
-
-    const closestY = Math.max(
-        rectangle.y,
-        Math.min(y, rectangle.y + rectangle.h)
-    );
-
-    const dx = x - closestX;
-    const dy = y - closestY;
-
-    return dx * dx + dy * dy < radius * radius;
 }
 
-function collidesWith(collection, x, y, radius) {
-    return collection.some(function(rectangle) {
-        return rectangleCollision(x, y, radius, rectangle);
-    });
-}
+function rectangleCollision(
+    x,
+    y,
+    radius,
+    rectangle
+) {
+    const closestX =
+        Math.max(
+            rectangle.x,
+            Math.min(
+                x,
+                rectangle.x +
+                rectangle.w
+            )
+        );
 
-function isBlocked(x, y, radius) {
+    const closestY =
+        Math.max(
+            rectangle.y,
+            Math.min(
+                y,
+                rectangle.y +
+                rectangle.h
+            )
+        );
+
+    const dx =
+        x -
+        closestX;
+
+    const dy =
+        y -
+        closestY;
+
     return (
-        collidesWith(walls, x, y, radius) ||
-        collidesWith(waterPools, x, y, radius)
+        dx * dx +
+        dy * dy <
+        radius * radius
     );
 }
 
-function isSafeSpawn(position) {
+function collidesWith(
+    collection,
+    x,
+    y,
+    radius
+) {
+    return collection.some(
+        function(rectangle) {
+            return rectangleCollision(
+                x,
+                y,
+                radius,
+                rectangle
+            );
+        }
+    );
+}
+
+function isBlocked(
+    x,
+    y,
+    radius
+) {
     return (
-        position &&
-        !isBlocked(position.x, position.y, 30) &&
-        !collidesWith(bushes, position.x, position.y, 30)
+        collidesWith(
+            walls,
+            x,
+            y,
+            radius
+        ) ||
+        collidesWith(
+            waterPools,
+            x,
+            y,
+            radius
+        )
     );
 }
 
-function getSafeSpawn(position) {
-    if (isSafeSpawn(position)) {
-        return position;
+function isSafeSpawn(
+    position
+) {
+    if (!position) {
+        return false;
     }
 
-    for (let radius = 50; radius <= 900; radius += 50) {
-        for (let angle = 0; angle < Math.PI * 2; angle += 0.25) {
+    if (
+        position.x < 130 ||
+        position.y < 130 ||
+        position.x >
+        WORLD_WIDTH - 130 ||
+        position.y >
+        WORLD_HEIGHT - 130
+    ) {
+        return false;
+    }
+
+    return (
+        !isBlocked(
+            position.x,
+            position.y,
+            32
+        ) &&
+        !collidesWith(
+            bushes,
+            position.x,
+            position.y,
+            32
+        )
+    );
+}
+
+function getSafeSpawn(
+    position
+) {
+    if (
+        isSafeSpawn(
+            position
+        )
+    ) {
+        return {
+            x:
+                position.x,
+
+            y:
+                position.y
+        };
+    }
+
+    for (
+        let searchRadius = 50;
+
+        searchRadius <= 900;
+
+        searchRadius += 50
+    ) {
+        for (
+            let angle = 0;
+
+            angle <
+            Math.PI * 2;
+
+            angle += 0.25
+        ) {
             const candidate = {
-                x: position.x + Math.cos(angle) * radius,
-                y: position.y + Math.sin(angle) * radius
+                x:
+                    position.x +
+                    Math.cos(angle) *
+                    searchRadius,
+
+                y:
+                    position.y +
+                    Math.sin(angle) *
+                    searchRadius
             };
 
-            if (isSafeSpawn(candidate)) {
+            if (
+                isSafeSpawn(
+                    candidate
+                )
+            ) {
                 return candidate;
             }
         }
     }
 
-    return { x: 2500, y: 2500 };
+    return {
+        x: 2500,
+        y: 2500
+    };
 }
 
-function getStats(heroId) {
-    const correctedId = heroId === "tesla" ? "muzyk" : heroId;
+function getStats(
+    heroId
+) {
+    const correctedId =
+        heroId === "tesla"
+            ? "muzyk"
+            : heroId;
 
-    return HERO_STATS[correctedId] || HERO_STATS.farmer;
+    return (
+        HERO_STATS[correctedId] ||
+        HERO_STATS.farmer
+    );
 }
 
-function getSavedPlayerName(state) {
+function getSavedPlayerName(
+    state
+) {
     const possibleNames = [
         state.profileName,
         state.playerName,
         state.username,
         state.name,
-        localStorage.getItem("playerName"),
-        localStorage.getItem("username")
+        localStorage.getItem(
+            "playerName"
+        ),
+        localStorage.getItem(
+            "username"
+        )
     ];
 
-    const foundName = possibleNames.find(function(name) {
-        return typeof name === "string" && name.trim().length > 0;
-    });
+    const foundName =
+        possibleNames.find(
+            function(name) {
+                return (
+                    typeof name ===
+                    "string" &&
+                    name.trim().length >
+                    0
+                );
+            }
+        );
 
-    return foundName ? foundName.trim().slice(0, 20) : "Gracz";
+    return foundName
+        ? foundName
+              .trim()
+              .slice(0, 20)
+        : "Gracz";
 }
 
-function createFighter(hero, position, isPlayer, number) {
-    const correctedHeroId = hero.id === "tesla" ? "muzyk" : hero.id;
-    const stats = getStats(correctedHeroId);
+function createFighter(
+    hero,
+    position,
+    isPlayer,
+    number
+) {
+    const correctedHeroId =
+        hero.id === "tesla"
+            ? "muzyk"
+            : hero.id;
+
+    const stats =
+        getStats(
+            correctedHeroId
+        );
 
     return {
-        id: isPlayer ? "player" : "bot-" + number,
+        id:
+            isPlayer
+                ? "player"
+                : "bot-" +
+                  number,
 
-        name: isPlayer
-            ? playerDisplayName
-            : "BOT " + number,
+        name:
+            isPlayer
+                ? playerDisplayName
+                : "BOT " +
+                  number,
 
-        heroId: correctedHeroId,
-        heroName: correctedHeroId === "muzyk" ? "Muzyk" : hero.nazwa,
-        icon: correctedHeroId === "muzyk" ? "🎵" : hero.ikona,
+        heroId:
+            correctedHeroId,
 
-        x: position.x,
-        y: position.y,
+        heroName:
+            correctedHeroId ===
+            "muzyk"
+                ? "Muzyk"
+                : hero.nazwa,
 
-        radius: 28,
+        icon:
+            correctedHeroId ===
+            "muzyk"
+                ? "🎵"
+                : hero.ikona,
 
-        hp: stats.hp,
-        maxHp: stats.hp,
+        x:
+            position.x,
 
-        damage: stats.damage,
-        speed: stats.speed,
-        normalSpeed: stats.speed,
-        range: stats.range,
-        cooldown: stats.cooldown,
+        y:
+            position.y,
 
-        projectileSpeed: stats.projectileSpeed || 0,
-        projectileWidth: stats.projectileWidth || 0,
-        projectileLife: stats.projectileLife || 0,
+        radius:
+            25,
 
-        melee: Boolean(stats.melee),
-        swordsman: Boolean(stats.swordsman),
-        alchemist: Boolean(stats.alchemist),
-        musicWave: Boolean(stats.musicWave),
-        canPassWalls: Boolean(stats.canPassWalls),
-        tripleShot: Boolean(stats.tripleShot),
-        vampire: Boolean(stats.vampire),
+        hp:
+            stats.hp,
 
-        farmerThirdAttack: Boolean(stats.farmerThirdAttack),
-        fastThirdArrow: Boolean(stats.fastThirdArrow),
-        fastArrowMultiplier: stats.fastArrowMultiplier || 1,
+        maxHp:
+            stats.hp,
 
-        lowHpShield: Boolean(stats.lowHpShield),
-        shieldThreshold: stats.shieldThreshold || 0,
-        shieldReduction: stats.shieldReduction || 0,
+        damage:
+            stats.damage,
 
-        ultraEvery: stats.ultraEvery || 0,
-        ultraStunDuration: stats.ultraStunDuration || 0,
+        speed:
+            stats.speed,
 
-        attackCounter: 0,
-        lastAttack: 0,
-        lastSwordDamage: 0,
+        normalSpeed:
+            stats.speed,
 
-        alive: true,
-        hidden: false,
-        moving: false,
+        range:
+            stats.range,
 
-        isPlayer,
-        isSummon: false,
+        cooldown:
+            stats.cooldown,
 
-        target: null,
-        behavior: "wander",
+        projectileSpeed:
+            stats.projectileSpeed ||
+            0,
 
-        directionX: randomNumber(-1, 1),
-        directionY: randomNumber(-1, 1),
+        projectileWidth:
+            stats.projectileWidth ||
+            0,
+
+        projectileLife:
+            stats.projectileLife ||
+            0,
+
+        melee:
+            Boolean(
+                stats.melee
+            ),
+
+        swordsman:
+            Boolean(
+                stats.swordsman
+            ),
+
+        alchemist:
+            Boolean(
+                stats.alchemist
+            ),
+
+        musicWave:
+            Boolean(
+                stats.musicWave
+            ),
+
+        canPassWalls:
+            Boolean(
+                stats.canPassWalls
+            ),
+
+        tripleShot:
+            Boolean(
+                stats.tripleShot
+            ),
+
+        vampire:
+            Boolean(
+                stats.vampire
+            ),
+
+        farmerThirdAttack:
+            Boolean(
+                stats.farmerThirdAttack
+            ),
+
+        fastThirdArrow:
+            Boolean(
+                stats.fastThirdArrow
+            ),
+
+        fastArrowMultiplier:
+            stats.fastArrowMultiplier ||
+            1,
+
+        lowHpShield:
+            Boolean(
+                stats.lowHpShield
+            ),
+
+        shieldThreshold:
+            stats.shieldThreshold ||
+            0,
+
+        shieldReduction:
+            stats.shieldReduction ||
+            0,
+
+        ultraEvery:
+            stats.ultraEvery ||
+            0,
+
+        ultraStunDuration:
+            stats.ultraStunDuration ||
+            0,
+
+        potionHealing:
+            stats.potionHealing ||
+            35,
+
+        potionDamage:
+            stats.potionDamage ||
+            stats.damage,
+
+        potionStunDuration:
+            stats.potionStunDuration ||
+            1000,
+
+        potionSpeedMultiplier:
+            stats.potionSpeedMultiplier ||
+            1.5,
+
+        potionSpeedDuration:
+            stats.potionSpeedDuration ||
+            1500,
+
+        speedBoostUntil:
+            0,
+
+        attackCounter:
+            0,
+
+        lastAttack:
+            0,
+
+        lastSwordDamage:
+            0,
+
+        alive:
+            true,
+
+        hidden:
+            false,
+
+        moving:
+            false,
+
+        isPlayer:
+            isPlayer,
+
+        isSummon:
+            false,
+
+        target:
+            null,
+
+        directionX:
+            randomNumber(
+                -1,
+                1
+            ),
+
+        directionY:
+            randomNumber(
+                -1,
+                1
+            ),
 
         nextDecision:
             performance.now() +
-            randomNumber(600, 1800),
+            randomNumber(
+                600,
+                1800
+            ),
 
-        stunnedUntil: 0,
+        stunnedUntil:
+            0,
 
-        color: isPlayer
-            ? "#36a9ff"
-            : `hsl(${Math.random() * 360}, 70%, 55%)`
+        color:
+            isPlayer
+                ? "#36a9ff"
+                : `hsl(${Math.random() * 360}, 70%, 55%)`
     };
 }
 
 function getAlivePlayers() {
-    return fighters.filter(function(fighter) {
-        return fighter.alive && !fighter.isSummon;
-    });
+    return fighters.filter(
+        function(fighter) {
+            return (
+                fighter.alive &&
+                !fighter.isSummon
+            );
+        }
+    );
+}
+
+function isEnemy(
+    first,
+    second
+) {
+    return (
+        first &&
+        second &&
+        first !== second &&
+        second.alive
+    );
+}
+
+function getTargets(
+    fighter
+) {
+    return fighters.filter(
+        function(target) {
+            return isEnemy(
+                fighter,
+                target
+            );
+        }
+    );
+}
+
+function getNearestTarget(
+    fighter
+) {
+    const targets =
+        getTargets(
+            fighter
+        );
+
+    targets.sort(
+        function(first, second) {
+            return (
+                distance(
+                    fighter,
+                    first
+                ) -
+                distance(
+                    fighter,
+                    second
+                )
+            );
+        }
+    );
+
+    return (
+        targets[0] ||
+        null
+    );
 }
 
 function prepareGame() {
-    const mapId = localStorage.getItem("selectedMap") || "green";
+    const mapId =
+        localStorage.getItem(
+            "selectedMap"
+        ) || "green";
 
-    selectedMap = MAPS[mapId] || MAPS.green;
+    selectedMap =
+        MAPS[mapId] ||
+        MAPS.green;
 
-    document.getElementById("mapName").textContent = selectedMap.name;
-    document.getElementById("loadingMap").textContent = selectedMap.name;
+    document
+        .getElementById(
+            "mapName"
+        )
+        .textContent =
+        selectedMap.name;
 
-    const state = getState();
+    document
+        .getElementById(
+            "loadingMap"
+        )
+        .textContent =
+        selectedMap.name;
 
-    playerDisplayName = getSavedPlayerName(state);
+    const state =
+        getState();
 
-    let selectedHero = getHero(state.selected);
+    playerDisplayName =
+        getSavedPlayerName(
+            state
+        );
+
+    let selectedHero =
+        getHero(
+            state.selected
+        );
 
     if (!selectedHero) {
-        selectedHero = BOHATEROWIE[0];
+        selectedHero =
+            BOHATEROWIE[0];
     }
 
     fighters = [];
@@ -1216,195 +2332,386 @@ function prepareGame() {
     potions = [];
     effects = [];
 
-    const randomizedSpawns = shuffle(spawnPoints);
+    matchFinished =
+        false;
 
-    const playerSpawn = getSafeSpawn(randomizedSpawns[0]);
+    trophiesAwarded =
+        false;
 
-    player = createFighter(
-        selectedHero,
-        playerSpawn,
-        true,
-        0
+    matchStats = {
+        damageDealt: 0,
+        damageTaken: 0,
+        healing: 0,
+        placement: 10,
+        trophyChange: 0,
+        heroTrophies: 0,
+        coinsReward: 0,
+        ticketsReward: 0
+    };
+
+    const randomizedSpawns =
+        shuffle(
+            spawnPoints
+        );
+
+    player =
+        createFighter(
+            selectedHero,
+            getSafeSpawn(
+                randomizedSpawns[0]
+            ),
+            true,
+            0
+        );
+
+    fighters.push(
+        player
     );
 
-    fighters.push(player);
+    for (
+        let index = 1;
 
-    for (let index = 1; index < TOTAL_PLAYERS; index++) {
-        const randomHero = randomItem(BOHATEROWIE);
-        const spawn = getSafeSpawn(randomizedSpawns[index]);
+        index <
+        TOTAL_PLAYERS;
+
+        index++
+    ) {
+        const randomHero =
+            randomItem(
+                BOHATEROWIE
+            );
+
+        const position =
+            getSafeSpawn(
+                randomizedSpawns[
+                    index
+                ]
+            );
 
         fighters.push(
             createFighter(
                 randomHero,
-                spawn,
+                position,
                 false,
                 index
             )
         );
     }
 
-    camera.x = clamp(
-        player.x - canvas.width / 2,
-        0,
-        WORLD_WIDTH - canvas.width
-    );
+    introTargetCamera = {
+        x:
+            clamp(
+                player.x -
+                canvas.width / 2,
 
-    camera.y = 0;
+                0,
+
+                WORLD_WIDTH -
+                canvas.width
+            ),
+
+        y:
+            clamp(
+                player.y -
+                canvas.height / 2,
+
+                0,
+
+                WORLD_HEIGHT -
+                canvas.height
+            )
+    };
+
+    introStartCamera = {
+        x:
+            introTargetCamera.x,
+
+        y:
+            0
+    };
+
+    camera.x =
+        introStartCamera.x;
+
+    camera.y =
+        introStartCamera.y;
 
     updateInformation();
     startLoading();
 }
 
 function startLoading() {
-    let progress = 0;
+    phase =
+        "loading";
 
-    const fill = document.getElementById("loadingFill");
-    const percent = document.getElementById("loadingPercent");
+    let progress =
+        0;
 
-    const interval = setInterval(function() {
-        progress += randomNumber(5, 13);
-        progress = Math.min(100, progress);
+    const fill =
+        document.getElementById(
+            "loadingFill"
+        );
 
-        fill.style.width = progress + "%";
-        percent.textContent = Math.floor(progress) + "%";
+    const percent =
+        document.getElementById(
+            "loadingPercent"
+        );
 
-        if (progress >= 100) {
-            clearInterval(interval);
-            setTimeout(startIntro, 350);
-        }
-    }, 115);
+    const interval =
+        setInterval(
+            function() {
+                progress +=
+                    randomNumber(
+                        5,
+                        13
+                    );
+
+                progress =
+                    Math.min(
+                        100,
+                        progress
+                    );
+
+                fill.style.width =
+                    progress + "%";
+
+                percent.textContent =
+                    Math.floor(
+                        progress
+                    ) + "%";
+
+                if (
+                    progress >= 100
+                ) {
+                    clearInterval(
+                        interval
+                    );
+
+                    setTimeout(
+                        startIntro,
+                        350
+                    );
+                }
+            },
+            115
+        );
 }
 
 function startIntro() {
-    document.getElementById("loadingScreen").classList.add("hidden");
-    document.getElementById("introShade").classList.add("visible");
+    document
+        .getElementById(
+            "loadingScreen"
+        )
+        .classList.add(
+            "hidden"
+        );
 
-    phase = "intro";
-    introStartTime = performance.now();
+    document
+        .getElementById(
+            "introShade"
+        )
+        .classList.add(
+            "visible"
+        );
 
-    setTimeout(function() {
-        document.getElementById("loadingScreen").style.display = "none";
-    }, 500);
+    phase =
+        "intro";
+
+    introStartTime =
+        performance.now();
+
+    setTimeout(
+        function() {
+            document
+                .getElementById(
+                    "loadingScreen"
+                )
+                .style.display =
+                "none";
+        },
+        500
+    );
 }
 
-function updateIntro(currentTime) {
-    const duration = 2500;
+function updateIntro(
+    currentTime
+) {
+    const duration =
+        2600;
 
-    const progress = Math.min(
-        1,
-        (currentTime - introStartTime) / duration
-    );
+    const progress =
+        Math.min(
+            1,
+            (
+                currentTime -
+                introStartTime
+            ) /
+            duration
+        );
 
-    const targetY = clamp(
-        player.y - canvas.height / 2,
-        0,
-        WORLD_HEIGHT - canvas.height
-    );
+    camera.x =
+        introStartCamera.x +
+        (
+            introTargetCamera.x -
+            introStartCamera.x
+        ) *
+        progress;
 
-    camera.x = clamp(
-        player.x - canvas.width / 2,
-        0,
-        WORLD_WIDTH - canvas.width
-    );
+    camera.y =
+        introStartCamera.y +
+        (
+            introTargetCamera.y -
+            introStartCamera.y
+        ) *
+        progress;
 
-    camera.y = targetY * progress;
+    const shade =
+        document.getElementById(
+            "introShade"
+        );
 
-    const shade = document.getElementById("introShade");
-    shade.style.opacity = String(0.88 - progress * 0.88);
+    shade.style.opacity =
+        String(
+            0.88 -
+            progress *
+            0.88
+        );
 
-    if (progress >= 1) {
-        shade.classList.remove("visible");
-        shade.style.opacity = "";
+    if (
+        progress >= 1
+    ) {
+        shade.classList.remove(
+            "visible"
+        );
+
+        shade.style.opacity =
+            "";
+
         showBattleText();
     }
 }
 
 function showBattleText() {
-    phase = "battle";
+    phase =
+        "battle";
 
-    const battleText = document.getElementById("battleText");
-    battleText.classList.add("visible");
+    const battleText =
+        document.getElementById(
+            "battleText"
+        );
 
-    setTimeout(function() {
-        battleText.classList.remove("visible");
-        phase = "playing";
-    }, 1150);
+    battleText.classList.add(
+        "visible"
+    );
+
+    setTimeout(
+        function() {
+            battleText.classList.remove(
+                "visible"
+            );
+
+            phase =
+                "playing";
+        },
+        1150
+    );
 }
 
 function updateCamera() {
-    if (!player || phase === "intro") {
+    if (
+        !player ||
+        phase === "intro"
+    ) {
         return;
     }
 
-    camera.x = clamp(
-        player.x - canvas.width / 2,
-        0,
-        WORLD_WIDTH - canvas.width
-    );
+    camera.x =
+        clamp(
+            player.x -
+            canvas.width / 2,
 
-    camera.y = clamp(
-        player.y - canvas.height / 2,
-        0,
-        WORLD_HEIGHT - canvas.height
-    );
-}
+            0,
 
-function moveFighter(fighter, dx, dy) {
-    if (fighter.stunnedUntil > performance.now()) {
-        return;
-    }
-
-    const nextX = clamp(
-        fighter.x + dx,
-        fighter.radius,
-        WORLD_WIDTH - fighter.radius
-    );
-
-    if (
-        fighter.canPassWalls ||
-        !isBlocked(nextX, fighter.y, fighter.radius)
-    ) {
-        fighter.x = nextX;
-    }
-
-    const nextY = clamp(
-        fighter.y + dy,
-        fighter.radius,
-        WORLD_HEIGHT - fighter.radius
-    );
-
-    if (
-        fighter.canPassWalls ||
-        !isBlocked(fighter.x, nextY, fighter.radius)
-    ) {
-        fighter.y = nextY;
-    }
-}
-
-function isEnemy(first, second) {
-    return (
-        first !== second &&
-        second.alive
-    );
-}
-
-function getTargets(fighter) {
-    return fighters.filter(function(target) {
-        return isEnemy(fighter, target);
-    });
-}
-
-function getNearestTarget(fighter) {
-    const targets = getTargets(fighter);
-
-    targets.sort(function(first, second) {
-        return (
-            distance(fighter, first) -
-            distance(fighter, second)
+            WORLD_WIDTH -
+            canvas.width
         );
-    });
 
-    return targets[0] || null;
+    camera.y =
+        clamp(
+            player.y -
+            canvas.height / 2,
+
+            0,
+
+            WORLD_HEIGHT -
+            canvas.height
+        );
+}
+
+function moveFighter(
+    fighter,
+    dx,
+    dy
+) {
+    if (
+        fighter.stunnedUntil >
+        performance.now()
+    ) {
+        return;
+    }
+
+    if (
+        fighter.speedBoostUntil >
+        0 &&
+        performance.now() >
+        fighter.speedBoostUntil
+    ) {
+        fighter.speed =
+            fighter.normalSpeed;
+
+        fighter.speedBoostUntil =
+            0;
+    }
+
+    const nextX =
+        clamp(
+            fighter.x + dx,
+            fighter.radius,
+            WORLD_WIDTH -
+            fighter.radius
+        );
+
+    if (
+        fighter.canPassWalls ||
+        !isBlocked(
+            nextX,
+            fighter.y,
+            fighter.radius
+        )
+    ) {
+        fighter.x =
+            nextX;
+    }
+
+    const nextY =
+        clamp(
+            fighter.y + dy,
+            fighter.radius,
+            WORLD_HEIGHT -
+            fighter.radius
+        );
+
+    if (
+        fighter.canPassWalls ||
+        !isBlocked(
+            fighter.x,
+            nextY,
+            fighter.radius
+        )
+    ) {
+        fighter.y =
+            nextY;
+    }
 }
 
 function movePlayer() {
@@ -1417,55 +2724,99 @@ function movePlayer() {
         return;
     }
 
-    let dx = 0;
-    let dy = 0;
+    let dx =
+        0;
 
-    if (keys.w || keys.arrowup) {
+    let dy =
+        0;
+
+    if (
+        keys.w ||
+        keys.arrowup
+    ) {
         dy--;
     }
 
-    if (keys.s || keys.arrowdown) {
+    if (
+        keys.s ||
+        keys.arrowdown
+    ) {
         dy++;
     }
 
-    if (keys.a || keys.arrowleft) {
+    if (
+        keys.a ||
+        keys.arrowleft
+    ) {
         dx--;
     }
 
-    if (keys.d || keys.arrowright) {
+    if (
+        keys.d ||
+        keys.arrowright
+    ) {
         dx++;
     }
 
-    player.moving = dx !== 0 || dy !== 0;
+    player.moving =
+        dx !== 0 ||
+        dy !== 0;
 
-    if (player.moving) {
-        const direction = normalize(dx, dy);
+    if (
+        player.moving
+    ) {
+        const direction =
+            normalize(
+                dx,
+                dy
+            );
 
         moveFighter(
             player,
-            direction.x * player.speed,
-            direction.y * player.speed
+            direction.x *
+            player.speed,
+            direction.y *
+            player.speed
         );
     }
 
-    if (mouse.down) {
+    if (
+        mouse.down
+    ) {
         attackTowards(
             player,
-            mouse.x + camera.x,
-            mouse.y + camera.y
+            mouse.x +
+            camera.x,
+            mouse.y +
+            camera.y
         );
     }
 
-    if (joystickAttack.active) {
+    if (
+        joystickAttack.active
+    ) {
+        const attackDistance =
+            Math.max(
+                player.range,
+                350
+            );
+
         attackTowards(
             player,
-            player.x + joystickAttack.directionX * player.range,
-            player.y + joystickAttack.directionY * player.range
+            player.x +
+            joystickAttack.directionX *
+            attackDistance,
+            player.y +
+            joystickAttack.directionY *
+            attackDistance
         );
     }
 }
 
-function updateBot(bot, currentTime) {
+function updateBot(
+    bot,
+    currentTime
+) {
     if (
         phase !== "playing" ||
         !bot.alive ||
@@ -1477,39 +2828,80 @@ function updateBot(bot, currentTime) {
     if (
         !bot.target ||
         !bot.target.alive ||
-        currentTime >= bot.nextDecision
+        currentTime >=
+        bot.nextDecision
     ) {
-        bot.target = getNearestTarget(bot);
+        bot.target =
+            getNearestTarget(
+                bot
+            );
 
         bot.nextDecision =
             currentTime +
-            randomNumber(600, 1500);
+            randomNumber(
+                600,
+                1500
+            );
     }
 
-    if (!bot.target) {
+    if (
+        !bot.target
+    ) {
+        bot.moving =
+            false;
+
         return;
     }
 
-    const direction = normalize(
-        bot.target.x - bot.x,
-        bot.target.y - bot.y
-    );
+    const direction =
+        normalize(
+            bot.target.x -
+            bot.x,
+            bot.target.y -
+            bot.y
+        );
 
-    const targetDistance = distance(bot, bot.target);
+    const targetDistance =
+        distance(
+            bot,
+            bot.target
+        );
 
-    if (targetDistance > bot.range * 0.7) {
-        bot.moving = true;
+    const preferredDistance =
+        bot.melee ||
+        bot.swordsman
+            ? bot.range *
+              0.75
+            : Math.min(
+                  bot.range *
+                  0.58,
+                  520
+              );
+
+    if (
+        targetDistance >
+        preferredDistance
+    ) {
+        bot.moving =
+            true;
 
         moveFighter(
             bot,
-            direction.x * bot.speed * 0.75,
-            direction.y * bot.speed * 0.75
+            direction.x *
+            bot.speed *
+            0.75,
+            direction.y *
+            bot.speed *
+            0.75
         );
     } else {
-        bot.moving = false;
+        bot.moving =
+            false;
     }
 
-    if (!bot.swordsman) {
+    if (
+        !bot.swordsman
+    ) {
         attackTowards(
             bot,
             bot.target.x,
@@ -1518,9 +2910,14 @@ function updateBot(bot, currentTime) {
     }
 }
 
-function attackTowards(attacker, targetX, targetY) {
+function attackTowards(
+    attacker,
+    targetX,
+    targetY
+) {
     if (
         phase !== "playing" ||
+        !attacker ||
         !attacker.alive ||
         attacker.swordsman ||
         matchFinished
@@ -1528,7 +2925,8 @@ function attackTowards(attacker, targetX, targetY) {
         return;
     }
 
-    const currentTime = performance.now();
+    const currentTime =
+        performance.now();
 
     if (
         currentTime -
@@ -1538,194 +2936,440 @@ function attackTowards(attacker, targetX, targetY) {
         return;
     }
 
-    attacker.lastAttack = currentTime;
+    attacker.lastAttack =
+        currentTime;
+
     attacker.attackCounter++;
 
-    const direction = normalize(
-        targetX - attacker.x,
-        targetY - attacker.y
-    );
+    const direction =
+        normalize(
+            targetX -
+            attacker.x,
+            targetY -
+            attacker.y
+        );
 
-    let damage = attacker.damage;
+    let damage =
+        attacker.damage;
 
     if (
         attacker.farmerThirdAttack &&
-        attacker.attackCounter % 3 === 0
+        attacker.attackCounter %
+        3 === 0
     ) {
-        damage = Math.round(damage * 1.5);
+        damage =
+            Math.round(
+                damage *
+                1.5
+            );
     }
 
-    if (attacker.melee) {
-        const target = getNearestTarget(attacker);
+    if (
+        attacker.melee
+    ) {
+        const target =
+            getNearestTarget(
+                attacker
+            );
 
         if (
             target &&
-            distance(attacker, target) <= attacker.range
+            distance(
+                attacker,
+                target
+            ) <=
+            attacker.range +
+            target.radius
         ) {
-            damageFighter(target, damage);
+            damageFighter(
+                target,
+                damage,
+                attacker
+            );
         }
 
         return;
     }
 
-    if (attacker.musicWave) {
-        createWave(attacker, direction, damage);
+    if (
+        attacker.musicWave
+    ) {
+        createWave(
+            attacker,
+            direction,
+            damage
+        );
+
         return;
     }
 
-    if (attacker.alchemist) {
-        createPotion(attacker, direction);
+    if (
+        attacker.alchemist
+    ) {
+        createPotion(
+            attacker,
+            direction
+        );
+
         return;
     }
 
-    if (attacker.tripleShot) {
-        createProjectile(attacker, direction, -0.14, damage);
-        createProjectile(attacker, direction, 0, damage);
-        createProjectile(attacker, direction, 0.14, damage);
+    if (
+        attacker.tripleShot
+    ) {
+        createProjectile(
+            attacker,
+            direction,
+            -0.14,
+            damage
+        );
+
+        createProjectile(
+            attacker,
+            direction,
+            0,
+            damage
+        );
+
+        createProjectile(
+            attacker,
+            direction,
+            0.14,
+            damage
+        );
+
         return;
     }
 
-    createProjectile(attacker, direction, 0, damage);
+    createProjectile(
+        attacker,
+        direction,
+        0,
+        damage
+    );
 }
 
-function createProjectile(attacker, direction, angle, damage) {
-    const cosine = Math.cos(angle);
-    const sine = Math.sin(angle);
+function createProjectile(
+    attacker,
+    direction,
+    angle,
+    damage
+) {
+    const cosine =
+        Math.cos(
+            angle
+        );
+
+    const sine =
+        Math.sin(
+            angle
+        );
 
     const rotatedX =
-        direction.x * cosine -
-        direction.y * sine;
+        direction.x *
+        cosine -
+        direction.y *
+        sine;
 
     const rotatedY =
-        direction.x * sine +
-        direction.y * cosine;
+        direction.x *
+        sine +
+        direction.y *
+        cosine;
 
-    let color = "#f9eda2";
+    let color =
+        "#f9eda2";
 
-    if (attacker.heroId === "farmer") {
-        color = "#6b4327";
+    let speedMultiplier =
+        1;
+
+    if (
+        attacker.heroId ===
+        "farmer"
+    ) {
+        color =
+            "#6b4327";
     }
 
-    if (attacker.heroId === "krol") {
-        color = "#ffd638";
+    if (
+        attacker.heroId ===
+        "lucznik"
+    ) {
+        color =
+            "#f5ecb0";
+
+        if (
+            attacker.fastThirdArrow &&
+            attacker.attackCounter %
+            3 === 0
+        ) {
+            color =
+                "#ffffff";
+
+            speedMultiplier =
+                attacker
+                    .fastArrowMultiplier;
+        }
     }
 
-    if (attacker.heroId === "wiedzma") {
-        color = "#FFCC33";
+    if (
+        attacker.heroId ===
+        "krol"
+    ) {
+        color =
+            "#ffd638";
+    }
+
+    if (
+        attacker.heroId ===
+        "wiedzma"
+    ) {
+        color =
+            "#FFCC33";
     }
 
     projectiles.push({
-        x: attacker.x + rotatedX * 25,
-        y: attacker.y + rotatedY * 25,
+        x:
+            attacker.x +
+            rotatedX *
+            30,
 
-        vx: rotatedX * attacker.projectileSpeed,
-        vy: rotatedY * attacker.projectileSpeed,
+        y:
+            attacker.y +
+            rotatedY *
+            30,
 
-        radius: attacker.projectileWidth,
-        damage,
-        owner: attacker,
-        color,
+        vx:
+            rotatedX *
+            attacker.projectileSpeed *
+            speedMultiplier,
 
-        born: performance.now(),
-        life: attacker.projectileLife
+        vy:
+            rotatedY *
+            attacker.projectileSpeed *
+            speedMultiplier,
+
+        radius:
+            attacker.projectileWidth,
+
+        damage:
+            damage,
+
+        owner:
+            attacker,
+
+        color:
+            color,
+
+        born:
+            performance.now(),
+
+        life:
+            attacker.projectileLife
     });
 }
 
-function createWave(attacker, direction, damage) {
+function createWave(
+    attacker,
+    direction,
+    damage
+) {
     const ultra =
-        attacker.ultraEvery > 0 &&
-        attacker.attackCounter % attacker.ultraEvery === 0;
+        attacker.ultraEvery >
+        0 &&
+        attacker.attackCounter %
+        attacker.ultraEvery ===
+        0;
 
     waves.push({
-        x: attacker.x,
-        y: attacker.y,
+        x:
+            attacker.x,
 
-        directionX: direction.x,
-        directionY: direction.y,
+        y:
+            attacker.y,
 
-        speed: ultra
-            ? attacker.projectileSpeed * 1.6
-            : attacker.projectileSpeed,
+        directionX:
+            direction.x,
 
-        damage,
-        owner: attacker,
+        directionY:
+            direction.y,
 
-        born: performance.now(),
-        life: attacker.projectileLife,
+        speed:
+            ultra
+                ? attacker.projectileSpeed *
+                  1.6
+                : attacker.projectileSpeed,
 
-        size: 12,
-        ultra,
+        damage:
+            damage,
 
-        color: ultra
-            ? "#ffd92f"
-            : "#80eaff"
+        owner:
+            attacker,
+
+        born:
+            performance.now(),
+
+        life:
+            attacker.projectileLife,
+
+        size:
+            12,
+
+        ultra:
+            ultra,
+
+        color:
+            ultra
+                ? "#ffd92f"
+                : "#80eaff",
+
+        stunDuration:
+            ultra
+                ? attacker
+                      .ultraStunDuration
+                : 0
     });
 }
 
-function createPotion(attacker, direction) {
-    const types = ["damage", "heal", "stun", "speed"];
-    const type = randomItem(types);
+function createPotion(
+    attacker,
+    direction
+) {
+    const types = [
+        "damage",
+        "heal",
+        "stun",
+        "speed"
+    ];
+
+    const type =
+        randomItem(
+            types
+        );
 
     const colors = {
-        damage: "#ff4040",
-        heal: "#43ef68",
-        stun: "#ffe34d",
-        speed: "#53d8ff"
+        damage:
+            "#ff4040",
+
+        heal:
+            "#43ef68",
+
+        stun:
+            "#ffe34d",
+
+        speed:
+            "#53d8ff"
     };
 
     potions.push({
-        x: attacker.x + direction.x * 25,
-        y: attacker.y + direction.y * 25,
+        x:
+            attacker.x +
+            direction.x *
+            30,
 
-        vx: direction.x * attacker.projectileSpeed,
-        vy: direction.y * attacker.projectileSpeed,
+        y:
+            attacker.y +
+            direction.y *
+            30,
 
-        radius: 9,
-        owner: attacker,
-        type,
-        color: colors[type],
+        vx:
+            direction.x *
+            attacker.projectileSpeed,
 
-        born: performance.now(),
-        life: attacker.projectileLife
+        vy:
+            direction.y *
+            attacker.projectileSpeed,
+
+        radius:
+            attacker.projectileWidth,
+
+        owner:
+            attacker,
+
+        type:
+            type,
+
+        color:
+            colors[type],
+
+        born:
+            performance.now(),
+
+        life:
+            attacker.projectileLife
     });
 }
 
-function updateSwordsmen(currentTime) {
-    fighters.forEach(function(swordsman) {
-        if (
-            !swordsman.alive ||
-            !swordsman.swordsman ||
-            !swordsman.moving
-        ) {
-            return;
-        }
+function updateSwordsmen(
+    currentTime
+) {
+    fighters.forEach(
+        function(swordsman) {
+            if (
+                !swordsman.alive ||
+                !swordsman.swordsman ||
+                !swordsman.moving
+            ) {
+                return;
+            }
 
-        if (
-            currentTime -
-            swordsman.lastSwordDamage <
-            swordsman.cooldown
-        ) {
-            return;
-        }
+            if (
+                currentTime -
+                swordsman.lastSwordDamage <
+                swordsman.cooldown
+            ) {
+                return;
+            }
 
-        const target = getNearestTarget(swordsman);
+            const target =
+                getNearestTarget(
+                    swordsman
+                );
 
-        if (
-            target &&
-            distance(swordsman, target) <= swordsman.range
-        ) {
-            swordsman.lastSwordDamage = currentTime;
-            damageFighter(target, swordsman.damage);
+            if (
+                target &&
+                distance(
+                    swordsman,
+                    target
+                ) <=
+                swordsman.range +
+                target.radius
+            ) {
+                swordsman.lastSwordDamage =
+                    currentTime;
+
+                damageFighter(
+                    target,
+                    swordsman.damage,
+                    swordsman
+                );
+            }
         }
-    });
+    );
 }
 
-function damageFighter(target, damage) {
-    if (!target.alive) {
+function damageFighter(
+    target,
+    damage,
+    attacker = null
+) {
+    if (
+        !target ||
+        !target.alive ||
+        matchFinished
+    ) {
         return;
     }
 
-    let finalDamage = Math.max(1, Math.round(damage));
+    let finalDamage =
+        Math.max(
+            1,
+            Math.round(
+                Number(
+                    damage
+                ) || 0
+            )
+        );
 
     if (
         target.lowHpShield &&
@@ -1733,385 +3377,1023 @@ function damageFighter(target, damage) {
         target.maxHp *
         target.shieldThreshold
     ) {
-        finalDamage = Math.max(
-            1,
-            Math.round(
-                finalDamage *
-                (1 - target.shieldReduction)
-            )
-        );
+        finalDamage =
+            Math.max(
+                1,
+                Math.round(
+                    finalDamage *
+                    (
+                        1 -
+                        target
+                            .shieldReduction
+                    )
+                )
+            );
     }
 
-    target.hp -= finalDamage;
+    const actualDamage =
+        Math.min(
+            target.hp,
+            finalDamage
+        );
 
-    if (target.hp <= 0) {
-        target.hp = 0;
-        target.alive = false;
+    target.hp -=
+        actualDamage;
 
-        if (target === player) {
+    target.hidden =
+        false;
+
+    if (
+        attacker === player
+    ) {
+        matchStats.damageDealt +=
+            actualDamage;
+    }
+
+    if (
+        target === player
+    ) {
+        matchStats.damageTaken +=
+            actualDamage;
+    }
+
+    if (
+        target.hp <= 0
+    ) {
+        target.hp =
+            0;
+
+        target.alive =
+            false;
+
+        if (
+            target === player
+        ) {
             const placement =
-                getAlivePlayers().length + 1;
+                getAlivePlayers()
+                    .length +
+                1;
 
-            awardTrophies(placement);
-            showDeathScreen(false);
+            matchFinished =
+                true;
+
+            matchStats.placement =
+                placement;
+
+            matchStats.coinsReward =
+                0;
+
+            matchStats.ticketsReward =
+                0;
+
+            awardTrophies(
+                placement
+            );
+
+            updateInformation();
+
+            setTimeout(
+                function() {
+                    showDeathScreen(
+                        false
+                    );
+                },
+                120
+            );
+
+            return;
         }
     }
 
-    checkWinner();
     updateInformation();
+
+    if (
+        !matchFinished
+    ) {
+        checkWinner();
+    }
 }
 
-function updateProjectiles(currentTime) {
+function updateProjectiles(
+    currentTime
+) {
     for (
-        let index = projectiles.length - 1;
+        let index =
+            projectiles.length - 1;
+
         index >= 0;
+
         index--
     ) {
-        const projectile = projectiles[index];
+        const projectile =
+            projectiles[index];
 
-        projectile.x += projectile.vx;
-        projectile.y += projectile.vy;
+        projectile.x +=
+            projectile.vx;
+
+        projectile.y +=
+            projectile.vy;
 
         let remove =
-            currentTime - projectile.born > projectile.life ||
+            currentTime -
+            projectile.born >
+            projectile.life;
+
+        if (
+            !remove &&
             isBlocked(
                 projectile.x,
                 projectile.y,
                 projectile.radius
-            );
+            )
+        ) {
+            remove =
+                true;
+        }
 
-        if (!remove) {
-            for (const fighter of fighters) {
-                if (!isEnemy(projectile.owner, fighter)) {
+        if (
+            !remove
+        ) {
+            for (
+                const fighter
+                of fighters
+            ) {
+                if (
+                    !isEnemy(
+                        projectile.owner,
+                        fighter
+                    )
+                ) {
                     continue;
                 }
 
                 if (
-                    distance(projectile, fighter) <
+                    distance(
+                        projectile,
+                        fighter
+                    ) <
                     projectile.radius +
                     fighter.radius
                 ) {
                     damageFighter(
                         fighter,
-                        projectile.damage
+                        projectile.damage,
+                        projectile.owner
                     );
 
-                    remove = true;
+                    remove =
+                        true;
+
                     break;
                 }
             }
         }
 
-        if (remove) {
-            projectiles.splice(index, 1);
+        if (
+            remove
+        ) {
+            projectiles.splice(
+                index,
+                1
+            );
+        }
+
+        if (
+            matchFinished
+        ) {
+            return;
         }
     }
 }
 
-function updateWaves(currentTime) {
+function updateWaves(
+    currentTime
+) {
     for (
-        let index = waves.length - 1;
+        let index =
+            waves.length - 1;
+
         index >= 0;
+
         index--
     ) {
-        const wave = waves[index];
+        const wave =
+            waves[index];
 
-        wave.x += wave.directionX * wave.speed;
-        wave.y += wave.directionY * wave.speed;
-        wave.size += 0.7;
+        wave.x +=
+            wave.directionX *
+            wave.speed;
+
+        wave.y +=
+            wave.directionY *
+            wave.speed;
+
+        wave.size +=
+            0.7;
 
         let remove =
-            currentTime - wave.born > wave.life ||
-            isBlocked(wave.x, wave.y, wave.size);
+            currentTime -
+            wave.born >
+            wave.life;
 
-        if (!remove) {
-            for (const fighter of fighters) {
-                if (!isEnemy(wave.owner, fighter)) {
+        if (
+            !remove &&
+            isBlocked(
+                wave.x,
+                wave.y,
+                Math.min(
+                    wave.size,
+                    55
+                )
+            )
+        ) {
+            remove =
+                true;
+        }
+
+        if (
+            !remove
+        ) {
+            for (
+                const fighter
+                of fighters
+            ) {
+                if (
+                    !isEnemy(
+                        wave.owner,
+                        fighter
+                    )
+                ) {
                     continue;
                 }
 
                 if (
-                    distance(wave, fighter) <
+                    distance(
+                        wave,
+                        fighter
+                    ) <
                     wave.size +
                     fighter.radius
                 ) {
-                    damageFighter(fighter, wave.damage);
+                    damageFighter(
+                        fighter,
+                        wave.damage,
+                        wave.owner
+                    );
 
-                    if (wave.ultra) {
+                    if (
+                        wave.ultra &&
+                        fighter.alive
+                    ) {
                         fighter.stunnedUntil =
-                            performance.now() + 1000;
+                            performance.now() +
+                            wave.stunDuration;
                     }
 
-                    remove = true;
+                    remove =
+                        true;
+
                     break;
                 }
             }
         }
 
-        if (remove) {
-            waves.splice(index, 1);
+        if (
+            remove
+        ) {
+            waves.splice(
+                index,
+                1
+            );
+        }
+
+        if (
+            matchFinished
+        ) {
+            return;
         }
     }
 }
 
-function updatePotions(currentTime) {
+function updatePotions(
+    currentTime
+) {
     for (
-        let index = potions.length - 1;
+        let index =
+            potions.length - 1;
+
         index >= 0;
+
         index--
     ) {
-        const potion = potions[index];
+        const potion =
+            potions[index];
 
-        potion.x += potion.vx;
-        potion.y += potion.vy;
+        potion.x +=
+            potion.vx;
+
+        potion.y +=
+            potion.vy;
 
         let remove =
-            currentTime - potion.born > potion.life ||
-            isBlocked(potion.x, potion.y, potion.radius);
+            currentTime -
+            potion.born >
+            potion.life;
 
-        if (!remove) {
-            for (const fighter of fighters) {
-                if (
-                    !fighter.alive ||
-                    fighter === potion.owner
+        if (
+            !remove &&
+            isBlocked(
+                potion.x,
+                potion.y,
+                potion.radius
+            )
+        ) {
+            remove =
+                true;
+        }
+
+        if (
+            !remove
+        ) {
+            if (
+                potion.type ===
+                "damage" ||
+                potion.type ===
+                "stun"
+            ) {
+                for (
+                    const fighter
+                    of fighters
                 ) {
-                    continue;
-                }
+                    if (
+                        !isEnemy(
+                            potion.owner,
+                            fighter
+                        )
+                    ) {
+                        continue;
+                    }
 
-                if (
-                    distance(potion, fighter) >
-                    potion.radius +
-                    fighter.radius
-                ) {
-                    continue;
-                }
+                    if (
+                        distance(
+                            potion,
+                            fighter
+                        ) <=
+                        potion.radius +
+                        fighter.radius
+                    ) {
+                        if (
+                            potion.type ===
+                            "damage"
+                        ) {
+                            damageFighter(
+                                fighter,
+                                potion.owner
+                                    .potionDamage,
+                                potion.owner
+                            );
+                        }
 
-                if (potion.type === "damage") {
-                    damageFighter(fighter, 28);
-                }
+                        if (
+                            potion.type ===
+                            "stun" &&
+                            fighter.alive
+                        ) {
+                            fighter.stunnedUntil =
+                                performance.now() +
+                                potion.owner
+                                    .potionStunDuration;
+                        }
 
-                if (potion.type === "stun") {
-                    fighter.stunnedUntil =
-                        performance.now() + 1000;
-                }
+                        remove =
+                            true;
 
-                remove = true;
-                break;
+                        break;
+                    }
+                }
             }
         }
 
-        if (remove) {
-            if (potion.type === "heal") {
-                potion.owner.hp = Math.min(
-                    potion.owner.maxHp,
-                    potion.owner.hp + 35
-                );
+        if (
+            remove
+        ) {
+            if (
+                potion.type ===
+                "heal" &&
+                potion.owner.alive
+            ) {
+                const before =
+                    potion.owner.hp;
+
+                potion.owner.hp =
+                    Math.min(
+                        potion.owner.maxHp,
+                        potion.owner.hp +
+                        potion.owner
+                            .potionHealing
+                    );
+
+                const healed =
+                    potion.owner.hp -
+                    before;
+
+                if (
+                    potion.owner ===
+                    player
+                ) {
+                    matchStats.healing +=
+                        healed;
+                }
             }
 
-            if (potion.type === "speed") {
+            if (
+                potion.type ===
+                "speed" &&
+                potion.owner.alive
+            ) {
                 potion.owner.speed =
-                    potion.owner.normalSpeed * 1.5;
+                    potion.owner
+                        .normalSpeed *
+                    potion.owner
+                        .potionSpeedMultiplier;
 
-                setTimeout(function() {
-                    potion.owner.speed =
-                        potion.owner.normalSpeed;
-                }, 1500);
+                potion.owner.speedBoostUntil =
+                    performance.now() +
+                    potion.owner
+                        .potionSpeedDuration;
             }
 
-            potions.splice(index, 1);
+            potions.splice(
+                index,
+                1
+            );
+        }
+
+        if (
+            matchFinished
+        ) {
+            return;
         }
     }
 }
 
-function awardTrophies(placement) {
-    if (trophiesAwarded || !player) {
+function awardTrophies(
+    placement
+) {
+    if (
+        trophiesAwarded ||
+        !player
+    ) {
         return;
     }
 
-    trophiesAwarded = true;
+    trophiesAwarded =
+        true;
 
-    const place = clamp(
-        Math.floor(placement),
-        1,
-        10
-    );
+    const safePlacement =
+        clamp(
+            Math.floor(
+                placement
+            ),
+            1,
+            10
+        );
 
-    const reward = TROPHY_REWARDS[place] || 0;
-    const state = getState();
+    const reward =
+        TROPHY_REWARDS[
+            safePlacement
+        ] || 0;
 
-    if (!state.heroTrophies) {
-        state.heroTrophies = {};
+    const state =
+        getState();
+
+    if (
+        !state.heroTrophies ||
+        typeof state.heroTrophies !==
+        "object"
+    ) {
+        state.heroTrophies =
+            {};
     }
 
-    const before = Math.max(
-        0,
-        Number(
-            state.heroTrophies[player.heroId]
-        ) || 0
+    const before =
+        Math.max(
+            0,
+            Number(
+                state.heroTrophies[
+                    player.heroId
+                ]
+            ) || 0
+        );
+
+    const after =
+        Math.max(
+            0,
+            before +
+            reward
+        );
+
+    const realChange =
+        after -
+        before;
+
+    state.heroTrophies[
+        player.heroId
+    ] =
+        after;
+
+    saveState(
+        state
     );
 
-    const after = Math.max(
-        0,
-        before + reward
-    );
+    matchStats.placement =
+        safePlacement;
 
-    state.heroTrophies[player.heroId] = after;
+    matchStats.trophyChange =
+        realChange;
 
-    saveState(state);
-
-    document.getElementById("matchResult").innerHTML =
-        "Miejsce: <b>" +
-        place +
-        "</b><br>Pucharki: <b>" +
-        (after - before >= 0 ? "+" : "") +
-        (after - before) +
-        "</b><br>" +
-        player.heroName +
-        ": <b>🏆 " +
-        after +
-        "</b>";
+    matchStats.heroTrophies =
+        after;
 }
 
 function checkWinner() {
-    const alive = getAlivePlayers();
-
     if (
-        alive.length !== 1 ||
         matchFinished
     ) {
         return;
     }
 
-    matchFinished = true;
+    const alive =
+        getAlivePlayers();
 
-    if (alive[0] === player) {
-        awardTrophies(1);
-
-        const state = getState();
-
-        state.tickets =
-            (Number(state.tickets) || 0) + 4;
-
-        state.coins =
-            (Number(state.coins) || 0) + 50;
-
-        saveState(state);
-
-        showDeathScreen(true);
-    }
-}
-
-function showDeathScreen(victory) {
-    phase = "finished";
-
-    document.getElementById("deathTitle").textContent =
-        victory
-            ? "ZWYCIĘSTWO!"
-            : "POKONANY";
-
-    document
-        .getElementById("deathScreen")
-        .classList.add("visible");
-}
-
-function updateInformation() {
-    document.getElementById("aliveCounter").textContent =
-        "Pozostało: " +
-        getAlivePlayers().length;
-
-    if (!player) {
+    if (
+        alive.length !== 1
+    ) {
         return;
     }
 
-    document.getElementById("playerInfo").textContent =
+    matchFinished =
+        true;
+
+    if (
+        alive[0] ===
+        player
+    ) {
+        matchStats.placement =
+            1;
+
+        matchStats.coinsReward =
+            50;
+
+        matchStats.ticketsReward =
+            4;
+
+        awardTrophies(
+            1
+        );
+
+        const state =
+            getState();
+
+        state.coins =
+            (
+                Number(
+                    state.coins
+                ) || 0
+            ) +
+            50;
+
+        state.tickets =
+            (
+                Number(
+                    state.tickets
+                ) || 0
+            ) +
+            4;
+
+        state.wins =
+            (
+                Number(
+                    state.wins
+                ) || 0
+            ) +
+            1;
+
+        saveState(
+            state
+        );
+
+        setTimeout(
+            function() {
+                showDeathScreen(
+                    true
+                );
+            },
+            120
+        );
+    }
+}
+
+function getTierFromTrophies(
+    trophies
+) {
+    const safeTrophies =
+        Math.max(
+            0,
+            Math.floor(
+                Number(
+                    trophies
+                ) || 0
+            )
+        );
+
+    if (
+        safeTrophies <= 19
+    ) {
+        return 1;
+    }
+
+    return Math.floor(
+        safeTrophies / 10
+    );
+}
+
+function fillResultScreen(
+    victory
+) {
+    const trophyChange =
+        matchStats.trophyChange;
+
+    const trophyText =
+        (
+            trophyChange > 0
+                ? "+"
+                : ""
+        ) +
+        trophyChange;
+
+    document
+        .getElementById(
+            "resultStatus"
+        )
+        .textContent =
+        victory
+            ? "ZWYCIĘSTWO"
+            : "PORAŻKA";
+
+    document
+        .getElementById(
+            "resultTrophyChange"
+        )
+        .textContent =
+        "🏆 " +
+        trophyText;
+
+    document
+        .getElementById(
+            "resultTrophyChangeMiddle"
+        )
+        .textContent =
+        trophyText;
+
+    document
+        .getElementById(
+            "resultHeroIcon"
+        )
+        .textContent =
+        player.icon;
+
+    document
+        .getElementById(
+            "resultHeroName"
+        )
+        .textContent =
+        player.heroName;
+
+    document
+        .getElementById(
+            "resultPlayerName"
+        )
+        .textContent =
+        player.name;
+
+    document
+        .getElementById(
+            "resultPlacement"
+        )
+        .textContent =
+        matchStats.placement;
+
+    document
+        .getElementById(
+            "resultHeroTrophies"
+        )
+        .textContent =
+        matchStats.heroTrophies;
+
+    document
+        .getElementById(
+            "resultTotalTrophies"
+        )
+        .textContent =
+        matchStats.heroTrophies;
+
+    document
+        .getElementById(
+            "resultTier"
+        )
+        .textContent =
+        "TIER " +
+        getTierFromTrophies(
+            matchStats.heroTrophies
+        );
+
+    document
+        .getElementById(
+            "resultCoins"
+        )
+        .textContent =
+        matchStats.coinsReward;
+
+    document
+        .getElementById(
+            "resultTickets"
+        )
+        .textContent =
+        matchStats.ticketsReward;
+
+    document
+        .getElementById(
+            "resultDamageDealt"
+        )
+        .textContent =
+        Math.round(
+            matchStats.damageDealt
+        );
+
+    document
+        .getElementById(
+            "resultHealing"
+        )
+        .textContent =
+        Math.round(
+            matchStats.healing
+        );
+
+    document
+        .getElementById(
+            "resultDamageTaken"
+        )
+        .textContent =
+        Math.round(
+            matchStats.damageTaken
+        );
+}
+
+function showDeathScreen(
+    victory
+) {
+    phase =
+        "finished";
+
+    matchFinished =
+        true;
+
+    mouse.down =
+        false;
+
+    resetJoystick();
+
+    const controls =
+        document.getElementById(
+            "screenControls"
+        );
+
+    if (
+        controls
+    ) {
+        controls.style.display =
+            "none";
+    }
+
+    fillResultScreen(
+        victory
+    );
+
+    document
+        .getElementById(
+            "deathScreen"
+        )
+        .classList.add(
+            "visible"
+        );
+}
+
+function updateInformation() {
+    document
+        .getElementById(
+            "aliveCounter"
+        )
+        .textContent =
+        "Pozostało: " +
+        getAlivePlayers()
+            .length;
+
+    if (
+        !player
+    ) {
+        return;
+    }
+
+    document
+        .getElementById(
+            "playerInfo"
+        )
+        .textContent =
         player.icon +
         " " +
         player.heroName +
         " | ❤️ " +
-        Math.ceil(player.hp);
+        Math.max(
+            0,
+            Math.ceil(
+                player.hp
+            )
+        );
 }
 
 function updateMovementButtons() {
     document
-        .getElementById("controlW")
+        .getElementById(
+            "controlW"
+        )
         .classList.toggle(
             "active",
-            Boolean(keys.w || keys.arrowup)
+            Boolean(
+                keys.w ||
+                keys.arrowup
+            )
         );
 
     document
-        .getElementById("controlA")
+        .getElementById(
+            "controlA"
+        )
         .classList.toggle(
             "active",
-            Boolean(keys.a || keys.arrowleft)
+            Boolean(
+                keys.a ||
+                keys.arrowleft
+            )
         );
 
     document
-        .getElementById("controlS")
+        .getElementById(
+            "controlS"
+        )
         .classList.toggle(
             "active",
-            Boolean(keys.s || keys.arrowdown)
+            Boolean(
+                keys.s ||
+                keys.arrowdown
+            )
         );
 
     document
-        .getElementById("controlD")
+        .getElementById(
+            "controlD"
+        )
         .classList.toggle(
             "active",
-            Boolean(keys.d || keys.arrowright)
+            Boolean(
+                keys.d ||
+                keys.arrowright
+            )
         );
 }
 
-window.addEventListener("keydown", function(event) {
-    const key = event.key.toLowerCase();
+window.addEventListener(
+    "keydown",
+    function(event) {
+        const key =
+            event.key.toLowerCase();
 
-    keys[key] = true;
-    updateMovementButtons();
+        keys[key] =
+            true;
 
-    if (key.startsWith("arrow")) {
-        event.preventDefault();
-    }
-});
-
-window.addEventListener("keyup", function(event) {
-    keys[event.key.toLowerCase()] = false;
-    updateMovementButtons();
-});
-
-function connectMovementButton(id, key) {
-    const button = document.getElementById(id);
-
-    button.addEventListener("pointerdown", function(event) {
-        event.preventDefault();
-        keys[key] = true;
         updateMovementButtons();
 
-        button.setPointerCapture(event.pointerId);
-    });
+        if (
+            key.startsWith(
+                "arrow"
+            )
+        ) {
+            event.preventDefault();
+        }
+    }
+);
+
+window.addEventListener(
+    "keyup",
+    function(event) {
+        keys[
+            event.key.toLowerCase()
+        ] =
+            false;
+
+        updateMovementButtons();
+    }
+);
+
+function connectMovementButton(
+    id,
+    key
+) {
+    const button =
+        document.getElementById(
+            id
+        );
+
+    button.addEventListener(
+        "pointerdown",
+        function(event) {
+            event.preventDefault();
+
+            keys[key] =
+                true;
+
+            updateMovementButtons();
+
+            if (
+                button.setPointerCapture
+            ) {
+                button.setPointerCapture(
+                    event.pointerId
+                );
+            }
+        }
+    );
 
     function release() {
-        keys[key] = false;
+        keys[key] =
+            false;
+
         updateMovementButtons();
     }
 
-    button.addEventListener("pointerup", release);
-    button.addEventListener("pointercancel", release);
-    button.addEventListener("lostpointercapture", release);
+    button.addEventListener(
+        "pointerup",
+        release
+    );
+
+    button.addEventListener(
+        "pointercancel",
+        release
+    );
+
+    button.addEventListener(
+        "lostpointercapture",
+        release
+    );
 }
 
-connectMovementButton("controlW", "w");
-connectMovementButton("controlA", "a");
-connectMovementButton("controlS", "s");
-connectMovementButton("controlD", "d");
+connectMovementButton(
+    "controlW",
+    "w"
+);
+
+connectMovementButton(
+    "controlA",
+    "a"
+);
+
+connectMovementButton(
+    "controlS",
+    "s"
+);
+
+connectMovementButton(
+    "controlD",
+    "d"
+);
 
 const attackJoystick =
-    document.getElementById("attackJoystick");
+    document.getElementById(
+        "attackJoystick"
+    );
 
 const attackStick =
-    document.getElementById("attackStick");
+    document.getElementById(
+        "attackStick"
+    );
 
-function updateAttackJoystick(clientX, clientY) {
+function updateAttackJoystick(
+    clientX,
+    clientY
+) {
     const rectangle =
-        attackJoystick.getBoundingClientRect();
+        attackJoystick
+            .getBoundingClientRect();
 
     const centerX =
         rectangle.left +
@@ -2121,28 +4403,48 @@ function updateAttackJoystick(clientX, clientY) {
         rectangle.top +
         rectangle.height / 2;
 
-    const dx = clientX - centerX;
-    const dy = clientY - centerY;
+    const dx =
+        clientX -
+        centerX;
 
-    const direction = normalize(dx, dy);
+    const dy =
+        clientY -
+        centerY;
+
+    const direction =
+        normalize(
+            dx,
+            dy
+        );
 
     const maximum =
-        rectangle.width * 0.26;
+        rectangle.width *
+        0.26;
 
-    const movement = Math.min(
-        maximum,
-        Math.hypot(dx, dy)
-    );
+    const movement =
+        Math.min(
+            maximum,
+            Math.hypot(
+                dx,
+                dy
+            )
+        );
 
     attackStick.style.transform =
         "translate(-50%, -50%) translate(" +
-        direction.x * movement +
+        direction.x *
+        movement +
         "px," +
-        direction.y * movement +
+        direction.y *
+        movement +
         "px)";
 
     joystickAttack.active =
-        Math.hypot(dx, dy) > 8;
+        Math.hypot(
+            dx,
+            dy
+        ) >
+        8;
 
     joystickAttack.directionX =
         direction.x;
@@ -2152,74 +4454,132 @@ function updateAttackJoystick(clientX, clientY) {
 }
 
 function resetJoystick() {
-    joystickAttack.active = false;
-    joystickAttack.directionX = 0;
-    joystickAttack.directionY = 0;
+    joystickAttack.active =
+        false;
+
+    joystickAttack.directionX =
+        0;
+
+    joystickAttack.directionY =
+        0;
 
     attackStick.style.transform =
         "translate(-50%, -50%)";
 }
 
-attackJoystick.addEventListener("pointerdown", function(event) {
-    event.preventDefault();
+attackJoystick.addEventListener(
+    "pointerdown",
+    function(event) {
+        event.preventDefault();
 
-    attackJoystick.setPointerCapture(
-        event.pointerId
-    );
-
-    updateAttackJoystick(
-        event.clientX,
-        event.clientY
-    );
-});
-
-attackJoystick.addEventListener("pointermove", function(event) {
-    if (
-        !attackJoystick.hasPointerCapture(
+        attackJoystick.setPointerCapture(
             event.pointerId
-        )
-    ) {
-        return;
+        );
+
+        updateAttackJoystick(
+            event.clientX,
+            event.clientY
+        );
     }
+);
 
-    updateAttackJoystick(
-        event.clientX,
-        event.clientY
-    );
-});
+attackJoystick.addEventListener(
+    "pointermove",
+    function(event) {
+        if (
+            !attackJoystick.hasPointerCapture(
+                event.pointerId
+            )
+        ) {
+            return;
+        }
 
-attackJoystick.addEventListener("pointerup", resetJoystick);
-attackJoystick.addEventListener("pointercancel", resetJoystick);
+        event.preventDefault();
 
-canvas.addEventListener("mousemove", function(event) {
-    const rectangle = canvas.getBoundingClientRect();
-
-    mouse.x =
-        (event.clientX - rectangle.left) *
-        canvas.width /
-        rectangle.width;
-
-    mouse.y =
-        (event.clientY - rectangle.top) *
-        canvas.height /
-        rectangle.height;
-});
-
-canvas.addEventListener("mousedown", function(event) {
-    if (event.button === 0) {
-        mouse.down = true;
+        updateAttackJoystick(
+            event.clientX,
+            event.clientY
+        );
     }
-});
+);
 
-window.addEventListener("mouseup", function() {
-    mouse.down = false;
-});
+attackJoystick.addEventListener(
+    "pointerup",
+    resetJoystick
+);
+
+attackJoystick.addEventListener(
+    "pointercancel",
+    resetJoystick
+);
+
+attackJoystick.addEventListener(
+    "lostpointercapture",
+    resetJoystick
+);
+
+canvas.addEventListener(
+    "mousemove",
+    function(event) {
+        const rectangle =
+            canvas.getBoundingClientRect();
+
+        mouse.x =
+            (
+                event.clientX -
+                rectangle.left
+            ) *
+            canvas.width /
+            rectangle.width;
+
+        mouse.y =
+            (
+                event.clientY -
+                rectangle.top
+            ) *
+            canvas.height /
+            rectangle.height;
+    }
+);
+
+canvas.addEventListener(
+    "mousedown",
+    function(event) {
+        if (
+            event.button === 0
+        ) {
+            mouse.down =
+                true;
+        }
+    }
+);
+
+window.addEventListener(
+    "mouseup",
+    function() {
+        mouse.down =
+            false;
+    }
+);
+
+canvas.addEventListener(
+    "contextmenu",
+    function(event) {
+        event.preventDefault();
+    }
+);
 
 function update() {
-    const currentTime = performance.now();
+    const currentTime =
+        performance.now();
 
-    if (phase === "intro") {
-        updateIntro(currentTime);
+    if (
+        phase === "intro"
+    ) {
+        updateIntro(
+            currentTime
+        );
+
         return;
     }
 
@@ -2232,60 +4592,163 @@ function update() {
 
     movePlayer();
 
-    fighters.forEach(function(fighter) {
-        if (!fighter.isPlayer) {
-            updateBot(fighter, currentTime);
+    fighters.forEach(
+        function(fighter) {
+            if (
+                !fighter.isPlayer
+            ) {
+                updateBot(
+                    fighter,
+                    currentTime
+                );
+            }
         }
-    });
+    );
 
-    updateSwordsmen(currentTime);
-    updateProjectiles(currentTime);
-    updateWaves(currentTime);
-    updatePotions(currentTime);
+    updateSwordsmen(
+        currentTime
+    );
+
+    updateProjectiles(
+        currentTime
+    );
+
+    if (
+        matchFinished
+    ) {
+        return;
+    }
+
+    updateWaves(
+        currentTime
+    );
+
+    if (
+        matchFinished
+    ) {
+        return;
+    }
+
+    updatePotions(
+        currentTime
+    );
+
+    if (
+        matchFinished
+    ) {
+        return;
+    }
+
     updateCamera();
     updateInformation();
     checkWinner();
 }
 
-function worldToScreenX(x) {
-    return x - camera.x;
-}
-
-function worldToScreenY(y) {
-    return y - camera.y;
-}
-
-function objectVisible(rectangle) {
+function worldToScreenX(
+    x
+) {
     return (
-        rectangle.x + rectangle.w >= camera.x &&
-        rectangle.x <= camera.x + canvas.width &&
-        rectangle.y + rectangle.h >= camera.y &&
-        rectangle.y <= camera.y + canvas.height
+        x -
+        camera.x
+    );
+}
+
+function worldToScreenY(
+    y
+) {
+    return (
+        y -
+        camera.y
+    );
+}
+
+function objectVisible(
+    rectangle
+) {
+    return (
+        rectangle.x +
+        rectangle.w >=
+        camera.x &&
+        rectangle.x <=
+        camera.x +
+        canvas.width &&
+        rectangle.y +
+        rectangle.h >=
+        camera.y &&
+        rectangle.y <=
+        camera.y +
+        canvas.height
     );
 }
 
 function drawGround() {
-    ctx.fillStyle = selectedMap.ground;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle =
+        selectedMap.ground;
 
-    const tileSize = 80;
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    const tileSize =
+        80;
 
     for (
-        let column = Math.floor(camera.x / tileSize);
-        column <= Math.ceil((camera.x + canvas.width) / tileSize);
+        let column =
+            Math.floor(
+                camera.x /
+                tileSize
+            );
+
+        column <=
+        Math.ceil(
+            (
+                camera.x +
+                canvas.width
+            ) /
+            tileSize
+        );
+
         column++
     ) {
         for (
-            let row = Math.floor(camera.y / tileSize);
-            row <= Math.ceil((camera.y + canvas.height) / tileSize);
+            let row =
+                Math.floor(
+                    camera.y /
+                    tileSize
+                );
+
+            row <=
+            Math.ceil(
+                (
+                    camera.y +
+                    canvas.height
+                ) /
+                tileSize
+            );
+
             row++
         ) {
-            if ((column + row) % 2 === 0) {
-                ctx.fillStyle = selectedMap.groundDark;
+            if (
+                (
+                    column +
+                    row
+                ) %
+                2 === 0
+            ) {
+                ctx.fillStyle =
+                    selectedMap
+                        .groundDark;
 
                 ctx.fillRect(
-                    column * tileSize - camera.x,
-                    row * tileSize - camera.y,
+                    column *
+                    tileSize -
+                    camera.x,
+                    row *
+                    tileSize -
+                    camera.y,
                     tileSize,
                     tileSize
                 );
@@ -2294,96 +4757,261 @@ function drawGround() {
     }
 }
 
-function drawRectangles(collection, fillColor, topColor) {
-    collection.forEach(function(rectangle) {
-        if (!objectVisible(rectangle)) {
-            return;
-        }
+function drawWater() {
+    waterPools.forEach(
+        function(water) {
+            if (
+                !objectVisible(
+                    water
+                )
+            ) {
+                return;
+            }
 
-        const x = worldToScreenX(rectangle.x);
-        const y = worldToScreenY(rectangle.y);
+            const x =
+                worldToScreenX(
+                    water.x
+                );
 
-        ctx.fillStyle = fillColor;
-        ctx.fillRect(x, y, rectangle.w, rectangle.h);
+            const y =
+                worldToScreenY(
+                    water.y
+                );
 
-        if (topColor) {
-            ctx.fillStyle = topColor;
+            ctx.fillStyle =
+                "#153e68";
+
+            ctx.fillRect(
+                x - 5,
+                y - 5,
+                water.w + 10,
+                water.h + 10
+            );
+
+            ctx.fillStyle =
+                selectedMap.water;
 
             ctx.fillRect(
                 x,
                 y,
-                rectangle.w,
-                Math.min(20, rectangle.h)
+                water.w,
+                water.h
             );
+
+            ctx.fillStyle =
+                selectedMap
+                    .waterLight;
+
+            for (
+                let waveX = 18;
+
+                waveX <
+                water.w;
+
+                waveX += 55
+            ) {
+                ctx.fillRect(
+                    x + waveX,
+                    y + 18,
+                    28,
+                    5
+                );
+            }
         }
-
-        ctx.strokeStyle = "#111827";
-        ctx.lineWidth = 3;
-
-        ctx.strokeRect(
-            x,
-            y,
-            rectangle.w,
-            rectangle.h
-        );
-    });
+    );
 }
 
 function drawBushes() {
-    bushes.forEach(function(bush) {
-        if (!objectVisible(bush)) {
-            return;
-        }
+    bushes.forEach(
+        function(bush) {
+            if (
+                !objectVisible(
+                    bush
+                )
+            ) {
+                return;
+            }
 
-        const x = worldToScreenX(bush.x);
-        const y = worldToScreenY(bush.y);
-
-        ctx.fillStyle = selectedMap.bush;
-        ctx.fillRect(x, y, bush.w, bush.h);
-
-        ctx.fillStyle = selectedMap.bushLight;
-
-        for (let leafX = 12; leafX < bush.w; leafX += 32) {
-            for (let leafY = 12; leafY < bush.h; leafY += 32) {
-                ctx.beginPath();
-
-                ctx.arc(
-                    x + leafX,
-                    y + leafY,
-                    13,
-                    0,
-                    Math.PI * 2
+            const x =
+                worldToScreenX(
+                    bush.x
                 );
 
-                ctx.fill();
+            const y =
+                worldToScreenY(
+                    bush.y
+                );
+
+            ctx.fillStyle =
+                selectedMap.bush;
+
+            ctx.fillRect(
+                x,
+                y,
+                bush.w,
+                bush.h
+            );
+
+            ctx.fillStyle =
+                selectedMap
+                    .bushLight;
+
+            for (
+                let leafX = 12;
+
+                leafX <
+                bush.w;
+
+                leafX += 32
+            ) {
+                for (
+                    let leafY = 12;
+
+                    leafY <
+                    bush.h;
+
+                    leafY += 32
+                ) {
+                    ctx.beginPath();
+
+                    ctx.arc(
+                        x + leafX,
+                        y + leafY,
+                        13,
+                        0,
+                        Math.PI * 2
+                    );
+
+                    ctx.fill();
+                }
             }
         }
-    });
+    );
 }
 
-function drawHealthBar(fighter, x, y) {
-    const width = 46;
-    const height = 7;
+function drawWalls() {
+    walls.forEach(
+        function(wall) {
+            if (
+                !objectVisible(
+                    wall
+                )
+            ) {
+                return;
+            }
 
-    const barX = x - width / 2;
-    const barY = y - fighter.radius - 18;
+            const x =
+                worldToScreenX(
+                    wall.x
+                );
 
-    ctx.fillStyle = "#251a1f";
-    ctx.fillRect(barX, barY, width, height);
+            const y =
+                worldToScreenY(
+                    wall.y
+                );
 
-    ctx.fillStyle = fighter.isPlayer
-        ? "#42de63"
-        : "#ef4d4d";
+            ctx.fillStyle =
+                "#00000044";
+
+            ctx.fillRect(
+                x + 7,
+                y + 8,
+                wall.w,
+                wall.h
+            );
+
+            ctx.fillStyle =
+                selectedMap.wall;
+
+            ctx.fillRect(
+                x,
+                y,
+                wall.w,
+                wall.h
+            );
+
+            ctx.fillStyle =
+                selectedMap
+                    .wallTop;
+
+            ctx.fillRect(
+                x,
+                y,
+                wall.w,
+                Math.min(
+                    22,
+                    wall.h
+                )
+            );
+
+            ctx.strokeStyle =
+                "#3b2a1f";
+
+            ctx.lineWidth =
+                3;
+
+            ctx.strokeRect(
+                x,
+                y,
+                wall.w,
+                wall.h
+            );
+        }
+    );
+}
+
+function drawHealthBar(
+    fighter,
+    x,
+    y
+) {
+    const width =
+        58;
+
+    const height =
+        8;
+
+    const barX =
+        x -
+        width / 2;
+
+    const barY =
+        y -
+        fighter.radius -
+        22;
+
+    ctx.fillStyle =
+        "#251a1f";
 
     ctx.fillRect(
         barX,
         barY,
-        width * Math.max(0, fighter.hp / fighter.maxHp),
+        width,
         height
     );
 
-    ctx.strokeStyle = "#111827";
-    ctx.lineWidth = 1.5;
+    ctx.fillStyle =
+        fighter.isPlayer
+            ? "#42de63"
+            : "#ef4d4d";
+
+    ctx.fillRect(
+        barX,
+        barY,
+        width *
+        Math.max(
+            0,
+            fighter.hp /
+            fighter.maxHp
+        ),
+        height
+    );
+
+    ctx.strokeStyle =
+        "#111827";
+
+    ctx.lineWidth =
+        1.5;
 
     ctx.strokeRect(
         barX,
@@ -2393,60 +5021,104 @@ function drawHealthBar(fighter, x, y) {
     );
 }
 
-function drawFighter(fighter) {
-    if (!fighter.alive) {
+function drawFighter(
+    fighter
+) {
+    if (
+        !fighter.alive
+    ) {
         return;
     }
 
-    const x = worldToScreenX(fighter.x);
-    const y = worldToScreenY(fighter.y);
+    const x =
+        worldToScreenX(
+            fighter.x
+        );
+
+    const y =
+        worldToScreenY(
+            fighter.y
+        );
 
     if (
-        x < -70 ||
-        y < -70 ||
-        x > canvas.width + 70 ||
-        y > canvas.height + 70
+        x < -80 ||
+        y < -80 ||
+        x >
+        canvas.width +
+        80 ||
+        y >
+        canvas.height +
+        80
     ) {
         return;
     }
 
     ctx.save();
 
-    if (fighter.swordsman && fighter.moving) {
-        ctx.translate(x, y);
-        ctx.rotate(performance.now() / 100);
+    if (
+        fighter.swordsman &&
+        fighter.moving
+    ) {
+        ctx.translate(
+            x,
+            y
+        );
 
-        ctx.font = "30px Arial";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText("⚔️", 0, 0);
+        ctx.rotate(
+            performance.now() /
+            100
+        );
+
+        ctx.font =
+            "42px Arial";
+
+        ctx.textAlign =
+            "center";
+
+        ctx.textBaseline =
+            "middle";
+
+        ctx.fillText(
+            "⚔️",
+            0,
+            0
+        );
     } else {
         ctx.beginPath();
 
         ctx.arc(
             x,
             y,
-            fighter.radius + 3,
+            fighter.radius + 4,
             0,
             Math.PI * 2
         );
 
-        ctx.fillStyle = fighter.color;
+        ctx.fillStyle =
+            fighter.color;
+
         ctx.fill();
 
-        ctx.strokeStyle = fighter.isPlayer
-            ? "white"
-            : "#111827";
+        ctx.strokeStyle =
+            fighter.isPlayer
+                ? "white"
+                : "#111827";
 
-        ctx.lineWidth = fighter.isPlayer
-            ? 3
-            : 2;
+        ctx.lineWidth =
+            fighter.isPlayer
+                ? 4
+                : 2.5;
 
         ctx.stroke();
 
-        ctx.font = "36px Arial";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
+        ctx.font =
+            "36px Arial";
+
+        ctx.textAlign =
+            "center";
+
+        ctx.textBaseline =
+            "middle";
 
         ctx.fillText(
             fighter.icon,
@@ -2457,24 +5129,38 @@ function drawFighter(fighter) {
 
     ctx.restore();
 
-    ctx.font = "bold 11px Arial";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "alphabetic";
-    ctx.strokeStyle = "black";
-    ctx.lineWidth = 3;
+    ctx.font =
+        "bold 12px Arial";
+
+    ctx.textAlign =
+        "center";
+
+    ctx.textBaseline =
+        "alphabetic";
+
+    ctx.strokeStyle =
+        "black";
+
+    ctx.lineWidth =
+        3;
 
     ctx.strokeText(
         fighter.name,
         x,
-        y + fighter.radius + 17
+        y +
+        fighter.radius +
+        19
     );
 
-    ctx.fillStyle = "white";
+    ctx.fillStyle =
+        "white";
 
     ctx.fillText(
         fighter.name,
         x,
-        y + fighter.radius + 17
+        y +
+        fighter.radius +
+        19
     );
 
     drawHealthBar(
@@ -2485,91 +5171,174 @@ function drawFighter(fighter) {
 }
 
 function drawProjectiles() {
-    projectiles.forEach(function(projectile) {
-        ctx.beginPath();
-
-        ctx.arc(
-            worldToScreenX(projectile.x),
-            worldToScreenY(projectile.y),
-            projectile.radius,
-            0,
-            Math.PI * 2
-        );
-
-        ctx.fillStyle = projectile.color;
-        ctx.fill();
-
-        ctx.strokeStyle = "#111827";
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
-    });
-}
-
-function drawWaves() {
-    waves.forEach(function(wave) {
-        const x = worldToScreenX(wave.x);
-        const y = worldToScreenY(wave.y);
-
-        const angle = Math.atan2(
-            wave.directionY,
-            wave.directionX
-        );
-
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.rotate(angle);
-
-        ctx.strokeStyle = wave.color;
-        ctx.lineWidth = wave.ultra ? 6 : 4;
-
-        for (let index = 1; index <= 3; index++) {
+    projectiles.forEach(
+        function(projectile) {
             ctx.beginPath();
 
             ctx.arc(
-                -index * 8,
+                worldToScreenX(
+                    projectile.x
+                ),
+                worldToScreenY(
+                    projectile.y
+                ),
+                projectile.radius,
                 0,
-                wave.size * index / 3,
-                -0.7,
-                0.7
+                Math.PI * 2
             );
+
+            ctx.fillStyle =
+                projectile.color;
+
+            ctx.fill();
+
+            ctx.strokeStyle =
+                "#111827";
+
+            ctx.lineWidth =
+                1.5;
 
             ctx.stroke();
         }
+    );
+}
 
-        ctx.restore();
-    });
+function drawWaves() {
+    waves.forEach(
+        function(wave) {
+            const x =
+                worldToScreenX(
+                    wave.x
+                );
+
+            const y =
+                worldToScreenY(
+                    wave.y
+                );
+
+            const angle =
+                Math.atan2(
+                    wave.directionY,
+                    wave.directionX
+                );
+
+            ctx.save();
+
+            ctx.translate(
+                x,
+                y
+            );
+
+            ctx.rotate(
+                angle
+            );
+
+            ctx.strokeStyle =
+                wave.color;
+
+            ctx.lineWidth =
+                wave.ultra
+                    ? 7
+                    : 5;
+
+            for (
+                let index = 1;
+
+                index <= 3;
+
+                index++
+            ) {
+                ctx.beginPath();
+
+                ctx.arc(
+                    -index * 8,
+                    0,
+                    wave.size *
+                    index /
+                    3,
+                    -0.7,
+                    0.7
+                );
+
+                ctx.stroke();
+            }
+
+            ctx.restore();
+        }
+    );
 }
 
 function drawPotions() {
-    potions.forEach(function(potion) {
-        const x = worldToScreenX(potion.x);
-        const y = worldToScreenY(potion.y);
+    potions.forEach(
+        function(potion) {
+            const x =
+                worldToScreenX(
+                    potion.x
+                );
 
-        ctx.beginPath();
-        ctx.arc(x, y, potion.radius, 0, Math.PI * 2);
+            const y =
+                worldToScreenY(
+                    potion.y
+                );
 
-        ctx.fillStyle = potion.color;
-        ctx.fill();
+            ctx.beginPath();
 
-        ctx.font = "12px Arial";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText("🧪", x, y);
-    });
+            ctx.arc(
+                x,
+                y,
+                potion.radius,
+                0,
+                Math.PI * 2
+            );
+
+            ctx.fillStyle =
+                potion.color;
+
+            ctx.fill();
+
+            ctx.strokeStyle =
+                "white";
+
+            ctx.lineWidth =
+                2;
+
+            ctx.stroke();
+
+            ctx.font =
+                "13px Arial";
+
+            ctx.textAlign =
+                "center";
+
+            ctx.textBaseline =
+                "middle";
+
+            ctx.fillText(
+                "🧪",
+                x,
+                y
+            );
+        }
+    );
 }
 
 function drawMiniMap() {
-    const size = 150;
+    const size =
+        165;
 
     const x =
         canvas.width -
         size -
         14;
 
-    const y = 14;
+    const y =
+        14;
 
-    const innerX = x + 5;
-    const innerY = y + 5;
+    const innerX =
+        x + 5;
+
+    const innerY =
+        y + 5;
 
     const innerSize =
         size - 10;
@@ -2604,19 +5373,16 @@ function drawMiniMap() {
                 water.x /
                 WORLD_WIDTH *
                 innerSize,
-
                 innerY +
                 water.y /
                 WORLD_HEIGHT *
                 innerSize,
-
                 Math.max(
                     1,
                     water.w /
                     WORLD_WIDTH *
                     innerSize
                 ),
-
                 Math.max(
                     1,
                     water.h /
@@ -2637,19 +5403,16 @@ function drawMiniMap() {
                 bush.x /
                 WORLD_WIDTH *
                 innerSize,
-
                 innerY +
                 bush.y /
                 WORLD_HEIGHT *
                 innerSize,
-
                 Math.max(
                     1,
                     bush.w /
                     WORLD_WIDTH *
                     innerSize
                 ),
-
                 Math.max(
                     1,
                     bush.h /
@@ -2670,19 +5433,16 @@ function drawMiniMap() {
                 wall.x /
                 WORLD_WIDTH *
                 innerSize,
-
                 innerY +
                 wall.y /
                 WORLD_HEIGHT *
                 innerSize,
-
                 Math.max(
                     1,
                     wall.w /
                     WORLD_WIDTH *
                     innerSize
                 ),
-
                 Math.max(
                     1,
                     wall.h /
@@ -2695,7 +5455,9 @@ function drawMiniMap() {
 
     fighters.forEach(
         function(fighter) {
-            if (!fighter.alive) {
+            if (
+                !fighter.alive
+            ) {
                 return;
             }
 
@@ -2757,7 +5519,8 @@ function drawMiniMap() {
     ctx.strokeStyle =
         "#ffffff";
 
-    ctx.lineWidth = 1;
+    ctx.lineWidth =
+        1;
 
     ctx.strokeRect(
         cameraX,
@@ -2769,7 +5532,8 @@ function drawMiniMap() {
     ctx.strokeStyle =
         "white";
 
-    ctx.lineWidth = 2;
+    ctx.lineWidth =
+        2;
 
     ctx.strokeRect(
         x,
@@ -2778,26 +5542,23 @@ function drawMiniMap() {
         size
     );
 }
+
 function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
 
     drawGround();
-
-    drawRectangles(
-        waterPools,
-        selectedMap.water,
-        selectedMap.waterLight
-    );
-
+    drawWater();
     drawBushes();
+    drawWalls();
 
-    drawRectangles(
-        walls,
-        selectedMap.wall,
-        selectedMap.wallTop
+    fighters.forEach(
+        drawFighter
     );
-
-    fighters.forEach(drawFighter);
 
     drawProjectiles();
     drawWaves();
@@ -2809,19 +5570,31 @@ function gameLoop() {
     update();
     draw();
 
-    requestAnimationFrame(gameLoop);
+    requestAnimationFrame(
+        gameLoop
+    );
 }
 
 try {
     prepareGame();
     gameLoop();
 } catch (error) {
-    console.error(error);
+    console.error(
+        error
+    );
 
-    document.getElementById("loadingPercent").textContent =
+    document
+        .getElementById(
+            "loadingPercent"
+        )
+        .textContent =
         "Błąd kodu";
 
-    document.getElementById("loadingText").textContent =
+    document
+        .getElementById(
+            "loadingText"
+        )
+        .textContent =
         error.message;
 }
 </script>
