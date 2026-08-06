@@ -2444,55 +2444,224 @@ function drawPotions() {
 
 function drawMiniMap() {
     const size = 150;
-    const x = canvas.width - size - 14;
+
+    const x =
+        canvas.width -
+        size -
+        14;
+
     const y = 14;
 
-    ctx.fillStyle = "#111827dd";
-    ctx.fillRect(x, y, size, size);
+    const innerX = x + 5;
+    const innerY = y + 5;
 
-    ctx.fillStyle = selectedMap.ground;
-    ctx.fillRect(x + 5, y + 5, size - 10, size - 10);
+    const innerSize =
+        size - 10;
 
-    fighters.forEach(function(fighter) {
-        if (!fighter.alive) {
-            return;
+    ctx.fillStyle =
+        "#111827dd";
+
+    ctx.fillRect(
+        x,
+        y,
+        size,
+        size
+    );
+
+    ctx.fillStyle =
+        selectedMap.ground;
+
+    ctx.fillRect(
+        innerX,
+        innerY,
+        innerSize,
+        innerSize
+    );
+
+    waterPools.forEach(
+        function(water) {
+            ctx.fillStyle =
+                selectedMap.water;
+
+            ctx.fillRect(
+                innerX +
+                water.x /
+                WORLD_WIDTH *
+                innerSize,
+
+                innerY +
+                water.y /
+                WORLD_HEIGHT *
+                innerSize,
+
+                Math.max(
+                    1,
+                    water.w /
+                    WORLD_WIDTH *
+                    innerSize
+                ),
+
+                Math.max(
+                    1,
+                    water.h /
+                    WORLD_HEIGHT *
+                    innerSize
+                )
+            );
         }
+    );
 
-        const pointX =
-            x + 5 +
-            fighter.x /
-            WORLD_WIDTH *
-            (size - 10);
+    bushes.forEach(
+        function(bush) {
+            ctx.fillStyle =
+                selectedMap.bush;
 
-        const pointY =
-            y + 5 +
-            fighter.y /
-            WORLD_HEIGHT *
-            (size - 10);
+            ctx.fillRect(
+                innerX +
+                bush.x /
+                WORLD_WIDTH *
+                innerSize,
 
-        ctx.beginPath();
+                innerY +
+                bush.y /
+                WORLD_HEIGHT *
+                innerSize,
 
-        ctx.arc(
-            pointX,
-            pointY,
-            fighter.isPlayer ? 4 : 2,
-            0,
-            Math.PI * 2
-        );
+                Math.max(
+                    1,
+                    bush.w /
+                    WORLD_WIDTH *
+                    innerSize
+                ),
 
-        ctx.fillStyle = fighter.isPlayer
-            ? "#36a9ff"
-            : "#ef4d4d";
+                Math.max(
+                    1,
+                    bush.h /
+                    WORLD_HEIGHT *
+                    innerSize
+                )
+            );
+        }
+    );
 
-        ctx.fill();
-    });
+    walls.forEach(
+        function(wall) {
+            ctx.fillStyle =
+                selectedMap.wall;
 
-    ctx.strokeStyle = "white";
+            ctx.fillRect(
+                innerX +
+                wall.x /
+                WORLD_WIDTH *
+                innerSize,
+
+                innerY +
+                wall.y /
+                WORLD_HEIGHT *
+                innerSize,
+
+                Math.max(
+                    1,
+                    wall.w /
+                    WORLD_WIDTH *
+                    innerSize
+                ),
+
+                Math.max(
+                    1,
+                    wall.h /
+                    WORLD_HEIGHT *
+                    innerSize
+                )
+            );
+        }
+    );
+
+    fighters.forEach(
+        function(fighter) {
+            if (!fighter.alive) {
+                return;
+            }
+
+            const pointX =
+                innerX +
+                fighter.x /
+                WORLD_WIDTH *
+                innerSize;
+
+            const pointY =
+                innerY +
+                fighter.y /
+                WORLD_HEIGHT *
+                innerSize;
+
+            ctx.beginPath();
+
+            ctx.arc(
+                pointX,
+                pointY,
+                fighter.isPlayer
+                    ? 4
+                    : 2,
+                0,
+                Math.PI * 2
+            );
+
+            ctx.fillStyle =
+                fighter.isPlayer
+                    ? "#36a9ff"
+                    : "#ef4d4d";
+
+            ctx.fill();
+        }
+    );
+
+    const cameraX =
+        innerX +
+        camera.x /
+        WORLD_WIDTH *
+        innerSize;
+
+    const cameraY =
+        innerY +
+        camera.y /
+        WORLD_HEIGHT *
+        innerSize;
+
+    const cameraWidth =
+        canvas.width /
+        WORLD_WIDTH *
+        innerSize;
+
+    const cameraHeight =
+        canvas.height /
+        WORLD_HEIGHT *
+        innerSize;
+
+    ctx.strokeStyle =
+        "#ffffff";
+
+    ctx.lineWidth = 1;
+
+    ctx.strokeRect(
+        cameraX,
+        cameraY,
+        cameraWidth,
+        cameraHeight
+    );
+
+    ctx.strokeStyle =
+        "white";
+
     ctx.lineWidth = 2;
 
-    ctx.strokeRect(x, y, size, size);
+    ctx.strokeRect(
+        x,
+        y,
+        size,
+        size
+    );
 }
-
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
