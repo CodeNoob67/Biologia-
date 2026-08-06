@@ -1,161 +1,195 @@
+function createDefaultState() {
+    return {
+        tickets: 12,
+        coins: 150,
+
+        selected: "farmer",
+        unlocked: ["farmer"],
+
+        wins: 0,
+        lastReward: null,
+
+        heroTrophies: {},
+        heroGadgets: {},
+        heroStarPowers: {}
+    };
+}
+
+function migrateTeslaToMusician(state) {
+    if (state.selected === "tesla") {
+        state.selected = "muzyk";
+    }
+
+    if (!Array.isArray(state.unlocked)) {
+        state.unlocked = ["farmer"];
+    }
+
+    state.unlocked = state.unlocked.map(function(heroId) {
+        return heroId === "tesla"
+            ? "muzyk"
+            : heroId;
+    });
+
+    state.unlocked = [...new Set(state.unlocked)];
+
+    if (
+        state.heroTrophies &&
+        state.heroTrophies.tesla !== undefined
+    ) {
+        if (state.heroTrophies.muzyk === undefined) {
+            state.heroTrophies.muzyk =
+                state.heroTrophies.tesla;
+        }
+
+        delete state.heroTrophies.tesla;
+    }
+
+    if (
+        state.heroGadgets &&
+        state.heroGadgets.tesla !== undefined
+    ) {
+        if (state.heroGadgets.muzyk === undefined) {
+            state.heroGadgets.muzyk =
+                state.heroGadgets.tesla;
+        }
+
+        delete state.heroGadgets.tesla;
+    }
+
+    if (
+        state.heroStarPowers &&
+        state.heroStarPowers.tesla !== undefined
+    ) {
+        if (state.heroStarPowers.muzyk === undefined) {
+            state.heroStarPowers.muzyk =
+                state.heroStarPowers.tesla;
+        }
+
+        delete state.heroStarPowers.tesla;
+    }
+}
+
+function repairState(state) {
+    const defaultState = createDefaultState();
+
+    if (!state || typeof state !== "object") {
+        state = defaultState;
+    }
+
+    if (!Number.isFinite(Number(state.tickets))) {
+        state.tickets = defaultState.tickets;
+    }
+
+    if (!Number.isFinite(Number(state.coins))) {
+        state.coins = defaultState.coins;
+    }
+
+    state.tickets = Math.max(0, Number(state.tickets));
+    state.coins = Math.max(0, Number(state.coins));
+
+    if (!Number.isFinite(Number(state.wins))) {
+        state.wins = 0;
+    }
+
+    state.wins = Math.max(0, Number(state.wins));
+
+    if (!Array.isArray(state.unlocked)) {
+        state.unlocked = ["farmer"];
+    }
+
+    if (!state.heroTrophies) {
+        state.heroTrophies = {};
+    }
+
+    if (!state.heroGadgets) {
+        state.heroGadgets = {};
+    }
+
+    if (!state.heroStarPowers) {
+        state.heroStarPowers = {};
+    }
+
+    migrateTeslaToMusician(state);
+
+    const existingHeroIds = BOHATEROWIE.map(function(hero) {
+        return hero.id;
+    });
+
+    state.unlocked = state.unlocked.filter(function(heroId) {
+        return existingHeroIds.includes(heroId);
+    });
+
+    if (!state.unlocked.includes("farmer")) {
+        state.unlocked.unshift("farmer");
+    }
+
+    if (!existingHeroIds.includes(state.selected)) {
+        state.selected = "farmer";
+    }
+
+    if (!state.unlocked.includes(state.selected)) {
+        state.selected = "farmer";
+    }
+
+    BOHATEROWIE.forEach(function(hero) {
+        const trophies =
+            Number(state.heroTrophies[hero.id]);
+
+        state.heroTrophies[hero.id] =
+            Number.isFinite(trophies)
+                ? Math.max(0, Math.floor(trophies))
+                : 0;
+    });
+
+    return state;
+}
+
 function getState() {
     const savedState =
-        localStorage.getItem(
-            "medievalArenaState"
-        );
+        localStorage.getItem("medievalArenaState");
 
     let state;
 
     if (savedState) {
         try {
-            state =
-                JSON.parse(savedState);
+            state = JSON.parse(savedState);
         } catch (error) {
             console.error(
-                "Nie udało się wczytać zapisu gry:",
+                "Nie udało się odczytać zapisu gry:",
                 error
             );
+
+            state = createDefaultState();
         }
+    } else {
+        state = createDefaultState();
     }
 
-    if (
-        !state ||
-        typeof state !== "object"
-    ) {
-        state = {
-            tickets: 12,
-            coins: 150,
-            selected: "farmer",
-            unlocked: ["farmer"],
-            wins: 0,
-            heroTrophies: {},
-            lastReward: null
-        };
-    }
+    state = repairState(state);
 
-    state.tickets =
-        Number(state.tickets) || 0;
-
-    state.coins =
-        Number(state.coins) || 0;
-
-    state.selected =
-        state.selected || "farmer";
-
-    if (
-        !Array.isArray(
-            state.unlocked
-        )
-    ) {
-        state.unlocked =
-            ["farmer"];
-    }
-
-    if (
-        !state.unlocked.includes(
-            "farmer"
-        )
-    ) {
-        state.unlocked.unshift(
-            "farmer"
-        );
-    }
-
-    state.unlocked =
-        [...new Set(state.unlocked)];
-
-    state.wins =
-        Number(state.wins) || 0;
-
-    if (
-        !state.heroTrophies ||
-        typeof state.heroTrophies !==
-            "object" ||
-        Array.isArray(
-            state.heroTrophies
-        )
-    ) {
-        state.heroTrophies = {};
-    }
-
-    BOHATEROWIE.forEach(
-        function(hero) {
-            const current =
-                Number(
-                    state.heroTrophies[
-                        hero.id
-                    ]
-                );
-
-            state.heroTrophies[
-                hero.id
-            ] =
-                Number.isFinite(current)
-                    ? Math.max(
-                        0,
-                        Math.floor(current)
-                    )
-                    : 0;
-        }
-    );
-
-    state.lastReward =
-        state.lastReward || null;
-
-    localStorage.setItem(
-        "medievalArenaState",
-        JSON.stringify(state)
-    );
+    saveState(state);
 
     return state;
 }
 
 function saveState(state) {
-    if (
-        !state.heroTrophies ||
-        typeof state.heroTrophies !==
-            "object"
-    ) {
-        state.heroTrophies = {};
-    }
-
-    Object.keys(
-        state.heroTrophies
-    ).forEach(
-        function(heroId) {
-            state.heroTrophies[
-                heroId
-            ] =
-                Math.max(
-                    0,
-                    Math.floor(
-                        Number(
-                            state
-                                .heroTrophies[
-                                heroId
-                            ]
-                        ) || 0
-                    )
-                );
-        }
-    );
+    const repairedState = repairState(state);
 
     localStorage.setItem(
         "medievalArenaState",
-        JSON.stringify(state)
+        JSON.stringify(repairedState)
     );
 }
 
 function getHero(heroId) {
-    const hero =
-        BOHATEROWIE.find(
-            function(character) {
-                return (
-                    character.id ===
-                    heroId
-                );
-            }
-        );
+    const convertedId =
+        heroId === "tesla"
+            ? "muzyk"
+            : heroId;
+
+    const hero = BOHATEROWIE.find(function(character) {
+        return character.id === convertedId;
+    });
 
     if (hero) {
         return hero;
@@ -164,140 +198,45 @@ function getHero(heroId) {
     return BOHATEROWIE[0];
 }
 
-function getHeroTrophies(heroId) {
-    const state =
-        getState();
-
-    return Math.max(
-        0,
-        Number(
-            state.heroTrophies[
-                heroId
-            ]
-        ) || 0
-    );
-}
-
-function setHeroTrophies(
-    heroId,
-    amount
-) {
-    const state =
-        getState();
-
-    state.heroTrophies[
-        heroId
-    ] =
-        Math.max(
-            0,
-            Math.floor(
-                Number(amount) || 0
+function getTotalTrophies(state = getState()) {
+    return BOHATEROWIE.reduce(function(total, hero) {
+        return (
+            total +
+            Math.max(
+                0,
+                Number(state.heroTrophies[hero.id]) || 0
             )
         );
-
-    saveState(state);
-
-    return state.heroTrophies[
-        heroId
-    ];
-}
-
-function addHeroTrophies(
-    heroId,
-    amount
-) {
-    const state =
-        getState();
-
-    const current =
-        Number(
-            state.heroTrophies[
-                heroId
-            ]
-        ) || 0;
-
-    const next =
-        Math.max(
-            0,
-            current +
-            Number(amount || 0)
-        );
-
-    state.heroTrophies[
-        heroId
-    ] =
-        Math.floor(next);
-
-    saveState(state);
-
-    return {
-        before: current,
-        after:
-            state.heroTrophies[
-                heroId
-            ],
-        change:
-            state.heroTrophies[
-                heroId
-            ] -
-            current
-    };
+    }, 0);
 }
 
 function updateTopbar() {
-    const state =
-        getState();
+    const state = getState();
+    const totalTrophies = getTotalTrophies(state);
 
     document
-        .querySelectorAll(
-            "[data-tickets]"
-        )
-        .forEach(
-            function(element) {
-                element.textContent =
-                    state.tickets;
-            }
-        );
+        .querySelectorAll("[data-tickets]")
+        .forEach(function(element) {
+            element.textContent = state.tickets;
+        });
 
     document
-        .querySelectorAll(
-            "[data-coins]"
-        )
-        .forEach(
-            function(element) {
-                element.textContent =
-                    state.coins;
-            }
-        );
+        .querySelectorAll("[data-coins]")
+        .forEach(function(element) {
+            element.textContent = state.coins;
+        });
 
     document
-        .querySelectorAll(
-            "[data-wins]"
-        )
-        .forEach(
-            function(element) {
-                element.textContent =
-                    state.wins;
-            }
-        );
+        .querySelectorAll("[data-wins]")
+        .forEach(function(element) {
+            element.textContent = totalTrophies;
+        });
 
     document
-        .querySelectorAll(
-            "[data-hero-trophies]"
-        )
-        .forEach(
-            function(element) {
-                const heroId =
-                    element.dataset
-                        .heroTrophies ||
-                    state.selected;
-
-                element.textContent =
-                    getHeroTrophies(
-                        heroId
-                    );
-            }
-        );
+        .querySelectorAll("[data-total-trophies]")
+        .forEach(function(element) {
+            element.textContent = totalTrophies;
+        });
 }
 
 document.addEventListener(
