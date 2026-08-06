@@ -280,107 +280,166 @@
         }
 
         .screen-controls {
-            position: absolute;
-            left: 24px;
-            right: 24px;
-            bottom: 24px;
-            z-index: 200;
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-between;
-            pointer-events: none;
-        }
+    position: absolute;
+    left: 13%;
+    right: 13%;
+    bottom: 35px;
+    z-index: 200;
 
-        .movement-controls {
-            position: relative;
-            width: 150px;
-            height: 125px;
-            pointer-events: auto;
-        }
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
 
-        .movement-key {
-            position: absolute;
-            width: 48px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-            color: #111827;
-            font-size: 21px;
-            font-weight: 1000;
-            background: linear-gradient(#e5e7eb, #9ca3af);
-            border: 3px solid #111827;
-            border-radius: 7px;
-            box-shadow: 0 4px 0 #00000088;
-            touch-action: none;
-            user-select: none;
-        }
+    pointer-events: none;
+}
 
-        .movement-key.active {
-            color: white;
-            background: linear-gradient(#555b66, #252a33);
-            transform: translateY(3px);
-            box-shadow: 0 1px 0 #00000088;
-        }
+.movement-controls {
+    position: relative;
+    width: 175px;
+    height: 145px;
+    pointer-events: auto;
+}
 
-        .key-w {
-            left: 51px;
-            top: 0;
-        }
+.movement-key {
+    position: absolute;
 
-        .key-a {
-            left: 0;
-            top: 51px;
-        }
+    width: 56px;
+    height: 56px;
 
-        .key-s {
-            left: 51px;
-            top: 51px;
-        }
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-        .key-d {
-            left: 102px;
-            top: 51px;
-        }
+    padding: 0;
 
-        .attack-joystick {
-            position: relative;
-            width: 145px;
-            height: 145px;
-            pointer-events: auto;
-            background: radial-gradient(circle, #32c4ff, #0788c4);
-            border: 5px solid #07131d;
-            border-radius: 50%;
-            box-shadow: inset 0 0 22px #ffffff55, 0 7px 0 #00000066;
-            touch-action: none;
-            user-select: none;
-        }
+    color: #111827;
+    font-size: 25px;
+    font-weight: 1000;
 
-        .attack-stick {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            width: 68px;
-            height: 68px;
-            transform: translate(-50%, -50%);
-            background: radial-gradient(circle, #5864e8, #303cae);
-            border: 4px solid #111827;
-            border-radius: 50%;
-            pointer-events: none;
-        }
+    background: linear-gradient(
+        #e5e7eb,
+        #9ca3af
+    );
 
-        .attack-label {
-            position: absolute;
-            left: 50%;
-            bottom: -23px;
-            transform: translateX(-50%);
-            font-size: 12px;
-            font-weight: 1000;
-            text-shadow: 2px 2px black;
-        }
+    border: 4px solid #111827;
+    border-radius: 8px;
 
-        @media (max-width: 800px) {
+    box-shadow: 0 5px 0 #00000088;
+
+    touch-action: none;
+    user-select: none;
+}
+
+.movement-key.active {
+    color: white;
+
+    background: linear-gradient(
+        #555b66,
+        #252a33
+    );
+
+    transform: translateY(4px);
+
+    box-shadow: 0 1px 0 #00000088;
+}
+
+.key-w {
+    left: 59px;
+    top: 0;
+}
+
+.key-a {
+    left: 0;
+    top: 59px;
+}
+
+.key-s {
+    left: 59px;
+    top: 59px;
+}
+
+.key-d {
+    left: 118px;
+    top: 59px;
+}
+
+.attack-joystick {
+    position: relative;
+
+    width: 165px;
+    height: 165px;
+
+    pointer-events: auto;
+
+    background: radial-gradient(
+        circle,
+        #32c4ff,
+        #0788c4
+    );
+
+    border: 5px solid #07131d;
+    border-radius: 50%;
+
+    box-shadow:
+        inset 0 0 22px #ffffff55,
+        0 7px 0 #00000066;
+
+    touch-action: none;
+    user-select: none;
+}
+
+.attack-stick {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+
+    width: 78px;
+    height: 78px;
+
+    transform: translate(-50%, -50%);
+
+    background: radial-gradient(
+        circle,
+        #5864e8,
+        #303cae
+    );
+
+    border: 5px solid #111827;
+    border-radius: 50%;
+
+    pointer-events: none;
+}
+
+.attack-label {
+    position: absolute;
+    left: 50%;
+    bottom: -24px;
+
+    transform: translateX(-50%);
+
+    font-size: 13px;
+    font-weight: 1000;
+
+    text-shadow: 2px 2px black;
+}
+
+@media (max-width: 800px) {
+    .screen-controls {
+        left: 6%;
+        right: 6%;
+        bottom: 18px;
+    }
+
+    .movement-controls {
+        transform: scale(0.82);
+        transform-origin: bottom left;
+    }
+
+    .attack-joystick {
+        transform: scale(0.82);
+        transform-origin: bottom right;
+    }
+}
             .logo {
                 font-size: 17px;
             }
@@ -948,7 +1007,7 @@ function createFighter(hero, position, isPlayer, number) {
         x: position.x,
         y: position.y,
 
-        radius: 20,
+        radius: 28,
 
         hp: stats.hp,
         maxHp: stats.hp,
@@ -2269,7 +2328,7 @@ function drawFighter(fighter) {
 
         ctx.stroke();
 
-        ctx.font = "27px Arial";
+        ctx.font = "36px Arial";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
 
