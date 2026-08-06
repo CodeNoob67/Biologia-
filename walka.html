@@ -17,8 +17,10 @@
         body {
             margin: 0;
             overflow: hidden;
+
             color: white;
             font-family: Arial, sans-serif;
+
             background: #111827;
         }
 
@@ -29,16 +31,20 @@
 
         .topbar {
             height: 72px;
+
             display: flex;
             align-items: center;
             justify-content: space-between;
+
             padding: 10px 18px;
+
             background: #111827;
             border-bottom: 4px solid #050912;
         }
 
         .logo {
             color: #ffd43b;
+
             font-size: 25px;
             font-weight: 1000;
         }
@@ -51,12 +57,16 @@
         .top-actions button,
         .top-actions a {
             padding: 10px 16px;
+
             color: white;
             text-decoration: none;
             font-weight: 1000;
+
             background: #35445e;
+
             border: 3px solid #080d16;
             border-radius: 10px;
+
             cursor: pointer;
         }
 
@@ -66,37 +76,50 @@
 
         .game-info {
             height: 58px;
+
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
+
             background: #202b40;
         }
 
         .info-box {
             padding: 8px 14px;
+
             font-weight: 1000;
+
             background: #2b3a54;
+
             border: 3px solid #0d1420;
             border-radius: 10px;
         }
 
         .game-container {
             position: relative;
+
             width: min(96vw, 1300px);
             aspect-ratio: 12 / 7;
+
             max-height: calc(100vh - 130px);
+
             margin: auto;
         }
 
         canvas {
             display: block;
+
             width: 100%;
             height: 100%;
+
             background: #5db95b;
+
             border: 7px solid #0d1420;
             border-radius: 12px;
+
             box-shadow: 0 12px 35px #0009;
+
             cursor: crosshair;
         }
 
@@ -104,16 +127,19 @@
             position: absolute;
             inset: 7px;
             z-index: 500;
+
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+
             background:
                 radial-gradient(
                     circle,
                     #263b5b,
                     #080e18
                 );
+
             border-radius: 6px;
         }
 
@@ -123,16 +149,31 @@
 
         .loading-screen h1 {
             margin: 10px 0;
+
             color: #ffd43b;
+
             font-size: 56px;
+
             text-shadow: 5px 5px black;
+        }
+
+        .loading-map {
+            margin-bottom: 20px;
+
+            color: #73dcff;
+
+            font-size: 22px;
+            font-weight: 1000;
         }
 
         .loading-bar {
             width: min(560px, 80%);
             height: 36px;
+
             overflow: hidden;
+
             background: #050912;
+
             border: 5px solid black;
             border-radius: 12px;
         }
@@ -140,6 +181,7 @@
         .loading-fill {
             width: 0;
             height: 100%;
+
             background:
                 linear-gradient(
                     90deg,
@@ -148,12 +190,22 @@
                 );
         }
 
+        .loading-percent {
+            margin-top: 10px;
+
+            font-size: 20px;
+            font-weight: 1000;
+        }
+
         .intro-shade {
             position: absolute;
             inset: 7px;
             z-index: 300;
+
             display: none;
+
             background: #555b66dd;
+
             pointer-events: none;
         }
 
@@ -166,21 +218,29 @@
             left: 50%;
             top: 50%;
             z-index: 350;
+
             display: none;
+
             transform: translate(-50%, -50%);
+
             font-size: 120px;
             font-weight: 1000;
+
             text-shadow: 7px 7px black;
         }
 
         .battle-text.visible {
             display: block;
-            animation: battleAnimation 1.15s ease forwards;
+
+            animation:
+                battleAnimation
+                1.15s ease forwards;
         }
 
         @keyframes battleAnimation {
             0% {
                 opacity: 0;
+
                 transform:
                     translate(-50%, -50%)
                     scale(0.25);
@@ -188,6 +248,7 @@
 
             40% {
                 opacity: 1;
+
                 transform:
                     translate(-50%, -50%)
                     scale(1.2);
@@ -195,6 +256,7 @@
 
             75% {
                 opacity: 1;
+
                 transform:
                     translate(-50%, -50%)
                     scale(1);
@@ -202,6 +264,7 @@
 
             100% {
                 opacity: 0;
+
                 transform:
                     translate(-50%, -50%)
                     scale(1.35);
@@ -210,54 +273,73 @@
 
         .controls {
             position: absolute;
+
             left: 13%;
-            right: 13%;
+            right: 8%;
             bottom: 28px;
             z-index: 200;
+
             display: flex;
             align-items: flex-end;
             justify-content: space-between;
+
             pointer-events: none;
         }
 
         .movement {
             position: relative;
+
             width: 175px;
             height: 145px;
+
             pointer-events: auto;
         }
 
         .movement-key {
             position: absolute;
+
             width: 56px;
             height: 56px;
+
             display: grid;
             place-items: center;
+
             padding: 0;
+
             color: #111827;
+
             font-size: 24px;
             font-weight: 1000;
+
             background:
                 linear-gradient(
                     #e5e7eb,
                     #9ca3af
                 );
+
             border: 4px solid #111827;
             border-radius: 8px;
-            box-shadow: 0 5px 0 #0008;
+
+            box-shadow:
+                0 5px 0 #0008;
+
             user-select: none;
             touch-action: none;
         }
 
         .movement-key.active {
             color: white;
+
             background:
                 linear-gradient(
                     #555b66,
                     #252a33
                 );
+
             transform: translateY(4px);
-            box-shadow: 0 1px 0 #0008;
+
+            box-shadow:
+                0 1px 0 #0008;
         }
 
         .key-w {
@@ -280,22 +362,146 @@
             top: 59px;
         }
 
+        .right-controls {
+            display: flex;
+            align-items: flex-end;
+            gap: 18px;
+
+            pointer-events: auto;
+        }
+
+        .gadget-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .gadget-button {
+            position: relative;
+
+            width: 94px;
+            height: 94px;
+
+            display: grid;
+            place-items: center;
+
+            padding: 0;
+
+            color: white;
+
+            font-size: 42px;
+            font-weight: 1000;
+
+            background:
+                radial-gradient(
+                    circle,
+                    #68ff88,
+                    #12a83c
+                );
+
+            border: 6px solid #071a0d;
+            border-radius: 50%;
+
+            box-shadow:
+                inset 0 0 18px #ffffff77,
+                0 7px 0 #0007;
+
+            cursor: pointer;
+
+            user-select: none;
+            touch-action: none;
+        }
+
+        .gadget-button:hover:not(:disabled) {
+            filter: brightness(1.15);
+        }
+
+        .gadget-button:active:not(:disabled) {
+            transform: translateY(5px);
+
+            box-shadow:
+                inset 0 0 18px #ffffff77,
+                0 2px 0 #0007;
+        }
+
+        .gadget-button.used,
+        .gadget-button:disabled {
+            color: #b7bdc7;
+
+            background:
+                radial-gradient(
+                    circle,
+                    #7b8490,
+                    #3b424d
+                );
+
+            border-color: #181c22;
+
+            box-shadow:
+                inset 0 0 12px #ffffff22,
+                0 4px 0 #0007;
+
+            cursor: default;
+        }
+
+        .gadget-count {
+            position: absolute;
+            right: -5px;
+            bottom: -5px;
+
+            width: 32px;
+            height: 32px;
+
+            display: grid;
+            place-items: center;
+
+            color: #15221a;
+
+            font-size: 17px;
+            font-weight: 1000;
+
+            background: white;
+
+            border: 4px solid #071a0d;
+            border-radius: 50%;
+        }
+
+        .gadget-button.used .gadget-count {
+            color: #d3d7de;
+
+            background: #454c56;
+
+            border-color: #181c22;
+        }
+
+        .gadget-label {
+            font-size: 12px;
+            font-weight: 1000;
+
+            text-shadow: 2px 2px black;
+        }
+
         .attack-joystick {
             position: relative;
+
             width: 165px;
             height: 165px;
-            pointer-events: auto;
+
             background:
                 radial-gradient(
                     circle,
                     #32c4ff,
                     #0788c4
                 );
+
             border: 5px solid #07131d;
             border-radius: 50%;
+
             box-shadow:
                 inset 0 0 22px #ffffff55,
                 0 7px 0 #0006;
+
             touch-action: none;
         }
 
@@ -303,34 +509,127 @@
             position: absolute;
             left: 50%;
             top: 50%;
+
             width: 78px;
             height: 78px;
-            transform: translate(-50%, -50%);
+
+            transform:
+                translate(-50%, -50%);
+
             background:
                 radial-gradient(
                     circle,
                     #5864e8,
                     #303cae
                 );
+
             border: 5px solid #111827;
             border-radius: 50%;
+
             pointer-events: none;
+        }
+
+        .attack-label {
+            position: absolute;
+            left: 50%;
+            bottom: -25px;
+
+            transform: translateX(-50%);
+
+            font-size: 12px;
+            font-weight: 1000;
+
+            text-shadow: 2px 2px black;
+        }
+
+        .floating-message {
+            position: absolute;
+            left: 50%;
+            top: 24%;
+            z-index: 450;
+
+            display: none;
+
+            transform: translate(-50%, -50%);
+
+            padding: 12px 20px;
+
+            color: white;
+
+            font-size: 24px;
+            font-weight: 1000;
+
+            background: #111827e8;
+
+            border: 4px solid #050912;
+            border-radius: 12px;
+
+            text-shadow: 2px 2px black;
+
+            pointer-events: none;
+        }
+
+        .floating-message.visible {
+            display: block;
+
+            animation:
+                floatingMessage
+                1.5s ease forwards;
+        }
+
+        @keyframes floatingMessage {
+            0% {
+                opacity: 0;
+
+                transform:
+                    translate(-50%, 15px)
+                    scale(0.5);
+            }
+
+            20% {
+                opacity: 1;
+
+                transform:
+                    translate(-50%, 0)
+                    scale(1.1);
+            }
+
+            75% {
+                opacity: 1;
+
+                transform:
+                    translate(-50%, 0)
+                    scale(1);
+            }
+
+            100% {
+                opacity: 0;
+
+                transform:
+                    translate(-50%, -20px)
+                    scale(0.85);
+            }
         }
 
         .result-screen {
             position: absolute;
             inset: 7px;
             z-index: 700;
+
             display: none;
             flex-direction: column;
+
             padding: 12px;
+
             background:
                 linear-gradient(
                     135deg,
                     #0a3e78,
                     #1765ad
                 );
+
             border-radius: 6px;
+
             overflow: hidden;
         }
 
@@ -341,35 +640,48 @@
         .result-header {
             display: flex;
             justify-content: space-between;
+
             padding: 9px 16px;
+
             font-size: 25px;
             font-weight: 1000;
+
             background: #082c59;
+
             border: 4px solid #031b38;
             border-radius: 8px;
+
             text-shadow: 3px 3px black;
         }
 
         .result-grid {
             flex: 1;
             min-height: 0;
+
             display: grid;
-            grid-template-columns: 1.15fr 0.9fr 1fr;
+            grid-template-columns:
+                1.15fr 0.9fr 1fr;
+
             gap: 10px;
+
             margin-top: 10px;
         }
 
         .result-panel {
             min-width: 0;
             min-height: 0;
+
             padding: 10px;
+
             background:
                 linear-gradient(
                     #145996,
                     #0e447c
                 );
+
             border: 5px solid #06274d;
             border-radius: 8px;
+
             overflow: hidden;
         }
 
@@ -383,34 +695,44 @@
         .result-icon {
             width: 130px;
             height: 130px;
+
             display: grid;
             place-items: center;
+
             font-size: 82px;
+
             background:
                 radial-gradient(
                     circle,
                     #72d5ff,
                     #2387c7
                 );
+
             border: 5px solid #071f3e;
             border-radius: 50%;
         }
 
         .result-name {
             margin-top: 8px;
+
             font-size: 25px;
             font-weight: 1000;
         }
 
         .result-rank {
             width: 90%;
+
             display: flex;
             justify-content: space-between;
+
             margin-top: 10px;
             padding: 8px 12px;
+
             background: #5d0d48;
+
             border: 4px solid #18071a;
             border-radius: 6px;
+
             font-weight: 1000;
         }
 
@@ -422,17 +744,23 @@
 
         .result-panel h2 {
             margin: 0 0 7px;
+
             text-align: center;
+
             font-size: 20px;
+
             text-shadow: 3px 3px black;
         }
 
         .result-row {
             display: flex;
             justify-content: space-between;
+
             margin: 5px 0;
             padding: 7px;
+
             background: #0b3767;
+
             border: 3px solid #052344;
             border-radius: 5px;
         }
@@ -442,9 +770,12 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+
             margin: 6px 0;
             padding: 8px;
+
             background: #0b3767;
+
             border: 3px solid #052344;
             border-radius: 5px;
         }
@@ -457,21 +788,27 @@
             display: flex;
             justify-content: flex-end;
             gap: 12px;
+
             margin-top: 10px;
         }
 
         .result-buttons button {
             min-width: 210px;
+
             padding: 11px 20px;
+
             font-size: 18px;
             font-weight: 1000;
+
             border: 4px solid #071c36;
             border-radius: 7px;
+
             cursor: pointer;
         }
 
         .play-again {
             color: #14213d;
+
             background:
                 linear-gradient(
                     #ffe44d,
@@ -481,6 +818,7 @@
 
         .exit-button {
             color: white;
+
             background:
                 linear-gradient(
                     #42a2ff,
@@ -488,23 +826,39 @@
                 );
         }
 
-        @media (max-width: 850px) {
+        @media (max-width: 900px) {
             .controls {
-                left: 5%;
-                right: 5%;
+                left: 4%;
+                right: 4%;
+            }
+
+            .right-controls {
+                gap: 8px;
+            }
+
+            .gadget-button {
+                width: 72px;
+                height: 72px;
+
+                font-size: 32px;
+            }
+
+            .attack-joystick {
+                width: 130px;
+                height: 130px;
+            }
+
+            .movement {
+                transform: scale(0.8);
+                transform-origin: bottom left;
             }
 
             .result-screen {
-                overflow: auto;
+                overflow-y: auto;
             }
 
             .result-grid {
                 grid-template-columns: 1fr;
-            }
-
-            .result-buttons {
-                justify-content: center;
-                flex-wrap: wrap;
             }
         }
     </style>
@@ -572,6 +926,7 @@
         id="loadingScreen"
         class="loading-screen"
     >
+
         <div style="font-size:70px">
             ⚔️
         </div>
@@ -582,12 +937,7 @@
 
         <div
             id="loadingMap"
-            style="
-                font-size:22px;
-                font-weight:1000;
-                color:#73dcff;
-                margin-bottom:20px;
-            "
+            class="loading-map"
         >
             Zielona Dolina
         </div>
@@ -603,14 +953,11 @@
 
         <div
             id="loadingPercent"
-            style="
-                margin-top:10px;
-                font-size:20px;
-                font-weight:1000;
-            "
+            class="loading-percent"
         >
             0%
         </div>
+
     </div>
 
     <div
@@ -624,6 +971,11 @@
     >
         BITWA!
     </div>
+
+    <div
+        id="floatingMessage"
+        class="floating-message"
+    ></div>
 
     <div
         id="screenControls"
@@ -662,14 +1014,51 @@
 
         </div>
 
-        <div
-            id="attackJoystick"
-            class="attack-joystick"
-        >
+        <div class="right-controls">
+
+            <div class="gadget-wrapper">
+
+                <button
+                    id="gadgetButton"
+                    class="gadget-button"
+                    onclick="activateGadget()"
+                    title="Użyj gadżetu"
+                >
+                    ⚡
+
+                    <span
+                        id="gadgetCount"
+                        class="gadget-count"
+                    >
+                        1
+                    </span>
+                </button>
+
+                <div
+                    id="gadgetLabel"
+                    class="gadget-label"
+                >
+                    GADŻET
+                </div>
+
+            </div>
+
             <div
-                id="attackStick"
-                class="attack-stick"
-            ></div>
+                id="attackJoystick"
+                class="attack-joystick"
+            >
+
+                <div
+                    id="attackStick"
+                    class="attack-stick"
+                ></div>
+
+                <div class="attack-label">
+                    ATAK
+                </div>
+
+            </div>
+
         </div>
 
     </div>
@@ -1111,6 +1500,31 @@ const HERO_STATS = {
     }
 };
 
+const GADGET_NAMES = {
+    farmer: "Wzmocnione widły",
+    rycerz: "Żelazna osłona",
+    lucznik: "Deszcz strzał",
+    ksiadz: "Armia duchów",
+    muzyk: "Ogłuszający koncert",
+    alchemik: "Mikstura wszystkiego",
+    szermierz: "Przyspieszenie",
+    goblin: "Szał goblina",
+    golem: "Potężne trzęsienie",
+    duch: "Widmowe leczenie",
+    czarodziej: "Magiczna eksplozja",
+    wampir: "Krwawy lot",
+    krol: "Królewska salwa",
+    wiedzma: "Grad magii",
+
+    szaman: "Krąg shockwave'ów",
+    wiking: "Berserk",
+    mag_ognia: "Pierścień ognia",
+    mnich: "Energia dookoła",
+    mag_lodu: "Lodowa pułapka",
+    samuraj: "Błyskawiczny bieg",
+    centaur: "Wybuchowa salwa"
+};
+
 const walls = [];
 const bushes = [];
 const waterPools = [];
@@ -1149,6 +1563,7 @@ let attackJoystick = {
 let phase = "loading";
 let matchFinished = false;
 let trophiesAwarded = false;
+let gadgetUsed = false;
 
 let matchStats = {
     damageDealt: 0,
@@ -1163,6 +1578,87 @@ let matchStats = {
 
 function byId(id) {
     return document.getElementById(id);
+}
+
+function clamp(
+    value,
+    minimum,
+    maximum
+) {
+    return Math.max(
+        minimum,
+        Math.min(
+            maximum,
+            value
+        )
+    );
+}
+
+function randomNumber(
+    minimum,
+    maximum
+) {
+    return (
+        Math.random() *
+        (maximum - minimum) +
+        minimum
+    );
+}
+
+function randomItem(array) {
+    return array[
+        Math.floor(
+            Math.random() *
+            array.length
+        )
+    ];
+}
+
+function normalize(x, y) {
+    const length =
+        Math.hypot(x, y) || 1;
+
+    return {
+        x: x / length,
+        y: y / length
+    };
+}
+
+function distance(first, second) {
+    return Math.hypot(
+        first.x - second.x,
+        first.y - second.y
+    );
+}
+
+function shuffle(array) {
+    const copy = array.slice();
+
+    for (
+        let index =
+            copy.length - 1;
+
+        index > 0;
+
+        index--
+    ) {
+        const randomIndex =
+            Math.floor(
+                Math.random() *
+                (index + 1)
+            );
+
+        const temporary =
+            copy[index];
+
+        copy[index] =
+            copy[randomIndex];
+
+        copy[randomIndex] =
+            temporary;
+    }
+
+    return copy;
 }
 
 function addRectangle(
@@ -1218,7 +1714,7 @@ function buildMap() {
         WORLD_SIZE
     );
 
-    const mapWalls = [
+    [
         [500, 500, 650, 90],
         [3850, 500, 650, 90],
         [500, 4410, 650, 90],
@@ -1251,9 +1747,7 @@ function buildMap() {
         [2960, 2150, 90, 700],
 
         [2350, 2350, 300, 300]
-    ];
-
-    mapWalls.forEach(function(item) {
+    ].forEach(function(item) {
         addRectangle(
             walls,
             item[0],
@@ -1263,7 +1757,7 @@ function buildMap() {
         );
     });
 
-    const mapWater = [
+    [
         [1000, 1150, 420, 270],
         [3580, 1150, 420, 270],
         [1000, 3580, 420, 270],
@@ -1274,9 +1768,7 @@ function buildMap() {
 
         [650, 1800, 250, 1400],
         [4100, 1800, 250, 1400]
-    ];
-
-    mapWater.forEach(function(item) {
+    ].forEach(function(item) {
         addRectangle(
             waterPools,
             item[0],
@@ -1286,7 +1778,7 @@ function buildMap() {
         );
     });
 
-    const mapBushes = [
+    [
         [160, 160, 650, 140],
         [4190, 160, 650, 140],
         [160, 4700, 650, 140],
@@ -1312,9 +1804,7 @@ function buildMap() {
 
         [1750, 2050, 120, 900],
         [3130, 2050, 120, 900]
-    ];
-
-    mapBushes.forEach(function(item) {
+    ].forEach(function(item) {
         addRectangle(
             bushes,
             item[0],
@@ -1324,7 +1814,7 @@ function buildMap() {
         );
     });
 
-    const points = [
+    [
         [300, 300],
         [1250, 350],
         [2500, 350],
@@ -1350,96 +1840,12 @@ function buildMap() {
         [3500, 2500],
         [2500, 1500],
         [2500, 3500]
-    ];
-
-    points.forEach(function(point) {
+    ].forEach(function(item) {
         spawnPoints.push({
-            x: point[0],
-            y: point[1]
+            x: item[0],
+            y: item[1]
         });
     });
-}
-
-function clamp(
-    value,
-    minimum,
-    maximum
-) {
-    return Math.max(
-        minimum,
-        Math.min(
-            maximum,
-            value
-        )
-    );
-}
-
-function randomNumber(
-    minimum,
-    maximum
-) {
-    return (
-        Math.random() *
-        (maximum - minimum) +
-        minimum
-    );
-}
-
-function randomItem(array) {
-    return array[
-        Math.floor(
-            Math.random() *
-            array.length
-        )
-    ];
-}
-
-function shuffle(array) {
-    const copy =
-        array.slice();
-
-    for (
-        let index =
-            copy.length - 1;
-
-        index > 0;
-
-        index--
-    ) {
-        const randomIndex =
-            Math.floor(
-                Math.random() *
-                (index + 1)
-            );
-
-        const temporary =
-            copy[index];
-
-        copy[index] =
-            copy[randomIndex];
-
-        copy[randomIndex] =
-            temporary;
-    }
-
-    return copy;
-}
-
-function normalize(x, y) {
-    const length =
-        Math.hypot(x, y) || 1;
-
-    return {
-        x: x / length,
-        y: y / length
-    };
-}
-
-function distance(first, second) {
-    return Math.hypot(
-        first.x - second.x,
-        first.y - second.y
-    );
 }
 
 function circleRectangleCollision(
@@ -1520,7 +1926,7 @@ function isBlocked(
     );
 }
 
-function safeSpawn(position) {
+function isSafeSpawn(position) {
     return (
         position &&
         !isBlocked(
@@ -1538,7 +1944,7 @@ function safeSpawn(position) {
 }
 
 function getSafeSpawn(position) {
-    if (safeSpawn(position)) {
+    if (isSafeSpawn(position)) {
         return {
             x: position.x,
             y: position.y
@@ -1571,7 +1977,11 @@ function getSafeSpawn(position) {
                     radius
             };
 
-            if (safeSpawn(candidate)) {
+            if (
+                isSafeSpawn(
+                    candidate
+                )
+            ) {
                 return candidate;
             }
         }
@@ -1587,36 +1997,55 @@ function getPlayerName() {
     const state =
         getState();
 
+    const accounts =
+        JSON.parse(
+            localStorage.getItem(
+                "medievalArenaAccounts_v1"
+            ) || "{}"
+        );
+
+    const currentKey =
+        localStorage.getItem(
+            "medievalArenaCurrentAccount_v1"
+        );
+
+    if (
+        currentKey &&
+        accounts[currentKey] &&
+        accounts[currentKey].name
+    ) {
+        return accounts[
+            currentKey
+        ].name;
+    }
+
     const possibleNames = [
         state.profileName,
         state.playerName,
         state.username,
         state.name,
-        localStorage.getItem("playerName"),
-        localStorage.getItem("username")
+        localStorage.getItem(
+            "playerName"
+        ),
+        localStorage.getItem(
+            "username"
+        )
     ];
 
-    const result =
+    const name =
         possibleNames.find(
-            function(name) {
+            function(value) {
                 return (
-                    typeof name ===
+                    typeof value ===
                         "string" &&
-                    name.trim().length > 0
+                    value.trim()
                 );
             }
         );
 
-    return result
-        ? result.trim().slice(0, 20)
+    return name
+        ? name.trim().slice(0, 20)
         : "Gracz";
-}
-
-function getHeroStats(heroId) {
-    return (
-        HERO_STATS[heroId] ||
-        HERO_STATS.farmer
-    );
 }
 
 function createFighter(
@@ -1631,7 +2060,8 @@ function createFighter(
             : hero.id;
 
     const stats =
-        getHeroStats(heroId);
+        HERO_STATS[heroId] ||
+        HERO_STATS.farmer;
 
     return {
         id:
@@ -1670,13 +2100,15 @@ function createFighter(
         normalSpeed: stats.speed,
 
         range: stats.range,
+        normalRange: stats.range,
+
         cooldown: stats.cooldown,
 
         projectileSpeed:
             stats.projectileSpeed || 0,
 
         projectileLife:
-            stats.projectileLife || 0,
+            stats.projectileLife || 1000,
 
         lastAttack: 0,
         attackCounter: 0,
@@ -1686,6 +2118,12 @@ function createFighter(
 
         lastSwordDamage: 0,
 
+        stunnedUntil: 0,
+        speedBoostUntil: 0,
+        damageReductionUntil: 0,
+        damageBoostUntil: 0,
+        rangeBoostUntil: 0,
+
         alive: true,
         isPlayer: isPlayer,
         isSummon: false,
@@ -1693,18 +2131,17 @@ function createFighter(
         target: null,
         nextDecision: 0,
 
-        stunnedUntil: 0,
-        speedBoostUntil: 0,
-
         moving: false,
-
         vampireMode: false,
 
         color:
             isPlayer
                 ? "#36a9ff"
                 : "hsl(" +
-                  randomNumber(0, 360) +
+                  randomNumber(
+                      0,
+                      360
+                  ) +
                   ",70%,55%)",
 
         ...stats
@@ -1740,8 +2177,14 @@ function getNearestEnemy(fighter) {
     enemies.sort(
         function(first, second) {
             return (
-                distance(fighter, first) -
-                distance(fighter, second)
+                distance(
+                    fighter,
+                    first
+                ) -
+                distance(
+                    fighter,
+                    second
+                )
             );
         }
     );
@@ -1749,13 +2192,607 @@ function getNearestEnemy(fighter) {
     return enemies[0] || null;
 }
 
+function showFloatingMessage(text) {
+    const message =
+        byId(
+            "floatingMessage"
+        );
+
+    message.textContent = text;
+
+    message.className =
+        "floating-message visible";
+
+    clearTimeout(
+        showFloatingMessage.timeout
+    );
+
+    showFloatingMessage.timeout =
+        setTimeout(
+            function() {
+                message.className =
+                    "floating-message";
+            },
+            1500
+        );
+}
+
+function updateGadgetButton() {
+    const button =
+        byId("gadgetButton");
+
+    const count =
+        byId("gadgetCount");
+
+    const label =
+        byId("gadgetLabel");
+
+    if (!player) {
+        return;
+    }
+
+    label.textContent =
+        GADGET_NAMES[
+            player.heroId
+        ] || "GADŻET";
+
+    if (gadgetUsed) {
+        button.disabled = true;
+
+        button.classList.add(
+            "used"
+        );
+
+        count.textContent = "0";
+    } else {
+        button.disabled = false;
+
+        button.classList.remove(
+            "used"
+        );
+
+        count.textContent = "1";
+    }
+}
+
+function createEffect(
+    x,
+    y,
+    radius,
+    color,
+    life
+) {
+    effects.push({
+        x: x,
+        y: y,
+        radius: radius,
+        color: color,
+        created:
+            performance.now(),
+        life: life || 400
+    });
+}
+
+function radialProjectiles(
+    fighter,
+    amount,
+    damage,
+    type
+) {
+    for (
+        let index = 0;
+
+        index < amount;
+
+        index++
+    ) {
+        const angle =
+            Math.PI *
+            2 *
+            index /
+            amount;
+
+        createProjectile(
+            fighter,
+            {
+                x: Math.cos(angle),
+                y: Math.sin(angle)
+            },
+            0,
+            damage,
+            type
+        );
+    }
+}
+
+function radialWaves(
+    fighter,
+    amount,
+    damage,
+    type
+) {
+    for (
+        let index = 0;
+
+        index < amount;
+
+        index++
+    ) {
+        const angle =
+            Math.PI *
+            2 *
+            index /
+            amount;
+
+        createWave(
+            fighter,
+            {
+                x: Math.cos(angle),
+                y: Math.sin(angle)
+            },
+            damage,
+            type
+        );
+    }
+}
+
+function activateGadget() {
+    if (
+        gadgetUsed ||
+        !player ||
+        !player.alive ||
+        phase !== "playing" ||
+        matchFinished
+    ) {
+        return;
+    }
+
+    gadgetUsed = true;
+
+    updateGadgetButton();
+
+    showFloatingMessage(
+        GADGET_NAMES[
+            player.heroId
+        ] || "GADŻET!"
+    );
+
+    const now =
+        performance.now();
+
+    const nearest =
+        getNearestEnemy(player);
+
+    switch (player.heroId) {
+        case "farmer":
+            player.damageBoostUntil =
+                now + 4000;
+
+            radialProjectiles(
+                player,
+                6,
+                player.damage * 1.5,
+                "normal"
+            );
+
+            break;
+
+        case "rycerz":
+            player.damageReductionUntil =
+                now + 4000;
+
+            healFighter(
+                player,
+                45
+            );
+
+            createEffect(
+                player.x,
+                player.y,
+                120,
+                "#7ed7ff",
+                700
+            );
+
+            break;
+
+        case "lucznik":
+            radialProjectiles(
+                player,
+                12,
+                player.damage,
+                "normal"
+            );
+
+            break;
+
+        case "ksiadz":
+            for (
+                let index = 0;
+
+                index < 5;
+
+                index++
+            ) {
+                createGhost(
+                    player,
+                    index
+                );
+            }
+
+            break;
+
+        case "muzyk":
+            radialWaves(
+                player,
+                8,
+                player.damage,
+                "stun"
+            );
+
+            break;
+
+        case "alchemik":
+            healFighter(
+                player,
+                50
+            );
+
+            player.speed =
+                player.normalSpeed *
+                1.6;
+
+            player.speedBoostUntil =
+                now + 2000;
+
+            player.damageBoostUntil =
+                now + 3000;
+
+            getEnemies(player)
+                .forEach(
+                    function(enemy) {
+                        if (
+                            distance(
+                                player,
+                                enemy
+                            ) < 280
+                        ) {
+                            damageFighter(
+                                enemy,
+                                player.damage *
+                                1.25,
+                                player
+                            );
+
+                            enemy.stunnedUntil =
+                                now + 1250;
+                        }
+                    }
+                );
+
+            createEffect(
+                player.x,
+                player.y,
+                280,
+                "#9d5cff",
+                700
+            );
+
+            break;
+
+        case "szermierz":
+            player.speed =
+                player.normalSpeed *
+                1.5;
+
+            player.speedBoostUntil =
+                now + 2000;
+
+            break;
+
+        case "goblin":
+            player.speed =
+                player.normalSpeed *
+                1.5;
+
+            player.speedBoostUntil =
+                now + 2500;
+
+            player.damageBoostUntil =
+                now + 2500;
+
+            break;
+
+        case "golem":
+            createExplosion(
+                player.x,
+                player.y,
+                280,
+                player.damage *
+                1.6,
+                player
+            );
+
+            break;
+
+        case "duch":
+            healFighter(
+                player,
+                55
+            );
+
+            player.speed =
+                player.normalSpeed *
+                1.4;
+
+            player.speedBoostUntil =
+                now + 2500;
+
+            break;
+
+        case "czarodziej":
+            createExplosion(
+                player.x,
+                player.y,
+                260,
+                player.damage *
+                1.4,
+                player
+            );
+
+            radialProjectiles(
+                player,
+                8,
+                player.damage,
+                "energy"
+            );
+
+            break;
+
+        case "wampir":
+            player.vampireMode = true;
+
+            player.speed =
+                player.normalSpeed *
+                2.5;
+
+            player.speedBoostUntil =
+                now + 1800;
+
+            player.damageBoostUntil =
+                now + 1800;
+
+            setTimeout(
+                function() {
+                    player.vampireMode =
+                        false;
+                },
+                1800
+            );
+
+            break;
+
+        case "krol":
+            if (nearest) {
+                const direction =
+                    normalize(
+                        nearest.x -
+                        player.x,
+                        nearest.y -
+                        player.y
+                    );
+
+                for (
+                    let index = -3;
+
+                    index <= 3;
+
+                    index++
+                ) {
+                    createProjectile(
+                        player,
+                        direction,
+                        index * 0.12,
+                        player.damage,
+                        "normal"
+                    );
+                }
+            } else {
+                radialProjectiles(
+                    player,
+                    10,
+                    player.damage,
+                    "normal"
+                );
+            }
+
+            break;
+
+        case "wiedzma":
+            radialProjectiles(
+                player,
+                24,
+                player.damage * 1.6,
+                "witch"
+            );
+
+            break;
+
+        case "szaman":
+            radialWaves(
+                player,
+                12,
+                player.damage * 1.25,
+                "shaman"
+            );
+
+            break;
+
+        case "wiking":
+            player.damageReductionUntil =
+                now + 3000;
+
+            player.damageBoostUntil =
+                now + 3000;
+
+            player.speed =
+                player.normalSpeed *
+                1.35;
+
+            player.speedBoostUntil =
+                now + 3000;
+
+            healFighter(
+                player,
+                50
+            );
+
+            createEffect(
+                player.x,
+                player.y,
+                150,
+                "#ff5722",
+                700
+            );
+
+            break;
+
+        case "mag_ognia":
+            radialProjectiles(
+                player,
+                16,
+                player.damage * 1.25,
+                "fire"
+            );
+
+            createExplosion(
+                player.x,
+                player.y,
+                190,
+                player.damage,
+                player
+            );
+
+            break;
+
+        case "mnich":
+            radialWaves(
+                player,
+                16,
+                player.damage,
+                "energy"
+            );
+
+            break;
+
+        case "mag_lodu":
+            getEnemies(player)
+                .forEach(
+                    function(enemy) {
+                        if (
+                            distance(
+                                player,
+                                enemy
+                            ) <= 360
+                        ) {
+                            enemy.stunnedUntil =
+                                now + 2500;
+
+                            damageFighter(
+                                enemy,
+                                player.damage *
+                                0.65,
+                                player
+                            );
+                        }
+                    }
+                );
+
+            createEffect(
+                player.x,
+                player.y,
+                360,
+                "#8eeaff",
+                800
+            );
+
+            break;
+
+        case "samuraj":
+            player.speed =
+                player.normalSpeed *
+                1.75;
+
+            player.speedBoostUntil =
+                now + 2000;
+
+            player.range =
+                player.normalRange *
+                1.5;
+
+            player.rangeBoostUntil =
+                now + 2000;
+
+            player.damageBoostUntil =
+                now + 2000;
+
+            break;
+
+        case "centaur":
+            if (nearest) {
+                const direction =
+                    normalize(
+                        nearest.x -
+                        player.x,
+                        nearest.y -
+                        player.y
+                    );
+
+                for (
+                    let index = -2;
+
+                    index <= 2;
+
+                    index++
+                ) {
+                    createProjectile(
+                        player,
+                        direction,
+                        index * 0.16,
+                        player.damage *
+                        1.2,
+                        "explosive-arrow"
+                    );
+                }
+            } else {
+                radialProjectiles(
+                    player,
+                    8,
+                    player.damage,
+                    "explosive-arrow"
+                );
+            }
+
+            break;
+
+        default:
+            healFighter(
+                player,
+                40
+            );
+    }
+}
+
 function moveFighter(
     fighter,
     dx,
     dy
 ) {
+    const now =
+        performance.now();
+
     if (
-        performance.now() <
+        now <
         fighter.stunnedUntil
     ) {
         return;
@@ -1763,13 +2800,24 @@ function moveFighter(
 
     if (
         fighter.speedBoostUntil &&
-        performance.now() >
+        now >
         fighter.speedBoostUntil
     ) {
         fighter.speed =
             fighter.normalSpeed;
 
         fighter.speedBoostUntil = 0;
+    }
+
+    if (
+        fighter.rangeBoostUntil &&
+        now >
+        fighter.rangeBoostUntil
+    ) {
+        fighter.range =
+            fighter.normalRange;
+
+        fighter.rangeBoostUntil = 0;
     }
 
     const newX =
@@ -1857,7 +2905,8 @@ function createProjectile(
         attacker.heroId ===
             "lucznik" &&
         attacker.fastThirdArrow &&
-        attacker.attackCounter % 3 === 0
+        attacker.attackCounter %
+        3 === 0
     ) {
         speed *= 2.8;
         color = "white";
@@ -1872,10 +2921,12 @@ function createProjectile(
 
     if (
         attacker.heroId ===
-        "wiedzma"
+            "wiedzma" ||
+        type === "witch"
     ) {
         color = "#FFCC33";
         radius = 3;
+        speed = 28;
     }
 
     if (type === "fire") {
@@ -1924,20 +2975,26 @@ function createProjectile(
             attacker.y +
             dy * 32,
 
-        vx: dx * speed,
-        vy: dy * speed,
+        vx:
+            dx * speed,
+
+        vy:
+            dy * speed,
 
         radius: radius,
         damage: damage,
 
         owner: attacker,
+
         color: color,
 
         created:
             performance.now(),
 
         life: life,
-        type: type || "normal"
+
+        type:
+            type || "normal"
     });
 }
 
@@ -1947,6 +3004,24 @@ function createWave(
     damage,
     type
 ) {
+    let waveColor =
+        "#80eaff";
+
+    if (type === "stun") {
+        waveColor =
+            "#ffd92f";
+    }
+
+    if (type === "shaman") {
+        waveColor =
+            "#4bbcff";
+    }
+
+    if (type === "energy") {
+        waveColor =
+            "#d7a8ff";
+    }
+
     waves.push({
         x: attacker.x,
         y: attacker.y,
@@ -1956,9 +3031,11 @@ function createWave(
 
         speed:
             type === "stun"
-                ? attacker.projectileSpeed *
+                ? attacker
+                    .projectileSpeed *
                   1.5
-                : attacker.projectileSpeed,
+                : attacker
+                    .projectileSpeed,
 
         size:
             type === "shaman"
@@ -1966,22 +3043,19 @@ function createWave(
                 : 12,
 
         damage: damage,
+
         owner: attacker,
 
         created:
             performance.now(),
 
         life:
-            attacker.projectileLife,
+            attacker
+                .projectileLife,
 
         type: type,
 
-        color:
-            type === "stun"
-                ? "#ffd92f"
-                : type === "shaman"
-                    ? "#4bbcff"
-                    : "#80eaff"
+        color: waveColor
     });
 }
 
@@ -2033,7 +3107,8 @@ function createPotion(
             performance.now(),
 
         life:
-            attacker.projectileLife
+            attacker
+                .projectileLife
     });
 }
 
@@ -2044,38 +3119,95 @@ function createExplosion(
     damageAmount,
     owner
 ) {
-    effects.push({
-        x: x,
-        y: y,
-
-        radius: radius,
-
-        created:
-            performance.now(),
-
-        life: 350,
-
-        color: "#ffb13b"
-    });
-
-    getEnemies(owner).forEach(
-        function(target) {
-            if (
-                distance(
-                    {x: x, y: y},
-                    target
-                ) <=
-                radius +
-                target.radius
-            ) {
-                damageFighter(
-                    target,
-                    damageAmount,
-                    owner
-                );
-            }
-        }
+    createEffect(
+        x,
+        y,
+        radius,
+        "#ffb13b",
+        350
     );
+
+    getEnemies(owner)
+        .forEach(
+            function(target) {
+                if (
+                    distance(
+                        {
+                            x: x,
+                            y: y
+                        },
+                        target
+                    ) <=
+                    radius +
+                    target.radius
+                ) {
+                    damageFighter(
+                        target,
+                        damageAmount,
+                        owner
+                    );
+                }
+            }
+        );
+}
+
+function createGhost(
+    owner,
+    number
+) {
+    const angle =
+        Math.PI *
+        2 *
+        number /
+        5;
+
+    const ghost =
+        createFighter(
+            {
+                id: "duch",
+                nazwa: "Duch",
+                ikona: "👻"
+            },
+            {
+                x:
+                    owner.x +
+                    Math.cos(angle) *
+                    55,
+
+                y:
+                    owner.y +
+                    Math.sin(angle) *
+                    55
+            },
+            false,
+            900 + number
+        );
+
+    ghost.isSummon = true;
+    ghost.name = "DUCH";
+
+    ghost.hp = 18;
+    ghost.maxHp = 18;
+
+    ghost.damage =
+        Math.max(
+            5,
+            owner.damage /
+            5
+        );
+
+    ghost.speed = 2.5;
+    ghost.normalSpeed = 2.5;
+
+    ghost.range = 65;
+    ghost.normalRange = 65;
+
+    ghost.cooldown = 700;
+
+    ghost.melee = true;
+    ghost.canPassWalls = true;
+
+    fighters.push(ghost);
 }
 
 function healFighter(
@@ -2088,18 +3220,20 @@ function healFighter(
     fighter.hp =
         Math.min(
             fighter.maxHp,
-            fighter.hp + amount
+            fighter.hp +
+            amount
         );
 
-    const realHealing =
-        fighter.hp - before;
+    const healing =
+        fighter.hp -
+        before;
 
     if (fighter === player) {
         matchStats.healing +=
-            realHealing;
+            healing;
     }
 
-    return realHealing;
+    return healing;
 }
 
 function damageFighter(
@@ -2118,13 +3252,19 @@ function damageFighter(
     let damage =
         Math.max(
             1,
-            Math.round(amount || 0)
+            Math.round(
+                amount || 0
+            )
         );
+
+    const now =
+        performance.now();
 
     if (
         target.lowHpShield &&
         target.hp <=
-        target.maxHp * 0.3
+        target.maxHp *
+        0.3
     ) {
         damage =
             Math.max(
@@ -2135,13 +3275,27 @@ function damageFighter(
             );
     }
 
+    if (
+        target.damageReductionUntil >
+        now
+    ) {
+        damage =
+            Math.max(
+                1,
+                Math.round(
+                    damage * 0.5
+                )
+            );
+    }
+
     const realDamage =
         Math.min(
             target.hp,
             damage
         );
 
-    target.hp -= realDamage;
+    target.hp -=
+        realDamage;
 
     if (attacker === player) {
         matchStats.damageDealt +=
@@ -2218,41 +3372,53 @@ function attack(
         return;
     }
 
-    attacker.lastAttack = now;
+    attacker.lastAttack =
+        now;
+
     attacker.attackCounter++;
 
     const direction =
         normalize(
-            targetX - attacker.x,
-            targetY - attacker.y
+            targetX -
+            attacker.x,
+
+            targetY -
+            attacker.y
         );
 
     let damage =
         attacker.damage;
 
     if (
-        attacker.farmerThirdAttack &&
-        attacker.attackCounter % 3 === 0
+        attacker.damageBoostUntil >
+        now
     ) {
-        damage =
-            Math.round(
-                damage * 1.5
-            );
+        damage *= 1.5;
+    }
+
+    if (
+        attacker.farmerThirdAttack &&
+        attacker.attackCounter %
+        3 === 0
+    ) {
+        damage *= 1.5;
     }
 
     if (
         attacker.lowHpDamage &&
         attacker.hp <
-        attacker.maxHp * 0.5
+        attacker.maxHp *
+        0.5
     ) {
-        damage =
-            Math.round(
-                damage * 1.25
-            );
+        damage *= 1.25;
     }
 
+    damage =
+        Math.round(damage);
+
     if (attacker.vampire) {
-        attacker.vampireMode = true;
+        attacker.vampireMode =
+            true;
 
         attacker.speed =
             attacker.normalSpeed *
@@ -2359,8 +3525,10 @@ function attack(
     }
 
     if (
-        attacker.golemShockwave &&
-        attacker.attackCounter % 5 === 0
+        attacker
+            .golemShockwave &&
+        attacker.attackCounter %
+        5 === 0
     ) {
         createExplosion(
             attacker.x,
@@ -2451,21 +3619,24 @@ function attack(
             attacker,
             direction,
             -0.14,
-            damage
+            damage,
+            "normal"
         );
 
         createProjectile(
             attacker,
             direction,
             0,
-            damage
+            damage,
+            "normal"
         );
 
         createProjectile(
             attacker,
             direction,
             0.14,
-            damage
+            damage,
+            "normal"
         );
 
         return;
@@ -2519,7 +3690,8 @@ function attack(
         attacker,
         direction,
         0,
-        damage
+        damage,
+        "normal"
     );
 }
 
@@ -2533,17 +3705,21 @@ function prepareGame() {
         MAPS[selectedMapId] ||
         MAPS.green;
 
-    byId("mapName").textContent =
+    byId("mapName")
+        .textContent =
         selectedMap.name;
 
-    byId("loadingMap").textContent =
+    byId("loadingMap")
+        .textContent =
         selectedMap.name;
 
     const state =
         getState();
 
     const selectedHero =
-        getHero(state.selected) ||
+        getHero(
+            state.selected
+        ) ||
         BOHATEROWIE[0];
 
     fighters = [];
@@ -2554,6 +3730,7 @@ function prepareGame() {
 
     matchFinished = false;
     trophiesAwarded = false;
+    gadgetUsed = false;
 
     matchStats = {
         damageDealt: 0,
@@ -2567,7 +3744,9 @@ function prepareGame() {
     };
 
     const shuffledSpawns =
-        shuffle(spawnPoints);
+        shuffle(
+            spawnPoints
+        );
 
     player =
         createFighter(
@@ -2589,22 +3768,23 @@ function prepareGame() {
 
         index++
     ) {
-        const botHero =
+        const hero =
             randomItem(
                 BOHATEROWIE
             );
 
-        const bot =
+        fighters.push(
             createFighter(
-                botHero,
+                hero,
                 getSafeSpawn(
-                    shuffledSpawns[index]
+                    shuffledSpawns[
+                        index
+                    ]
                 ),
                 false,
                 index
-            );
-
-        fighters.push(bot);
+            )
+        );
     }
 
     camera.x =
@@ -2625,20 +3805,21 @@ function prepareGame() {
             canvas.height
         );
 
+    updateGadgetButton();
     updateGameInfo();
     startLoading();
 }
 
 function startLoading() {
-    let percentValue = 0;
+    let progress = 0;
 
     const timer =
         setInterval(
             function() {
-                percentValue =
+                progress =
                     Math.min(
                         100,
-                        percentValue +
+                        progress +
                         randomNumber(
                             5,
                             13
@@ -2648,19 +3829,17 @@ function startLoading() {
                 byId(
                     "loadingFill"
                 ).style.width =
-                    percentValue +
-                    "%";
+                    progress + "%";
 
                 byId(
                     "loadingPercent"
                 ).textContent =
                     Math.floor(
-                        percentValue
-                    ) +
-                    "%";
+                        progress
+                    ) + "%";
 
                 if (
-                    percentValue >=
+                    progress >=
                     100
                 ) {
                     clearInterval(
@@ -2692,9 +3871,7 @@ function startIntro() {
 
     phase = "intro";
 
-    const startCameraY = 0;
-
-    const targetCameraY =
+    const targetY =
         clamp(
             player.y -
             canvas.height / 2,
@@ -2706,7 +3883,7 @@ function startIntro() {
     const startTime =
         performance.now();
 
-    function animateIntro(time) {
+    function animate(time) {
         const progress =
             Math.min(
                 1,
@@ -2718,11 +3895,7 @@ function startIntro() {
             );
 
         camera.y =
-            startCameraY +
-            (
-                targetCameraY -
-                startCameraY
-            ) *
+            targetY *
             progress;
 
         byId(
@@ -2730,13 +3903,13 @@ function startIntro() {
         ).style.opacity =
             String(
                 0.88 -
-                0.88 *
-                progress
+                progress *
+                0.88
             );
 
         if (progress < 1) {
             requestAnimationFrame(
-                animateIntro
+                animate
             );
         } else {
             byId(
@@ -2770,7 +3943,7 @@ function startIntro() {
     }
 
     requestAnimationFrame(
-        animateIntro
+        animate
     );
 }
 
@@ -2825,6 +3998,7 @@ function updatePlayer() {
             player,
             direction.x *
             player.speed,
+
             direction.y *
             player.speed
         );
@@ -2835,20 +4009,25 @@ function updatePlayer() {
             player,
             mouse.x +
             camera.x,
+
             mouse.y +
             camera.y
         );
     }
 
-    if (attackJoystick.active) {
+    if (
+        attackJoystick.active
+    ) {
         attack(
             player,
+
             player.x +
             attackJoystick.x *
             Math.max(
                 player.range,
                 350
             ),
+
             player.y +
             attackJoystick.y *
             Math.max(
@@ -2901,6 +4080,7 @@ function updateBot(
         normalize(
             target.x -
             fighter.x,
+
             target.y -
             fighter.y
         );
@@ -2914,9 +4094,11 @@ function updateBot(
     const preferredRange =
         fighter.melee ||
         fighter.swordsman
-            ? fighter.range * 0.7
+            ? fighter.range *
+              0.7
             : Math.min(
-                fighter.range * 0.58,
+                fighter.range *
+                0.58,
                 520
             );
 
@@ -2930,6 +4112,7 @@ function updateBot(
             direction.x *
             fighter.speed *
             0.75,
+
             direction.y *
             fighter.speed *
             0.75
@@ -2946,11 +4129,15 @@ function updateBot(
 }
 
 function updateSummons(time) {
-    fighters.forEach(
+    const originalFighters =
+        fighters.slice();
+
+    originalFighters.forEach(
         function(fighter) {
             if (
                 !fighter.alive ||
-                !fighter.summonsGhosts ||
+                !fighter
+                    .summonsGhosts ||
                 time -
                 fighter.lastSummon <
                 3000
@@ -2961,59 +4148,10 @@ function updateSummons(time) {
             fighter.lastSummon =
                 time;
 
-            const ghostStats =
-                HERO_STATS.duch;
-
-            const ghost = {
-                ...createFighter(
-                    {
-                        id: "duch",
-                        nazwa: "Duch",
-                        ikona: "👻"
-                    },
-                    {
-                        x:
-                            fighter.x +
-                            40,
-
-                        y:
-                            fighter.y +
-                            40
-                    },
-                    false,
-                    999
-                ),
-
-                isSummon: true,
-
-                name: "DUCH",
-
-                hp: 18,
-                maxHp: 18,
-
-                damage: 8,
-
-                speed: 2.5,
-                normalSpeed: 2.5,
-
-                range: 65,
-                cooldown: 700,
-
-                canPassWalls: true
-            };
-
-            Object.assign(
-                ghost,
-                ghostStats
+            createGhost(
+                fighter,
+                0
             );
-
-            ghost.hp = 18;
-            ghost.maxHp = 18;
-            ghost.damage = 8;
-            ghost.speed = 2.5;
-            ghost.normalSpeed = 2.5;
-
-            fighters.push(ghost);
         }
     );
 }
@@ -3026,7 +4164,8 @@ function updateSwordsmen(time) {
                 !fighter.swordsman ||
                 !fighter.moving ||
                 time -
-                fighter.lastSwordDamage <
+                fighter
+                    .lastSwordDamage <
                 fighter.cooldown
             ) {
                 return;
@@ -3046,12 +4185,24 @@ function updateSwordsmen(time) {
                 fighter.range +
                 target.radius
             ) {
-                fighter.lastSwordDamage =
+                fighter
+                    .lastSwordDamage =
                     time;
+
+                let damage =
+                    fighter.damage;
+
+                if (
+                    fighter
+                        .damageBoostUntil >
+                    time
+                ) {
+                    damage *= 1.5;
+                }
 
                 damageFighter(
                     target,
-                    fighter.damage,
+                    damage,
                     fighter
                 );
             }
@@ -3346,7 +4497,8 @@ function updatePotions(time) {
                             potion.owner
                         );
                     } else {
-                        fighter.stunnedUntil =
+                        fighter
+                            .stunnedUntil =
                             performance.now() +
                             1000;
                     }
@@ -3435,7 +4587,8 @@ function awardTrophies(
         );
 
     const change =
-        after - before;
+        after -
+        before;
 
     state.heroTrophies[
         player.heroId
@@ -3466,10 +4619,12 @@ function awardTrophies(
         })
     );
 
-    matchStats.trophyChange =
+    matchStats
+        .trophyChange =
         change;
 
-    matchStats.heroTrophies =
+    matchStats
+        .heroTrophies =
         after;
 
     matchStats.placement =
@@ -3536,7 +4691,8 @@ function getTier(trophies) {
     return trophies < 20
         ? 1
         : Math.floor(
-            trophies / 10
+            trophies /
+            10
         );
 }
 
@@ -3558,12 +4714,14 @@ function showResult(won) {
 
     const changeText =
         (
-            matchStats.trophyChange >
+            matchStats
+                .trophyChange >
             0
                 ? "+"
                 : ""
         ) +
-        matchStats.trophyChange;
+        matchStats
+            .trophyChange;
 
     byId(
         "resultChange"
@@ -3599,50 +4757,58 @@ function showResult(won) {
     byId(
         "resultTrophies"
     ).textContent =
-        matchStats.heroTrophies;
+        matchStats
+            .heroTrophies;
 
     byId(
         "resultTrophiesMiddle"
     ).textContent =
-        matchStats.heroTrophies;
+        matchStats
+            .heroTrophies;
 
     byId(
         "resultTier"
     ).textContent =
         "TIER " +
         getTier(
-            matchStats.heroTrophies
+            matchStats
+                .heroTrophies
         );
 
     byId(
         "resultCoins"
     ).textContent =
-        matchStats.coinsReward;
+        matchStats
+            .coinsReward;
 
     byId(
         "resultTickets"
     ).textContent =
-        matchStats.ticketsReward;
+        matchStats
+            .ticketsReward;
 
     byId(
         "resultDamageDealt"
     ).textContent =
         Math.round(
-            matchStats.damageDealt
+            matchStats
+                .damageDealt
         );
 
     byId(
         "resultHealing"
     ).textContent =
         Math.round(
-            matchStats.healing
+            matchStats
+                .healing
         );
 
     byId(
         "resultDamageTaken"
     ).textContent =
         Math.round(
-            matchStats.damageTaken
+            matchStats
+                .damageTaken
         );
 
     byId(
@@ -3692,7 +4858,9 @@ function updateGame() {
 
     fighters.forEach(
         function(fighter) {
-            if (!fighter.isPlayer) {
+            if (
+                !fighter.isPlayer
+            ) {
                 updateBot(
                     fighter,
                     time
@@ -3715,7 +4883,8 @@ function updateGame() {
     camera.x =
         clamp(
             player.x -
-            canvas.width / 2,
+            canvas.width /
+            2,
             0,
             WORLD_SIZE -
             canvas.width
@@ -3724,7 +4893,8 @@ function updateGame() {
     camera.y =
         clamp(
             player.y -
-            canvas.height / 2,
+            canvas.height /
+            2,
             0,
             WORLD_SIZE -
             canvas.height
@@ -3747,12 +4917,15 @@ function isVisible(rectangle) {
         rectangle.x +
         rectangle.w >=
         camera.x &&
+
         rectangle.x <=
         camera.x +
         canvas.width &&
+
         rectangle.y +
         rectangle.h >=
         camera.y &&
+
         rectangle.y <=
         camera.y +
         canvas.height
@@ -3879,7 +5052,8 @@ function drawMapObjects() {
             );
 
             ctx.fillStyle =
-                selectedMap.bushLight;
+                selectedMap
+                    .bushLight;
 
             for (
                 let x = 12;
@@ -3898,11 +5072,13 @@ function drawMapObjects() {
                     ctx.beginPath();
 
                     ctx.arc(
-                        screenX(bush.x) +
-                        x,
+                        screenX(
+                            bush.x
+                        ) + x,
 
-                        screenY(bush.y) +
-                        y,
+                        screenY(
+                            bush.y
+                        ) + y,
 
                         13,
                         0,
@@ -3925,8 +5101,12 @@ function drawMapObjects() {
                 "#0004";
 
             ctx.fillRect(
-                screenX(wall.x) + 7,
-                screenY(wall.y) + 8,
+                screenX(wall.x) +
+                7,
+
+                screenY(wall.y) +
+                8,
+
                 wall.w,
                 wall.h
             );
@@ -4201,8 +5381,11 @@ function drawEffects() {
                 ctx.arc(
                     -index * 8,
                     0,
+
                     wave.size *
-                    index / 3,
+                    index /
+                    3,
+
                     -0.7,
                     0.7
                 );
@@ -4219,12 +5402,8 @@ function drawEffects() {
             ctx.beginPath();
 
             ctx.arc(
-                screenX(
-                    potion.x
-                ),
-                screenY(
-                    potion.y
-                ),
+                screenX(potion.x),
+                screenY(potion.y),
                 potion.radius,
                 0,
                 Math.PI * 2
@@ -4253,12 +5432,8 @@ function drawEffects() {
 
             ctx.fillText(
                 "🧪",
-                screenX(
-                    potion.x
-                ),
-                screenY(
-                    potion.y
-                )
+                screenX(potion.x),
+                screenY(potion.y)
             );
         }
     );
@@ -4557,7 +5732,7 @@ function gameLoop() {
 }
 
 function updateMovementButtons() {
-    const controls = [
+    [
         [
             "controlW",
             "w",
@@ -4581,9 +5756,7 @@ function updateMovementButtons() {
             "d",
             "arrowright"
         ]
-    ];
-
-    controls.forEach(
+    ].forEach(
         function(item) {
             byId(
                 item[0]
@@ -4604,6 +5777,13 @@ window.addEventListener(
         keys[
             event.key.toLowerCase()
         ] = true;
+
+        if (
+            event.key.toLowerCase() ===
+            "e"
+        ) {
+            activateGadget();
+        }
 
         updateMovementButtons();
 
@@ -4645,11 +5825,13 @@ function connectMovementButton(
             updateMovementButtons();
 
             if (
-                button.setPointerCapture
+                button
+                    .setPointerCapture
             ) {
-                button.setPointerCapture(
-                    event.pointerId
-                );
+                button
+                    .setPointerCapture(
+                        event.pointerId
+                    );
             }
         }
     );
@@ -4694,10 +5876,14 @@ connectMovementButton(
 );
 
 const attackPad =
-    byId("attackJoystick");
+    byId(
+        "attackJoystick"
+    );
 
 const attackStick =
-    byId("attackStick");
+    byId(
+        "attackStick"
+    );
 
 function moveAttackJoystick(
     clientX,
@@ -4716,10 +5902,12 @@ function moveAttackJoystick(
         rectangle.height / 2;
 
     const dx =
-        clientX - centerX;
+        clientX -
+        centerX;
 
     const dy =
-        clientY - centerY;
+        clientY -
+        centerY;
 
     const direction =
         normalize(dx, dy);
@@ -4729,11 +5917,14 @@ function moveAttackJoystick(
 
     const movement =
         Math.min(
-            rectangle.width * 0.26,
+            rectangle.width *
+            0.26,
             distanceFromCenter
         );
 
-    attackStick.style.transform =
+    attackStick
+        .style
+        .transform =
         "translate(-50%,-50%) " +
         "translate(" +
         direction.x *
@@ -4760,7 +5951,9 @@ function resetAttackJoystick() {
     attackJoystick.x = 0;
     attackJoystick.y = 0;
 
-    attackStick.style.transform =
+    attackStick
+        .style
+        .transform =
         "translate(-50%,-50%)";
 }
 
@@ -4769,9 +5962,10 @@ attackPad.addEventListener(
     function(event) {
         event.preventDefault();
 
-        attackPad.setPointerCapture(
-            event.pointerId
-        );
+        attackPad
+            .setPointerCapture(
+                event.pointerId
+            );
 
         moveAttackJoystick(
             event.clientX,
