@@ -4296,14 +4296,22 @@ function awardTrophies(
         after -
         before;
 
-    state.heroTrophies[
-        player.heroId
-    ] =
-        after;
+    state.heroTrophies[player.heroId] = after;
 
-    saveState(
-        state
-    );
+localStorage.setItem(
+    "pendingTrophyAnimation",
+    JSON.stringify({
+        heroId: player.heroId,
+        heroIcon: player.icon,
+        heroName: player.heroName,
+        change: realChange,
+        before: before,
+        after: after,
+        createdAt: Date.now()
+    })
+);
+
+saveState(state);
 
     matchStats.placement =
         safePlacement;
