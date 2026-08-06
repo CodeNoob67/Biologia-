@@ -1,0 +1,1759 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zombie World</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        overflow: hidden;
+        background: #07100a;
+        font-family: Arial, sans-serif;
+        user-select: none;
+    }
+
+    canvas {
+        display: block;
+        background: #1c5327;
+    }
+
+    #hud {
+        position: fixed;
+        left: 18px;
+        top: 18px;
+        width: 280px;
+        padding: 15px;
+        color: white;
+        background: rgba(0, 0, 0, 0.7);
+        border: 2px solid rgba(255, 255, 255, 0.18);
+        border-radius: 12px;
+        z-index: 5;
+        backdrop-filter: blur(5px);
+    }
+
+    #hud h2 {
+        margin-bottom: 10px;
+        color: #ffdd55;
+        font-size: 22px;
+    }
+
+    .bar {
+        width: 100%;
+        height: 18px;
+        margin: 5px 0 10px;
+        background: #222;
+        border: 1px solid #777;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .bar-fill {
+        height: 100%;
+        transition: width 0.15s;
+    }
+
+    #healthFill {
+        background: linear-gradient(90deg, #b90000, #ff3838);
+    }
+
+    #fuelFill {
+        background: linear-gradient(90deg, #c58a00, #ffe15c);
+    }
+
+    #staminaFill {
+        background: linear-gradient(90deg, #07851d, #5cff64);
+    }
+
+    #ammo {
+        font-size: 19px;
+        margin-top: 8px;
+    }
+
+    #mission {
+        position: fixed;
+        top: 18px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: min(620px, 90vw);
+        padding: 13px 20px;
+        text-align: center;
+        color: white;
+        background: rgba(0, 0, 0, 0.72);
+        border: 2px solid #ffcc34;
+        border-radius: 12px;
+        z-index: 5;
+    }
+
+    #interaction {
+        position: fixed;
+        left: 50%;
+        bottom: 35px;
+        transform: translateX(-50%);
+        color: white;
+        background: rgba(0, 0, 0, 0.8);
+        padding: 12px 22px;
+        border-radius: 10px;
+        font-size: 18px;
+        display: none;
+        z-index: 5;
+    }
+
+    #message {
+        position: fixed;
+        left: 50%;
+        top: 40%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 34px;
+        font-weight: bold;
+        text-align: center;
+        text-shadow: 0 3px 8px black;
+        opacity: 0;
+        transition: opacity 0.3s;
+        pointer-events: none;
+        z-index: 10;
+    }
+
+    #gameOver,
+    #victory {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.92);
+        color: white;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+        z-index: 20;
+    }
+
+    #gameOver h1 {
+        color: #ff3030;
+        font-size: 75px;
+    }
+
+    #victory h1 {
+        color: #5cff73;
+        font-size: 70px;
+    }
+
+    .end-screen p {
+        margin: 15px;
+        max-width: 700px;
+        font-size: 22px;
+        line-height: 1.5;
+    }
+
+    button {
+        padding: 13px 26px;
+        margin-top: 20px;
+        border: none;
+        border-radius: 9px;
+        background: #ffcc34;
+        color: #171717;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #ffe174;
+    }
+
+    #minimap {
+        position: fixed;
+        right: 18px;
+        bottom: 18px;
+        width: 220px;
+        height: 220px;
+        border: 3px solid rgba(255, 255, 255, 0.8);
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 6;
+    }
+
+    #instructions {
+        position: fixed;
+        right: 18px;
+        top: 18px;
+        padding: 13px;
+        color: white;
+        background: rgba(0, 0, 0, 0.67);
+        border-radius: 10px;
+        font-size: 14px;
+        line-height: 1.6;
+        z-index: 5;
+    }
+</style>
+</head>
+
+<body>
+
+<canvas id="game"></canvas>
+<canvas id="minimap" width="220" height="220"></canvas>
+
+<div id="hud">
+    <h2>ZOMBIE WORLD</h2>
+
+    <div>Życie: <span id="healthText">100</span></div>
+    <div class="bar">
+        <div id="healthFill" class="bar-fill"></div>
+    </div>
+
+    <div>Kondycja:</div>
+    <div class="bar">
+        <div id="staminaFill" class="bar-fill"></div>
+    </div>
+
+    <div id="fuelContainer" style="display:none">
+        <div>Paliwo: <span id="fuelText">100</span>%</div>
+        <div class="bar">
+            <div id="fuelFill" class="bar-fill"></div>
+        </div>
+    </div>
+
+    <div id="ammo">Amunicja: 12 / 72</div>
+    <div>Pokonane zombie: <span id="kills">0</span></div>
+    <div>Pozostałe części radia: <span id="parts">3</span></div>
+</div>
+
+<div id="mission">
+    Zbierz 3 części radia awaryjnego, a następnie dotrzyj do punktu ewakuacji.
+</div>
+
+<div id="instructions">
+    <b>Sterowanie</b><br>
+    WASD – ruch / jazda<br>
+    Shift – sprint<br>
+    E – ukradnij / opuść samochód<br>
+    LPM – strzał<br>
+    R – przeładuj<br>
+    Spacja – hamulec ręczny
+</div>
+
+<div id="interaction"></div>
+<div id="message"></div>
+
+<div id="gameOver" class="end-screen">
+    <h1>POKONANY</h1>
+    <p>Zombie przejęły kontrolę nad światem.</p>
+    <button onclick="location.reload()">Zagraj ponownie</button>
+</div>
+
+<div id="victory" class="end-screen">
+    <h1>UCIEKŁEŚ!</h1>
+    <p>Naprawiłeś radio i dotarłeś do helikoptera. Udało ci się opuścić obszar opanowany przez zombie.</p>
+    <button onclick="location.reload()">Zagraj ponownie</button>
+</div>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+const minimap = document.getElementById("minimap");
+const miniCtx = minimap.getContext("2d");
+
+function resizeCanvas() {
+    canvas.width = innerWidth;
+    canvas.height = innerHeight;
+}
+
+resizeCanvas();
+addEventListener("resize", resizeCanvas);
+
+const WORLD = {
+    width: 7000,
+    height: 7000
+};
+
+const keys = {};
+const mouse = {
+    x: 0,
+    y: 0,
+    down: false
+};
+
+let camera = {
+    x: 0,
+    y: 0
+};
+
+let gameEnded = false;
+let messageTimer = null;
+let lastTime = performance.now();
+
+const player = {
+    x: 3500,
+    y: 3500,
+    radius: 16,
+    speed: 210,
+    sprintSpeed: 330,
+    angle: 0,
+    health: 100,
+    stamina: 100,
+    ammo: 12,
+    reserveAmmo: 72,
+    magazineSize: 12,
+    reloadTime: 0,
+    shootCooldown: 0,
+    vehicle: null,
+    kills: 0,
+    radioParts: 0,
+    invincibleTime: 0
+};
+
+const extraction = {
+    x: 6200,
+    y: 720,
+    radius: 130,
+    active: false
+};
+
+const cars = [];
+const zombies = [];
+const bullets = [];
+const buildings = [];
+const trees = [];
+const roads = [];
+const radioParts = [];
+const bloodSplats = [];
+
+const carColors = [
+    "#ca2f2f",
+    "#247bd1",
+    "#dddddd",
+    "#222222",
+    "#e4ad22",
+    "#763ead",
+    "#229d64"
+];
+
+function random(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
+function distance(a, b) {
+    return Math.hypot(a.x - b.x, a.y - b.y);
+}
+
+function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+}
+
+function circleCollision(a, b, extra = 0) {
+    return distance(a, b) < (a.radius || 0) + (b.radius || 0) + extra;
+}
+
+function pointInBuilding(x, y, padding = 0) {
+    return buildings.some(building =>
+        x > building.x - padding &&
+        x < building.x + building.width + padding &&
+        y > building.y - padding &&
+        y < building.y + building.height + padding
+    );
+}
+
+function generateWorld() {
+    for (let x = 300; x < WORLD.width; x += 700) {
+        roads.push({
+            x: x,
+            y: 0,
+            width: 170,
+            height: WORLD.height,
+            vertical: true
+        });
+    }
+
+    for (let y = 350; y < WORLD.height; y += 700) {
+        roads.push({
+            x: 0,
+            y: y,
+            width: WORLD.width,
+            height: 170,
+            vertical: false
+        });
+    }
+
+    for (let gridX = 0; gridX < 10; gridX++) {
+        for (let gridY = 0; gridY < 10; gridY++) {
+            if (Math.random() < 0.18) continue;
+
+            const baseX = gridX * 700 + 200;
+            const baseY = gridY * 700 + 220;
+
+            const buildingCount = Math.floor(random(1, 4));
+
+            for (let i = 0; i < buildingCount; i++) {
+                const width = random(120, 260);
+                const height = random(100, 230);
+
+                buildings.push({
+                    x: baseX + random(0, 280),
+                    y: baseY + random(0, 270),
+                    width,
+                    height,
+                    color: `hsl(${random(15, 50)}, ${random(10, 35)}%, ${random(32, 55)}%)`
+                });
+            }
+        }
+    }
+
+    for (let i = 0; i < 430; i++) {
+        const tree = {
+            x: random(50, WORLD.width - 50),
+            y: random(50, WORLD.height - 50),
+            radius: random(15, 28)
+        };
+
+        if (!pointInBuilding(tree.x, tree.y, 25)) {
+            trees.push(tree);
+        }
+    }
+
+    for (let i = 0; i < 35; i++) {
+        let car;
+
+        do {
+            car = {
+                x: random(200, WORLD.width - 200),
+                y: random(200, WORLD.height - 200),
+                width: 65,
+                height: 34,
+                radius: 31,
+                angle: Math.random() < 0.5 ? 0 : Math.PI / 2,
+                speed: 0,
+                maxSpeed: random(390, 480),
+                acceleration: random(280, 350),
+                handling: random(2.2, 2.8),
+                friction: 0.975,
+                color: carColors[Math.floor(Math.random() * carColors.length)],
+                fuel: random(45, 100),
+                health: 100,
+                occupied: false
+            };
+        } while (pointInBuilding(car.x, car.y, 70));
+
+        cars.push(car);
+    }
+
+    for (let i = 0; i < 95; i++) {
+        spawnZombie();
+    }
+
+    const partLocations = [
+        { x: 900, y: 1150 },
+        { x: 3750, y: 900 },
+        { x: 5450, y: 4800 }
+    ];
+
+    for (const location of partLocations) {
+        radioParts.push({
+            x: location.x,
+            y: location.y,
+            radius: 20,
+            collected: false
+        });
+    }
+}
+
+function spawnZombie(x = null, y = null) {
+    let zombie;
+
+    do {
+        zombie = {
+            x: x ?? random(100, WORLD.width - 100),
+            y: y ?? random(100, WORLD.height - 100),
+            radius: random(14, 20),
+            speed: random(55, 95),
+            health: random(40, 75),
+            maxHealth: 75,
+            attackCooldown: 0,
+            wanderAngle: random(0, Math.PI * 2),
+            wanderTimer: random(1, 4),
+            alerted: false
+        };
+    } while (
+        pointInBuilding(zombie.x, zombie.y, 30) ||
+        Math.hypot(zombie.x - player.x, zombie.y - player.y) < 500
+    );
+
+    zombies.push(zombie);
+}
+
+function showMessage(text, duration = 1800) {
+    const element = document.getElementById("message");
+    element.textContent = text;
+    element.style.opacity = 1;
+
+    clearTimeout(messageTimer);
+
+    messageTimer = setTimeout(() => {
+        element.style.opacity = 0;
+    }, duration);
+}
+
+function getControlledObject() {
+    return player.vehicle || player;
+}
+
+function updatePlayer(delta) {
+    if (player.invincibleTime > 0) {
+        player.invincibleTime -= delta;
+    }
+
+    if (player.reloadTime > 0) {
+        player.reloadTime -= delta;
+
+        if (player.reloadTime <= 0) {
+            const needed = player.magazineSize - player.ammo;
+            const loaded = Math.min(needed, player.reserveAmmo);
+
+            player.ammo += loaded;
+            player.reserveAmmo -= loaded;
+
+            showMessage("Przeładowano");
+        }
+    }
+
+    if (player.shootCooldown > 0) {
+        player.shootCooldown -= delta;
+    }
+
+    const worldMouseX = mouse.x + camera.x;
+    const worldMouseY = mouse.y + camera.y;
+
+    player.angle = Math.atan2(
+        worldMouseY - player.y,
+        worldMouseX - player.x
+    );
+
+    if (player.vehicle) {
+        updateCar(player.vehicle, delta);
+        player.x = player.vehicle.x;
+        player.y = player.vehicle.y;
+        player.angle = player.vehicle.angle;
+    } else {
+        let dx = 0;
+        let dy = 0;
+
+        if (keys["w"] || keys["arrowup"]) dy -= 1;
+        if (keys["s"] || keys["arrowdown"]) dy += 1;
+        if (keys["a"] || keys["arrowleft"]) dx -= 1;
+        if (keys["d"] || keys["arrowright"]) dx += 1;
+
+        const length = Math.hypot(dx, dy);
+
+        if (length > 0) {
+            dx /= length;
+            dy /= length;
+
+            const sprinting = keys["shift"] && player.stamina > 0;
+            const speed = sprinting ? player.sprintSpeed : player.speed;
+
+            if (sprinting) {
+                player.stamina -= 24 * delta;
+            }
+
+            moveCharacter(player, dx * speed * delta, dy * speed * delta);
+        } else {
+            player.stamina += 18 * delta;
+        }
+
+        player.stamina = clamp(player.stamina, 0, 100);
+
+        if (mouse.down) {
+            shoot();
+        }
+    }
+
+    player.x = clamp(player.x, player.radius, WORLD.width - player.radius);
+    player.y = clamp(player.y, player.radius, WORLD.height - player.radius);
+}
+
+function moveCharacter(entity, dx, dy) {
+    const oldX = entity.x;
+    entity.x += dx;
+
+    if (pointInBuilding(entity.x, entity.y, entity.radius)) {
+        entity.x = oldX;
+    }
+
+    const oldY = entity.y;
+    entity.y += dy;
+
+    if (pointInBuilding(entity.x, entity.y, entity.radius)) {
+        entity.y = oldY;
+    }
+}
+
+function updateCar(car, delta) {
+    if (car.fuel <= 0) {
+        car.speed *= 0.96;
+        return;
+    }
+
+    let throttle = 0;
+
+    if (keys["w"] || keys["arrowup"]) throttle += 1;
+    if (keys["s"] || keys["arrowdown"]) throttle -= 1;
+
+    car.speed += throttle * car.acceleration * delta;
+
+    if (throttle !== 0) {
+        car.fuel -= Math.abs(throttle) * 1.4 * delta;
+    }
+
+    const steeringDirection = car.speed >= 0 ? 1 : -1;
+    const steeringPower = Math.min(Math.abs(car.speed) / 110, 1);
+
+    if (keys["a"] || keys["arrowleft"]) {
+        car.angle -= car.handling * steeringPower * steeringDirection * delta;
+    }
+
+    if (keys["d"] || keys["arrowright"]) {
+        car.angle += car.handling * steeringPower * steeringDirection * delta;
+    }
+
+    if (keys[" "]) {
+        car.speed *= Math.pow(0.82, delta * 60);
+    } else {
+        car.speed *= Math.pow(car.friction, delta * 60);
+    }
+
+    car.speed = clamp(car.speed, -car.maxSpeed * 0.42, car.maxSpeed);
+    car.fuel = clamp(car.fuel, 0, 100);
+
+    const oldX = car.x;
+    const oldY = car.y;
+
+    car.x += Math.cos(car.angle) * car.speed * delta;
+    car.y += Math.sin(car.angle) * car.speed * delta;
+
+    let crashed = false;
+
+    if (
+        pointInBuilding(car.x, car.y, car.radius) ||
+        car.x < car.radius ||
+        car.y < car.radius ||
+        car.x > WORLD.width - car.radius ||
+        car.y > WORLD.height - car.radius
+    ) {
+        car.x = oldX;
+        car.y = oldY;
+
+        if (Math.abs(car.speed) > 160) {
+            car.health -= Math.abs(car.speed) * 0.035;
+            showMessage("Samochód został uszkodzony!");
+        }
+
+        car.speed *= -0.35;
+        crashed = true;
+    }
+
+    for (const tree of trees) {
+        if (distance(car, tree) < car.radius + tree.radius) {
+            car.x = oldX;
+            car.y = oldY;
+            car.speed *= -0.3;
+            crashed = true;
+            break;
+        }
+    }
+
+    for (const otherCar of cars) {
+        if (otherCar === car) continue;
+
+        if (distance(car, otherCar) < car.radius + otherCar.radius) {
+            car.x = oldX;
+            car.y = oldY;
+
+            otherCar.speed += car.speed * 0.35;
+            car.speed *= -0.32;
+            crashed = true;
+            break;
+        }
+    }
+
+    for (let i = zombies.length - 1; i >= 0; i--) {
+        const zombie = zombies[i];
+
+        if (distance(car, zombie) < car.radius + zombie.radius) {
+            if (Math.abs(car.speed) > 80) {
+                zombie.health -= Math.abs(car.speed) * 0.42;
+                zombie.x += Math.cos(car.angle) * 50;
+                zombie.y += Math.sin(car.angle) * 50;
+                car.speed *= 0.88;
+
+                addBlood(zombie.x, zombie.y);
+
+                if (zombie.health <= 0) {
+                    zombies.splice(i, 1);
+                    player.kills++;
+                }
+            }
+        }
+    }
+
+    if (crashed) {
+        car.health = clamp(car.health, 0, 100);
+    }
+
+    if (car.health <= 0) {
+        explodeCar(car);
+    }
+}
+
+function explodeCar(car) {
+    showMessage("Samochód eksplodował!", 2200);
+
+    for (const zombie of zombies) {
+        const dist = distance(car, zombie);
+
+        if (dist < 260) {
+            zombie.health -= 120 * (1 - dist / 260);
+            addBlood(zombie.x, zombie.y);
+        }
+    }
+
+    player.health -= 45;
+
+    player.vehicle = null;
+    car.occupied = false;
+    car.health = 100;
+    car.fuel = 0;
+    car.speed = 0;
+
+    player.x = clamp(car.x + 90, 20, WORLD.width - 20);
+    player.y = clamp(car.y, 20, WORLD.height - 20);
+}
+
+function shoot() {
+    if (player.vehicle) return;
+    if (player.reloadTime > 0) return;
+    if (player.shootCooldown > 0) return;
+
+    if (player.ammo <= 0) {
+        reloadWeapon();
+        return;
+    }
+
+    player.ammo--;
+    player.shootCooldown = 0.18;
+
+    const spread = random(-0.035, 0.035);
+    const angle = player.angle + spread;
+
+    bullets.push({
+        x: player.x + Math.cos(angle) * 24,
+        y: player.y + Math.sin(angle) * 24,
+        angle,
+        speed: 850,
+        radius: 4,
+        damage: random(32, 48),
+        life: 1.3
+    });
+
+    for (const zombie of zombies) {
+        if (distance(player, zombie) < 650) {
+            zombie.alerted = true;
+        }
+    }
+}
+
+function reloadWeapon() {
+    if (player.reloadTime > 0) return;
+    if (player.ammo >= player.magazineSize) return;
+    if (player.reserveAmmo <= 0) return;
+
+    player.reloadTime = 1.4;
+    showMessage("Przeładowywanie...");
+}
+
+function updateBullets(delta) {
+    for (let i = bullets.length - 1; i >= 0; i--) {
+        const bullet = bullets[i];
+
+        bullet.x += Math.cos(bullet.angle) * bullet.speed * delta;
+        bullet.y += Math.sin(bullet.angle) * bullet.speed * delta;
+        bullet.life -= delta;
+
+        if (
+            bullet.life <= 0 ||
+            bullet.x < 0 ||
+            bullet.y < 0 ||
+            bullet.x > WORLD.width ||
+            bullet.y > WORLD.height ||
+            pointInBuilding(bullet.x, bullet.y)
+        ) {
+            bullets.splice(i, 1);
+            continue;
+        }
+
+        let hit = false;
+
+        for (let z = zombies.length - 1; z >= 0; z--) {
+            const zombie = zombies[z];
+
+            if (distance(bullet, zombie) < bullet.radius + zombie.radius) {
+                zombie.health -= bullet.damage;
+                zombie.alerted = true;
+
+                addBlood(bullet.x, bullet.y);
+
+                if (zombie.health <= 0) {
+                    zombies.splice(z, 1);
+                    player.kills++;
+
+                    if (Math.random() < 0.16) {
+                        player.reserveAmmo += Math.floor(random(3, 9));
+                    }
+                }
+
+                hit = true;
+                break;
+            }
+        }
+
+        if (hit) {
+            bullets.splice(i, 1);
+        }
+    }
+}
+
+function updateZombies(delta) {
+    const target = player.vehicle || player;
+
+    for (const zombie of zombies) {
+        zombie.attackCooldown -= delta;
+        zombie.wanderTimer -= delta;
+
+        const targetDistance = distance(zombie, target);
+        const detectionRange = player.vehicle ? 650 : 420;
+
+        if (targetDistance < detectionRange) {
+            zombie.alerted = true;
+        }
+
+        let moveAngle;
+
+        if (zombie.alerted) {
+            moveAngle = Math.atan2(
+                target.y - zombie.y,
+                target.x - zombie.x
+            );
+
+            const speedBonus = targetDistance < 180 ? 1.2 : 1;
+
+            const dx = Math.cos(moveAngle) * zombie.speed * speedBonus * delta;
+            const dy = Math.sin(moveAngle) * zombie.speed * speedBonus * delta;
+
+            moveZombie(zombie, dx, dy);
+
+            if (targetDistance > 1100) {
+                zombie.alerted = false;
+            }
+        } else {
+            if (zombie.wanderTimer <= 0) {
+                zombie.wanderAngle += random(-1.8, 1.8);
+                zombie.wanderTimer = random(1.5, 4);
+            }
+
+            moveAngle = zombie.wanderAngle;
+
+            moveZombie(
+                zombie,
+                Math.cos(moveAngle) * zombie.speed * 0.35 * delta,
+                Math.sin(moveAngle) * zombie.speed * 0.35 * delta
+            );
+        }
+
+        if (targetDistance < zombie.radius + (target.radius || 20) + 8) {
+            if (player.vehicle) {
+                player.vehicle.health -= 7 * delta;
+            } else if (zombie.attackCooldown <= 0 && player.invincibleTime <= 0) {
+                player.health -= random(5, 10);
+                zombie.attackCooldown = 0.75;
+                player.invincibleTime = 0.3;
+                showMessage("Zombie cię ugryzł!", 700);
+            }
+        }
+    }
+
+    if (zombies.length < 80 && Math.random() < delta * 1.4) {
+        spawnZombie();
+    }
+}
+
+function moveZombie(zombie, dx, dy) {
+    const oldX = zombie.x;
+    zombie.x += dx;
+
+    if (pointInBuilding(zombie.x, zombie.y, zombie.radius)) {
+        zombie.x = oldX;
+        zombie.wanderAngle += Math.PI / 2;
+    }
+
+    const oldY = zombie.y;
+    zombie.y += dy;
+
+    if (pointInBuilding(zombie.x, zombie.y, zombie.radius)) {
+        zombie.y = oldY;
+        zombie.wanderAngle += Math.PI / 2;
+    }
+
+    zombie.x = clamp(zombie.x, zombie.radius, WORLD.width - zombie.radius);
+    zombie.y = clamp(zombie.y, zombie.radius, WORLD.height - zombie.radius);
+}
+
+function updateRadioParts() {
+    for (const part of radioParts) {
+        if (part.collected) continue;
+
+        if (distance(player, part) < 45) {
+            part.collected = true;
+            player.radioParts++;
+
+            showMessage(
+                `Zdobyto część radia ${player.radioParts}/3`,
+                2300
+            );
+
+            if (player.radioParts >= 3) {
+                extraction.active = true;
+
+                document.getElementById("mission").textContent =
+                    "Radio działa! Dotrzyj do zielonego punktu ewakuacji.";
+
+                showMessage("Odblokowano punkt ewakuacji!", 3000);
+            }
+        }
+    }
+
+    if (
+        extraction.active &&
+        distance(player, extraction) < extraction.radius
+    ) {
+        endGame(true);
+    }
+}
+
+function interact() {
+    if (player.vehicle) {
+        const car = player.vehicle;
+
+        player.vehicle = null;
+        car.occupied = false;
+        car.speed *= 0.5;
+
+        player.x = car.x + Math.cos(car.angle + Math.PI / 2) * 55;
+        player.y = car.y + Math.sin(car.angle + Math.PI / 2) * 55;
+
+        showMessage("Opuściłeś samochód");
+        return;
+    }
+
+    let nearestCar = null;
+    let nearestDistance = Infinity;
+
+    for (const car of cars) {
+        const dist = distance(player, car);
+
+        if (
+            dist < 75 &&
+            dist < nearestDistance &&
+            car.health > 0
+        ) {
+            nearestCar = car;
+            nearestDistance = dist;
+        }
+    }
+
+    if (nearestCar) {
+        player.vehicle = nearestCar;
+        nearestCar.occupied = true;
+
+        showMessage("Ukradłeś samochód!");
+    }
+}
+
+function addBlood(x, y) {
+    bloodSplats.push({
+        x: x + random(-8, 8),
+        y: y + random(-8, 8),
+        radius: random(5, 14),
+        alpha: 0.7
+    });
+
+    if (bloodSplats.length > 180) {
+        bloodSplats.shift();
+    }
+}
+
+function updateInteractionText() {
+    const interaction = document.getElementById("interaction");
+
+    if (player.vehicle) {
+        interaction.style.display = "block";
+        interaction.textContent = "E – opuść samochód";
+        return;
+    }
+
+    const carNearby = cars.some(car =>
+        distance(player, car) < 75 &&
+        car.health > 0
+    );
+
+    if (carNearby) {
+        interaction.style.display = "block";
+        interaction.textContent = "E – ukradnij samochód";
+    } else {
+        interaction.style.display = "none";
+    }
+}
+
+function updateCamera() {
+    const target = getControlledObject();
+
+    camera.x += (
+        target.x - canvas.width / 2 - camera.x
+    ) * 0.1;
+
+    camera.y += (
+        target.y - canvas.height / 2 - camera.y
+    ) * 0.1;
+
+    camera.x = clamp(
+        camera.x,
+        0,
+        Math.max(0, WORLD.width - canvas.width)
+    );
+
+    camera.y = clamp(
+        camera.y,
+        0,
+        Math.max(0, WORLD.height - canvas.height)
+    );
+}
+
+function updateHUD() {
+    player.health = clamp(player.health, 0, 100);
+
+    document.getElementById("healthText").textContent =
+        Math.ceil(player.health);
+
+    document.getElementById("healthFill").style.width =
+        `${player.health}%`;
+
+    document.getElementById("staminaFill").style.width =
+        `${player.stamina}%`;
+
+    document.getElementById("ammo").textContent =
+        player.reloadTime > 0
+            ? "Przeładowywanie..."
+            : `Amunicja: ${player.ammo} / ${player.reserveAmmo}`;
+
+    document.getElementById("kills").textContent =
+        player.kills;
+
+    document.getElementById("parts").textContent =
+        3 - player.radioParts;
+
+    const fuelContainer = document.getElementById("fuelContainer");
+
+    if (player.vehicle) {
+        fuelContainer.style.display = "block";
+
+        document.getElementById("fuelText").textContent =
+            Math.ceil(player.vehicle.fuel);
+
+        document.getElementById("fuelFill").style.width =
+            `${player.vehicle.fuel}%`;
+    } else {
+        fuelContainer.style.display = "none";
+    }
+
+    if (player.health <= 0) {
+        endGame(false);
+    }
+}
+
+function endGame(victory) {
+    if (gameEnded) return;
+
+    gameEnded = true;
+
+    document.getElementById(
+        victory ? "victory" : "gameOver"
+    ).style.display = "flex";
+}
+
+function isVisible(object, margin = 100) {
+    return (
+        object.x + margin > camera.x &&
+        object.x - margin < camera.x + canvas.width &&
+        object.y + margin > camera.y &&
+        object.y - margin < camera.y + canvas.height
+    );
+}
+
+function drawWorld() {
+    ctx.fillStyle = "#276f35";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.save();
+    ctx.translate(-camera.x, -camera.y);
+
+    drawGroundDetails();
+    drawRoads();
+    drawBlood();
+    drawExtraction();
+    drawBuildings();
+    drawTrees();
+    drawRadioParts();
+    drawCars();
+    drawZombies();
+    drawBullets();
+
+    if (!player.vehicle) {
+        drawPlayer();
+    }
+
+    ctx.restore();
+
+    drawCrosshair();
+    drawDayNightEffect();
+}
+
+function drawGroundDetails() {
+    const tileSize = 300;
+
+    const startX = Math.floor(camera.x / tileSize) * tileSize;
+    const startY = Math.floor(camera.y / tileSize) * tileSize;
+
+    for (
+        let x = startX;
+        x < camera.x + canvas.width + tileSize;
+        x += tileSize
+    ) {
+        for (
+            let y = startY;
+            y < camera.y + canvas.height + tileSize;
+            y += tileSize
+        ) {
+            const value = Math.abs(
+                Math.sin(x * 0.017 + y * 0.009)
+            );
+
+            ctx.fillStyle =
+                value > 0.6
+                    ? "rgba(20,80,30,0.18)"
+                    : "rgba(100,150,70,0.08)";
+
+            ctx.fillRect(x, y, tileSize, tileSize);
+        }
+    }
+}
+
+function drawRoads() {
+    for (const road of roads) {
+        if (
+            road.x + road.width < camera.x - 100 ||
+            road.x > camera.x + canvas.width + 100 ||
+            road.y + road.height < camera.y - 100 ||
+            road.y > camera.y + canvas.height + 100
+        ) continue;
+
+        ctx.fillStyle = "#414141";
+        ctx.fillRect(road.x, road.y, road.width, road.height);
+
+        ctx.strokeStyle = "#e8d96e";
+        ctx.lineWidth = 4;
+        ctx.setLineDash([35, 28]);
+
+        ctx.beginPath();
+
+        if (road.vertical) {
+            ctx.moveTo(road.x + road.width / 2, road.y);
+            ctx.lineTo(road.x + road.width / 2, road.y + road.height);
+        } else {
+            ctx.moveTo(road.x, road.y + road.height / 2);
+            ctx.lineTo(road.x + road.width, road.y + road.height / 2);
+        }
+
+        ctx.stroke();
+        ctx.setLineDash([]);
+    }
+}
+
+function drawBuildings() {
+    for (const building of buildings) {
+        if (
+            building.x + building.width < camera.x - 100 ||
+            building.x > camera.x + canvas.width + 100 ||
+            building.y + building.height < camera.y - 100 ||
+            building.y > camera.y + canvas.height + 100
+        ) continue;
+
+        ctx.fillStyle = "rgba(0,0,0,0.28)";
+        ctx.fillRect(
+            building.x + 13,
+            building.y + 13,
+            building.width,
+            building.height
+        );
+
+        ctx.fillStyle = building.color;
+        ctx.fillRect(
+            building.x,
+            building.y,
+            building.width,
+            building.height
+        );
+
+        ctx.strokeStyle = "#242424";
+        ctx.lineWidth = 5;
+        ctx.strokeRect(
+            building.x,
+            building.y,
+            building.width,
+            building.height
+        );
+
+        ctx.fillStyle = "rgba(120,210,255,0.6)";
+
+        const windowsX = Math.floor(building.width / 55);
+        const windowsY = Math.floor(building.height / 55);
+
+        for (let x = 0; x < windowsX; x++) {
+            for (let y = 0; y < windowsY; y++) {
+                ctx.fillRect(
+                    building.x + 18 + x * 55,
+                    building.y + 18 + y * 55,
+                    22,
+                    18
+                );
+            }
+        }
+    }
+}
+
+function drawTrees() {
+    for (const tree of trees) {
+        if (!isVisible(tree, 60)) continue;
+
+        ctx.fillStyle = "rgba(0,0,0,0.25)";
+        ctx.beginPath();
+        ctx.arc(
+            tree.x + 8,
+            tree.y + 8,
+            tree.radius + 5,
+            0,
+            Math.PI * 2
+        );
+        ctx.fill();
+
+        ctx.fillStyle = "#513319";
+        ctx.fillRect(tree.x - 5, tree.y - 3, 10, 24);
+
+        ctx.fillStyle = "#123f1c";
+        ctx.beginPath();
+        ctx.arc(
+            tree.x,
+            tree.y - 10,
+            tree.radius,
+            0,
+            Math.PI * 2
+        );
+        ctx.fill();
+
+        ctx.fillStyle = "#206c2d";
+        ctx.beginPath();
+        ctx.arc(
+            tree.x - 8,
+            tree.y - 17,
+            tree.radius * 0.65,
+            0,
+            Math.PI * 2
+        );
+        ctx.fill();
+    }
+}
+
+function drawPlayer() {
+    ctx.save();
+    ctx.translate(player.x, player.y);
+    ctx.rotate(player.angle);
+
+    if (
+        player.invincibleTime > 0 &&
+        Math.floor(player.invincibleTime * 15) % 2 === 0
+    ) {
+        ctx.globalAlpha = 0.4;
+    }
+
+    ctx.fillStyle = "#f0bd8e";
+    ctx.beginPath();
+    ctx.arc(0, 0, player.radius, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = "#214c99";
+    ctx.fillRect(-12, -10, 22, 20);
+
+    ctx.fillStyle = "#222";
+    ctx.fillRect(4, -4, 28, 8);
+
+    ctx.fillStyle = "#111";
+    ctx.beginPath();
+    ctx.arc(8, -7, 3, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+}
+
+function drawCarShape(car) {
+    ctx.save();
+    ctx.translate(car.x, car.y);
+    ctx.rotate(car.angle);
+
+    ctx.fillStyle = "rgba(0,0,0,0.4)";
+    ctx.fillRect(
+        -car.width / 2 + 6,
+        -car.height / 2 + 7,
+        car.width,
+        car.height
+    );
+
+    ctx.fillStyle = car.color;
+    ctx.fillRect(
+        -car.width / 2,
+        -car.height / 2,
+        car.width,
+        car.height
+    );
+
+    ctx.fillStyle = "#151515";
+    ctx.fillRect(-20, -car.height / 2 - 4, 15, 6);
+    ctx.fillRect(10, -car.height / 2 - 4, 15, 6);
+    ctx.fillRect(-20, car.height / 2 - 2, 15, 6);
+    ctx.fillRect(10, car.height / 2 - 2, 15, 6);
+
+    ctx.fillStyle = "#94d8f5";
+    ctx.fillRect(-8, -car.height / 2 + 4, 21, 8);
+    ctx.fillRect(-8, car.height / 2 - 12, 21, 8);
+
+    ctx.fillStyle = "#ffe75a";
+    ctx.fillRect(car.width / 2 - 4, -11, 5, 7);
+    ctx.fillRect(car.width / 2 - 4, 4, 5, 7);
+
+    if (car.fuel <= 0) {
+        ctx.fillStyle = "rgba(30,30,30,0.5)";
+        ctx.beginPath();
+        ctx.arc(-20, -25, 16, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    if (car.occupied) {
+        ctx.strokeStyle = "#56ff65";
+        ctx.lineWidth = 3;
+        ctx.strokeRect(
+            -car.width / 2 - 4,
+            -car.height / 2 - 4,
+            car.width + 8,
+            car.height + 8
+        );
+    }
+
+    ctx.restore();
+}
+
+function drawCars() {
+    for (const car of cars) {
+        if (!isVisible(car, 100)) continue;
+        drawCarShape(car);
+    }
+}
+
+function drawZombies() {
+    for (const zombie of zombies) {
+        if (!isVisible(zombie, 60)) continue;
+
+        ctx.save();
+        ctx.translate(zombie.x, zombie.y);
+
+        ctx.fillStyle = "#78a449";
+        ctx.beginPath();
+        ctx.arc(0, 0, zombie.radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = "#493f36";
+        ctx.fillRect(
+            -zombie.radius * 0.75,
+            -4,
+            zombie.radius * 1.5,
+            zombie.radius * 1.5
+        );
+
+        ctx.fillStyle = "#ff2626";
+        ctx.beginPath();
+        ctx.arc(-5, -5, 2.5, 0, Math.PI * 2);
+        ctx.arc(5, -5, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        if (zombie.health < zombie.maxHealth) {
+            const healthWidth = 36;
+
+            ctx.fillStyle = "#111";
+            ctx.fillRect(
+                -healthWidth / 2,
+                -zombie.radius - 13,
+                healthWidth,
+                5
+            );
+
+            ctx.fillStyle = "#ff3030";
+            ctx.fillRect(
+                -healthWidth / 2,
+                -zombie.radius - 13,
+                healthWidth * clamp(
+                    zombie.health / zombie.maxHealth,
+                    0,
+                    1
+                ),
+                5
+            );
+        }
+
+        ctx.restore();
+    }
+}
+
+function drawBullets() {
+    ctx.fillStyle = "#fff17a";
+
+    for (const bullet of bullets) {
+        ctx.beginPath();
+        ctx.arc(
+            bullet.x,
+            bullet.y,
+            bullet.radius,
+            0,
+            Math.PI * 2
+        );
+        ctx.fill();
+    }
+}
+
+function drawBlood() {
+    for (const blood of bloodSplats) {
+        ctx.fillStyle = `rgba(100,0,0,${blood.alpha})`;
+        ctx.beginPath();
+        ctx.arc(
+            blood.x,
+            blood.y,
+            blood.radius,
+            0,
+            Math.PI * 2
+        );
+        ctx.fill();
+    }
+}
+
+function drawRadioParts() {
+    for (const part of radioParts) {
+        if (part.collected || !isVisible(part, 80)) continue;
+
+        const pulse = 1 + Math.sin(performance.now() * 0.005) * 0.15;
+
+        ctx.save();
+        ctx.translate(part.x, part.y);
+        ctx.scale(pulse, pulse);
+
+        ctx.fillStyle = "rgba(255,220,40,0.2)";
+        ctx.beginPath();
+        ctx.arc(0, 0, 42, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = "#ffd72f";
+        ctx.fillRect(-15, -12, 30, 24);
+
+        ctx.fillStyle = "#333";
+        ctx.fillRect(-9, -6, 18, 7);
+
+        ctx.strokeStyle = "#ffd72f";
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(8, -12);
+        ctx.lineTo(18, -32);
+        ctx.stroke();
+
+        ctx.restore();
+    }
+}
+
+function drawExtraction() {
+    if (!extraction.active) return;
+    if (!isVisible(extraction, 220)) return;
+
+    const pulse = 1 + Math.sin(performance.now() * 0.004) * 0.08;
+
+    ctx.save();
+    ctx.translate(extraction.x, extraction.y);
+    ctx.scale(pulse, pulse);
+
+    ctx.fillStyle = "rgba(50,255,80,0.18)";
+    ctx.beginPath();
+    ctx.arc(
+        0,
+        0,
+        extraction.radius,
+        0,
+        Math.PI * 2
+    );
+    ctx.fill();
+
+    ctx.strokeStyle = "#4cff63";
+    ctx.lineWidth = 8;
+    ctx.beginPath();
+    ctx.arc(
+        0,
+        0,
+        extraction.radius,
+        0,
+        Math.PI * 2
+    );
+    ctx.stroke();
+
+    ctx.fillStyle = "#151515";
+    ctx.fillRect(-45, -12, 90, 24);
+    ctx.fillRect(-8, -60, 16, 120);
+
+    ctx.strokeStyle = "#202020";
+    ctx.lineWidth = 8;
+    ctx.beginPath();
+    ctx.moveTo(-90, -45);
+    ctx.lineTo(90, 45);
+    ctx.moveTo(-90, 45);
+    ctx.lineTo(90, -45);
+    ctx.stroke();
+
+    ctx.restore();
+}
+
+function drawCrosshair() {
+    if (player.vehicle) return;
+
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 2;
+
+    ctx.beginPath();
+    ctx.arc(mouse.x, mouse.y, 10, 0, Math.PI * 2);
+    ctx.moveTo(mouse.x - 16, mouse.y);
+    ctx.lineTo(mouse.x - 5, mouse.y);
+    ctx.moveTo(mouse.x + 5, mouse.y);
+    ctx.lineTo(mouse.x + 16, mouse.y);
+    ctx.moveTo(mouse.x, mouse.y - 16);
+    ctx.lineTo(mouse.x, mouse.y - 5);
+    ctx.moveTo(mouse.x, mouse.y + 5);
+    ctx.lineTo(mouse.x, mouse.y + 16);
+    ctx.stroke();
+}
+
+function drawDayNightEffect() {
+    const time = performance.now() * 0.000025;
+    const darkness = 0.08 + (Math.sin(time) + 1) * 0.09;
+
+    const gradient = ctx.createRadialGradient(
+        canvas.width / 2,
+        canvas.height / 2,
+        100,
+        canvas.width / 2,
+        canvas.height / 2,
+        Math.max(canvas.width, canvas.height) * 0.8
+    );
+
+    gradient.addColorStop(0, "rgba(0,0,10,0)");
+    gradient.addColorStop(
+        1,
+        `rgba(0,0,15,${darkness})`
+    );
+
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+function drawMinimap() {
+    miniCtx.clearRect(0, 0, minimap.width, minimap.height);
+
+    miniCtx.save();
+
+    miniCtx.beginPath();
+    miniCtx.arc(110, 110, 106, 0, Math.PI * 2);
+    miniCtx.clip();
+
+    miniCtx.fillStyle = "#285c32";
+    miniCtx.fillRect(0, 0, 220, 220);
+
+    const scaleX = 220 / WORLD.width;
+    const scaleY = 220 / WORLD.height;
+
+    miniCtx.fillStyle = "#555";
+
+    for (const road of roads) {
+        miniCtx.fillRect(
+            road.x * scaleX,
+            road.y * scaleY,
+            Math.max(1, road.width * scaleX),
+            Math.max(1, road.height * scaleY)
+        );
+    }
+
+    miniCtx.fillStyle = "#222";
+
+    for (const building of buildings) {
+        miniCtx.fillRect(
+            building.x * scaleX,
+            building.y * scaleY,
+            Math.max(2, building.width * scaleX),
+            Math.max(2, building.height * scaleY)
+        );
+    }
+
+    for (const part of radioParts) {
+        if (part.collected) continue;
+
+        miniCtx.fillStyle = "#ffe432";
+        miniCtx.beginPath();
+        miniCtx.arc(
+            part.x * scaleX,
+            part.y * scaleY,
+            4,
+            0,
+            Math.PI * 2
+        );
+        miniCtx.fill();
+    }
+
+    if (extraction.active) {
+        miniCtx.fillStyle = "#45ff62";
+        miniCtx.beginPath();
+        miniCtx.arc(
+            extraction.x * scaleX,
+            extraction.y * scaleY,
+            7,
+            0,
+            Math.PI * 2
+        );
+        miniCtx.fill();
+    }
+
+    const target = getControlledObject();
+
+    miniCtx.fillStyle = "#ffffff";
+    miniCtx.beginPath();
+    miniCtx.arc(
+        target.x * scaleX,
+        target.y * scaleY,
+        5,
+        0,
+        Math.PI * 2
+    );
+    miniCtx.fill();
+
+    miniCtx.restore();
+
+    miniCtx.strokeStyle = "rgba(255,255,255,0.8)";
+    miniCtx.lineWidth = 3;
+    miniCtx.beginPath();
+    miniCtx.arc(110, 110, 106, 0, Math.PI * 2);
+    miniCtx.stroke();
+}
+
+function update(delta) {
+    if (gameEnded) return;
+
+    updatePlayer(delta);
+    updateBullets(delta);
+    updateZombies(delta);
+    updateRadioParts();
+    updateInteractionText();
+    updateCamera();
+    updateHUD();
+}
+
+function gameLoop(currentTime) {
+    const delta = Math.min(
+        (currentTime - lastTime) / 1000,
+        0.033
+    );
+
+    lastTime = currentTime;
+
+    update(delta);
+    drawWorld();
+    drawMinimap();
+
+    requestAnimationFrame(gameLoop);
+}
+
+addEventListener("keydown", event => {
+    const key = event.key.toLowerCase();
+    keys[key] = true;
+
+    if (
+        ["arrowup", "arrowdown", "arrowleft", "arrowright", " "]
+            .includes(key)
+    ) {
+        event.preventDefault();
+    }
+
+    if (key === "e" && !event.repeat) {
+        interact();
+    }
+
+    if (key === "r" && !event.repeat) {
+        reloadWeapon();
+    }
+});
+
+addEventListener("keyup", event => {
+    keys[event.key.toLowerCase()] = false;
+});
+
+canvas.addEventListener("mousemove", event => {
+    const rect = canvas.getBoundingClientRect();
+
+    mouse.x = event.clientX - rect.left;
+    mouse.y = event.clientY - rect.top;
+});
+
+canvas.addEventListener("mousedown", event => {
+    if (event.button === 0) {
+        mouse.down = true;
+    }
+});
+
+addEventListener("mouseup", event => {
+    if (event.button === 0) {
+        mouse.down = false;
+    }
+});
+
+canvas.addEventListener("contextmenu", event => {
+    event.preventDefault();
+});
+
+generateWorld();
+showMessage("Znajdź części radia i uciekaj!", 3000);
+requestAnimationFrame(gameLoop);
+</script>
+
+</body>
+</html>
