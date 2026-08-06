@@ -676,6 +676,200 @@
                 width: 150px;
             }
         }
+        .top-right-menu {
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    z-index: 100;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile-button {
+    min-width: 210px;
+    height: 64px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 7px 12px;
+
+    color: white;
+    text-align: left;
+
+    background: linear-gradient(
+        #344b70,
+        #203450
+    );
+
+    border: 4px solid #07101d;
+    border-radius: 12px;
+
+    box-shadow: 0 5px 0 #00000077;
+
+    cursor: pointer;
+}
+
+.profile-avatar {
+    width: 47px;
+    height: 47px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 30px;
+
+    background: #16243a;
+
+    border: 3px solid #07101d;
+    border-radius: 50%;
+}
+
+.profile-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-text b {
+    font-size: 18px;
+}
+
+.profile-text span {
+    color: #bdc9dc;
+    font-size: 11px;
+}
+
+.trophy-road-button {
+    height: 64px;
+
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    padding: 7px 14px;
+
+    color: white;
+    text-decoration: none;
+
+    background: linear-gradient(
+        #ffb915,
+        #e98200
+    );
+
+    border: 4px solid #3a2100;
+    border-radius: 12px;
+
+    box-shadow: 0 5px 0 #00000077;
+}
+
+.trophy-road-icon {
+    font-size: 37px;
+}
+
+.trophy-road-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    font-size: 14px;
+}
+
+.trophy-road-text > span {
+    color: #fff4a9;
+    font-size: 17px;
+    font-weight: 1000;
+}
+
+.trophy-animation-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    pointer-events: none;
+}
+
+.flying-trophy {
+    position: fixed;
+    left: 50%;
+    top: 52%;
+
+    font-size: 42px;
+
+    animation: trophyFly 1.25s ease forwards;
+}
+
+.trophy-change-popup {
+    position: fixed;
+    left: 50%;
+    top: 42%;
+
+    transform: translate(-50%, -50%);
+
+    padding: 10px 20px;
+
+    color: white;
+    font-size: 34px;
+    font-weight: 1000;
+
+    background: #111827dd;
+
+    border: 4px solid #050912;
+    border-radius: 12px;
+
+    text-shadow: 3px 3px black;
+
+    animation: trophyPopup 1.2s ease forwards;
+}
+
+.trophy-change-popup.negative {
+    color: #ff6b6b;
+}
+
+@keyframes trophyFly {
+    0% {
+        left: 50%;
+        top: 54%;
+        opacity: 0;
+        transform: scale(0.3);
+    }
+
+    20% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+
+    100% {
+        left: calc(100% - 100px);
+        top: 48px;
+        opacity: 0;
+        transform: scale(0.4) rotate(360deg);
+    }
+}
+
+@keyframes trophyPopup {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.3);
+    }
+
+    25% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.2);
+    }
+
+    75% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -70%) scale(0.8);
+    }
+}
     </style>
 </head>
 
@@ -688,10 +882,42 @@
        <div class="top-right-menu">
 
     <button
+        <div class="top-right-menu">
+
+    <button
         class="profile-button"
         onclick="openProfile()"
     >
         <div
+            id="topAvatar"
+            class="profile-avatar"
+        >
+            👑
+        </div>
+
+        <div class="profile-text">
+            <b id="topName">Gracz</b>
+            <span>PROFIL</span>
+        </div>
+    </button>
+
+    <a
+        href="aleja.html"
+        class="trophy-road-button"
+    >
+        <span class="trophy-road-icon">🏆</span>
+
+        <span class="trophy-road-text">
+            <b>ALEJA PUCHARÓW</b>
+
+            <span>
+                🏆
+                <span data-total-trophies>0</span>
+            </span>
+        </span>
+    </a>
+
+</div>
             id="topAvatar"
             class="profile-avatar"
         >
@@ -2044,6 +2270,9 @@ ensureCurrentAccount();
 loadMap();
 renderLobby();
 </script>
-
+<div
+    id="trophyAnimationLayer"
+    class="trophy-animation-layer"
+></div>
 </body>
 </html>
