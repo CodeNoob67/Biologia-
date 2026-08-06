@@ -105,35 +105,34 @@ const BOHATEROWIE = [
     },
 
     {
-        id: "goblin",
-        nazwa: "Goblin",
-        ikona: "👺",
-        rzadkosc: "epicki",
-        moc: "Desperacki atak",
-        opis: "Gdy ma mniej niż połowę życia, zadaje o 25% więcej obrażeń.",
-        hp: 105,
-        damage: 28,
-        speed: 2.2,
-        range: 76,
-        cooldown: 480,
-        ticketCost: 30
-    },
+    id: "goblin",
+    nazwa: "Goblin",
+    ikona: "👺",
+    rzadkosc: "epicki",
+    moc: "Desperacki atak",
+    opis: "Gdy ma mniej niż połowę życia, zadaje o 25% więcej obrażeń.",
+    hp: 105,
+    damage: 28,
+    speed: 2.2,
+    range: 76,
+    cooldown: 480,
+    ticketCost: 30
+},
 
-    {
-        id: "golem",
-        nazwa: "Golem",
-        ikona: "🗿",
-        rzadkosc: "epicki",
-        moc: "Kamienna fala",
-        opis: "Ma bardzo dużo życia. Co piąty atak tworzy falę uderzeniową wokół niego.",
-        hp: 330,
-        damage: 38,
-        speed: 1.05,
-        range: 350,
-        cooldown: 950,
-        ticketCost: 34
-    },
-
+{
+    id: "golem",
+    nazwa: "Golem",
+    ikona: "🗿",
+    rzadkosc: "epicki",
+    moc: "Kamienna fala",
+    opis: "Ma bardzo dużo życia. Co piąty atak tworzy falę uderzeniową wokół niego.",
+    hp: 330,
+    damage: 38,
+    speed: 1.05,
+    range: 350,
+    cooldown: 950,
+    ticketCost: 34
+},
     {
         id: "duch",
         nazwa: "Duch",
