@@ -751,24 +751,64 @@ const HERO_STATS = {
         maximumSummons: 5
     },
 
-    Muzyk: {
-        hp: 150,
-        damage: 27,
-        speed: 1.7,
-        range: 620,
-        cooldown: 720,
+   Muzyk: {
+    hp: 150,
+    damage: 27,
+    speed: 1.7,
+    range: 620,
+    cooldown: 720,
 
-        projectileSpeed: 10,
-        projectileWidth: 8,
-        projectileLife: 1100,
+    projectileSpeed: 10,
+    projectileWidth: 8,
+    projectileLife: 1100,
 
-        melee: false,
+    melee: false,
 
-        electricWave: true,
+    musicWave: true,
 
-        ultraEvery: 5,
-        ultraSpeedMultiplier: 1.65,
-        ultraStunDuration: 1000
+    ultraEvery: 5,
+    ultraSpeedMultiplier: 1.65,
+    ultraStunDuration: 1000
+},
+
+Alchemik: {
+    hp: 150,
+    damage: 28,
+    speed: 1.65,
+    range: 600,
+    cooldown: 850,
+
+    projectileSpeed: 8,
+    projectileWidth: 13,
+    projectileLife: 1200,
+
+    melee: false,
+
+    alchemist: true,
+
+    potionHealing: 35,
+    potionDamage: 28,
+
+    potionStunDuration: 1000,
+
+    potionSpeedMultiplier: 1.5,
+    potionSpeedDuration: 1500
+},
+
+Szermierz: {
+    hp: 155,
+    damage: 24,
+    speed: 2.1,
+    range: 105,
+    cooldown: 450,
+
+    melee: true,
+
+    swordsman: true,
+
+    spinDamageCooldown: 450
+},
+    
     },
 
      Goblin: {
@@ -1680,15 +1720,28 @@ function getSafeSpawn(
     };
 }
 
-function getStats(
-    heroId
-) {
-    return (
-        HERO_STATS[heroId] ||
-        HERO_STATS.farmer
-    );
-}
+function getStats(heroId) {
+    let correctedHeroId = heroId;
 
+    if (correctedHeroId === "tesla") {
+        correctedHeroId = "muzyk";
+    }
+
+    const stats = HERO_STATS[correctedHeroId];
+
+    if (!stats) {
+        console.warn(
+            "Brak statystyk dla postaci:",
+            correctedHeroId,
+            "— używam statystyk Farmera."
+        );
+
+        return HERO_STATS.farmer;
+    }
+
+    return stats;
+}
+    
 function createFighter(
     hero,
     position,
