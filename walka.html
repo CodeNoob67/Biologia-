@@ -762,21 +762,420 @@
                 );
         }
 
-        .exit-button {
-            background:
-                linear-gradient(
-                    #42a2ff,
-                    #1165cd
-                );
-        }
+       .result-screen {
+    position: absolute;
+    inset: 7px;
+    z-index: 700;
 
-        @media (max-width: 850px) {
-            .result-layout {
-                grid-template-columns: 1fr;
-                overflow-y: auto;
-            }
+    display: none;
+    flex-direction: column;
 
-            .result-screen {
+    padding: 14px;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0a3e78,
+            #1765ad
+        );
+
+    border-radius: 6px;
+
+    overflow: hidden;
+}
+
+.result-screen.visible {
+    display: flex;
+}
+
+.result-header {
+    flex: 0 0 auto;
+
+    min-height: 54px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 7px 16px;
+
+    font-size: 25px;
+    font-weight: 1000;
+
+    background: #082c59;
+
+    border: 4px solid #031b38;
+    border-radius: 8px;
+
+    text-shadow: 3px 3px black;
+}
+
+.result-layout {
+    flex: 1 1 auto;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.2fr)
+        minmax(0, 0.95fr)
+        minmax(0, 1fr);
+
+    gap: 12px;
+
+    min-height: 0;
+
+    margin-top: 12px;
+
+    overflow: hidden;
+}
+
+.result-character-panel,
+.result-middle-panel,
+.result-stats-panel {
+    min-width: 0;
+    min-height: 0;
+}
+
+.result-character-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 10px;
+
+    background:
+        linear-gradient(
+            #267ac2,
+            #155898
+        );
+
+    border: 5px solid #072b55;
+    border-radius: 8px;
+
+    overflow: hidden;
+}
+
+.result-hero-icon {
+    flex: 0 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 145px;
+    height: 145px;
+
+    font-size: 92px;
+
+    background:
+        radial-gradient(
+            circle,
+            #72d5ff,
+            #2387c7
+        );
+
+    border: 5px solid #071f3e;
+    border-radius: 50%;
+}
+
+.result-hero-name {
+    margin-top: 8px;
+
+    font-size: 27px;
+    font-weight: 1000;
+
+    text-transform: uppercase;
+
+    text-shadow: 3px 3px black;
+}
+
+.result-player-name {
+    margin-top: 3px;
+
+    font-size: 15px;
+}
+
+.result-rank-box {
+    width: 88%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-top: 10px;
+    padding: 8px 12px;
+
+    background: #5d0d48;
+
+    border: 4px solid #18071a;
+    border-radius: 6px;
+
+    font-size: 16px;
+    font-weight: 1000;
+}
+
+.result-trophies {
+    color: #ffd33d;
+}
+
+.result-middle-panel {
+    display: grid;
+
+    grid-template-rows:
+        minmax(0, 1fr)
+        minmax(0, 1fr);
+
+    gap: 12px;
+
+    overflow: hidden;
+}
+
+.result-box,
+.result-stats-panel {
+    min-height: 0;
+
+    padding: 10px;
+
+    background:
+        linear-gradient(
+            #145996,
+            #0e447c
+        );
+
+    border: 5px solid #06274d;
+    border-radius: 8px;
+
+    overflow: hidden;
+}
+
+.result-box {
+    display: flex;
+    flex-direction: column;
+}
+
+.result-box h2,
+.result-stats-panel h2 {
+    flex: 0 0 auto;
+
+    margin: 0 0 8px;
+
+    font-size: 22px;
+    font-weight: 1000;
+
+    text-shadow: 3px 3px black;
+}
+
+.result-row {
+    flex: 1 1 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+
+    min-height: 0;
+
+    margin: 4px 0;
+    padding: 7px 8px;
+
+    background: #0b3767;
+
+    border: 3px solid #052344;
+    border-radius: 5px;
+
+    font-size: 14px;
+}
+
+.result-row b {
+    color: #ffd83d;
+}
+
+.result-stats-panel {
+    display: grid;
+
+    grid-template-rows:
+        auto
+        minmax(0, 1fr)
+        minmax(0, 1fr)
+        minmax(0, 1fr);
+
+    gap: 7px;
+}
+
+.result-stat {
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 6px;
+
+    background: #0b3767;
+
+    border: 3px solid #052344;
+    border-radius: 5px;
+
+    overflow: hidden;
+}
+
+.result-stat span {
+    font-size: 12px;
+    font-weight: 1000;
+}
+
+.result-stat b {
+    margin-top: 2px;
+
+    font-size: 24px;
+    font-weight: 1000;
+
+    text-shadow: 3px 3px black;
+}
+
+.result-buttons {
+    flex: 0 0 auto;
+
+    display: flex;
+    justify-content: flex-end;
+    gap: 14px;
+
+    margin-top: 12px;
+    padding-top: 2px;
+}
+
+.result-buttons button {
+    min-width: 210px;
+
+    padding: 12px 22px;
+
+    font-size: 18px;
+    font-weight: 1000;
+
+    border: 4px solid #071c36;
+    border-radius: 7px;
+
+    box-shadow: 0 5px 0 #00000066;
+}
+
+.play-again-button {
+    color: #14213d;
+
+    background:
+        linear-gradient(
+            #ffe44d,
+            #f5a900
+        );
+}
+
+.exit-button {
+    background:
+        linear-gradient(
+            #42a2ff,
+            #1165cd
+        );
+}
+
+@media (max-height: 760px) {
+    .result-screen {
+        padding: 10px;
+    }
+
+    .result-header {
+        min-height: 46px;
+        font-size: 21px;
+    }
+
+    .result-layout {
+        gap: 8px;
+        margin-top: 8px;
+    }
+
+    .result-hero-icon {
+        width: 115px;
+        height: 115px;
+        font-size: 72px;
+    }
+
+    .result-hero-name {
+        font-size: 22px;
+    }
+
+    .result-rank-box {
+        margin-top: 7px;
+        padding: 6px 9px;
+        font-size: 14px;
+    }
+
+    .result-box,
+    .result-stats-panel {
+        padding: 7px;
+        border-width: 4px;
+    }
+
+    .result-box h2,
+    .result-stats-panel h2 {
+        margin-bottom: 5px;
+        font-size: 18px;
+    }
+
+    .result-row {
+        margin: 2px 0;
+        padding: 5px 6px;
+        font-size: 12px;
+    }
+
+    .result-stat {
+        padding: 4px;
+    }
+
+    .result-stat span {
+        font-size: 10px;
+    }
+
+    .result-stat b {
+        font-size: 20px;
+    }
+
+    .result-buttons {
+        margin-top: 8px;
+    }
+
+    .result-buttons button {
+        min-width: 180px;
+        padding: 9px 18px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 850px) {
+    .result-screen {
+        overflow-y: auto;
+    }
+
+    .result-layout {
+        flex: none;
+
+        grid-template-columns: 1fr;
+
+        overflow: visible;
+    }
+
+    .result-character-panel,
+    .result-middle-panel,
+    .result-stats-panel {
+        min-height: 260px;
+    }
+
+    .result-buttons {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+}
                 overflow-y: auto;
             }
 
