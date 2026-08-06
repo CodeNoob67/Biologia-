@@ -10,8 +10,6 @@
 
     <title>Postacie</title>
 
-    <link rel="stylesheet" href="style.css">
-
     <style>
         * {
             box-sizing: border-box;
@@ -27,7 +25,7 @@
             background:
                 radial-gradient(
                     circle at top,
-                    #344b70,
+                    #31517e,
                     #101827
                 );
         }
@@ -42,14 +40,14 @@
             top: 0;
             z-index: 50;
 
-            min-height: 76px;
+            min-height: 78px;
 
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 15px;
 
-            padding: 10px 18px;
+            padding: 10px 22px;
 
             background:
                 linear-gradient(
@@ -57,70 +55,85 @@
                     #182238
                 );
 
-            border-bottom: 5px solid #0d1421;
+            border-bottom: 5px solid #080e18;
+
+            box-shadow:
+                0 5px 0 #00000055;
         }
 
         .logo {
             color: #ffd83d;
-            font-size: 26px;
+
+            font-size: 27px;
             font-weight: 1000;
+
+            text-shadow:
+                3px 3px #00000088;
+        }
+
+        .currency-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
         .currency {
-            display: flex;
-            gap: 10px;
-        }
+            min-width: 90px;
 
-        .pill {
-            min-width: 85px;
-            padding: 9px 13px;
+            padding: 10px 14px;
 
             text-align: center;
-            font-size: 17px;
+
+            font-size: 18px;
             font-weight: 1000;
 
             background: #263248;
 
             border: 3px solid #111827;
-            border-radius: 10px;
+            border-radius: 11px;
+
+            box-shadow:
+                0 4px 0 #00000055;
         }
 
         .screen {
-            width: min(1200px, 96%);
+            width: min(1120px, 95%);
+
             margin: 0 auto;
-            padding: 25px 0 105px;
+            padding: 28px 0 110px;
         }
 
-        .section-title {
-            margin: 0 0 10px;
+        .page-title {
+            margin: 0 0 12px;
 
             text-align: center;
 
-            font-size: 38px;
+            font-size:
+                clamp(31px, 5vw, 46px);
+
             font-weight: 1000;
 
-            text-shadow: 4px 4px #080d16;
+            text-shadow:
+                4px 4px #00000099;
         }
 
         .notice {
-            max-width: 750px;
+            max-width: 820px;
 
-            margin: 0 auto 25px;
-            padding: 12px 18px;
+            margin: 0 auto 28px;
+            padding: 13px 18px;
+
+            color: #e4efff;
 
             text-align: center;
 
-            color: #d8ecff;
+            font-size: 15px;
             font-weight: 800;
 
-            background: #1d2b42;
+            background: #1e2c43;
 
-            border: 3px solid #0e1726;
+            border: 3px solid #0d1624;
             border-radius: 12px;
-        }
-
-        .characters-section {
-            margin-top: 25px;
         }
 
         .group-title {
@@ -128,244 +141,448 @@
             align-items: center;
             gap: 14px;
 
-            margin: 25px 0 16px;
+            margin: 27px 0 16px;
 
-            font-size: 25px;
+            font-size: 26px;
             font-weight: 1000;
+
+            text-shadow:
+                2px 2px #00000088;
         }
 
         .group-title::after {
             content: "";
 
             flex: 1;
-            height: 6px;
+            height: 8px;
 
-            background: #101827;
+            background:
+                linear-gradient(
+                    #182337,
+                    #080e18
+                );
 
-            border: 2px solid #050912;
-            border-radius: 10px;
+            border: 3px solid #050912;
+            border-radius: 20px;
         }
 
         .group-title.locked-title {
-            color: #bac5d4;
+            color: #bcc7d8;
         }
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 18px;
+
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+
+            gap: 20px;
         }
 
         .character-card {
             position: relative;
 
-            min-height: 230px;
+            min-width: 0;
+            height: 282px;
+
             overflow: hidden;
 
             display: flex;
             flex-direction: column;
-            align-items: center;
 
-            padding: 16px;
+            padding: 0;
 
-            text-align: center;
+            color: white;
 
-            border: 5px solid #111827;
-            border-radius: 16px;
+            background: #172033;
+
+            border: 5px solid #090e17;
+            border-radius: 5px;
 
             box-shadow:
-                0 8px 0 #00000066;
+                0 8px 0 #00000088;
 
             cursor: pointer;
 
             transition:
-                transform 0.16s,
-                filter 0.16s;
+                transform 0.15s,
+                filter 0.15s;
         }
 
         .character-card:hover {
             transform: translateY(-5px);
+
             filter: brightness(1.08);
         }
 
         .character-card.locked {
             filter:
                 grayscale(0.65)
-                brightness(0.72);
+                brightness(0.66);
         }
 
         .character-card.locked:hover {
             filter:
                 grayscale(0.45)
-                brightness(0.82);
+                brightness(0.78);
         }
 
-        .rarity-startowy {
+        .character-portrait {
+            position: relative;
+
+            height: 190px;
+            min-height: 190px;
+
+            overflow: hidden;
+
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+
+            border-bottom: 5px solid #090e17;
+        }
+
+        .rarity-startowy .character-portrait {
             background:
                 linear-gradient(
                     145deg,
-                    #929aa7,
-                    #515966
+                    #a6afb9,
+                    #5c6674
                 );
         }
 
-        .rarity-rzadki {
+        .rarity-rzadki .character-portrait {
             background:
                 linear-gradient(
                     145deg,
-                    #4bd26c,
-                    #18753a
+                    #62f078,
+                    #15923e
                 );
         }
 
-        .rarity-bardzo-rzadki {
+        .rarity-bardzo_rzadki .character-portrait {
             background:
                 linear-gradient(
                     145deg,
-                    #3f9cff,
-                    #164f9d
+                    #1451a8,
+                    #09265e
                 );
         }
 
-        .rarity-epicki {
+        .rarity-epicki .character-portrait {
             background:
                 linear-gradient(
                     145deg,
-                    #c95cff,
-                    #6c229b
+                    #dc67ff,
+                    #7220ad
                 );
         }
 
-        .rarity-mityczny {
+        .rarity-mityczny .character-portrait {
             background:
                 linear-gradient(
                     145deg,
-                    #ff5656,
-                    #a51e39
+                    #ff5962,
+                    #a61d3b
                 );
         }
 
-        .rarity-legendarny {
+        .rarity-legendarny .character-portrait {
             background:
                 linear-gradient(
                     145deg,
-                    #ffd93d,
-                    #e67d00
+                    #ffe44e,
+                    #e68400
                 );
         }
 
-        .rarity-aleja {
+        .rarity-aleja .character-portrait {
             background:
                 linear-gradient(
                     145deg,
-                    #e6edf2,
-                    #8fd5f4,
-                    #5ba6d4
+                    #e8f4fa,
+                    #9bdcf5,
+                    #5d9fc9
                 );
-
-            color: #10263b;
-
-            border-color: #355e7b;
         }
 
-        .rarity-label {
+        .portrait-pattern {
             position: absolute;
-            top: 9px;
-            left: 9px;
+            inset: 0;
 
-            padding: 5px 9px;
+            opacity: 0.12;
 
-            color: white;
-            font-size: 10px;
-            font-weight: 1000;
+            background-image:
+                radial-gradient(
+                    circle,
+                    white 3px,
+                    transparent 4px
+                );
 
-            background: #111827dd;
-
-            border: 2px solid #050912;
-            border-radius: 8px;
-        }
-
-        .selected-label {
-            position: absolute;
-            top: 9px;
-            right: 9px;
-
-            padding: 5px 9px;
-
-            color: #12341e;
-            font-size: 10px;
-            font-weight: 1000;
-
-            background: #7dff9e;
-
-            border: 2px solid #14542b;
-            border-radius: 8px;
-        }
-
-        .lock-label {
-            position: absolute;
-            top: 9px;
-            right: 9px;
-
-            padding: 5px 9px;
-
-            color: white;
-            font-size: 10px;
-            font-weight: 1000;
-
-            background: #2b3443;
-
-            border: 2px solid #111827;
-            border-radius: 8px;
+            background-size:
+                35px 35px;
         }
 
         .card-icon {
-            margin-top: 19px;
+            position: relative;
+            z-index: 2;
 
-            font-size: 88px;
+            margin-bottom: -5px;
+
+            font-size: 132px;
+            line-height: 1;
 
             filter:
                 drop-shadow(
-                    0 7px 3px #00000055
+                    0 10px 3px #00000055
                 );
         }
 
-        .character-card h2 {
-            margin: 5px 0 3px;
+        .card-rank {
+            position: absolute;
+            top: 7px;
+            left: 7px;
+            z-index: 5;
 
-            font-size: 24px;
-            font-weight: 1000;
+            width: 52px;
+            min-height: 52px;
 
-            text-shadow: 2px 2px #00000055;
-        }
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
 
-        .rarity-aleja h2 {
-            text-shadow: 1px 1px white;
-        }
+            padding: 3px;
 
-        .card-power {
-            min-height: 36px;
-
-            font-size: 13px;
-            font-weight: 900;
-        }
-
-        .road-requirement {
-            margin-top: auto;
-            padding: 6px 10px;
-
-            color: #fff6a3;
-            font-size: 13px;
-            font-weight: 1000;
-
-            background: #102a45dd;
-
-            border: 2px solid #06182a;
-            border-radius: 8px;
-        }
-
-        .rarity-aleja .road-requirement {
             color: white;
+
+            font-size: 9px;
+            font-weight: 1000;
+
+            background:
+                linear-gradient(
+                    #8359d6,
+                    #40218f
+                );
+
+            border: 3px solid #090e17;
+            border-radius: 4px;
+
+            text-align: center;
+
+            text-shadow:
+                1px 1px black;
+        }
+
+        .card-rank strong {
+            margin-top: 1px;
+
+            font-size: 20px;
+            line-height: 19px;
+        }
+
+        .card-trophies {
+            position: absolute;
+            top: 7px;
+            left: 64px;
+            z-index: 5;
+
+            min-width: 76px;
+
+            padding: 7px 9px;
+
+            color: #ffe155;
+
+            text-align: center;
+
+            font-size: 14px;
+            font-weight: 1000;
+
+            background:
+                linear-gradient(
+                    #681744,
+                    #45102f
+                );
+
+            border: 3px solid #090e17;
+            border-radius: 4px;
+
+            text-shadow:
+                1px 1px black;
+        }
+
+        .selected-label,
+        .lock-label {
+            position: absolute;
+            top: 7px;
+            right: 7px;
+            z-index: 6;
+
+            padding: 6px 8px;
+
+            font-size: 10px;
+            font-weight: 1000;
+
+            border: 3px solid #090e17;
+            border-radius: 4px;
+        }
+
+        .selected-label {
+            color: #12351c;
+
+            background:
+                linear-gradient(
+                    #92ffa9,
+                    #48d56c
+                );
+        }
+
+        .lock-label {
+            color: white;
+
+            background:
+                linear-gradient(
+                    #505c70,
+                    #2b3445
+                );
+        }
+
+        .road-label {
+            position: absolute;
+            left: 8px;
+            bottom: 7px;
+            z-index: 6;
+
+            padding: 5px 8px;
+
+            color: white;
+
+            font-size: 10px;
+            font-weight: 1000;
+
+            background: #163a5bdd;
+
+            border: 2px solid #071827;
+            border-radius: 5px;
+
+            text-shadow:
+                1px 1px black;
+        }
+
+        .character-info {
+            position: relative;
+
+            flex: 1;
+
+            padding: 7px 9px 8px;
+
+            background:
+                linear-gradient(
+                    #354159,
+                    #192234
+                );
+        }
+
+        .character-name-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 7px;
+        }
+
+        .character-name {
+            min-width: 0;
+
+            overflow: hidden;
+
+            font-size: 19px;
+            font-weight: 1000;
+
+            white-space: nowrap;
+            text-overflow: ellipsis;
+
+            text-shadow:
+                2px 2px black;
+        }
+
+        .card-power-level {
+            flex-shrink: 0;
+
+            font-size: 10px;
+            font-weight: 1000;
+
+            text-align: right;
+        }
+
+        .card-power-level strong {
+            font-size: 18px;
+        }
+
+        .card-progress {
+            position: relative;
+
+            height: 31px;
+
+            margin-top: 6px;
+            overflow: hidden;
+
+            background:
+                linear-gradient(
+                    #671344,
+                    #3a0b2a
+                );
+
+            border: 3px solid #090e17;
+            border-radius: 4px;
+        }
+
+        .card-progress-fill {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+
+            width: 0%;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #e525cf,
+                    #ff64eb
+                );
+        }
+
+        .card-progress-text {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+
+            font-size: 13px;
+            font-weight: 1000;
+
+            text-shadow:
+                1px 1px black;
+        }
+
+        .empty-message {
+            grid-column: 1 / -1;
+
+            padding: 20px;
+
+            color: #dbe8f8;
+
+            text-align: center;
+            font-weight: 900;
+
+            background: #1b293f;
+
+            border: 3px solid #0c1522;
+            border-radius: 12px;
         }
 
         .bottom-nav {
@@ -373,16 +590,18 @@
             left: 0;
             right: 0;
             bottom: 0;
-            z-index: 60;
+            z-index: 70;
 
-            min-height: 76px;
+            min-height: 78px;
 
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
 
-            background: #121b2a;
+            grid-template-columns:
+                repeat(4, 1fr);
 
-            border-top: 5px solid #070c14;
+            background: #101827;
+
+            border-top: 5px solid #060b13;
         }
 
         .bottom-nav a {
@@ -391,18 +610,29 @@
 
             padding: 9px;
 
-            color: #c8d2df;
+            color: #c5d0df;
+
             text-align: center;
             text-decoration: none;
+
             font-size: 13px;
             font-weight: 1000;
 
-            border-right: 2px solid #263246;
+            border-right: 2px solid #263247;
+        }
+
+        .bottom-nav a:hover {
+            background: #26344c;
         }
 
         .bottom-nav a.active {
             color: white;
-            background: #32425d;
+
+            background:
+                linear-gradient(
+                    #485d7d,
+                    #31425e
+                );
         }
 
         .details-overlay {
@@ -416,7 +646,7 @@
 
             padding: 20px;
 
-            background: #000000c7;
+            background: #000000cc;
         }
 
         .details-overlay.visible {
@@ -426,15 +656,20 @@
         .details-window {
             position: relative;
 
-            width: min(980px, 96%);
+            width: min(1050px, 96%);
             max-height: 92vh;
+
             overflow-y: auto;
 
             display: grid;
-            grid-template-columns: 1.2fr 0.8fr;
+
+            grid-template-columns:
+                minmax(0, 1.2fr)
+                minmax(280px, 0.8fr);
+
             gap: 18px;
 
-            padding: 25px;
+            padding: 24px;
 
             background:
                 linear-gradient(
@@ -442,71 +677,147 @@
                     #17243a
                 );
 
-            border: 6px solid #0b111d;
-            border-radius: 20px;
+            border: 6px solid #090e17;
+            border-radius: 18px;
 
             box-shadow:
-                0 15px 45px #000000aa;
+                0 15px 50px #000000aa;
         }
 
         .close-button {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            z-index: 5;
+            top: 9px;
+            right: 9px;
+            z-index: 10;
 
-            width: 46px;
-            height: 46px;
+            width: 47px;
+            height: 47px;
 
             color: white;
-            font-size: 21px;
+
+            font-size: 22px;
             font-weight: 1000;
 
-            background: #d63f3f;
+            background:
+                linear-gradient(
+                    #ef5555,
+                    #b82232
+                );
 
-            border: 3px solid #111827;
-            border-radius: 10px;
+            border: 3px solid #090e17;
+            border-radius: 9px;
 
             cursor: pointer;
         }
 
         .details-main {
-            min-height: 520px;
+            min-height: 530px;
 
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
 
-            padding: 25px;
+            padding: 26px;
 
             text-align: center;
 
-            border: 5px solid #111827;
-            border-radius: 16px;
+            border: 5px solid #090e17;
+            border-radius: 15px;
+
+            overflow: hidden;
+        }
+
+        .details-main.rarity-startowy {
+            background:
+                linear-gradient(
+                    145deg,
+                    #a6afb9,
+                    #5c6674
+                );
+        }
+
+        .details-main.rarity-rzadki {
+            background:
+                linear-gradient(
+                    145deg,
+                    #62f078,
+                    #15923e
+                );
+        }
+
+        .details-main.rarity-bardzo_rzadki {
+            background:
+                linear-gradient(
+                    145deg,
+                    #1451a8,
+                    #09265e
+                );
+        }
+
+        .details-main.rarity-epicki {
+            background:
+                linear-gradient(
+                    145deg,
+                    #dc67ff,
+                    #7220ad
+                );
+        }
+
+        .details-main.rarity-mityczny {
+            background:
+                linear-gradient(
+                    145deg,
+                    #ff5962,
+                    #a61d3b
+                );
+        }
+
+        .details-main.rarity-legendarny {
+            background:
+                linear-gradient(
+                    145deg,
+                    #ffe44e,
+                    #e68400
+                );
+        }
+
+        .details-main.rarity-aleja {
+            color: #10263b;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #e8f4fa,
+                    #9bdcf5,
+                    #5d9fc9
+                );
         }
 
         .details-icon {
-            font-size: 150px;
+            font-size: 160px;
 
             filter:
                 drop-shadow(
-                    0 12px 5px #00000066
+                    0 12px 4px #00000066
                 );
         }
 
         .details-name {
             margin-top: 5px;
 
-            font-size: 38px;
+            font-size: 40px;
             font-weight: 1000;
 
-            text-shadow: 3px 3px #00000066;
+            text-shadow:
+                3px 3px #00000066;
         }
 
         .details-rarity {
-            margin-top: 6px;
-            padding: 6px 12px;
+            margin-top: 7px;
+            padding: 6px 13px;
+
+            color: white;
 
             font-size: 13px;
             font-weight: 1000;
@@ -518,22 +829,35 @@
         }
 
         .details-description {
-            max-width: 570px;
+            max-width: 600px;
 
             margin-top: 14px;
 
-            color: #e5efff;
+            color: #f0f6ff;
+
             font-size: 16px;
-            font-weight: 700;
+            font-weight: 800;
             line-height: 1.45;
+
+            text-shadow:
+                1px 1px #00000099;
+        }
+
+        .details-main.rarity-aleja
+        .details-description {
+            color: #10263b;
+            text-shadow: none;
         }
 
         .stats {
-            width: min(500px, 100%);
+            width: min(520px, 100%);
 
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 9px;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 10px;
 
             margin-top: 18px;
         }
@@ -543,55 +867,59 @@
             justify-content: space-between;
             gap: 10px;
 
-            padding: 9px 12px;
+            padding: 10px 12px;
+
+            color: white;
 
             background: #18253bdd;
 
-            border: 3px solid #0b1422;
+            border: 3px solid #0a1321;
             border-radius: 9px;
         }
 
         .select-button {
-            width: min(390px, 100%);
+            width: min(420px, 100%);
 
             margin-top: 20px;
             padding: 14px;
 
-            color: #152036;
+            color: #182238;
+
             font-size: 20px;
             font-weight: 1000;
 
             background:
                 linear-gradient(
-                    #ffd942,
-                    #ef9f00
+                    #ffe04c,
+                    #efa000
                 );
 
-            border: 5px solid #111827;
-            border-radius: 13px;
+            border: 5px solid #090e17;
+            border-radius: 12px;
 
-            box-shadow: 0 6px 0 #00000066;
+            box-shadow:
+                0 6px 0 #00000066;
 
             cursor: pointer;
         }
 
         .select-button.selected {
-            color: #15331e;
+            color: #13331d;
 
             background:
                 linear-gradient(
-                    #9cffad,
-                    #42ca68
+                    #a2ffb4,
+                    #42c967
                 );
         }
 
         .select-button:disabled {
-            color: #c4ccd6;
+            color: #c6ced8;
 
             background:
                 linear-gradient(
-                    #566275,
-                    #303b4d
+                    #596578,
+                    #303a4c
                 );
 
             cursor: default;
@@ -600,22 +928,23 @@
         .powers-panel {
             display: flex;
             flex-direction: column;
-            gap: 14px;
+            justify-content: center;
+            gap: 16px;
 
-            padding-top: 45px;
+            padding-top: 38px;
         }
 
         .power-box {
-            padding: 16px;
+            padding: 17px;
 
             background:
                 linear-gradient(
-                    #263752,
+                    #283a57,
                     #162338
                 );
 
-            border: 5px solid #0c1421;
-            border-radius: 15px;
+            border: 5px solid #0a1220;
+            border-radius: 14px;
         }
 
         .power-box h3 {
@@ -626,42 +955,45 @@
         }
 
         .power-box p {
-            min-height: 44px;
+            min-height: 45px;
 
-            margin: 0 0 12px;
+            margin: 0 0 13px;
 
-            color: #d6e5f7;
+            color: #d8e6f7;
+
             font-size: 13px;
-            line-height: 1.35;
+            line-height: 1.4;
         }
 
         .buy-power-button {
             width: 100%;
-            padding: 11px;
 
-            color: #182238;
+            padding: 12px;
+
+            color: #172238;
+
             font-size: 15px;
             font-weight: 1000;
 
             background:
                 linear-gradient(
-                    #ffd93d,
-                    #efa300
+                    #ffdc42,
+                    #efa000
                 );
 
-            border: 4px solid #101827;
-            border-radius: 10px;
+            border: 4px solid #090e17;
+            border-radius: 9px;
 
             cursor: pointer;
         }
 
         .buy-power-button.owned {
-            color: #15331e;
+            color: #14331e;
 
             background:
                 linear-gradient(
-                    #91ffa9,
-                    #3bc263
+                    #9dffb0,
+                    #40c768
                 );
         }
 
@@ -669,9 +1001,10 @@
             cursor: default;
         }
 
-        @media (max-width: 850px) {
+        @media (max-width: 900px) {
             .grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
             }
 
             .details-window {
@@ -683,25 +1016,42 @@
             }
         }
 
-        @media (max-width: 560px) {
+        @media (max-width: 590px) {
+            .topbar {
+                padding: 8px;
+            }
+
+            .logo {
+                font-size: 20px;
+            }
+
+            .currency {
+                min-width: 60px;
+                padding: 8px 5px;
+                font-size: 14px;
+            }
+
             .grid {
                 grid-template-columns: 1fr;
             }
 
-            .section-title {
-                font-size: 29px;
-            }
+            .character-card {
+                max-width: 390px;
+                width: 100%;
 
-            .card-icon {
-                font-size: 76px;
+                margin: 0 auto;
             }
 
             .details-icon {
-                font-size: 110px;
+                font-size: 115px;
             }
 
             .details-name {
-                font-size: 30px;
+                font-size: 31px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -715,13 +1065,13 @@
         🧙 POSTACIE
     </div>
 
-    <div class="currency">
+    <div class="currency-box">
 
-        <div class="pill">
+        <div class="currency">
             🎟️ <span data-tickets>0</span>
         </div>
 
-        <div class="pill">
+        <div class="currency">
             🪙 <span data-coins>0</span>
         </div>
 
@@ -731,35 +1081,32 @@
 
 <main class="screen">
 
-    <h1 class="section-title">
+    <h1 class="page-title">
         Wybierz bohatera
     </h1>
 
     <div class="notice">
-        Odblokowane postacie znajdują się na górze. Postacie z Alei Pucharów odblokujesz w pliku aleja.html.
+        Odblokowane postacie są na górze. Zablokowane postacie
+        możesz zdobyć w sklepie lub na Alei Pucharów.
     </div>
 
-    <section class="characters-section">
+    <div class="group-title">
+        ✅ ODBLOKOWANE
+    </div>
 
-        <div class="group-title">
-            ✅ ODBLOKOWANE
-        </div>
+    <div
+        id="unlockedCharacters"
+        class="grid"
+    ></div>
 
-        <div
-            id="unlockedCharacters"
-            class="grid"
-        ></div>
+    <div class="group-title locked-title">
+        🔒 ZABLOKOWANE
+    </div>
 
-        <div class="group-title locked-title">
-            🔒 ZABLOKOWANE
-        </div>
-
-        <div
-            id="lockedCharacters"
-            class="grid"
-        ></div>
-
-    </section>
+    <div
+        id="lockedCharacters"
+        class="grid"
+    ></div>
 
 </main>
 
@@ -870,7 +1217,7 @@
                 <h3>🟢 GADŻET</h3>
 
                 <p>
-                    Specjalna zdolność używana podczas walki.
+                    Specjalna umiejętność, której możesz używać podczas walki.
                 </p>
 
                 <button
@@ -887,7 +1234,7 @@
                 <h3>⭐ GWIEZDNA MOC</h3>
 
                 <p>
-                    Stałe ulepszenie wyjątkowej zdolności bohatera.
+                    Stała wyjątkowa moc wzmacniająca zdolności tej postaci.
                 </p>
 
                 <button
@@ -923,64 +1270,203 @@ const RARITY_NAMES = {
 let openedHeroId = null;
 
 function getCharactersState() {
-    const state = getState();
+    const state =
+        getState();
 
-    if (!Array.isArray(state.unlocked)) {
-        state.unlocked = ["farmer"];
+    if (
+        !Array.isArray(
+            state.unlocked
+        )
+    ) {
+        state.unlocked = [
+            "farmer"
+        ];
     }
 
-    if (!state.unlocked.includes("farmer")) {
-        state.unlocked.unshift("farmer");
+    if (
+        !state.unlocked.includes(
+            "farmer"
+        )
+    ) {
+        state.unlocked.unshift(
+            "farmer"
+        );
     }
 
-    if (!Array.isArray(state.gadgets)) {
+    if (
+        !Array.isArray(
+            state.gadgets
+        )
+    ) {
         state.gadgets = [];
     }
 
-    if (!Array.isArray(state.starPowers)) {
+    if (
+        !Array.isArray(
+            state.starPowers
+        )
+    ) {
         state.starPowers = [];
     }
 
     if (
         !state.heroTrophies ||
-        typeof state.heroTrophies !== "object"
+        typeof state.heroTrophies !==
+        "object"
     ) {
         state.heroTrophies = {};
+    }
+
+    if (!state.selected) {
+        state.selected =
+            "farmer";
     }
 
     return state;
 }
 
+function getRarityKey(hero) {
+    const key =
+        String(
+            hero.rzadkosc ||
+            "startowy"
+        )
+        .trim()
+        .toLowerCase()
+        .replace(/ /g, "_")
+        .replace(/-/g, "_");
+
+    if (
+        Object.prototype.hasOwnProperty.call(
+            RARITY_NAMES,
+            key
+        )
+    ) {
+        return key;
+    }
+
+    return "startowy";
+}
+
 function rarityClass(hero) {
     return (
         "rarity-" +
-        (
-            RARITY_NAMES[hero.rzadkosc]
-                ? hero.rzadkosc
-                : "startowy"
-        )
+        getRarityKey(hero)
     );
 }
 
-function createCharacterCard(hero, state) {
+function getHeroTier(trophies) {
+    const safeTrophies =
+        Math.max(
+            0,
+            Math.floor(
+                Number(trophies) || 0
+            )
+        );
+
+    if (safeTrophies < 20) {
+        return 1;
+    }
+
+    return Math.floor(
+        safeTrophies / 10
+    );
+}
+
+function getHeroProgress(trophies) {
+    const safeTrophies =
+        Math.max(
+            0,
+            Math.floor(
+                Number(trophies) || 0
+            )
+        );
+
+    if (safeTrophies < 20) {
+        return {
+            current:
+                safeTrophies,
+
+            required:
+                20,
+
+            percent:
+                safeTrophies /
+                20 *
+                100
+        };
+    }
+
+    const current =
+        safeTrophies % 10;
+
+    return {
+        current:
+            current,
+
+        required:
+            10,
+
+        percent:
+            current /
+            10 *
+            100
+    };
+}
+
+function createCharacterCard(
+    hero,
+    state
+) {
     const unlocked =
-        state.unlocked.includes(hero.id);
+        state.unlocked.includes(
+            hero.id
+        );
 
     const selected =
-        state.selected === hero.id;
+        state.selected ===
+        hero.id;
+
+    const trophies =
+        Math.max(
+            0,
+            Number(
+                state.heroTrophies[
+                    hero.id
+                ]
+            ) || 0
+        );
+
+    const tier =
+        getHeroTier(
+            trophies
+        );
+
+    const progress =
+        getHeroProgress(
+            trophies
+        );
+
+    const rarityKey =
+        getRarityKey(hero);
 
     const card =
-        document.createElement("article");
+        document.createElement(
+            "article"
+        );
 
     card.className =
         "character-card " +
         rarityClass(hero);
 
     if (!unlocked) {
-        card.classList.add("locked");
+        card.classList.add(
+            "locked"
+        );
     }
 
-    let rightLabel = "";
+    let rightLabel =
+        "";
 
     if (selected) {
         rightLabel = `
@@ -996,42 +1482,76 @@ function createCharacterCard(hero, state) {
         `;
     }
 
-    const requirement =
-        hero.rzadkosc === "aleja"
+    const roadLabel =
+        rarityKey === "aleja"
             ? `
-                <div class="road-requirement">
+                <div class="road-label">
                     🏆 ${hero.wymaganePuchary || 0}
                 </div>
             `
-            : `
-                <div class="road-requirement">
-                    ${unlocked ? "KLIKNIJ, ABY OTWORZYĆ" : "ZABLOKOWANA"}
-                </div>
-            `;
+            : "";
 
     card.innerHTML = `
-        <div class="rarity-label">
-            ${RARITY_NAMES[hero.rzadkosc] || "STARTOWY"}
+        <div class="character-portrait">
+
+            <div class="portrait-pattern"></div>
+
+            <div class="card-rank">
+                RANGA
+                <strong>${tier}</strong>
+            </div>
+
+            <div class="card-trophies">
+                🏆 ${trophies}
+            </div>
+
+            ${rightLabel}
+            ${roadLabel}
+
+            <div class="card-icon">
+                ${hero.ikona}
+            </div>
+
         </div>
 
-        ${rightLabel}
+        <div class="character-info">
 
-        <div class="card-icon">
-            ${hero.ikona}
+            <div class="character-name-row">
+
+                <div class="character-name">
+                    ${hero.nazwa}
+                </div>
+
+                <div class="card-power-level">
+                    MOC
+                    <strong>1</strong>
+                </div>
+
+            </div>
+
+            <div class="card-progress">
+
+                <div
+                    class="card-progress-fill"
+                    style="width:${progress.percent}%"
+                ></div>
+
+                <div class="card-progress-text">
+                    ⚡
+                    ${progress.current}/${progress.required}
+                </div>
+
+            </div>
+
         </div>
-
-        <h2>${hero.nazwa}</h2>
-
-        <div class="card-power">
-            ${hero.moc}
-        </div>
-
-        ${requirement}
     `;
 
-    card.onclick = function() {
-        openDetails(hero.id);
-    };
+    card.onclick =
+        function() {
+            openDetails(
+                hero.id
+            );
+        };
 
     return card;
 }
@@ -1052,35 +1572,61 @@ function renderCharacters() {
             "lockedCharacters"
         );
 
-    unlockedContainer.innerHTML = "";
-    lockedContainer.innerHTML = "";
+    unlockedContainer.innerHTML =
+        "";
 
-    BOHATEROWIE.forEach(function(hero) {
-        const card =
-            createCharacterCard(
-                hero,
-                state
-            );
+    lockedContainer.innerHTML =
+        "";
 
-        if (state.unlocked.includes(hero.id)) {
-            unlockedContainer.appendChild(card);
-        } else {
-            lockedContainer.appendChild(card);
+    BOHATEROWIE.forEach(
+        function(hero) {
+            const card =
+                createCharacterCard(
+                    hero,
+                    state
+                );
+
+            if (
+                state.unlocked.includes(
+                    hero.id
+                )
+            ) {
+                unlockedContainer.appendChild(
+                    card
+                );
+            } else {
+                lockedContainer.appendChild(
+                    card
+                );
+            }
         }
-    });
+    );
 
     if (
-        lockedContainer.children.length === 0
+        unlockedContainer
+            .children.length === 0
+    ) {
+        unlockedContainer.innerHTML = `
+            <div class="empty-message">
+                Nie masz jeszcze żadnych odblokowanych postaci.
+            </div>
+        `;
+    }
+
+    if (
+        lockedContainer
+            .children.length === 0
     ) {
         lockedContainer.innerHTML = `
-            <div class="notice">
+            <div class="empty-message">
                 Wszystkie postacie zostały odblokowane!
             </div>
         `;
     }
 
     if (
-        typeof updateTopbar === "function"
+        typeof updateTopbar ===
+        "function"
     ) {
         updateTopbar();
     }
@@ -1090,62 +1636,89 @@ function openDetails(heroId) {
     const hero =
         getHero(heroId);
 
+    if (!hero) {
+        return;
+    }
+
     const state =
         getCharactersState();
 
     const unlocked =
-        state.unlocked.includes(hero.id);
+        state.unlocked.includes(
+            hero.id
+        );
 
     const selected =
-        state.selected === hero.id;
+        state.selected ===
+        hero.id;
 
     openedHeroId =
         hero.id;
 
     document
-        .getElementById("detailsMain")
+        .getElementById(
+            "detailsMain"
+        )
         .className =
         "details-main " +
         rarityClass(hero);
 
     document
-        .getElementById("detailsIcon")
+        .getElementById(
+            "detailsIcon"
+        )
         .textContent =
         hero.ikona;
 
     document
-        .getElementById("detailsName")
+        .getElementById(
+            "detailsName"
+        )
         .textContent =
         hero.nazwa;
 
     document
-        .getElementById("detailsRarity")
+        .getElementById(
+            "detailsRarity"
+        )
         .textContent =
-        RARITY_NAMES[hero.rzadkosc] ||
-        "STARTOWY";
+        RARITY_NAMES[
+            getRarityKey(hero)
+        ];
 
     document
-        .getElementById("detailsDescription")
+        .getElementById(
+            "detailsDescription"
+        )
         .textContent =
-        hero.opis;
+        hero.opis ||
+        "";
 
     document
-        .getElementById("detailsHp")
+        .getElementById(
+            "detailsHp"
+        )
         .textContent =
         hero.hp;
 
     document
-        .getElementById("detailsDamage")
+        .getElementById(
+            "detailsDamage"
+        )
         .textContent =
         hero.damage;
 
     document
-        .getElementById("detailsSpeed")
+        .getElementById(
+            "detailsSpeed"
+        )
         .textContent =
         hero.speed;
 
     document
-        .getElementById("detailsRange")
+        .getElementById(
+            "detailsRange"
+        )
         .textContent =
         hero.range;
 
@@ -1161,10 +1734,16 @@ function openDetails(heroId) {
         "select-button";
 
     if (!unlocked) {
-        selectButton.textContent =
-            hero.rzadkosc === "aleja"
-                ? "ODBLOKUJ W ALEI PUCHARÓW"
-                : "POSTAĆ ZABLOKOWANA";
+        if (
+            getRarityKey(hero) ===
+            "aleja"
+        ) {
+            selectButton.textContent =
+                "ODBLOKUJ W ALEI PUCHARÓW";
+        } else {
+            selectButton.textContent =
+                "POSTAĆ ZABLOKOWANA";
+        }
     } else if (selected) {
         selectButton.textContent =
             "WYBRANO";
@@ -1180,7 +1759,9 @@ function openDetails(heroId) {
     selectButton.onclick =
         unlocked
             ? function() {
-                selectHero(hero.id);
+                selectHero(
+                    hero.id
+                );
             }
             : null;
 
@@ -1191,23 +1772,36 @@ function openDetails(heroId) {
     );
 
     document
-        .getElementById("detailsOverlay")
-        .classList.add("visible");
+        .getElementById(
+            "detailsOverlay"
+        )
+        .classList.add(
+            "visible"
+        );
 }
 
 function closeDetails() {
     document
-        .getElementById("detailsOverlay")
-        .classList.remove("visible");
+        .getElementById(
+            "detailsOverlay"
+        )
+        .classList.remove(
+            "visible"
+        );
 
-    openedHeroId = null;
+    openedHeroId =
+        null;
 }
 
 function selectHero(heroId) {
     const state =
         getCharactersState();
 
-    if (!state.unlocked.includes(heroId)) {
+    if (
+        !state.unlocked.includes(
+            heroId
+        )
+    ) {
         return;
     }
 
@@ -1230,36 +1824,40 @@ function updatePowerButtons(
             "gadgetButton"
         );
 
-    const starButton =
+    const starPowerButton =
         document.getElementById(
             "starPowerButton"
         );
 
     const gadgetOwned =
-        state.gadgets.includes(hero.id);
+        state.gadgets.includes(
+            hero.id
+        );
 
-    const starOwned =
-        state.starPowers.includes(hero.id);
+    const starPowerOwned =
+        state.starPowers.includes(
+            hero.id
+        );
+
+    gadgetButton.className =
+        "buy-power-button";
+
+    starPowerButton.className =
+        "buy-power-button";
 
     gadgetButton.disabled =
         !unlocked ||
         gadgetOwned;
 
-    starButton.disabled =
+    starPowerButton.disabled =
         !unlocked ||
-        starOwned;
-
-    gadgetButton.className =
-        "buy-power-button";
-
-    starButton.className =
-        "buy-power-button";
+        starPowerOwned;
 
     if (!unlocked) {
         gadgetButton.textContent =
             "NAJPIERW ODBLOKUJ POSTAĆ";
 
-        starButton.textContent =
+        starPowerButton.textContent =
             "NAJPIERW ODBLOKUJ POSTAĆ";
     } else if (gadgetOwned) {
         gadgetButton.textContent =
@@ -1273,20 +1871,24 @@ function updatePowerButtons(
             "KUP ZA 2000 🪙";
     }
 
-    if (unlocked && starOwned) {
-        starButton.textContent =
+    if (
+        unlocked &&
+        starPowerOwned
+    ) {
+        starPowerButton.textContent =
             "POSIADASZ";
 
-        starButton.classList.add(
+        starPowerButton.classList.add(
             "owned"
         );
     } else if (unlocked) {
-        starButton.textContent =
+        starPowerButton.textContent =
             "KUP ZA 5000 🪙";
     }
 
     gadgetButton.onclick =
-        unlocked && !gadgetOwned
+        unlocked &&
+        !gadgetOwned
             ? function() {
                 buyPower(
                     hero.id,
@@ -1295,8 +1897,9 @@ function updatePowerButtons(
             }
             : null;
 
-    starButton.onclick =
-        unlocked && !starOwned
+    starPowerButton.onclick =
+        unlocked &&
+        !starPowerOwned
             ? function() {
                 buyPower(
                     hero.id,
@@ -1306,7 +1909,10 @@ function updatePowerButtons(
             : null;
 }
 
-function buyPower(heroId, type) {
+function buyPower(
+    heroId,
+    type
+) {
     const state =
         getCharactersState();
 
@@ -1320,14 +1926,20 @@ function buyPower(heroId, type) {
             ? state.gadgets
             : state.starPowers;
 
-    if (collection.includes(heroId)) {
+    if (
+        collection.includes(
+            heroId
+        )
+    ) {
         return;
     }
 
-    if (
-        (Number(state.coins) || 0) <
-        price
-    ) {
+    const coins =
+        Number(
+            state.coins
+        ) || 0;
+
+    if (coins < price) {
         alert(
             "Masz za mało monet. Potrzebujesz " +
             price +
@@ -1338,18 +1950,17 @@ function buyPower(heroId, type) {
     }
 
     state.coins =
-        Math.max(
-            0,
-            (Number(state.coins) || 0) -
-            price
-        );
+        coins - price;
 
-    collection.push(heroId);
+    collection.push(
+        heroId
+    );
 
     saveState(state);
 
     if (
-        typeof updateTopbar === "function"
+        typeof updateTopbar ===
+        "function"
     ) {
         updateTopbar();
     }
@@ -1358,11 +1969,16 @@ function buyPower(heroId, type) {
 }
 
 document
-    .getElementById("detailsOverlay")
+    .getElementById(
+        "detailsOverlay"
+    )
     .addEventListener(
         "click",
         function(event) {
-            if (event.target === this) {
+            if (
+                event.target ===
+                this
+            ) {
                 closeDetails();
             }
         }
@@ -1371,13 +1987,33 @@ document
 document.addEventListener(
     "keydown",
     function(event) {
-        if (event.key === "Escape") {
+        if (
+            event.key ===
+            "Escape"
+        ) {
             closeDetails();
         }
     }
 );
 
-renderCharacters();
+try {
+    renderCharacters();
+} catch (error) {
+    console.error(
+        "Błąd wyświetlania postaci:",
+        error
+    );
+
+    document
+        .getElementById(
+            "unlockedCharacters"
+        )
+        .innerHTML = `
+            <div class="empty-message">
+                Błąd kodu: ${error.message}
+            </div>
+        `;
+}
 </script>
 
 </body>
