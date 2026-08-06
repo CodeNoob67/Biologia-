@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Real Earth Explorer</title>
+<title>Real Earth Life 3D</title>
 
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.2.0/dist/maplibre-gl.css">
 
@@ -26,23 +26,23 @@ html,body,#map{
   justify-content:center;
   color:#fff;
   text-align:center;
-  background:linear-gradient(#68bfff,#10273d);
+  background:linear-gradient(#69c4ff,#10283f);
 }
 
 #startBox{
-  width:min(650px,calc(100% - 40px));
-  box-sizing:border-box;
+  width:min(660px,calc(100% - 40px));
   padding:28px;
+  box-sizing:border-box;
   border:2px solid #fff;
   border-radius:18px;
   background:#000d;
 }
 
-#play{
-  padding:13px 30px;
+button{
+  padding:12px 25px;
   border:0;
-  border-radius:11px;
-  font-size:22px;
+  border-radius:10px;
+  font-size:19px;
   font-weight:bold;
   cursor:pointer;
 }
@@ -61,7 +61,7 @@ html,body,#map{
 #hud{
   left:14px;
   top:14px;
-  min-width:245px;
+  min-width:250px;
 }
 
 #help{
@@ -71,79 +71,188 @@ html,body,#map{
 
 #notice{
   left:50%;
-  bottom:28px;
+  bottom:22px;
   transform:translateX(-50%);
-  max-width:700px;
+  max-width:720px;
   text-align:center;
   font-weight:bold;
 }
 
-#crosshair{
-  position:fixed;
-  z-index:18;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  width:8px;
-  height:8px;
-  border:2px solid white;
-  border-radius:50%;
-  box-shadow:0 0 4px #000;
-  pointer-events:none;
-}
-
 #player{
-  width:34px;
-  height:55px;
-  transform-origin:50% 85%;
-  filter:drop-shadow(0 4px 3px #0008);
+  position:relative;
+  width:38px;
+  height:64px;
+  transform-origin:50% 88%;
+  filter:drop-shadow(0 5px 4px #0009);
 }
 
 #player .head{
   position:absolute;
-  left:9px;
+  left:10px;
   top:0;
-  width:16px;
-  height:16px;
+  width:18px;
+  height:18px;
   border-radius:50%;
-  background:#e2b084;
-  border:2px solid #281d18;
+  background:#e1ae83;
+  border:2px solid #2d2019;
+}
+
+#player .hair{
+  position:absolute;
+  left:10px;
+  top:0;
+  width:18px;
+  height:9px;
+  border-radius:12px 12px 3px 3px;
+  background:#2d211d;
 }
 
 #player .body{
   position:absolute;
   left:7px;
-  top:17px;
-  width:20px;
-  height:23px;
-  border-radius:7px 7px 4px 4px;
-  background:#2861ba;
-  border:2px solid #162c50;
+  top:19px;
+  width:24px;
+  height:27px;
+  border-radius:8px 8px 5px 5px;
+  background:#285fb5;
+  border:2px solid #142d58;
+}
+
+#player .shirt{
+  position:absolute;
+  left:10px;
+  top:24px;
+  width:18px;
+  height:15px;
+  background:#df493f;
+  border-radius:3px;
 }
 
 #player .arm{
   position:absolute;
-  top:19px;
+  top:21px;
   width:6px;
-  height:22px;
-  border-radius:4px;
-  background:#df4b40;
+  height:26px;
+  border-radius:5px;
+  background:#285fb5;
 }
 
-#player .arm.left{left:1px;transform:rotate(8deg)}
-#player .arm.right{right:1px;transform:rotate(-8deg)}
+#player .arm.left{left:1px}
+#player .arm.right{right:1px}
 
 #player .leg{
   position:absolute;
-  top:39px;
-  width:7px;
-  height:16px;
-  border-radius:3px;
-  background:#1f2837;
+  top:45px;
+  width:8px;
+  height:18px;
+  border-radius:4px;
+  background:#1e2735;
 }
 
 #player .leg.left{left:8px}
 #player .leg.right{right:8px}
+
+.car{
+  position:relative;
+  width:52px;
+  height:30px;
+  transform-origin:50% 50%;
+  filter:drop-shadow(0 5px 4px #0009);
+}
+
+.car-body{
+  position:absolute;
+  left:3px;
+  top:10px;
+  width:46px;
+  height:15px;
+  border-radius:7px;
+  background:var(--car-color);
+  border:2px solid #222;
+}
+
+.car-roof{
+  position:absolute;
+  left:14px;
+  top:3px;
+  width:26px;
+  height:13px;
+  border-radius:7px 7px 3px 3px;
+  background:#7fb8d8;
+  border:2px solid #222;
+}
+
+.car-wheel{
+  position:absolute;
+  top:22px;
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background:#111;
+}
+
+.car-wheel.left{left:8px}
+.car-wheel.right{right:8px}
+
+.airport{
+  width:30px;
+  height:30px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:24px;
+  border-radius:50%;
+  background:#fff;
+  border:3px solid #1c5aa6;
+  box-shadow:0 4px 6px #0008;
+}
+
+#dialogue{
+  position:fixed;
+  inset:0;
+  z-index:80;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:#0009;
+}
+
+#dialogueBox{
+  width:min(600px,calc(100% - 40px));
+  padding:24px;
+  box-sizing:border-box;
+  border:2px solid #fff;
+  border-radius:16px;
+  color:#fff;
+  background:#10151eee;
+}
+
+#npcName{
+  margin-top:0;
+  color:#ffe06b;
+}
+
+#destinationInput{
+  width:100%;
+  margin-top:12px;
+  padding:12px;
+  box-sizing:border-box;
+  border:0;
+  border-radius:8px;
+  font-size:18px;
+}
+
+.dialogueButtons{
+  display:flex;
+  gap:10px;
+  margin-top:14px;
+}
+
+#suggestions{
+  margin-top:12px;
+  color:#cfe4ff;
+  font-size:14px;
+}
 
 .maplibregl-ctrl-attrib{
   font-size:11px;
@@ -156,24 +265,21 @@ html,body,#map{
 
 <div id="start">
   <div id="startBox">
-    <h1>REAL EARTH EXPLORER</h1>
+    <h1>REAL EARTH LIFE 3D</h1>
     <p>
-      Cała prawdziwa Ziemia z rzeczywistymi miastami, drogami,
-      nazwami miejsc i wieloma budynkami 3D.
-    </p>
-    <p>
-      Świat jest doczytywany przez internet, dlatego może mieć rozmiar całej planety.
+      Poruszaj się po prawdziwej mapie świata, zabieraj samochody
+      i rozmawiaj z pracownikami lotnisk.
     </p>
     <button id="play">GRAJ</button>
   </div>
 </div>
 
 <div id="hud" class="panel">
-  🌍 Pozycja: <span id="position">Warszawa</span><br>
+  🌍 Pozycja: <span id="position">Paryż</span><br>
   🚶 Tryb: <span id="mode">pieszo</span><br>
   🧭 Kierunek: <span id="bearing">0</span>°<br>
   ⚡ Prędkość: <span id="speed">0</span> km/h<br>
-  🔎 Przybliżenie: <span id="zoom">16.5</span>
+  🚗 Najbliższy pojazd: <span id="nearCar">brak</span>
 </div>
 
 <div id="help" class="panel">
@@ -181,94 +287,194 @@ html,body,#map{
   S — tył<br>
   A — lewo<br>
   D — prawo<br>
-  Mysz — obracanie postaci i kamery<br>
-  Shift — sprint<br>
-  1 — pieszo<br>
-  2 — samochód<br>
-  3 — samolot<br>
+  Mysz — obrót kamery i postaci<br>
+  E — wejdź / wyjdź z auta<br>
+  F — porozmawiaj na lotnisku<br>
+  Shift — sprint / szybsza jazda<br>
   G — widok całej Ziemi<br>
-  T — powrót do Warszawy
+  T — powrót do Paryża
 </div>
 
 <div id="notice" class="panel">
-  Przybliż mapę do poziomu 15–18, aby zobaczyć budynki 3D.
+  Podejdź do samochodu i naciśnij E albo podejdź do lotniska i naciśnij F.
 </div>
 
-<div id="crosshair"></div>
+<div id="dialogue">
+  <div id="dialogueBox">
+    <h2 id="npcName">Pracownik lotniska</h2>
+    <p id="npcText"></p>
+    <input id="destinationInput" type="text" placeholder="Wpisz miasto, np. Warszawa">
+    <div class="dialogueButtons">
+      <button id="flyButton">Leć</button>
+      <button id="cancelButton">Anuluj</button>
+    </div>
+    <div id="suggestions"></div>
+  </div>
+</div>
 
 <script type="module">
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.2.0/dist/maplibre-gl.mjs";
 
-const startPosition = {
-  lng: 21.0122,
-  lat: 52.2297
+const START = {
+  name: "Paryż",
+  lng: 2.3522,
+  lat: 48.8566
 };
 
-let playerLng = startPosition.lng;
-let playerLat = startPosition.lat;
+const cityDatabase = [
+  {name:"Paryż", aliases:["paris"], lng:2.3522, lat:48.8566, language:"fr", airport:"Charles de Gaulle"},
+  {name:"Warszawa", aliases:["warsaw"], lng:21.0122, lat:52.2297, language:"pl", airport:"Lotnisko Chopina"},
+  {name:"Londyn", aliases:["london"], lng:-0.1276, lat:51.5072, language:"en", airport:"Heathrow"},
+  {name:"Berlin", aliases:[], lng:13.4050, lat:52.5200, language:"de", airport:"Berlin Brandenburg"},
+  {name:"Madryt", aliases:["madrid"], lng:-3.7038, lat:40.4168, language:"es", airport:"Barajas"},
+  {name:"Rzym", aliases:["rome"], lng:12.4964, lat:41.9028, language:"it", airport:"Fiumicino"},
+  {name:"Praga", aliases:["prague"], lng:14.4378, lat:50.0755, language:"cs", airport:"Václav Havel"},
+  {name:"Nowy Jork", aliases:["new york","nyc"], lng:-74.0060, lat:40.7128, language:"en", airport:"JFK"},
+  {name:"Los Angeles", aliases:["la"], lng:-118.2437, lat:34.0522, language:"en", airport:"LAX"},
+  {name:"Toronto", aliases:[], lng:-79.3832, lat:43.6532, language:"en", airport:"Pearson"},
+  {name:"Meksyk", aliases:["mexico city"], lng:-99.1332, lat:19.4326, language:"es", airport:"Benito Juárez"},
+  {name:"Rio de Janeiro", aliases:["rio"], lng:-43.1729, lat:-22.9068, language:"pt", airport:"Galeão"},
+  {name:"Buenos Aires", aliases:[], lng:-58.3816, lat:-34.6037, language:"es", airport:"Ezeiza"},
+  {name:"Kair", aliases:["cairo"], lng:31.2357, lat:30.0444, language:"ar", airport:"Cairo International"},
+  {name:"Dubaj", aliases:["dubai"], lng:55.2708, lat:25.2048, language:"ar", airport:"Dubai International"},
+  {name:"Tokio", aliases:["tokyo"], lng:139.6917, lat:35.6895, language:"ja", airport:"Haneda"},
+  {name:"Pekin", aliases:["beijing"], lng:116.4074, lat:39.9042, language:"zh", airport:"Capital International"},
+  {name:"Seul", aliases:["seoul"], lng:126.9780, lat:37.5665, language:"ko", airport:"Incheon"},
+  {name:"Delhi", aliases:["new delhi"], lng:77.2090, lat:28.6139, language:"hi", airport:"Indira Gandhi"},
+  {name:"Sydney", aliases:[], lng:151.2093, lat:-33.8688, language:"en", airport:"Kingsford Smith"}
+];
 
+const npcPhrases = {
+  fr: {
+    name:"Employé de l'aéroport",
+    text:"Bonjour ! Où voulez-vous aller ? Écrivez le nom de la ville.",
+    placeholder:"Écrivez une ville, par exemple Varsovie",
+    fly:"Voler",
+    cancel:"Annuler"
+  },
+  pl: {
+    name:"Pracownik lotniska",
+    text:"Dzień dobry! Dokąd chcesz lecieć? Wpisz nazwę miasta.",
+    placeholder:"Wpisz miasto, np. Paryż",
+    fly:"Leć",
+    cancel:"Anuluj"
+  },
+  en: {
+    name:"Airport employee",
+    text:"Hello! Where would you like to fly? Type the city name.",
+    placeholder:"Type a city, for example Paris",
+    fly:"Fly",
+    cancel:"Cancel"
+  },
+  de: {
+    name:"Flughafenmitarbeiter",
+    text:"Guten Tag! Wohin möchten Sie fliegen? Geben Sie den Stadtnamen ein.",
+    placeholder:"Stadt eingeben, zum Beispiel Paris",
+    fly:"Fliegen",
+    cancel:"Abbrechen"
+  },
+  es: {
+    name:"Empleado del aeropuerto",
+    text:"¡Hola! ¿Adónde quieres volar? Escribe el nombre de la ciudad.",
+    placeholder:"Escribe una ciudad, por ejemplo París",
+    fly:"Volar",
+    cancel:"Cancelar"
+  },
+  it: {
+    name:"Impiegato dell'aeroporto",
+    text:"Buongiorno! Dove vuoi volare? Scrivi il nome della città.",
+    placeholder:"Scrivi una città, per esempio Parigi",
+    fly:"Vola",
+    cancel:"Annulla"
+  },
+  pt: {
+    name:"Funcionário do aeroporto",
+    text:"Olá! Para onde você quer voar? Digite o nome da cidade.",
+    placeholder:"Digite uma cidade, por exemplo Paris",
+    fly:"Voar",
+    cancel:"Cancelar"
+  },
+  ar: {
+    name:"موظف المطار",
+    text:"مرحباً! إلى أين تريد السفر؟ اكتب اسم المدينة.",
+    placeholder:"اكتب اسم مدينة",
+    fly:"سافر",
+    cancel:"إلغاء"
+  },
+  ja: {
+    name:"空港スタッフ",
+    text:"こんにちは！どこへ行きたいですか？都市名を入力してください。",
+    placeholder:"都市名を入力してください",
+    fly:"飛ぶ",
+    cancel:"キャンセル"
+  },
+  zh: {
+    name:"机场工作人员",
+    text:"你好！你想去哪里？请输入城市名称。",
+    placeholder:"请输入城市名称",
+    fly:"飞行",
+    cancel:"取消"
+  },
+  ko: {
+    name:"공항 직원",
+    text:"안녕하세요! 어디로 가고 싶으신가요? 도시 이름을 입력하세요.",
+    placeholder:"도시 이름을 입력하세요",
+    fly:"비행",
+    cancel:"취소"
+  },
+  hi: {
+    name:"हवाई अड्डा कर्मचारी",
+    text:"नमस्ते! आप कहाँ जाना चाहते हैं? शहर का नाम लिखें।",
+    placeholder:"शहर का नाम लिखें",
+    fly:"उड़ें",
+    cancel:"रद्द करें"
+  },
+  cs: {
+    name:"Pracovník letiště",
+    text:"Dobrý den! Kam chcete letět? Napište název města.",
+    placeholder:"Napište město, například Paříž",
+    fly:"Letět",
+    cancel:"Zrušit"
+  }
+};
+
+let playerLng = START.lng;
+let playerLat = START.lat;
 let bearing = 0;
-let pitch = 67;
-
-let pointerLocked = false;
-let started = false;
-
+let pitch = 78;
 let mode = "foot";
 let currentSpeed = 0;
+let currentCar = null;
+let pointerLocked = false;
+let started = false;
+let dialogueOpen = false;
+let currentCity = cityDatabase[0];
 
 const keys = {};
-
-const modeNames = {
-  foot: "pieszo",
-  car: "samochód",
-  plane: "samolot"
-};
-
-const normalSpeeds = {
-  foot: 6,
-  car: 75,
-  plane: 750
-};
-
-const boostSpeeds = {
-  foot: 14,
-  car: 150,
-  plane: 1050
-};
+const carMarkers = [];
+const airportMarkers = [];
 
 const map = new maplibregl.Map({
-  container: "map",
-  style: "https://tiles.openfreemap.org/styles/liberty",
-  center: [playerLng, playerLat],
-  zoom: 16.5,
+  container:"map",
+  style:"https://tiles.openfreemap.org/styles/liberty",
+  center:[playerLng,playerLat],
+  zoom:18.2,
   pitch,
   bearing,
-  maxPitch: 85,
-  canvasContextAttributes: {
-    antialias: true
-  },
-  attributionControl: true
+  maxPitch:85,
+  canvasContextAttributes:{antialias:true}
 });
 
-map.addControl(
-  new maplibregl.NavigationControl({
-    visualizePitch: true
-  }),
-  "bottom-right"
-);
-
-map.addControl(
-  new maplibregl.ScaleControl({
-    unit: "metric"
-  }),
-  "bottom-left"
-);
+map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),"bottom-right");
+map.addControl(new maplibregl.ScaleControl({unit:"metric"}),"bottom-left");
 
 const playerElement = document.createElement("div");
 playerElement.id = "player";
 playerElement.innerHTML = `
   <div class="head"></div>
+  <div class="hair"></div>
   <div class="body"></div>
+  <div class="shirt"></div>
   <div class="arm left"></div>
   <div class="arm right"></div>
   <div class="leg left"></div>
@@ -276,410 +482,522 @@ playerElement.innerHTML = `
 `;
 
 const playerMarker = new maplibregl.Marker({
-  element: playerElement,
-  anchor: "bottom",
-  rotationAlignment: "map",
-  pitchAlignment: "map"
+  element:playerElement,
+  anchor:"bottom",
+  rotationAlignment:"map",
+  pitchAlignment:"map"
 })
-.setLngLat([playerLng, playerLat])
+.setLngLat([playerLng,playerLat])
 .addTo(map);
 
-map.on("load", () => {
-  try {
-    map.setProjection({
-      type: "globe"
-    });
-  } catch (error) {
-    console.warn("Widok globu nie jest dostępny:", error);
+map.on("load",()=>{
+  try{
+    map.setProjection({type:"globe"});
+  }catch(error){
+    console.warn(error);
   }
 
   const layers = map.getStyle().layers;
   let firstLabelLayer;
 
-  for (const layer of layers) {
-    if (
-      layer.type === "symbol" &&
-      layer.layout &&
-      layer.layout["text-field"]
-    ) {
+  for(const layer of layers){
+    if(layer.type==="symbol" && layer.layout && layer.layout["text-field"]){
       firstLabelLayer = layer.id;
       break;
     }
   }
 
-  if (!map.getSource("real-world-buildings")) {
-    map.addSource("real-world-buildings", {
-      type: "vector",
-      url: "https://tiles.openfreemap.org/planet"
+  if(!map.getSource("real-world-buildings")){
+    map.addSource("real-world-buildings",{
+      type:"vector",
+      url:"https://tiles.openfreemap.org/planet"
     });
   }
 
-  if (!map.getLayer("real-3d-buildings")) {
-    map.addLayer(
-      {
-        id: "real-3d-buildings",
-        source: "real-world-buildings",
-        "source-layer": "building",
-        type: "fill-extrusion",
-        minzoom: 15,
-        filter: [
-          "!=",
-          ["get", "hide_3d"],
-          true
+  if(!map.getLayer("real-3d-buildings")){
+    map.addLayer({
+      id:"real-3d-buildings",
+      source:"real-world-buildings",
+      "source-layer":"building",
+      type:"fill-extrusion",
+      minzoom:15,
+      paint:{
+        "fill-extrusion-color":[
+          "interpolate",
+          ["linear"],
+          ["coalesce",["get","render_height"],8],
+          0,"#d7d2ca",
+          70,"#c3c8cc",
+          180,"#abb8c5",
+          400,"#8fa2b8"
         ],
-        paint: {
-          "fill-extrusion-color": [
-            "interpolate",
-            ["linear"],
-            ["coalesce", ["get", "render_height"], 8],
-            0,
-            "#d8d4ce",
-            80,
-            "#c4c7ca",
-            250,
-            "#aeb7c2",
-            500,
-            "#9aa8bb"
-          ],
-          "fill-extrusion-height": [
-            "interpolate",
-            ["linear"],
-            ["zoom"],
-            15,
-            0,
-            16,
-            ["coalesce", ["get", "render_height"], 8]
-          ],
-          "fill-extrusion-base": [
-            "case",
-            [">=", ["zoom"], 16],
-            ["coalesce", ["get", "render_min_height"], 0],
-            0
-          ],
-          "fill-extrusion-opacity": 0.92
-        }
-      },
-      firstLabelLayer
-    );
+        "fill-extrusion-height":[
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          15,0,
+          16,["coalesce",["get","render_height"],8]
+        ],
+        "fill-extrusion-base":[
+          "coalesce",
+          ["get","render_min_height"],
+          0
+        ],
+        "fill-extrusion-opacity":0.94
+      }
+    },firstLabelLayer);
   }
+
+  spawnWorldObjects();
 });
 
-document.getElementById("play").addEventListener("click", () => {
-  document.getElementById("start").style.display = "none";
-  started = true;
+function spawnWorldObjects(){
+  for(const city of cityDatabase){
+    createAirportMarker(city);
+
+    for(let i=0;i<4;i++){
+      const angle = Math.random()*Math.PI*2;
+      const distance = 0.001 + Math.random()*0.0025;
+
+      createCarMarker(
+        city.lng + Math.cos(angle)*distance,
+        city.lat + Math.sin(angle)*distance,
+        randomCarColor()
+      );
+    }
+  }
+}
+
+function randomCarColor(){
+  const colors = [
+    "#d83333",
+    "#2d63c8",
+    "#eeeeee",
+    "#202020",
+    "#e0b82c",
+    "#42a562",
+    "#a445b5"
+  ];
+
+  return colors[Math.floor(Math.random()*colors.length)];
+}
+
+function createCarMarker(lng,lat,color){
+  const el = document.createElement("div");
+  el.className = "car";
+  el.style.setProperty("--car-color",color);
+  el.innerHTML = `
+    <div class="car-roof"></div>
+    <div class="car-body"></div>
+    <div class="car-wheel left"></div>
+    <div class="car-wheel right"></div>
+  `;
+
+  const marker = new maplibregl.Marker({
+    element:el,
+    anchor:"center",
+    rotationAlignment:"map",
+    pitchAlignment:"map"
+  })
+  .setLngLat([lng,lat])
+  .addTo(map);
+
+  carMarkers.push({
+    marker,
+    element:el,
+    lng,
+    lat,
+    bearing:Math.random()*360,
+    occupied:false
+  });
+}
+
+function createAirportMarker(city){
+  const el = document.createElement("div");
+  el.className = "airport";
+  el.textContent = "✈";
+
+  const marker = new maplibregl.Marker({
+    element:el,
+    anchor:"center"
+  })
+  .setLngLat([city.lng+0.007,city.lat+0.004])
+  .addTo(map);
+
+  airportMarkers.push({
+    marker,
+    city,
+    lng:city.lng+0.007,
+    lat:city.lat+0.004
+  });
+}
+
+document.getElementById("play").onclick=()=>{
+  document.getElementById("start").style.display="none";
+  started=true;
   map.getCanvas().requestPointerLock();
+};
+
+document.addEventListener("pointerlockchange",()=>{
+  pointerLocked=document.pointerLockElement===map.getCanvas();
 });
 
-document.addEventListener("pointerlockchange", () => {
-  pointerLocked =
-    document.pointerLockElement === map.getCanvas();
-});
-
-map.getCanvas().addEventListener("click", () => {
-  if (started && !pointerLocked) {
+map.getCanvas().addEventListener("click",()=>{
+  if(started && !pointerLocked && !dialogueOpen){
     map.getCanvas().requestPointerLock();
   }
 });
 
-document.addEventListener("mousemove", event => {
-  if (!pointerLocked) {
-    return;
-  }
+document.addEventListener("mousemove",event=>{
+  if(!pointerLocked || dialogueOpen)return;
 
-  bearing += event.movementX * 0.18;
-  pitch -= event.movementY * 0.12;
+  bearing += event.movementX*0.16;
+  pitch -= event.movementY*0.09;
 
-  pitch = Math.max(
-    35,
-    Math.min(82, pitch)
-  );
-
-  bearing = normalizeBearing(bearing);
+  bearing = ((bearing%360)+360)%360;
+  pitch = Math.max(62,Math.min(84,pitch));
 });
 
-document.addEventListener("keydown", event => {
-  keys[event.code] = true;
+document.addEventListener("keydown",event=>{
+  keys[event.code]=true;
 
-  if (event.code === "Digit1") {
-    setMode("foot");
+  if(event.code==="KeyE"){
+    toggleCar();
   }
 
-  if (event.code === "Digit2") {
-    setMode("car");
+  if(event.code==="KeyF"){
+    tryAirportDialogue();
   }
 
-  if (event.code === "Digit3") {
-    setMode("plane");
-  }
-
-  if (event.code === "KeyG") {
+  if(event.code==="KeyG"){
     map.easeTo({
-      center: [playerLng, playerLat],
-      zoom: 1.4,
-      pitch: 0,
+      center:[playerLng,playerLat],
+      zoom:1.5,
+      pitch:0,
       bearing,
-      duration: 1600
+      duration:1500
     });
   }
 
-  if (event.code === "KeyT") {
-    playerLng = startPosition.lng;
-    playerLat = startPosition.lat;
-
-    map.easeTo({
-      center: [playerLng, playerLat],
-      zoom: 16.5,
-      pitch: 67,
-      bearing,
-      duration: 1400
-    });
+  if(event.code==="KeyT"){
+    teleportToCity(cityDatabase[0]);
   }
 });
 
-document.addEventListener("keyup", event => {
-  keys[event.code] = false;
+document.addEventListener("keyup",event=>{
+  keys[event.code]=false;
 });
 
-function setMode(newMode) {
-  mode = newMode;
-  document.getElementById("mode").textContent =
-    modeNames[newMode];
+function metersBetween(lng1,lat1,lng2,lat2){
+  const R=6371000;
+  const p1=lat1*Math.PI/180;
+  const p2=lat2*Math.PI/180;
+  const dp=(lat2-lat1)*Math.PI/180;
+  const dl=(lng2-lng1)*Math.PI/180;
 
-  if (newMode === "foot") {
-    document.getElementById("notice").textContent =
-      "Tryb pieszy. W/S porusza do przodu i do tyłu, A/D w lewo i w prawo.";
-  }
+  const a=
+    Math.sin(dp/2)*Math.sin(dp/2)+
+    Math.cos(p1)*Math.cos(p2)*
+    Math.sin(dl/2)*Math.sin(dl/2);
 
-  if (newMode === "car") {
-    document.getElementById("notice").textContent =
-      "Tryb samochodu. To prototyp ruchu po prawdziwej mapie; kolizje z drogami będą kolejnym etapem.";
-  }
-
-  if (newMode === "plane") {
-    document.getElementById("notice").textContent =
-      "Tryb samolotu. Oddal mapę kółkiem myszy, aby szybciej obserwować lot.";
-  }
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 }
 
-function normalizeBearing(value) {
-  value %= 360;
+function destinationPoint(lng,lat,directionDegrees,distanceMeters){
+  const R=6371000;
+  const direction=directionDegrees*Math.PI/180;
+  const lat1=lat*Math.PI/180;
+  const lng1=lng*Math.PI/180;
+  const angular=distanceMeters/R;
 
-  if (value < 0) {
-    value += 360;
-  }
-
-  return value;
-}
-
-function destinationPoint(
-  lng,
-  lat,
-  directionDegrees,
-  distanceMeters
-) {
-  const earthRadius = 6371000;
-
-  const direction =
-    directionDegrees *
-    Math.PI /
-    180;
-
-  const latitude1 =
-    lat *
-    Math.PI /
-    180;
-
-  const longitude1 =
-    lng *
-    Math.PI /
-    180;
-
-  const angularDistance =
-    distanceMeters /
-    earthRadius;
-
-  const latitude2 = Math.asin(
-    Math.sin(latitude1) *
-    Math.cos(angularDistance) +
-    Math.cos(latitude1) *
-    Math.sin(angularDistance) *
-    Math.cos(direction)
+  const lat2=Math.asin(
+    Math.sin(lat1)*Math.cos(angular)+
+    Math.cos(lat1)*Math.sin(angular)*Math.cos(direction)
   );
 
-  const longitude2 =
-    longitude1 +
-    Math.atan2(
-      Math.sin(direction) *
-      Math.sin(angularDistance) *
-      Math.cos(latitude1),
-
-      Math.cos(angularDistance) -
-      Math.sin(latitude1) *
-      Math.sin(latitude2)
-    );
+  const lng2=lng1+Math.atan2(
+    Math.sin(direction)*Math.sin(angular)*Math.cos(lat1),
+    Math.cos(angular)-Math.sin(lat1)*Math.sin(lat2)
+  );
 
   return {
-    lng:
-      (
-        longitude2 *
-        180 /
-        Math.PI +
-        540
-      ) %
-      360 -
-      180,
-
-    lat:
-      latitude2 *
-      180 /
-      Math.PI
+    lng:((lng2*180/Math.PI+540)%360)-180,
+    lat:lat2*180/Math.PI
   };
 }
 
-function updateMovement(deltaSeconds) {
-  if (!started) {
-    return;
+function nearestCar(){
+  let best=null;
+  let distance=Infinity;
+
+  for(const car of carMarkers){
+    if(car.occupied)continue;
+
+    const d=metersBetween(playerLng,playerLat,car.lng,car.lat);
+
+    if(d<distance){
+      distance=d;
+      best=car;
+    }
   }
 
-  let forwardInput = 0;
-  let sideInput = 0;
-
-  if (keys.KeyW) {
-    forwardInput += 1;
-  }
-
-  if (keys.KeyS) {
-    forwardInput -= 1;
-  }
-
-  if (keys.KeyD) {
-    sideInput += 1;
-  }
-
-  if (keys.KeyA) {
-    sideInput -= 1;
-  }
-
-  const moving =
-    forwardInput !== 0 ||
-    sideInput !== 0;
-
-  if (!moving) {
-    currentSpeed = 0;
-    return;
-  }
-
-  const requestedSpeed =
-    keys.ShiftLeft || keys.ShiftRight
-      ? boostSpeeds[mode]
-      : normalSpeeds[mode];
-
-  currentSpeed = requestedSpeed;
-
-  let movementDirection =
-    bearing +
-    Math.atan2(
-      sideInput,
-      forwardInput
-    ) *
-    180 /
-    Math.PI;
-
-  const inputLength =
-    Math.min(
-      1,
-      Math.hypot(
-        forwardInput,
-        sideInput
-      )
-    );
-
-  const distanceMeters =
-    requestedSpeed /
-    3.6 *
-    deltaSeconds *
-    inputLength;
-
-  const next = destinationPoint(
-    playerLng,
-    playerLat,
-    movementDirection,
-    distanceMeters
-  );
-
-  playerLng = next.lng;
-  playerLat = Math.max(
-    -85,
-    Math.min(85, next.lat)
-  );
+  return {car:best,distance};
 }
 
-function updateView() {
-  playerMarker.setLngLat([
-    playerLng,
-    playerLat
-  ]);
+function toggleCar(){
+  if(dialogueOpen)return;
 
-  playerElement.style.transform =
-    `rotate(${bearing}deg)`;
-
-  const currentZoom = map.getZoom();
-
-  let wantedZoom = currentZoom;
-
-  if (mode === "foot" && currentZoom < 16) {
-    wantedZoom = 16.5;
+  if(currentCar){
+    currentCar.occupied=false;
+    currentCar.lng=playerLng;
+    currentCar.lat=playerLat;
+    currentCar.marker.setLngLat([playerLng,playerLat]);
+    currentCar.element.style.display="block";
+    currentCar=null;
+    mode="foot";
+    document.getElementById("mode").textContent="pieszo";
+    document.getElementById("notice").textContent="Wysiadłeś z samochodu.";
+    return;
   }
 
-  if (mode === "car" && currentZoom < 14) {
-    wantedZoom = 14.5;
+  const nearest=nearestCar();
+
+  if(!nearest.car || nearest.distance>35){
+    document.getElementById("notice").textContent="Podejdź bliżej samochodu.";
+    return;
   }
 
-  if (mode === "plane" && currentZoom > 10) {
-    wantedZoom = 8.5;
+  currentCar=nearest.car;
+  currentCar.occupied=true;
+  currentCar.element.style.display="none";
+  mode="car";
+  document.getElementById("mode").textContent="samochód";
+  document.getElementById("notice").textContent="Zabrałeś samochód. Naciśnij E, aby wysiąść.";
+}
+
+function nearestAirport(){
+  let best=null;
+  let distance=Infinity;
+
+  for(const airport of airportMarkers){
+    const d=metersBetween(playerLng,playerLat,airport.lng,airport.lat);
+
+    if(d<distance){
+      distance=d;
+      best=airport;
+    }
   }
 
-  map.jumpTo({
-    center: [
-      playerLng,
-      playerLat
-    ],
+  return {airport:best,distance};
+}
+
+function tryAirportDialogue(){
+  if(dialogueOpen || currentCar)return;
+
+  const nearest=nearestAirport();
+
+  if(!nearest.airport || nearest.distance>120){
+    document.getElementById("notice").textContent="Podejdź bliżej oznaczenia lotniska.";
+    return;
+  }
+
+  openDialogue(nearest.airport.city);
+}
+
+function openDialogue(city){
+  currentCity=city;
+  dialogueOpen=true;
+
+  if(pointerLocked){
+    document.exitPointerLock();
+  }
+
+  const phrase=npcPhrases[city.language] || npcPhrases.en;
+
+  document.getElementById("npcName").textContent=
+    `${phrase.name} — ${city.airport}`;
+
+  document.getElementById("npcText").textContent=phrase.text;
+  document.getElementById("destinationInput").placeholder=phrase.placeholder;
+  document.getElementById("flyButton").textContent=phrase.fly;
+  document.getElementById("cancelButton").textContent=phrase.cancel;
+
+  document.getElementById("suggestions").textContent=
+    "Dostępne miasta: " +
+    cityDatabase.map(c=>c.name).join(", ");
+
+  document.getElementById("destinationInput").value="";
+  document.getElementById("dialogue").style.display="flex";
+  document.getElementById("destinationInput").focus();
+}
+
+function closeDialogue(){
+  dialogueOpen=false;
+  document.getElementById("dialogue").style.display="none";
+
+  setTimeout(()=>{
+    if(started){
+      map.getCanvas().requestPointerLock();
+    }
+  },100);
+}
+
+document.getElementById("cancelButton").onclick=closeDialogue;
+
+document.getElementById("flyButton").onclick=()=>{
+  const value=document.getElementById("destinationInput").value.trim().toLowerCase();
+
+  if(!value){
+    document.getElementById("npcText").textContent="Wpisz nazwę miasta.";
+    return;
+  }
+
+  const destination=cityDatabase.find(city=>{
+    const allNames=[city.name,...city.aliases].map(name=>name.toLowerCase());
+    return allNames.includes(value);
+  });
+
+  if(!destination){
+    document.getElementById("npcText").textContent=
+      "Nie znalazłem tego miasta. Wybierz jedno z listy poniżej.";
+    return;
+  }
+
+  closeDialogue();
+  flyToCity(destination);
+};
+
+document.getElementById("destinationInput").addEventListener("keydown",event=>{
+  if(event.key==="Enter"){
+    document.getElementById("flyButton").click();
+  }
+});
+
+function flyToCity(destination){
+  document.getElementById("notice").textContent=
+    `Lot do miasta ${destination.name}...`;
+
+  map.easeTo({
+    center:[destination.lng,destination.lat],
+    zoom:3.2,
+    pitch:25,
     bearing,
-    pitch,
-    zoom: wantedZoom
+    duration:2500
+  });
+
+  setTimeout(()=>{
+    playerLng=destination.lng;
+    playerLat=destination.lat;
+
+    map.easeTo({
+      center:[playerLng,playerLat],
+      zoom:18.2,
+      pitch:78,
+      bearing,
+      duration:2500
+    });
+
+    document.getElementById("notice").textContent=
+      `Wylądowałeś w mieście ${destination.name}.`;
+  },2600);
+}
+
+function teleportToCity(city){
+  playerLng=city.lng;
+  playerLat=city.lat;
+
+  map.easeTo({
+    center:[playerLng,playerLat],
+    zoom:18.2,
+    pitch:78,
+    bearing,
+    duration:1200
   });
 }
 
-function updateHUD() {
-  document.getElementById("position").textContent =
-    `${playerLat.toFixed(5)}, ${playerLng.toFixed(5)}`;
+function updateMovement(dt){
+  if(!started || dialogueOpen)return;
 
-  document.getElementById("bearing").textContent =
-    Math.round(bearing);
+  let forward=0;
+  let side=0;
 
-  document.getElementById("speed").textContent =
-    Math.round(currentSpeed);
+  if(keys.KeyW)forward+=1;
+  if(keys.KeyS)forward-=1;
+  if(keys.KeyD)side+=1;
+  if(keys.KeyA)side-=1;
 
-  document.getElementById("zoom").textContent =
-    map.getZoom().toFixed(1);
+  if(forward===0 && side===0){
+    currentSpeed=0;
+    return;
+  }
+
+  const walkingSpeed=(keys.ShiftLeft||keys.ShiftRight)?15:6;
+  const carSpeed=(keys.ShiftLeft||keys.ShiftRight)?140:70;
+
+  currentSpeed=mode==="car"?carSpeed:walkingSpeed;
+
+  const movementDirection=
+    bearing+
+    Math.atan2(side,forward)*180/Math.PI;
+
+  const distance=
+    currentSpeed/3.6*dt*Math.min(1,Math.hypot(forward,side));
+
+  const next=destinationPoint(
+    playerLng,
+    playerLat,
+    movementDirection,
+    distance
+  );
+
+  playerLng=next.lng;
+  playerLat=Math.max(-85,Math.min(85,next.lat));
+
+  if(currentCar){
+    currentCar.lng=playerLng;
+    currentCar.lat=playerLat;
+    currentCar.bearing=bearing;
+  }
 }
 
-let previousTime = performance.now();
+function updateView(){
+  playerMarker.setLngLat([playerLng,playerLat]);
+  playerElement.style.display=mode==="car"?"none":"block";
+  playerElement.style.transform=`rotate(${bearing}deg)`;
 
-function gameLoop(currentTime) {
-  const deltaSeconds =
-    Math.min(
-      0.05,
-      (
-        currentTime -
-        previousTime
-      ) /
-      1000
-    );
+  const wantedZoom=mode==="car"?17.4:18.7;
+  const wantedPitch=mode==="car"?76:80;
 
-  previousTime = currentTime;
+  map.jumpTo({
+    center:[playerLng,playerLat],
+    bearing,
+    pitch:wantedPitch,
+    zoom:wantedZoom
+  });
+}
 
-  updateMovement(deltaSeconds);
+function updateHUD(){
+  document.getElementById("position").textContent=
+    `${playerLat.toFixed(5)}, ${playerLng.toFixed(5)}`;
+
+  document.getElementById("bearing").textContent=Math.round(bearing);
+  document.getElementById("speed").textContent=Math.round(currentSpeed);
+
+  const nearest=nearestCar();
+
+  document.getElementById("nearCar").textContent=
+    nearest.car && nearest.distance<100
+      ? `${Math.round(nearest.distance)} m`
+      : "brak";
+}
+
+let previousTime=performance.now();
+
+function gameLoop(time){
+  const dt=Math.min(.05,(time-previousTime)/1000);
+  previousTime=time;
+
+  updateMovement(dt);
   updateView();
   updateHUD();
 
