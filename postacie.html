@@ -10,6 +10,8 @@
 
     <title>Postacie</title>
 
+    <link rel="stylesheet" href="style.css">
+
     <style>
         * {
             box-sizing: border-box;
@@ -18,7 +20,6 @@
         body {
             margin: 0;
             min-height: 100vh;
-            padding-bottom: 90px;
 
             color: white;
             font-family: Arial, sans-serif;
@@ -26,39 +27,22 @@
             background:
                 radial-gradient(
                     circle at top,
-                    #168fe7,
-                    #0758bd 55%,
-                    #043678
+                    #344b70,
+                    #101827
                 );
         }
 
-        button {
+        button,
+        a {
             font-family: inherit;
-        }
-
-        .background-pattern {
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-
-            opacity: 0.08;
-
-            background-image:
-                radial-gradient(
-                    circle,
-                    white 4px,
-                    transparent 5px
-                );
-
-            background-size: 75px 75px;
         }
 
         .topbar {
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 50;
 
-            min-height: 78px;
+            min-height: 76px;
 
             display: flex;
             align-items: center;
@@ -69,487 +53,319 @@
 
             background:
                 linear-gradient(
-                    #27344e,
-                    #111a2b
+                    #2f3b53,
+                    #182238
                 );
 
-            border-bottom: 5px solid #070c14;
-
-            box-shadow:
-                0 5px 0 #00000066;
+            border-bottom: 5px solid #0d1421;
         }
 
-        .back-button {
-            width: 56px;
-            height: 56px;
-
-            display: grid;
-            place-items: center;
-
-            color: white;
-            font-size: 34px;
+        .logo {
+            color: #ffd83d;
+            font-size: 26px;
             font-weight: 1000;
-            text-decoration: none;
-
-            background:
-                linear-gradient(
-                    #687891,
-                    #35465f
-                );
-
-            border: 4px solid #080d16;
-            border-radius: 10px;
-
-            box-shadow:
-                0 4px 0 #00000066;
-        }
-
-        .page-title {
-            position: absolute;
-            left: 50%;
-
-            transform:
-                translateX(-50%);
-
-            font-size: 29px;
-            font-weight: 1000;
-
-            text-shadow:
-                3px 3px black;
-        }
-
-        .counter {
-            color: #5ee9ff;
         }
 
         .currency {
             display: flex;
-            gap: 9px;
+            gap: 10px;
         }
 
         .pill {
-            min-width: 92px;
-
+            min-width: 85px;
             padding: 9px 13px;
 
             text-align: center;
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 1000;
 
             background: #263248;
 
-            border: 3px solid #080d16;
+            border: 3px solid #111827;
             border-radius: 10px;
         }
 
         .screen {
-            width: min(1100px, 95%);
-
+            width: min(1200px, 96%);
             margin: 0 auto;
-            padding: 28px 0;
+            padding: 25px 0 105px;
+        }
+
+        .section-title {
+            margin: 0 0 10px;
+
+            text-align: center;
+
+            font-size: 38px;
+            font-weight: 1000;
+
+            text-shadow: 4px 4px #080d16;
+        }
+
+        .notice {
+            max-width: 750px;
+
+            margin: 0 auto 25px;
+            padding: 12px 18px;
+
+            text-align: center;
+
+            color: #d8ecff;
+            font-weight: 800;
+
+            background: #1d2b42;
+
+            border: 3px solid #0e1726;
+            border-radius: 12px;
+        }
+
+        .characters-section {
+            margin-top: 25px;
         }
 
         .group-title {
-            margin: 0 0 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
 
-            font-size: 27px;
+            margin: 25px 0 16px;
+
+            font-size: 25px;
             font-weight: 1000;
-
-            text-shadow:
-                3px 3px black;
         }
 
-        .group-description {
-            margin: -8px 0 20px;
+        .group-title::after {
+            content: "";
 
-            color: #dcecff;
-            font-size: 14px;
-            font-weight: 800;
+            flex: 1;
+            height: 6px;
+
+            background: #101827;
+
+            border: 2px solid #050912;
+            border-radius: 10px;
         }
 
-        .locked-section {
-            margin-top: 44px;
-            padding-top: 30px;
-
-            border-top:
-                12px solid #101827;
-
-            box-shadow:
-                inset 0 5px 0 #ffffff22;
+        .group-title.locked-title {
+            color: #bac5d4;
         }
 
-        .characters-grid {
+        .grid {
             display: grid;
-
-            grid-template-columns:
-                repeat(3, minmax(0, 1fr));
-
-            gap: 23px;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
         }
 
         .character-card {
             position: relative;
 
-            height: 325px;
-
+            min-height: 230px;
             overflow: hidden;
 
-            color: white;
-            text-align: left;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
 
-            border: 5px solid #101827;
-            border-radius: 5px;
+            padding: 16px;
+
+            text-align: center;
+
+            border: 5px solid #111827;
+            border-radius: 16px;
 
             box-shadow:
-                7px 8px 0 #00000066;
+                0 8px 0 #00000066;
 
             cursor: pointer;
 
             transition:
-                transform 0.16s ease,
-                filter 0.16s ease;
+                transform 0.16s,
+                filter 0.16s;
         }
 
         .character-card:hover {
-            transform:
-                translateY(-5px)
-                scale(1.015);
-        }
-
-        .character-card.selected {
-            outline:
-                6px solid #fff064;
-
-            outline-offset: 3px;
+            transform: translateY(-5px);
+            filter: brightness(1.08);
         }
 
         .character-card.locked {
             filter:
-                grayscale(0.7)
-                brightness(0.62);
+                grayscale(0.65)
+                brightness(0.72);
+        }
+
+        .character-card.locked:hover {
+            filter:
+                grayscale(0.45)
+                brightness(0.82);
         }
 
         .rarity-startowy {
             background:
                 linear-gradient(
-                    135deg,
-                    #afb8c1,
-                    #59636e
+                    145deg,
+                    #929aa7,
+                    #515966
                 );
         }
 
-        .rarity-rzadki  {
+        .rarity-rzadki {
             background:
                 linear-gradient(
-                    135deg,
-                    #42e35a,
-                    #11972e
+                    145deg,
+                    #4bd26c,
+                    #18753a
                 );
         }
 
         .rarity-bardzo-rzadki {
             background:
                 linear-gradient(
-                    135deg,
-                    #2fa4ff,
-                    #1944a6
+                    145deg,
+                    #3f9cff,
+                    #164f9d
                 );
         }
 
         .rarity-epicki {
             background:
                 linear-gradient(
-                    135deg,
-                    #bd50ff,
-                    #64209c
+                    145deg,
+                    #c95cff,
+                    #6c229b
                 );
         }
 
         .rarity-mityczny {
             background:
                 linear-gradient(
-                    135deg,
-                    #f24459,
-                    #94152c
+                    145deg,
+                    #ff5656,
+                    #a51e39
                 );
         }
 
         .rarity-legendarny {
             background:
                 linear-gradient(
-                    135deg,
-                    #ffe854,
-                    #e39212
+                    145deg,
+                    #ffd93d,
+                    #e67d00
                 );
         }
 
-        .card-top {
-            position: relative;
-
-            height: 245px;
-
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-
-            overflow: hidden;
-
-            border-bottom:
-                5px solid #101827;
-        }
-
-        .card-pattern {
-            position: absolute;
-            inset: 0;
-
-            opacity: 0.12;
-
-            background-image:
-                repeating-linear-gradient(
-                    45deg,
-                    transparent,
-                    transparent 24px,
-                    white 25px,
-                    transparent 27px
-                );
-        }
-
-        .tier-badge {
-            position: absolute;
-            top: 7px;
-            left: 7px;
-            z-index: 5;
-
-            width: 57px;
-            height: 57px;
-
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-
-            color: white;
-
+        .rarity-aleja {
             background:
                 linear-gradient(
-                    #30d9eb,
-                    #0c75c7
+                    145deg,
+                    #e6edf2,
+                    #8fd5f4,
+                    #5ba6d4
                 );
 
-            border:
-                4px solid #111827;
+            color: #10263b;
 
-            clip-path:
-                polygon(
-                    50% 0%,
-                    94% 17%,
-                    86% 82%,
-                    50% 100%,
-                    14% 82%,
-                    6% 17%
-                );
-
-            text-shadow:
-                2px 2px black;
+            border-color: #355e7b;
         }
 
-        .tier-word {
-            font-size: 8px;
-            font-weight: 1000;
-        }
-
-        .tier-number {
-            font-size: 20px;
-            font-weight: 1000;
-            line-height: 19px;
-        }
-
-        .trophy-box {
+        .rarity-label {
             position: absolute;
-            top: 8px;
-            left: 66px;
-            right: 8px;
-            z-index: 4;
+            top: 9px;
+            left: 9px;
 
-            height: 34px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            padding: 5px 9px;
 
             color: white;
-            font-size: 15px;
+            font-size: 10px;
             font-weight: 1000;
 
-            background:
-                linear-gradient(
-                    #65183b,
-                    #3d1026
-                );
+            background: #111827dd;
 
-            border:
-                4px solid #111827;
-
-            text-shadow:
-                2px 2px black;
+            border: 2px solid #050912;
+            border-radius: 8px;
         }
 
-        .status-badge {
+        .selected-label {
             position: absolute;
-            top: 50px;
-            right: 7px;
-            z-index: 5;
+            top: 9px;
+            right: 9px;
 
-            padding: 5px 8px;
+            padding: 5px 9px;
 
-            font-size: 11px;
+            color: #12341e;
+            font-size: 10px;
             font-weight: 1000;
 
-            background: #272f3e;
+            background: #7dff9e;
 
-            border:
-                3px solid #111827;
-
-            text-shadow:
-                2px 2px black;
+            border: 2px solid #14542b;
+            border-radius: 8px;
         }
 
-        .selected-badge {
-            background: #21b83b;
+        .lock-label {
+            position: absolute;
+            top: 9px;
+            right: 9px;
+
+            padding: 5px 9px;
+
+            color: white;
+            font-size: 10px;
+            font-weight: 1000;
+
+            background: #2b3443;
+
+            border: 2px solid #111827;
+            border-radius: 8px;
         }
 
-        .character-icon {
-            position: relative;
-            z-index: 2;
+        .card-icon {
+            margin-top: 19px;
 
-            margin-bottom: -8px;
-
-            font-size: 145px;
+            font-size: 88px;
 
             filter:
                 drop-shadow(
-                    0 10px 3px #00000066
+                    0 7px 3px #00000055
                 );
         }
 
-        .card-bottom {
-            position: relative;
+        .character-card h2 {
+            margin: 5px 0 3px;
 
-            height: 80px;
-
-            padding: 7px 9px;
-
-            background:
-                linear-gradient(
-                    #461839,
-                    #180d1c
-                );
-        }
-
-        .card-name-line {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-        }
-
-        .card-name {
-            margin: 0;
-
-            font-size: 19px;
+            font-size: 24px;
             font-weight: 1000;
-            text-transform: uppercase;
 
-            text-shadow:
-                2px 2px black;
+            text-shadow: 2px 2px #00000055;
+        }
+
+        .rarity-aleja h2 {
+            text-shadow: 1px 1px white;
         }
 
         .card-power {
-            font-size: 11px;
-            font-weight: 1000;
-            text-transform: uppercase;
-        }
+            min-height: 36px;
 
-        .card-tier-progress {
-            position: absolute;
-            left: 8px;
-            right: 8px;
-            bottom: 7px;
-
-            height: 24px;
-
-            overflow: hidden;
-
-            background: #260d22;
-
-            border:
-                3px solid #080d16;
-
-            border-radius: 3px;
-        }
-
-        .card-tier-progress-fill {
-            position: absolute;
-            inset: 0 auto 0 0;
-
-            background:
-                linear-gradient(
-                    #ff55dc,
-                    #d5169c
-                );
-        }
-
-        .card-tier-progress-fill::after {
-            content: "";
-
-            position: absolute;
-            top: 0;
-            right: -3px;
-
-            width: 5px;
-            height: 100%;
-
-            background: white;
-
-            box-shadow:
-                0 0 6px white,
-                0 0 10px white;
-        }
-
-        .card-tier-progress-fill.empty::after {
-            display: none;
-        }
-
-        .card-tier-progress-text {
-            position: absolute;
-            inset: 0;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            font-size: 12px;
-            font-weight: 1000;
-
-            text-shadow:
-                2px 2px black;
-        }
-
-        .empty-list {
-            grid-column: 1 / -1;
-
-            padding: 25px;
-
-            text-align: center;
-            font-size: 18px;
+            font-size: 13px;
             font-weight: 900;
+        }
 
-            background: #111827aa;
+        .road-requirement {
+            margin-top: auto;
+            padding: 6px 10px;
 
-            border:
-                4px solid #080d16;
+            color: #fff6a3;
+            font-size: 13px;
+            font-weight: 1000;
 
-            border-radius: 10px;
+            background: #102a45dd;
+
+            border: 2px solid #06182a;
+            border-radius: 8px;
+        }
+
+        .rarity-aleja .road-requirement {
+            color: white;
         }
 
         .bottom-nav {
@@ -557,647 +373,335 @@
             left: 0;
             right: 0;
             bottom: 0;
-            z-index: 110;
+            z-index: 60;
 
             min-height: 76px;
 
-            display: flex;
-            justify-content: center;
-            gap: 8px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
 
-            padding: 8px;
+            background: #121b2a;
 
-            background:
-                linear-gradient(
-                    #202d45,
-                    #101827
-                );
-
-            border-top:
-                5px solid #080d16;
+            border-top: 5px solid #070c14;
         }
 
         .bottom-nav a {
-            min-width: 112px;
+            display: grid;
+            place-items: center;
 
-            padding: 8px 15px;
+            padding: 9px;
 
-            color: white;
+            color: #c8d2df;
             text-align: center;
             text-decoration: none;
-            font-size: 12px;
-            font-weight: 900;
+            font-size: 13px;
+            font-weight: 1000;
 
-            background:
-                linear-gradient(
-                    #435670,
-                    #202d42
-                );
-
-            border:
-                3px solid #080d16;
-
-            border-radius: 8px;
+            border-right: 2px solid #263246;
         }
 
         .bottom-nav a.active {
-            color: #111827;
-
-            background:
-                linear-gradient(
-                    #ffd938,
-                    #eba414
-                );
+            color: white;
+            background: #32425d;
         }
 
         .details-overlay {
             position: fixed;
             inset: 0;
-            z-index: 1000;
+            z-index: 100;
 
             display: none;
+            align-items: center;
+            justify-content: center;
 
-            overflow-y: auto;
+            padding: 20px;
 
-            background: #000000dd;
+            background: #000000c7;
         }
 
         .details-overlay.visible {
-            display: block;
+            display: flex;
         }
 
-        .details-screen {
+        .details-window {
             position: relative;
 
-            min-height: 100vh;
+            width: min(980px, 96%);
+            max-height: 92vh;
+            overflow-y: auto;
 
             display: grid;
-
-            grid-template-columns:
-                minmax(270px, 0.85fr)
-                minmax(350px, 1.25fr)
-                minmax(300px, 0.9fr);
-
-            gap: 22px;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 18px;
 
             padding: 25px;
 
             background:
-                radial-gradient(
-                    circle at center,
-                    #fff88d,
-                    #ffc91d 42%,
-                    #f37b12 100%
-                );
-        }
-
-        .details-screen.rarity-background-startowy {
-            background:
-                radial-gradient(
-                    circle at center,
-                    #e5e7eb,
-                    #9ca3af 48%,
-                    #4b5563
-                );
-        }
-
-        .details-screen.rarity-background-rzadki {
-            background:
-                radial-gradient(
-                    circle at center,
-                    #a7f3b1,
-                    #35cf50 48%,
-                    #087b23
-                );
-        }
-
-        .details-screen.rarity-background-bardzo-rzadki {
-            background:
-                radial-gradient(
-                    circle at center,
-                    #9dd9ff,
-                    #2e9df4 48%,
-                    #153c99
-                );
-        }
-
-        .details-screen.rarity-background-epicki {
-            background:
-                radial-gradient(
-                    circle at center,
-                    #e8b5ff,
-                    #ae47ed 48%,
-                    #56127d
-                );
-        }
-
-        .details-screen.rarity-background-mityczny {
-            background:
-                radial-gradient(
-                    circle at center,
-                    #ff9ea8,
-                    #e4384e 48%,
-                    #7b1025
-                );
-        }
-
-        .details-screen.rarity-background-legendarny {
-            background:
-                radial-gradient(
-                    circle at center,
-                    #fff88d,
-                    #ffc91d 42%,
-                    #f37b12 100%
-                );
-        }
-
-        .close-details {
-            position: fixed;
-            top: 14px;
-            left: 14px;
-            z-index: 1100;
-
-            width: 62px;
-            height: 62px;
-
-            display: grid;
-            place-items: center;
-
-            color: white;
-            font-size: 35px;
-            font-weight: 1000;
-
-            background:
                 linear-gradient(
-                    #69768c,
-                    #343f55
+                    #344b6c,
+                    #17243a
                 );
 
-            border:
-                5px solid #111827;
-
-            border-radius: 9px;
+            border: 6px solid #0b111d;
+            border-radius: 20px;
 
             box-shadow:
-                0 5px 0 #00000066;
-
-            cursor: pointer;
+                0 15px 45px #000000aa;
         }
 
-        .details-column {
-            position: relative;
-            z-index: 2;
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 5;
 
-            min-width: 0;
-        }
-
-        .details-left {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-
-            padding-top: 45px;
-        }
-
-        .details-rarity {
-            width: fit-content;
-
-            padding: 6px 12px;
-
-            color: #111827;
-            font-size: 13px;
-            font-weight: 1000;
-            text-transform: uppercase;
-
-            background: #ffffffcc;
-
-            border:
-                3px solid #111827;
-
-            border-radius: 8px;
-        }
-
-        .details-name {
-            margin: 14px 0 2px;
-
-            font-size:
-                clamp(38px, 5vw, 68px);
-
-            line-height: 0.92;
-            font-weight: 1000;
-            text-transform: uppercase;
-
-            text-shadow:
-                4px 4px white,
-                7px 7px #111827;
-        }
-
-        .details-role {
-            margin-top: 14px;
-
-            color: #111827;
-            font-size: 18px;
-            font-weight: 1000;
-        }
-
-        .details-trophies {
-            width:
-                min(100%, 330px);
-
-            margin-top: 20px;
-            padding: 11px 14px;
+            width: 46px;
+            height: 46px;
 
             color: white;
             font-size: 21px;
             font-weight: 1000;
 
-            background:
-                linear-gradient(
-                    #681a72,
-                    #351041
-                );
+            background: #d63f3f;
 
-            border:
-                5px solid #111827;
-
-            border-radius: 8px;
-
-            text-shadow:
-                2px 2px black;
-        }
-
-        .details-description {
-            width:
-                min(100%, 380px);
-
-            margin-top: 18px;
-
-            color: #272015;
-            font-size: 16px;
-            font-weight: 800;
-            line-height: 1.4;
-        }
-
-        .select-hero-button {
-            width:
-                min(100%, 340px);
-
-            margin-top: 25px;
-            padding: 18px;
-
-            color: #111827;
-            font-size: 25px;
-            font-weight: 1000;
-
-            background:
-                linear-gradient(
-                    #ffe43d,
-                    #eca900
-                );
-
-            border:
-                5px solid #111827;
-
-            border-radius: 9px;
-
-            box-shadow:
-                0 7px 0 #00000066;
+            border: 3px solid #111827;
+            border-radius: 10px;
 
             cursor: pointer;
         }
 
-        .select-hero-button.selected {
-            color: #102115;
+        .details-main {
+            min-height: 520px;
 
-            background:
-                linear-gradient(
-                    #6aff6e,
-                    #19bd38
-                );
-        }
-
-        .select-hero-button:disabled {
-            color: #c5c9d0;
-            background: #535d6d;
-            cursor: not-allowed;
-        }
-
-        .details-center {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
 
-            min-height: 700px;
+            padding: 25px;
+
+            text-align: center;
+
+            border: 5px solid #111827;
+            border-radius: 16px;
         }
 
-        .large-character {
-            font-size:
-                clamp(190px, 25vw, 360px);
+        .details-icon {
+            font-size: 150px;
 
             filter:
                 drop-shadow(
-                    0 25px 6px #6d3d0077
+                    0 12px 5px #00000066
                 );
-
-            animation:
-                heroIdle 2.3s
-                ease-in-out infinite;
         }
 
-        @keyframes heroIdle {
-            0%,
-            100% {
-                transform:
-                    translateY(0)
-                    rotate(-2deg);
-            }
-
-            50% {
-                transform:
-                    translateY(-18px)
-                    rotate(2deg);
-            }
-        }
-
-        .large-shadow {
-            width: 65%;
-            height: 55px;
-
-            margin-top: -20px;
-
-            background: #7d450055;
-
-            border-radius: 50%;
-
-            filter:
-                blur(5px);
-        }
-
-        .details-right {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-
-            padding-top: 50px;
-        }
-
-        .abilities-title {
-            margin: 0 0 13px;
-
-            color: #111827;
-            font-size: 27px;
-            font-weight: 1000;
-        }
-
-        .ability-card {
-            margin-bottom: 16px;
-            padding: 15px;
-
-            color: white;
-
-            background:
-                linear-gradient(
-                    #3d285e,
-                    #1c1530
-                );
-
-            border:
-                5px solid #111827;
-
-            border-radius: 12px;
-
-            box-shadow:
-                0 6px 0 #00000055;
-        }
-
-        .ability-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .ability-icon {
-            width: 67px;
-            height: 67px;
-
-            display: grid;
-            place-items: center;
-
-            flex-shrink: 0;
+        .details-name {
+            margin-top: 5px;
 
             font-size: 38px;
-
-            background:
-                linear-gradient(
-                    #53e94f,
-                    #158b2b
-                );
-
-            border:
-                4px solid #111827;
-
-            border-radius: 50%;
-        }
-
-        .ability-icon.star {
-            background:
-                linear-gradient(
-                    #ffd63e,
-                    #e17800
-                );
-        }
-
-        .ability-name {
-            font-size: 18px;
             font-weight: 1000;
+
+            text-shadow: 3px 3px #00000066;
         }
 
-        .ability-type {
-            margin-top: 2px;
+        .details-rarity {
+            margin-top: 6px;
+            padding: 6px 12px;
 
-            color: #9ceeff;
-            font-size: 12px;
-            font-weight: 900;
-            text-transform: uppercase;
-        }
-
-        .ability-description {
-            margin-top: 12px;
-
-            color: #dce7f7;
             font-size: 13px;
-            font-weight: 700;
-            line-height: 1.35;
+            font-weight: 1000;
+
+            background: #111827dd;
+
+            border: 3px solid #050912;
+            border-radius: 9px;
         }
 
-        .ability-button {
-            width: 100%;
+        .details-description {
+            max-width: 570px;
 
-            margin-top: 13px;
-            padding: 11px;
+            margin-top: 14px;
 
-            color: #111827;
-            font-size: 15px;
+            color: #e5efff;
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1.45;
+        }
+
+        .stats {
+            width: min(500px, 100%);
+
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 9px;
+
+            margin-top: 18px;
+        }
+
+        .stat {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+
+            padding: 9px 12px;
+
+            background: #18253bdd;
+
+            border: 3px solid #0b1422;
+            border-radius: 9px;
+        }
+
+        .select-button {
+            width: min(390px, 100%);
+
+            margin-top: 20px;
+            padding: 14px;
+
+            color: #152036;
+            font-size: 20px;
             font-weight: 1000;
 
             background:
                 linear-gradient(
-                    #5eff68,
-                    #1ebd39
+                    #ffd942,
+                    #ef9f00
                 );
 
-            border:
-                4px solid #111827;
+            border: 5px solid #111827;
+            border-radius: 13px;
 
-            border-radius: 8px;
+            box-shadow: 0 6px 0 #00000066;
 
             cursor: pointer;
         }
 
-        .ability-button.star {
-            background:
-                linear-gradient(
-                    #ffe44b,
-                    #eca400
-                );
-        }
-
-        .ability-button.owned {
-            color: white;
+        .select-button.selected {
+            color: #15331e;
 
             background:
                 linear-gradient(
-                    #56647a,
-                    #27344a
+                    #9cffad,
+                    #42ca68
                 );
         }
 
-        .ability-button:disabled {
-            opacity: 0.8;
+        .select-button:disabled {
+            color: #c4ccd6;
+
+            background:
+                linear-gradient(
+                    #566275,
+                    #303b4d
+                );
+
             cursor: default;
         }
 
-        .details-stats {
-            margin-top: 8px;
-            padding: 15px;
+        .powers-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
 
-            color: white;
+            padding-top: 45px;
+        }
+
+        .power-box {
+            padding: 16px;
 
             background:
                 linear-gradient(
-                    #7f4a09,
-                    #4d2a05
+                    #263752,
+                    #162338
                 );
 
-            border:
-                5px solid #111827;
-
-            border-radius: 10px;
+            border: 5px solid #0c1421;
+            border-radius: 15px;
         }
 
-        .details-stat {
-            display: flex;
-            justify-content: space-between;
-            gap: 15px;
+        .power-box h3 {
+            margin: 0 0 9px;
 
-            padding: 9px 0;
-
-            font-size: 16px;
-            font-weight: 1000;
-
-            border-bottom:
-                2px solid #ffffff22;
+            color: #ffd83d;
+            font-size: 21px;
         }
 
-        .details-stat:last-child {
-            border-bottom: 0;
+        .power-box p {
+            min-height: 44px;
+
+            margin: 0 0 12px;
+
+            color: #d6e5f7;
+            font-size: 13px;
+            line-height: 1.35;
         }
 
-        .details-message {
-            min-height: 28px;
+        .buy-power-button {
+            width: 100%;
+            padding: 11px;
 
-            margin-top: 9px;
-
-            color: #164619;
-            text-align: center;
+            color: #182238;
             font-size: 15px;
             font-weight: 1000;
+
+            background:
+                linear-gradient(
+                    #ffd93d,
+                    #efa300
+                );
+
+            border: 4px solid #101827;
+            border-radius: 10px;
+
+            cursor: pointer;
         }
 
-        .details-message.error {
-            color: #8c1111;
+        .buy-power-button.owned {
+            color: #15331e;
+
+            background:
+                linear-gradient(
+                    #91ffa9,
+                    #3bc263
+                );
         }
 
-        @media (max-width: 950px) {
-            .characters-grid {
-                grid-template-columns:
-                    repeat(
-                        2,
-                        minmax(0, 1fr)
-                    );
+        .buy-power-button:disabled {
+            cursor: default;
+        }
+
+        @media (max-width: 850px) {
+            .grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
             }
 
-            .details-screen {
+            .details-window {
                 grid-template-columns: 1fr;
-
-                padding:
-                    90px 20px 30px;
             }
 
-            .details-left,
-            .details-right {
-                align-items: center;
-                text-align: center;
+            .powers-panel {
                 padding-top: 0;
             }
-
-            .details-center {
-                min-height: 360px;
-            }
-
-            .large-character {
-                font-size: 220px;
-            }
-
-            .details-description {
-                margin-left: auto;
-                margin-right: auto;
-            }
-
-            .details-right {
-                width:
-                    min(600px, 100%);
-
-                margin: 0 auto;
-            }
         }
 
-        @media (max-width: 620px) {
-            .page-title {
-                position: static;
-
-                transform: none;
-
-                font-size: 18px;
-            }
-
-            .pill {
-                min-width: 56px;
-
-                padding: 7px;
-
-                font-size: 14px;
-            }
-
-            .characters-grid {
+        @media (max-width: 560px) {
+            .grid {
                 grid-template-columns: 1fr;
             }
 
-            .bottom-nav a {
-                min-width: 70px;
+            .section-title {
+                font-size: 29px;
+            }
 
-                padding: 7px;
+            .card-icon {
+                font-size: 76px;
+            }
+
+            .details-icon {
+                font-size: 110px;
+            }
+
+            .details-name {
+                font-size: 30px;
             }
         }
     </style>
@@ -1205,38 +709,20 @@
 
 <body>
 
-<div class="background-pattern"></div>
-
 <header class="topbar">
 
-    <a
-        class="back-button"
-        href="gra.html"
-    >
-        ◀
-    </a>
-
-    <div class="page-title">
-        POSTACIE
-
-        <span
-            id="ownedCounter"
-            class="counter"
-        >
-            0/0
-        </span>
+    <div class="logo">
+        🧙 POSTACIE
     </div>
 
     <div class="currency">
 
         <div class="pill">
-            🎟️
-            <span data-tickets>0</span>
+            🎟️ <span data-tickets>0</span>
         </div>
 
         <div class="pill">
-            🪙
-            <span data-coins>0</span>
+            🪙 <span data-coins>0</span>
         </div>
 
     </div>
@@ -1245,33 +731,32 @@
 
 <main class="screen">
 
-    <section>
+    <h1 class="section-title">
+        Wybierz bohatera
+    </h1>
 
-        <h1 class="group-title">
-            ODBLOKOWANE POSTACIE
-        </h1>
+    <div class="notice">
+        Odblokowane postacie znajdują się na górze. Postacie z Alei Pucharów odblokujesz w pliku aleja.html.
+    </div>
 
-        <div class="group-description">
-            Kliknij postać, aby zobaczyć szczegóły,
-            gadżet, gwiezdną moc i przycisk wyboru.
+    <section class="characters-section">
+
+        <div class="group-title">
+            ✅ ODBLOKOWANE
         </div>
 
         <div
             id="unlockedCharacters"
-            class="characters-grid"
+            class="grid"
         ></div>
 
-    </section>
-
-    <section class="locked-section">
-
-        <h1 class="group-title">
-            🔒 NIEODBLOKOWANE POSTACIE
-        </h1>
+        <div class="group-title locked-title">
+            🔒 ZABLOKOWANE
+        </div>
 
         <div
             id="lockedCharacters"
-            class="characters-grid"
+            class="grid"
         ></div>
 
     </section>
@@ -1281,26 +766,22 @@
 <nav class="bottom-nav">
 
     <a href="gra.html">
-        🏰<br>
-        LOBBY
+        🏰<br>Lobby
     </a>
 
     <a
         class="active"
         href="postacie.html"
     >
-        🧙<br>
-        POSTACIE
+        🧙<br>Postacie
     </a>
 
     <a href="sklep.html">
-        🛒<br>
-        SKLEP
+        🛒<br>Sklep
     </a>
 
     <a href="walka.html">
-        ⚔️<br>
-        GRA
+        ⚔️<br>Gra
     </a>
 
 </nav>
@@ -1309,47 +790,39 @@
     id="detailsOverlay"
     class="details-overlay"
 >
+    <div class="details-window">
 
-    <button
-        class="close-details"
-        onclick="closeCharacterDetails()"
-    >
-        ◀
-    </button>
+        <button
+            class="close-button"
+            onclick="closeDetails()"
+        >
+            ✖
+        </button>
 
-    <div
-        id="detailsScreen"
-        class="details-screen"
-    >
+        <section
+            id="detailsMain"
+            class="details-main rarity-startowy"
+        >
 
-        <section class="details-column details-left">
+            <div
+                id="detailsIcon"
+                class="details-icon"
+            >
+                🧑‍🌾
+            </div>
+
+            <div
+                id="detailsName"
+                class="details-name"
+            >
+                Farmer
+            </div>
 
             <div
                 id="detailsRarity"
                 class="details-rarity"
             >
-                RZADKOŚĆ
-            </div>
-
-            <h1
-                id="detailsName"
-                class="details-name"
-            >
-                POSTAĆ
-            </h1>
-
-            <div
-                id="detailsRole"
-                class="details-role"
-            >
-                BOHATER
-            </div>
-
-            <div
-                id="detailsTrophies"
-                class="details-trophies"
-            >
-                🏆 0
+                STARTOWY
             </div>
 
             <div
@@ -1357,153 +830,78 @@
                 class="details-description"
             ></div>
 
+            <div class="stats">
+
+                <div class="stat">
+                    <span>❤️ Życie</span>
+                    <b id="detailsHp">0</b>
+                </div>
+
+                <div class="stat">
+                    <span>⚔️ Obrażenia</span>
+                    <b id="detailsDamage">0</b>
+                </div>
+
+                <div class="stat">
+                    <span>👟 Szybkość</span>
+                    <b id="detailsSpeed">0</b>
+                </div>
+
+                <div class="stat">
+                    <span>🎯 Zasięg</span>
+                    <b id="detailsRange">0</b>
+                </div>
+
+            </div>
+
             <button
                 id="selectHeroButton"
-                class="select-hero-button"
-                onclick="selectCurrentHero()"
+                class="select-button"
             >
                 WYBIERZ
             </button>
 
         </section>
 
-        <section class="details-column details-center">
+        <aside class="powers-panel">
 
-            <div
-                id="largeCharacter"
-                class="large-character"
-            >
-                🧙
-            </div>
+            <div class="power-box">
 
-            <div class="large-shadow"></div>
+                <h3>🟢 GADŻET</h3>
 
-        </section>
-
-        <section class="details-column details-right">
-
-            <h2 class="abilities-title">
-                MOCE POSTACI
-            </h2>
-
-            <div class="ability-card">
-
-                <div class="ability-header">
-
-                    <div class="ability-icon">
-                        ⚙️
-                    </div>
-
-                    <div>
-
-                        <div
-                            id="gadgetName"
-                            class="ability-name"
-                        >
-                            Gadżet
-                        </div>
-
-                        <div class="ability-type">
-                            GADŻET
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div
-                    id="gadgetDescription"
-                    class="ability-description"
-                ></div>
+                <p>
+                    Specjalna zdolność używana podczas walki.
+                </p>
 
                 <button
                     id="gadgetButton"
-                    class="ability-button"
-                    onclick="buyCurrentGadget()"
+                    class="buy-power-button"
                 >
-                    KUP ZA 🪙 2000
+                    KUP ZA 2000 🪙
                 </button>
 
             </div>
 
-            <div class="ability-card">
+            <div class="power-box">
 
-                <div class="ability-header">
+                <h3>⭐ GWIEZDNA MOC</h3>
 
-                    <div class="ability-icon star">
-                        ⭐
-                    </div>
-
-                    <div>
-
-                        <div
-                            id="starPowerName"
-                            class="ability-name"
-                        >
-                            Gwiezdna moc
-                        </div>
-
-                        <div class="ability-type">
-                            GWIEZDNA MOC
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div
-                    id="starPowerDescription"
-                    class="ability-description"
-                ></div>
+                <p>
+                    Stałe ulepszenie wyjątkowej zdolności bohatera.
+                </p>
 
                 <button
                     id="starPowerButton"
-                    class="ability-button star"
-                    onclick="buyCurrentStarPower()"
+                    class="buy-power-button"
                 >
-                    KUP ZA 🪙 5000
+                    KUP ZA 5000 🪙
                 </button>
 
             </div>
 
-            <div class="details-stats">
-
-                <div class="details-stat">
-                    <span>❤️ ŻYCIE</span>
-                    <span id="detailHp">0</span>
-                </div>
-
-                <div class="details-stat">
-                    <span>⚔️ ATAK</span>
-                    <span id="detailDamage">0</span>
-                </div>
-
-                <div class="details-stat">
-                    <span>👟 PRĘDKOŚĆ</span>
-                    <span id="detailSpeed">0</span>
-                </div>
-
-                <div class="details-stat">
-                    <span>🎯 ZASIĘG</span>
-                    <span id="detailRange">0</span>
-                </div>
-
-                <div class="details-stat">
-                    <span>✨ MOC</span>
-                    <span id="detailPower">-</span>
-                </div>
-
-            </div>
-
-            <div
-                id="detailsMessage"
-                class="details-message"
-            ></div>
-
-        </section>
+        </aside>
 
     </div>
-
 </div>
 
 <script src="dane.js"></script>
@@ -1512,612 +910,137 @@
 <script>
 "use strict";
 
-const HERO_RARITIES = {
-    startowy: {
-        name: "Startowy",
-        className: "rarity-startowy",
-        backgroundClass:
-            "rarity-background-startowy"
-    },
-
-    rzadki: {
-        name: "Rzadki",
-        className: "rarity-rzadki",
-        backgroundClass:
-            "rarity-background-rzadki"
-    },
-
-    "bardzo-rzadki": {
-        name: "Bardzo rzadki",
-        className:
-            "rarity-bardzo-rzadki",
-        backgroundClass:
-            "rarity-background-bardzo-rzadki"
-    },
-
-    epicki: {
-        name: "Epicki",
-        className: "rarity-epicki",
-        backgroundClass:
-            "rarity-background-epicki"
-    },
-
-    mityczny: {
-        name: "Mityczny",
-        className: "rarity-mityczny",
-        backgroundClass:
-            "rarity-background-mityczny"
-    },
-
-    legendarny: {
-        name: "Legendarny",
-        className: "rarity-legendarny",
-        backgroundClass:
-            "rarity-background-legendarny"
-    }
+const RARITY_NAMES = {
+    startowy: "STARTOWY",
+    rzadki: "RZADKI",
+    bardzo_rzadki: "BARDZO RZADKI",
+    epicki: "EPICKI",
+    mityczny: "MITYCZNY",
+    legendarny: "LEGENDARNY",
+    aleja: "ALEJA PUCHARÓW"
 };
 
-const HERO_ABILITIES = {
-    farmer: {
-        gadgetName:
-            "Szybkie zbiory",
+let openedHeroId = null;
 
-        gadgetDescription:
-            "Farmer przez kilka sekund porusza się szybciej.",
+function getCharactersState() {
+    const state = getState();
 
-        starName:
-            "Ostre widły",
-
-        starDescription:
-            "Co trzeci atak Farmera zadaje jeszcze większe obrażenia."
-    },
-
-    rycerz: {
-        gadgetName:
-            "Mocna tarcza",
-
-        gadgetDescription:
-            "Rycerz otrzymuje krótką ochronę przed obrażeniami.",
-
-        starName:
-            "Ostatni obrońca",
-
-        starDescription:
-            "Tarcza przy małej ilości życia pochłania więcej obrażeń."
-    },
-
-    lucznik: {
-        gadgetName:
-            "Odrzut",
-
-        gadgetDescription:
-            "Łucznik odskakuje od najbliższego przeciwnika.",
-
-        starName:
-            "Napięta cięciwa",
-
-        starDescription:
-            "Co trzecia szybka strzała zadaje dodatkowe obrażenia."
-    },
-
-    ksiadz: {
-        gadgetName:
-            "Święte wezwanie",
-
-        gadgetDescription:
-            "Ksiądz natychmiast przywołuje dodatkowego Ducha.",
-
-        starName:
-            "Wieczna służba",
-
-        starDescription:
-            "Przywołane Duchy mają więcej życia i zadają większe obrażenia."
-    },
-
-   muzyk: {
-    gadgetName:
-        "Głośnik basowy",
-
-    gadgetDescription:
-        "Muzyk tworzy wokół siebie potężną falę basową, która odpycha pobliskich przeciwników.",
-
-    starName:
-        "Mocny rytm",
-
-    starDescription:
-        "Żółta fala Ultra jest o 25% szersza i zatrzymuje przeciwnika o 25% dłużej."
-},
-
-alchemik: {
-    gadgetName:
-        "Mikstura doskonała",
-
-    gadgetDescription:
-        "Następny rzut łączy leczenie, obrażenia, zatrzymanie i przyspieszenie w jednej miksturze.",
-
-    starName:
-        "Mistrz alchemii",
-
-    starDescription:
-        "Każda mikstura działa o 25% skuteczniej."
-},
-
-szermierz: {
-    gadgetName:
-        "Błyskawiczny taniec",
-
-    gadgetDescription:
-        "Szermierz przez 2 sekundy porusza się o 50% szybciej.",
-
-    starName:
-        "Długie ostrze",
-
-    starDescription:
-        "Miecz Szermierza ma większy zasięg rażenia."
-},
-
-    goblin: {
-        gadgetName:
-            "Dymna bomba",
-
-        gadgetDescription:
-            "Goblin na chwilę ukrywa się przed przeciwnikami.",
-
-        starName:
-            "Desperacja",
-
-        starDescription:
-            "Goblin z małą ilością życia zadaje jeszcze więcej obrażeń."
-    },
-
-    golem: {
-        gadgetName:
-            "Kamienna skóra",
-
-        gadgetDescription:
-            "Golem przez chwilę otrzymuje mniej obrażeń.",
-
-        starName:
-            "Trzęsienie ziemi",
-
-        starDescription:
-            "Fala uderzeniowa Golema jest większa i silniejsza."
-    },
-
-    duch: {
-        gadgetName:
-            "Widmowy skok",
-
-        gadgetDescription:
-            "Duch szybko przemieszcza się w kierunku przeciwnika.",
-
-        starName:
-            "Niematerialny",
-
-        starDescription:
-            "Po przejściu przez ścianę Duch przez chwilę porusza się szybciej."
-    },
-
-    czarodziej: {
-        gadgetName:
-            "Magiczna eksplozja",
-
-        gadgetDescription:
-            "Czarodziej tworzy magiczną eksplozję wokół siebie.",
-
-        starName:
-            "Silniejsza klątwa",
-
-        starDescription:
-            "Przeklęci przeciwnicy otrzymują więcej obrażeń."
-    },
-
-    wampir: {
-        gadgetName:
-            "Krwawy głód",
-
-        gadgetDescription:
-            "Następna przemiana Wampira leczy go mocniej za trafionych przeciwników.",
-
-        starName:
-            "Nocny łowca",
-
-        starDescription:
-            "Forma nietoperzy trwa dłużej i porusza się jeszcze szybciej."
-    },
-
-    krol: {
-        gadgetName:
-            "Królewski rozkaz",
-
-        gadgetDescription:
-            "Król przez chwilę strzela szybciej.",
-
-        starName:
-            "Złota salwa",
-
-        starDescription:
-            "Środkowy pocisk Króla zadaje więcej obrażeń."
-    },
-
-    wiedzma: {
-        gadgetName:
-            "Magiczny wir",
-
-        gadgetDescription:
-            "Wiedźma wystrzeliwuje kule we wszystkich kierunkach.",
-
-        starName:
-            "Nieskończony strumień",
-
-        starDescription:
-            "Kule Wiedźmy są szybsze i mają większy zasięg."
-    }
-};
-
-let currentHeroId = null;
-
-function prepareState() {
-    const state =
-        getState();
-
-    if (
-        !Array.isArray(
-            state.unlocked
-        )
-    ) {
-        state.unlocked =
-            ["farmer"];
+    if (!Array.isArray(state.unlocked)) {
+        state.unlocked = ["farmer"];
     }
 
-    state.unlocked =
-        state.unlocked.filter(
-            function(heroId) {
-                return BOHATEROWIE.some(
-                    function(hero) {
-                        return (
-                            hero.id ===
-                            heroId
-                        );
-                    }
-                );
-            }
-        );
+    if (!state.unlocked.includes("farmer")) {
+        state.unlocked.unshift("farmer");
+    }
 
-    if (
-        !state.unlocked.includes(
-            "farmer"
-        )
-    ) {
-        state.unlocked.unshift(
-            "farmer"
-        );
+    if (!Array.isArray(state.gadgets)) {
+        state.gadgets = [];
+    }
+
+    if (!Array.isArray(state.starPowers)) {
+        state.starPowers = [];
     }
 
     if (
         !state.heroTrophies ||
-        typeof state.heroTrophies !==
-            "object"
+        typeof state.heroTrophies !== "object"
     ) {
         state.heroTrophies = {};
     }
 
-    if (
-        !state.heroGadgets ||
-        typeof state.heroGadgets !==
-            "object"
-    ) {
-        state.heroGadgets = {};
-    }
-
-    if (
-        !state.heroStarPowers ||
-        typeof state.heroStarPowers !==
-            "object"
-    ) {
-        state.heroStarPowers = {};
-    }
-
-    const selectedExists =
-        BOHATEROWIE.some(
-            function(hero) {
-                return (
-                    hero.id ===
-                    state.selected
-                );
-            }
-        );
-
-    if (
-        !selectedExists ||
-        !state.unlocked.includes(
-            state.selected
-        )
-    ) {
-        state.selected =
-            "farmer";
-    }
-
-    state.coins =
-        Math.max(
-            0,
-            Number(
-                state.coins
-            ) || 0
-        );
-
-    state.tickets =
-        Math.max(
-            0,
-            Number(
-                state.tickets
-            ) || 0
-        );
-
-    saveState(state);
-
     return state;
 }
 
-function getHeroTier(trophies) {
-    const amount =
-        Math.max(
-            0,
-            Math.floor(
-                Number(
-                    trophies
-                ) || 0
-            )
-        );
-
-    if (amount < 20) {
-        return 1;
-    }
-
-    return Math.floor(
-        amount / 10
+function rarityClass(hero) {
+    return (
+        "rarity-" +
+        (
+            RARITY_NAMES[hero.rzadkosc]
+                ? hero.rzadkosc
+                : "startowy"
+        )
     );
 }
 
-function getTierProgress(
-    trophies
-) {
-    const amount =
-        Math.max(
-            0,
-            Math.floor(
-                Number(
-                    trophies
-                ) || 0
-            )
-        );
-
-    if (amount < 20) {
-        return {
-            current:
-                amount,
-
-            required:
-                20,
-
-            percent:
-                amount /
-                20 *
-                100
-        };
-    }
-
-    const current =
-        amount % 10;
-
-    return {
-        current:
-            current,
-
-        required:
-            10,
-
-        percent:
-            current /
-            10 *
-            100
-    };
-}
-
-function getRangeName(hero) {
-    if (
-        hero.id === "rycerz" ||
-        hero.id === "goblin" ||
-        hero.id === "duch"
-    ) {
-        return "MELEE";
-    }
-
-    if (
-        hero.id === "wampir"
-    ) {
-        return "PRZEMIANA";
-    }
-
-    if (
-        hero.range >= 650
-    ) {
-        return "DŁUGI";
-    }
-
-    if (
-        hero.range >= 450
-    ) {
-        return "ŚREDNI";
-    }
-
-    return "KRÓTKI";
-}
-
-function createCharacterCard(
-    hero,
-    state
-) {
+function createCharacterCard(hero, state) {
     const unlocked =
-        state.unlocked.includes(
-            hero.id
-        );
+        state.unlocked.includes(hero.id);
 
     const selected =
-        state.selected ===
-        hero.id;
-
-    const rarity =
-        HERO_RARITIES[
-            hero.rzadkosc
-        ] ||
-        HERO_RARITIES.startowy;
-
-    const trophies =
-        Math.max(
-            0,
-            Number(
-                state.heroTrophies[
-                    hero.id
-                ]
-            ) || 0
-        );
-
-    const tier =
-        getHeroTier(
-            trophies
-        );
-
-    const progress =
-        getTierProgress(
-            trophies
-        );
+        state.selected === hero.id;
 
     const card =
-        document.createElement(
-            "article"
-        );
+        document.createElement("article");
 
     card.className =
         "character-card " +
-        rarity.className;
+        rarityClass(hero);
 
     if (!unlocked) {
-        card.classList.add(
-            "locked"
-        );
+        card.classList.add("locked");
     }
+
+    let rightLabel = "";
 
     if (selected) {
-        card.classList.add(
-            "selected"
-        );
+        rightLabel = `
+            <div class="selected-label">
+                WYBRANO
+            </div>
+        `;
+    } else if (!unlocked) {
+        rightLabel = `
+            <div class="lock-label">
+                🔒
+            </div>
+        `;
     }
 
+    const requirement =
+        hero.rzadkosc === "aleja"
+            ? `
+                <div class="road-requirement">
+                    🏆 ${hero.wymaganePuchary || 0}
+                </div>
+            `
+            : `
+                <div class="road-requirement">
+                    ${unlocked ? "KLIKNIJ, ABY OTWORZYĆ" : "ZABLOKOWANA"}
+                </div>
+            `;
+
     card.innerHTML = `
-        <div class="card-top">
-
-            <div class="card-pattern"></div>
-
-            <div class="tier-badge">
-
-                <span class="tier-word">
-                    TIER
-                </span>
-
-                <span class="tier-number">
-                    ${tier}
-                </span>
-
-            </div>
-
-            <div class="trophy-box">
-                🏆 ${trophies}
-            </div>
-
-            ${
-                !unlocked
-                    ? `
-                        <div class="status-badge">
-                            🔒
-                        </div>
-                    `
-                    : selected
-                        ? `
-                            <div
-                                class="
-                                    status-badge
-                                    selected-badge
-                                "
-                            >
-                                ✓
-                            </div>
-                        `
-                        : ""
-            }
-
-            <div class="character-icon">
-                ${hero.ikona}
-            </div>
-
+        <div class="rarity-label">
+            ${RARITY_NAMES[hero.rzadkosc] || "STARTOWY"}
         </div>
 
-        <div class="card-bottom">
+        ${rightLabel}
 
-            <div class="card-name-line">
-
-                <h2 class="card-name">
-                    ${hero.nazwa}
-                </h2>
-
-                <div class="card-power">
-                    ATAK ${hero.damage}
-                </div>
-
-            </div>
-
-            <div class="card-tier-progress">
-
-                <div
-                    class="
-                        card-tier-progress-fill
-                        ${
-                            progress.current === 0
-                                ? "empty"
-                                : ""
-                        }
-                    "
-                    style="
-                        width:
-                        ${progress.percent}%;
-                    "
-                ></div>
-
-                <div class="card-tier-progress-text">
-                    ⚡
-                    ${progress.current}/${progress.required}
-                </div>
-
-            </div>
-
+        <div class="card-icon">
+            ${hero.ikona}
         </div>
+
+        <h2>${hero.nazwa}</h2>
+
+        <div class="card-power">
+            ${hero.moc}
+        </div>
+
+        ${requirement}
     `;
 
-    card.addEventListener(
-        "click",
-        function() {
-            openCharacterDetails(
-                hero.id
-            );
-        }
-    );
+    card.onclick = function() {
+        openDetails(hero.id);
+    };
 
     return card;
 }
 
 function renderCharacters() {
     const state =
-        prepareState();
+        getCharactersState();
+
+    saveState(state);
 
     const unlockedContainer =
         document.getElementById(
@@ -2129,255 +1052,102 @@ function renderCharacters() {
             "lockedCharacters"
         );
 
-    unlockedContainer.innerHTML =
-        "";
+    unlockedContainer.innerHTML = "";
+    lockedContainer.innerHTML = "";
 
-    lockedContainer.innerHTML =
-        "";
+    BOHATEROWIE.forEach(function(hero) {
+        const card =
+            createCharacterCard(
+                hero,
+                state
+            );
 
-    let unlockedCount = 0;
-
-    BOHATEROWIE.forEach(
-        function(hero) {
-            const card =
-                createCharacterCard(
-                    hero,
-                    state
-                );
-
-            if (
-                state.unlocked.includes(
-                    hero.id
-                )
-            ) {
-                unlockedContainer.appendChild(
-                    card
-                );
-
-                unlockedCount++;
-            } else {
-                lockedContainer.appendChild(
-                    card
-                );
-            }
+        if (state.unlocked.includes(hero.id)) {
+            unlockedContainer.appendChild(card);
+        } else {
+            lockedContainer.appendChild(card);
         }
-    );
-
-    document
-        .getElementById(
-            "ownedCounter"
-        )
-        .textContent =
-        unlockedCount +
-        "/" +
-        BOHATEROWIE.length;
+    });
 
     if (
-        unlockedContainer
-            .children
-            .length === 0
+        lockedContainer.children.length === 0
     ) {
-        unlockedContainer.innerHTML =
-            `
-                <div class="empty-list">
-                    Nie masz odblokowanych postaci.
-                </div>
-            `;
+        lockedContainer.innerHTML = `
+            <div class="notice">
+                Wszystkie postacie zostały odblokowane!
+            </div>
+        `;
     }
 
     if (
-        lockedContainer
-            .children
-            .length === 0
+        typeof updateTopbar === "function"
     ) {
-        lockedContainer.innerHTML =
-            `
-                <div class="empty-list">
-                    Wszystkie postacie są odblokowane.
-                </div>
-            `;
+        updateTopbar();
     }
-
-    updateTopbar();
 }
 
-function openCharacterDetails(
-    heroId
-) {
-    const state =
-        prepareState();
-
+function openDetails(heroId) {
     const hero =
-        BOHATEROWIE.find(
-            function(character) {
-                return (
-                    character.id ===
-                    heroId
-                );
-            }
-        );
+        getHero(heroId);
 
-    if (!hero) {
-        return;
-    }
-
-    currentHeroId =
-        hero.id;
+    const state =
+        getCharactersState();
 
     const unlocked =
-        state.unlocked.includes(
-            hero.id
-        );
+        state.unlocked.includes(hero.id);
 
     const selected =
-        state.selected ===
+        state.selected === hero.id;
+
+    openedHeroId =
         hero.id;
 
-    const rarity =
-        HERO_RARITIES[
-            hero.rzadkosc
-        ] ||
-        HERO_RARITIES.startowy;
-
-    const abilities =
-        HERO_ABILITIES[
-            hero.id
-        ] || {
-            gadgetName:
-                "Specjalny gadżet",
-
-            gadgetDescription:
-                "Unikalny gadżet tej postaci.",
-
-            starName:
-                "Gwiezdna moc",
-
-            starDescription:
-                "Unikalna gwiezdna moc tej postaci."
-        };
-
-    const trophies =
-        Math.max(
-            0,
-            Number(
-                state.heroTrophies[
-                    hero.id
-                ]
-            ) || 0
-        );
+    document
+        .getElementById("detailsMain")
+        .className =
+        "details-main " +
+        rarityClass(hero);
 
     document
-        .getElementById(
-            "detailsName"
-        )
-        .textContent =
-        hero.nazwa;
-
-    document
-        .getElementById(
-            "detailsRarity"
-        )
-        .textContent =
-        rarity.name;
-
-    document
-        .getElementById(
-            "detailsRole"
-        )
-        .textContent =
-        getRangeName(hero) +
-        " ZASIĘG";
-
-    document
-        .getElementById(
-            "detailsTrophies"
-        )
-        .textContent =
-        "🏆 " +
-        trophies +
-        " | TIER " +
-        getHeroTier(
-            trophies
-        );
-
-    document
-        .getElementById(
-            "detailsDescription"
-        )
-        .textContent =
-        hero.opis;
-
-    document
-        .getElementById(
-            "largeCharacter"
-        )
+        .getElementById("detailsIcon")
         .textContent =
         hero.ikona;
 
     document
-        .getElementById(
-            "detailHp"
-        )
+        .getElementById("detailsName")
+        .textContent =
+        hero.nazwa;
+
+    document
+        .getElementById("detailsRarity")
+        .textContent =
+        RARITY_NAMES[hero.rzadkosc] ||
+        "STARTOWY";
+
+    document
+        .getElementById("detailsDescription")
+        .textContent =
+        hero.opis;
+
+    document
+        .getElementById("detailsHp")
         .textContent =
         hero.hp;
 
     document
-        .getElementById(
-            "detailDamage"
-        )
+        .getElementById("detailsDamage")
         .textContent =
         hero.damage;
 
     document
-        .getElementById(
-            "detailSpeed"
-        )
+        .getElementById("detailsSpeed")
         .textContent =
         hero.speed;
 
     document
-        .getElementById(
-            "detailRange"
-        )
+        .getElementById("detailsRange")
         .textContent =
-        getRangeName(hero);
-
-    document
-        .getElementById(
-            "detailPower"
-        )
-        .textContent =
-        hero.moc;
-
-    document
-        .getElementById(
-            "gadgetName"
-        )
-        .textContent =
-        abilities.gadgetName;
-
-    document
-        .getElementById(
-            "gadgetDescription"
-        )
-        .textContent =
-        abilities
-            .gadgetDescription;
-
-    document
-        .getElementById(
-            "starPowerName"
-        )
-        .textContent =
-        abilities.starName;
-
-    document
-        .getElementById(
-            "starPowerDescription"
-        )
-        .textContent =
-        abilities
-            .starDescription;
+        hero.range;
 
     const selectButton =
         document.getElementById(
@@ -2387,142 +1157,74 @@ function openCharacterDetails(
     selectButton.disabled =
         !unlocked;
 
-    selectButton.classList.toggle(
-        "selected",
-        selected
-    );
+    selectButton.className =
+        "select-button";
 
-    selectButton.textContent =
-        !unlocked
-            ? "POSTAĆ ZABLOKOWANA"
-            : selected
-                ? "WYBRANO"
-                : "WYBIERZ";
+    if (!unlocked) {
+        selectButton.textContent =
+            hero.rzadkosc === "aleja"
+                ? "ODBLOKUJ W ALEI PUCHARÓW"
+                : "POSTAĆ ZABLOKOWANA";
+    } else if (selected) {
+        selectButton.textContent =
+            "WYBRANO";
 
-    const detailsScreen =
-        document.getElementById(
-            "detailsScreen"
+        selectButton.classList.add(
+            "selected"
         );
-
-    Object.values(
-        HERO_RARITIES
-    ).forEach(
-        function(rarityData) {
-            detailsScreen
-                .classList
-                .remove(
-                    rarityData
-                        .backgroundClass
-                );
-        }
-    );
-
-    detailsScreen
-        .classList
-        .add(
-            rarity
-                .backgroundClass
-        );
-
-    updateAbilityButtons(
-        state,
-        hero
-    );
-
-    clearDetailsMessage();
-
-    document
-        .getElementById(
-            "detailsOverlay"
-        )
-        .classList
-        .add(
-            "visible"
-        );
-
-    document.body.style.overflow =
-        "hidden";
-}
-
-function closeCharacterDetails() {
-    document
-        .getElementById(
-            "detailsOverlay"
-        )
-        .classList
-        .remove(
-            "visible"
-        );
-
-    document.body.style.overflow =
-        "";
-
-    currentHeroId =
-        null;
-
-    renderCharacters();
-}
-
-function selectCurrentHero() {
-    if (!currentHeroId) {
-        return;
+    } else {
+        selectButton.textContent =
+            "WYBIERZ";
     }
 
+    selectButton.onclick =
+        unlocked
+            ? function() {
+                selectHero(hero.id);
+            }
+            : null;
+
+    updatePowerButtons(
+        hero,
+        state,
+        unlocked
+    );
+
+    document
+        .getElementById("detailsOverlay")
+        .classList.add("visible");
+}
+
+function closeDetails() {
+    document
+        .getElementById("detailsOverlay")
+        .classList.remove("visible");
+
+    openedHeroId = null;
+}
+
+function selectHero(heroId) {
     const state =
-        prepareState();
+        getCharactersState();
 
-    if (
-        !state.unlocked.includes(
-            currentHeroId
-        )
-    ) {
-        showDetailsMessage(
-            "Ta postać jest zablokowana.",
-            true
-        );
-
+    if (!state.unlocked.includes(heroId)) {
         return;
     }
 
     state.selected =
-        currentHeroId;
+        heroId;
 
     saveState(state);
 
-    showDetailsMessage(
-        "Wybrano postać."
-    );
-
-    openCharacterDetails(
-        currentHeroId
-    );
-
     renderCharacters();
+    openDetails(heroId);
 }
 
-function updateAbilityButtons(
+function updatePowerButtons(
+    hero,
     state,
-    hero
+    unlocked
 ) {
-    const unlocked =
-        state.unlocked.includes(
-            hero.id
-        );
-
-    const gadgetOwned =
-        Boolean(
-            state.heroGadgets[
-                hero.id
-            ]
-        );
-
-    const starOwned =
-        Boolean(
-            state.heroStarPowers[
-                hero.id
-            ]
-        );
-
     const gadgetButton =
         document.getElementById(
             "gadgetButton"
@@ -2533,15 +1235,11 @@ function updateAbilityButtons(
             "starPowerButton"
         );
 
-    gadgetButton.classList.toggle(
-        "owned",
-        gadgetOwned
-    );
+    const gadgetOwned =
+        state.gadgets.includes(hero.id);
 
-    starButton.classList.toggle(
-        "owned",
-        starOwned
-    );
+    const starOwned =
+        state.starPowers.includes(hero.id);
 
     gadgetButton.disabled =
         !unlocked ||
@@ -2551,175 +1249,130 @@ function updateAbilityButtons(
         !unlocked ||
         starOwned;
 
-    gadgetButton.textContent =
-        !unlocked
-            ? "POSTAĆ ZABLOKOWANA"
-            : gadgetOwned
-                ? "KUPIONO"
-                : "KUP ZA 🪙 2000";
+    gadgetButton.className =
+        "buy-power-button";
 
-    starButton.textContent =
-        !unlocked
-            ? "POSTAĆ ZABLOKOWANA"
-            : starOwned
-                ? "KUPIONO"
-                : "KUP ZA 🪙 5000";
-}
+    starButton.className =
+        "buy-power-button";
 
-function buyCurrentGadget() {
-    buyAbility(
-        "gadget"
-    );
-}
+    if (!unlocked) {
+        gadgetButton.textContent =
+            "NAJPIERW ODBLOKUJ POSTAĆ";
 
-function buyCurrentStarPower() {
-    buyAbility(
-        "star"
-    );
-}
+        starButton.textContent =
+            "NAJPIERW ODBLOKUJ POSTAĆ";
+    } else if (gadgetOwned) {
+        gadgetButton.textContent =
+            "POSIADASZ";
 
-function buyAbility(type) {
-    if (!currentHeroId) {
-        return;
-    }
-
-    const state =
-        prepareState();
-
-    if (
-        !state.unlocked.includes(
-            currentHeroId
-        )
-    ) {
-        showDetailsMessage(
-            "Najpierw odblokuj tę postać.",
-            true
+        gadgetButton.classList.add(
+            "owned"
         );
-
-        return;
+    } else {
+        gadgetButton.textContent =
+            "KUP ZA 2000 🪙";
     }
 
-    const isGadget =
-        type === "gadget";
+    if (unlocked && starOwned) {
+        starButton.textContent =
+            "POSIADASZ";
+
+        starButton.classList.add(
+            "owned"
+        );
+    } else if (unlocked) {
+        starButton.textContent =
+            "KUP ZA 5000 🪙";
+    }
+
+    gadgetButton.onclick =
+        unlocked && !gadgetOwned
+            ? function() {
+                buyPower(
+                    hero.id,
+                    "gadget"
+                );
+            }
+            : null;
+
+    starButton.onclick =
+        unlocked && !starOwned
+            ? function() {
+                buyPower(
+                    hero.id,
+                    "star"
+                );
+            }
+            : null;
+}
+
+function buyPower(heroId, type) {
+    const state =
+        getCharactersState();
 
     const price =
-        isGadget
+        type === "gadget"
             ? 2000
             : 5000;
 
     const collection =
-        isGadget
-            ? state.heroGadgets
-            : state.heroStarPowers;
+        type === "gadget"
+            ? state.gadgets
+            : state.starPowers;
 
-    if (
-        collection[
-            currentHeroId
-        ]
-    ) {
-        showDetailsMessage(
-            "Ta moc została już kupiona.",
-            true
-        );
-
+    if (collection.includes(heroId)) {
         return;
     }
 
     if (
-        state.coins <
+        (Number(state.coins) || 0) <
         price
     ) {
-        showDetailsMessage(
+        alert(
             "Masz za mało monet. Potrzebujesz " +
             price +
-            " monet.",
-            true
+            " monet."
         );
 
         return;
     }
 
-    state.coins -=
-        price;
+    state.coins =
+        Math.max(
+            0,
+            (Number(state.coins) || 0) -
+            price
+        );
 
-    collection[
-        currentHeroId
-    ] = true;
+    collection.push(heroId);
 
     saveState(state);
 
-    updateTopbar();
+    if (
+        typeof updateTopbar === "function"
+    ) {
+        updateTopbar();
+    }
 
-    const hero =
-        BOHATEROWIE.find(
-            function(character) {
-                return (
-                    character.id ===
-                    currentHeroId
-                );
+    openDetails(heroId);
+}
+
+document
+    .getElementById("detailsOverlay")
+    .addEventListener(
+        "click",
+        function(event) {
+            if (event.target === this) {
+                closeDetails();
             }
-        );
-
-    updateAbilityButtons(
-        state,
-        hero
+        }
     );
-
-    showDetailsMessage(
-        isGadget
-            ? "Kupiono gadżet!"
-            : "Kupiono gwiezdną moc!"
-    );
-}
-
-function showDetailsMessage(
-    message,
-    error = false
-) {
-    const element =
-        document.getElementById(
-            "detailsMessage"
-        );
-
-    element.textContent =
-        message;
-
-    element.classList.toggle(
-        "error",
-        error
-    );
-}
-
-function clearDetailsMessage() {
-    const element =
-        document.getElementById(
-            "detailsMessage"
-        );
-
-    element.textContent =
-        "";
-
-    element.classList.remove(
-        "error"
-    );
-}
 
 document.addEventListener(
     "keydown",
     function(event) {
-        if (
-            event.key ===
-            "Escape" &&
-            document
-                .getElementById(
-                    "detailsOverlay"
-                )
-                .classList
-                .contains(
-                    "visible"
-                )
-        ) {
-            closeCharacterDetails();
+        if (event.key === "Escape") {
+            closeDetails();
         }
     }
 );
