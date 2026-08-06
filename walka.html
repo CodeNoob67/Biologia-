@@ -6070,6 +6070,1248 @@ try {
         error.message;
 }
 </script>
+<script>
+"use strict";
 
+/*
+MEDIEVAL ARENA – UPGRADE GADŻETÓW, GWIEZDNYCH MOCY I AMUNICJI
+Wklej ten cały blok w walka.html zaraz po obecnym </script>,
+ale jeszcze przed </body>.
+*/
+
+(() => {
+    const oldCreateFighter = createFighter;
+    const oldAttack = attack;
+    const oldDamageFighter = damageFighter;
+    const oldDrawFighter = drawFighter;
+    const oldUpdatePlayer = updatePlayer;
+    const oldUpdateProjectiles = updateProjectiles;
+    const oldMoveFighter = moveFighter;
+
+    const RELOAD_TIME = 1350;
+    const MAX_AMMO = 3;
+
+    function now() {
+        return performance.now();
+    }
+
+    function initUpgradeData(fighter) {
+        if (!fighter || fighter.upgradeReady) return fighter;
+
+        fighter.upgradeReady = true;
+        fighter.ammo = MAX_AMMO;
+        fighter.maxAmmo = MAX_AMMO;
+        fighter.nextAmmoReload = now() + RELOAD_TIME;
+
+        fighter.nextAttackMode = "";
+        fighter.fullPotionAttack = false;
+        fighter.musicHealAttack = false;
+        fighter.doublePitchfork = false;
+        fighter.tripleInfiniteArrow = false;
+        fighter.massiveRockAttack = false;
+        fighter.ricochetWizardAttack = false;
+        fighter.kingRadialAttack = false;
+        fighter.witchRadialAttack = false;
+        fighter.doubleAxeAttack = false;
+        fighter.tripleFreezeAttack = false;
+        fighter.samuraiStunAttack = false;
+
+        fighter.frozenUntil = 0;
+        fighter.poisonedUntil = 0;
+        fighter.burningUntil = 0;
+        fighter.invisibleUntil = 0;
+        fighter.invulnerableUntil = 0;
+        fighter.goblinSpeedUntil = 0;
+        fighter.centaurSpeedUntil = 0;
+        fighter.resurrectionReady = false;
+        fighter.golemPowerUsed = false;
+
+        fighter.lastPassiveGhost = now();
+        fighter.lastFireAura = 0;
+        fighter.lastPoisonTick = 0;
+        fighter.lastBurnTick = 0;
+
+        switch (fighter.heroId) {
+            case "szermierz":
+                fighter.normalSpeed *= 1.33;
+                fighter.speed = fighter.normalSpeed;
+                break;
+            case "samuraj":
+                fighter.normalSpeed *= 1.20;
+                fighter.speed = fighter.normalSpeed;
+                break;
+            case "centaur":
+                fighter.projectileSpeed *= 1.5;
+                break;
+            case "wiking":
+                fighter.permanentDamageReduction = 0.20;
+                break;
+            case "czarodziej":
+                fighter.projectileWidthMultiplier = 1.15;
+                break;
+            case "alchemik":
+                fighter.potionPowerMultiplier = 1.25;
+                break;
+            case "mag_lodu":
+                fighter.iceChance = 0.75;
+                break;
+        }
+
+        return fighter;
+    }
+
+    createFighter = function(hero, position, isPlayer, number) {
+        return initUpgradeData(
+            oldCreateFighter(hero, position, isPlayer, number)
+        );
+    };
+
+    fighters.forEach(initUpgradeData);
+    if (player) initUpgradeData(player);
+
+    function addStatus(target, type, duration) {
+        if (!target || !target.alive) return;
+
+        const end = now() + duration;
+
+        if (type === "freeze") {
+            target.frozenUntil = Math.max(target.frozenUntil || 0, end);
+            target.stunnedUntil = Math.max(target.stunnedUntil || 0, end);
+        }
+
+        if (type === "stun") {
+            target.stunnedUntil = Math.max(target.stunnedUntil || 0, end);
+        }
+
+        if (type === "poison") {
+            target.poisonedUntil = Math.max(target.poisonedUntil || 0, end);
+        }
+
+        if (type === "burn") {
+            target.burningUntil = Math.max(target.burningUntil || 0, end);
+        }
+    }
+
+    function markNewProjectiles(startIndex, settings = {}) {
+        for (let i = startIndex; i < projectiles.length; i++) {
+            const projectile = projectiles[i];
+
+            if (settings.damageMultiplier) {
+                projectile.damage *= settings.damageMultiplier;
+            }
+            if (settings.speedMultiplier) {
+                projectile.vx *= settings.speedMultiplier;
+                projectile.vy *= settings.speedMultiplier;
+            }
+            if (settings.radiusMultiplier) {
+                projectile.radius *= settings.radiusMultiplier;
+            }
+            if (settings.lifeMultiplier) {
+                projectile.life *= settings.lifeMultiplier;
+            }
+            if (settings.type) {
+                projectile.type = settings.type;
+            }
+            if (settings.status) {
+                projectile.upgradeStatus = settings.status;
+            }
+            if (settings.bounces !== undefined) {
+                projectile.bouncesLeft = settings.bounces;
+            }
+            if (settings.ignoreWalls) {
+                projectile.ignoreWalls = true;
+            }
+            if (settings.color) {
+                projectile.color = settings.color;
+            }
+        }
+    }
+
+    function shootParallel(attacker, direction, damage, type, spacing = 16) {
+        const perpendicular = { x: -direction.y, y: direction.x };
+
+        const first = projectiles.length;
+        createProjectile(attacker, direction, 0, damage, type);
+        createProjectile(attacker, direction, 0, damage, type);
+
+        if (projectiles[first]) {
+            projectiles[first].x += perpendicular.x * spacing;
+            projectiles[first].y += perpendicular.y * spacing;
+        }
+        if (projectiles[first + 1]) {
+            projectiles[first + 1].x -= perpendicular.x * spacing;
+            projectiles[first + 1].y -= perpendicular.y * spacing;
+        }
+    }
+
+    function radialAttack(attacker, amount, damage, type) {
+        for (let i = 0; i < amount; i++) {
+            const angle = Math.PI * 2 * i / amount;
+            createProjectile(
+                attacker,
+                { x: Math.cos(angle), y: Math.sin(angle) },
+                0,
+                damage,
+                type
+            );
+        }
+    }
+
+    function createBat(owner, number) {
+        const angle = Math.PI * 2 * number / 5;
+        const bat = oldCreateFighter(
+            { id: "duch", nazwa: "Nietoperz", ikona: "🦇" },
+            {
+                x: owner.x + Math.cos(angle) * 48,
+                y: owner.y + Math.sin(angle) * 48
+            },
+            false,
+            1500 + number + Math.floor(Math.random() * 500)
+        );
+
+        initUpgradeData(bat);
+        bat.isSummon = true;
+        bat.name = "NIETOPERZ";
+        bat.icon = "🦇";
+        bat.hp = 16;
+        bat.maxHp = 16;
+        bat.damage = Math.max(7, owner.damage * 0.28);
+        bat.speed = 3;
+        bat.normalSpeed = 3;
+        bat.range = 55;
+        bat.normalRange = 55;
+        bat.cooldown = 500;
+        bat.melee = true;
+        bat.canPassWalls = true;
+        bat.summonOwner = owner;
+
+        fighters.push(bat);
+    }
+
+    function createHealingSpirit(owner) {
+        const spirit = oldCreateFighter(
+            { id: "duch", nazwa: "Duch leczenia", ikona: "✨" },
+            { x: owner.x + 55, y: owner.y },
+            false,
+            2100 + Math.floor(Math.random() * 900)
+        );
+
+        initUpgradeData(spirit);
+        spirit.isSummon = true;
+        spirit.healingSpirit = true;
+        spirit.summonOwner = owner;
+        spirit.name = "DUCH LECZENIA";
+        spirit.icon = "✨";
+        spirit.hp = 45;
+        spirit.maxHp = 45;
+        spirit.damage = 0;
+        spirit.speed = 2.2;
+        spirit.normalSpeed = 2.2;
+        spirit.range = 0;
+        spirit.cooldown = 1000;
+        spirit.canPassWalls = true;
+
+        fighters.push(spirit);
+    }
+
+    function reloadAmmo(fighter, time) {
+        if (!fighter || !fighter.alive || fighter.ammo >= fighter.maxAmmo) {
+            return;
+        }
+
+        if (time >= fighter.nextAmmoReload) {
+            fighter.ammo++;
+            fighter.nextAmmoReload = time + RELOAD_TIME;
+        }
+    }
+
+    function canUseAmmo(attacker) {
+        initUpgradeData(attacker);
+
+        if (!attacker.isPlayer) return true;
+
+        if (attacker.ammo <= 0) {
+            showFloatingMessage("BRAK AMUNICJI!");
+            return false;
+        }
+
+        return true;
+    }
+
+    function consumeAmmo(attacker) {
+        if (!attacker.isPlayer) return;
+
+        attacker.ammo = Math.max(0, attacker.ammo - 1);
+
+        if (attacker.ammo < attacker.maxAmmo) {
+            attacker.nextAmmoReload = Math.max(
+                attacker.nextAmmoReload || 0,
+                now() + RELOAD_TIME
+            );
+        }
+    }
+
+    attack = function(attacker, targetX, targetY) {
+        initUpgradeData(attacker);
+
+        if (!canUseAmmo(attacker)) return;
+
+        const beforeLastAttack = attacker.lastAttack;
+        const projectileStart = projectiles.length;
+        const waveStart = waves.length;
+        const potionStart = potions.length;
+
+        const direction = normalize(
+            targetX - attacker.x,
+            targetY - attacker.y
+        );
+
+        oldAttack(attacker, targetX, targetY);
+
+        const fired = attacker.lastAttack !== beforeLastAttack;
+        if (!fired) return;
+
+        consumeAmmo(attacker);
+
+        if (attacker.heroId === "muzyk" && attacker.attackCounter % 5 === 0) {
+            for (let i = waveStart; i < waves.length; i++) {
+                waves[i].upgradeStatus = "stun";
+                waves[i].statusDuration = 1500;
+            }
+            markNewProjectiles(projectileStart, {
+                status: "stun"
+            });
+        }
+
+        if (attacker.heroId === "czarodziej") {
+            markNewProjectiles(projectileStart, {
+                radiusMultiplier: 1.15
+            });
+        }
+
+        if (attacker.heroId === "mag_lodu") {
+            if (Math.random() < 0.75) {
+                markNewProjectiles(projectileStart, {
+                    damageMultiplier: 0.75,
+                    type: "freeze",
+                    status: "freeze",
+                    color: "#91e8ff"
+                });
+            }
+        }
+
+        if (attacker.doublePitchfork) {
+            projectiles.splice(projectileStart);
+            shootParallel(attacker, direction, attacker.damage, "normal", 13);
+            attacker.doublePitchfork = false;
+        }
+
+        if (attacker.tripleInfiniteArrow) {
+            projectiles.splice(projectileStart);
+
+            [-0.11, 0, 0.11].forEach(angle => {
+                createProjectile(
+                    attacker,
+                    direction,
+                    angle,
+                    attacker.damage,
+                    "normal"
+                );
+            });
+
+            markNewProjectiles(projectileStart, {
+                lifeMultiplier: 8,
+                speedMultiplier: 1.25
+            });
+
+            attacker.tripleInfiniteArrow = false;
+        }
+
+        if (attacker.musicHealAttack) {
+            healFighter(attacker, Math.round(attacker.maxHp * 0.22));
+            attacker.musicHealAttack = false;
+        }
+
+        if (attacker.fullPotionAttack) {
+            for (let i = potionStart; i < potions.length; i++) {
+                potions[i].allPotionPowers = true;
+                potions[i].powerMultiplier = 1.25;
+                potions[i].radius *= 1.35;
+            }
+            attacker.fullPotionAttack = false;
+        }
+
+        if (attacker.massiveRockAttack) {
+            projectiles.splice(projectileStart);
+            createProjectile(
+                attacker,
+                direction,
+                0,
+                attacker.damage * 3.2,
+                "massive-rock"
+            );
+
+            markNewProjectiles(projectileStart, {
+                speedMultiplier: 0.45,
+                radiusMultiplier: 2.5,
+                lifeMultiplier: 1.8,
+                color: "#777777"
+            });
+
+            attacker.massiveRockAttack = false;
+        }
+
+        if (attacker.ricochetWizardAttack) {
+            projectiles.splice(projectileStart);
+            createProjectile(
+                attacker,
+                direction,
+                0,
+                attacker.damage * 1.35,
+                "wizard-ricochet"
+            );
+
+            markNewProjectiles(projectileStart, {
+                speedMultiplier: 3.4,
+                radiusMultiplier: 0.35,
+                lifeMultiplier: 3.5,
+                bounces: 5,
+                color: "#d7b4ff"
+            });
+
+            attacker.ricochetWizardAttack = false;
+        }
+
+        if (attacker.kingRadialAttack) {
+            projectiles.splice(projectileStart);
+            radialAttack(attacker, 5, attacker.damage, "normal");
+            attacker.kingRadialAttack = false;
+        }
+
+        if (attacker.witchRadialAttack) {
+            projectiles.splice(projectileStart);
+            radialAttack(attacker, 20, attacker.damage, "witch");
+            markNewProjectiles(projectileStart, { bounces: 1 });
+            attacker.witchRadialAttack = false;
+        }
+
+        if (attacker.doubleAxeAttack) {
+            projectiles.splice(projectileStart);
+            shootParallel(attacker, direction, attacker.damage, "axe", 18);
+            attacker.doubleAxeAttack = false;
+        }
+
+        if (attacker.tripleFreezeAttack) {
+            projectiles.splice(projectileStart);
+
+            [-0.13, 0, 0.13].forEach(angle => {
+                createProjectile(
+                    attacker,
+                    direction,
+                    angle,
+                    attacker.damage,
+                    "freeze"
+                );
+            });
+
+            markNewProjectiles(projectileStart, {
+                status: "freeze",
+                color: "#80ddff"
+            });
+
+            attacker.tripleFreezeAttack = false;
+        }
+
+        if (attacker.samuraiStunAttack) {
+            markNewProjectiles(projectileStart, {
+                status: "stun"
+            });
+
+            for (let i = waveStart; i < waves.length; i++) {
+                waves[i].upgradeStatus = "stun";
+                waves[i].statusDuration = 1600;
+            }
+
+            attacker.samuraiStunAttack = false;
+        }
+
+        if (attacker.heroId === "mnich") {
+            projectiles.splice(projectileStart);
+            waves.splice(waveStart);
+
+            [-16, 16].forEach(offset => {
+                const before = waves.length;
+                createWave(attacker, direction, attacker.damage, "energy");
+                if (waves[before]) {
+                    const perpendicular = {
+                        x: -direction.y,
+                        y: direction.x
+                    };
+                    waves[before].x += perpendicular.x * offset;
+                    waves[before].y += perpendicular.y * offset;
+                    waves[before].speed *= 1.45;
+                    waves[before].size *= 1.35;
+                }
+            });
+        }
+    };
+
+    damageFighter = function(target, amount, attacker) {
+        initUpgradeData(target);
+        if (attacker) initUpgradeData(attacker);
+
+        const time = now();
+
+        if (target.invulnerableUntil > time) {
+            createEffect(target.x, target.y, 54, "#83ddff", 180);
+            return 0;
+        }
+
+        let changedAmount = amount;
+
+        if (target.heroId === "rycerz" &&
+            target.hp < target.maxHp * 0.25) {
+            changedAmount *= 0.70;
+        }
+
+        if (target.heroId === "wiking") {
+            changedAmount *= 0.80;
+        }
+
+        const hpBefore = target.hp;
+        const dealt = oldDamageFighter(target, changedAmount, attacker);
+
+        if (hpBefore > 0 && !target.alive && target.resurrectionReady) {
+            target.alive = true;
+            target.hp = 30;
+            target.resurrectionReady = false;
+            createEffect(target.x, target.y, 110, "#75ffc8", 700);
+
+            if (target === player) {
+                matchFinished = false;
+            }
+        }
+
+        if (hpBefore > 0 && !target.alive && attacker) {
+            if (attacker.heroId === "goblin") {
+                attacker.speed = attacker.normalSpeed * 1.25;
+                attacker.goblinSpeedUntil = time + 4000;
+            }
+
+            if (attacker.heroId === "wampir") {
+                healFighter(
+                    attacker,
+                    Math.round(attacker.maxHp * 0.20)
+                );
+            }
+        }
+
+        return dealt;
+    };
+
+    activateGadget = function() {
+        if (
+            gadgetUsed ||
+            !player ||
+            !player.alive ||
+            phase !== "playing" ||
+            matchFinished
+        ) return;
+
+        initUpgradeData(player);
+        gadgetUsed = true;
+        updateGadgetButton();
+
+        const time = now();
+
+        switch (player.heroId) {
+            case "farmer":
+                player.doublePitchfork = true;
+                showFloatingMessage("NASTĘPNY ATAK: 2 WIDŁY");
+                break;
+
+            case "rycerz":
+                player.invulnerableUntil = time + 1500;
+                createEffect(player.x, player.y, 75, "#87dcff", 1500);
+                showFloatingMessage("TARCZA: 1,5 S");
+                break;
+
+            case "lucznik":
+                player.tripleInfiniteArrow = true;
+                showFloatingMessage("NASTĘPNY ATAK: 3 STRZAŁY");
+                break;
+
+            case "ksiadz":
+                for (let i = 0; i < 3; i++) createGhost(player, i);
+                showFloatingMessage("3 MINI DUCHY");
+                break;
+
+            case "muzyk":
+                player.musicHealAttack = true;
+                showFloatingMessage("NASTĘPNY ATAK LECZY");
+                break;
+
+            case "alchemik":
+                player.fullPotionAttack = true;
+                showFloatingMessage("MIKSTURA WSZYSTKICH MOCY");
+                break;
+
+            case "szermierz":
+                player.speed = player.normalSpeed * 1.5;
+                player.speedBoostUntil = time + 3000;
+                showFloatingMessage("+50% SZYBKOŚCI");
+                break;
+
+            case "goblin":
+                player.damageBoostUntil = time + 5000;
+                player.nextAttackOnlyBoost = true;
+                showFloatingMessage("NASTĘPNY ATAK +50%");
+                break;
+
+            case "golem":
+                player.massiveRockAttack = true;
+                showFloatingMessage("NASTĘPNY ATAK: GŁAZ");
+                break;
+
+            case "duch":
+                player.invisibleUntil = time + 4000;
+                player.speed = player.normalSpeed * 1.25;
+                player.speedBoostUntil = time + 4000;
+                showFloatingMessage("NIEWIDZIALNOŚĆ + SZYBKOŚĆ");
+                break;
+
+            case "czarodziej":
+                player.ricochetWizardAttack = true;
+                showFloatingMessage("RYKOSZETUJĄCA MAGIA");
+                break;
+
+            case "wampir":
+                for (let i = 0; i < 5; i++) createBat(player, i);
+                showFloatingMessage("5 NIETOPERZY");
+                break;
+
+            case "krol":
+                player.kingRadialAttack = true;
+                showFloatingMessage("5 STRZAŁÓW DOOKOŁA");
+                break;
+
+            case "wiedzma":
+                player.witchRadialAttack = true;
+                showFloatingMessage("20 KUL ENERGII");
+                break;
+
+            case "szaman":
+                player.resurrectionReady = true;
+                createEffect(player.x, player.y, 85, "#55ffc0", 800);
+                showFloatingMessage("TOTEM WSKRZESZENIA");
+                break;
+
+            case "wiking":
+                player.doubleAxeAttack = true;
+                showFloatingMessage("NASTĘPNY ATAK: 2 TOPORY");
+                break;
+
+            case "mag_ognia": {
+                const direction = mouse
+                    ? normalize(
+                        mouse.x + camera.x - player.x,
+                        mouse.y + camera.y - player.y
+                    )
+                    : { x: 1, y: 0 };
+
+                const start = projectiles.length;
+                createProjectile(
+                    player,
+                    direction,
+                    0,
+                    player.damage * 2.2,
+                    "fire"
+                );
+
+                markNewProjectiles(start, {
+                    radiusMultiplier: 2.8,
+                    lifeMultiplier: 1.4,
+                    status: "burn",
+                    color: "#ff5a00"
+                });
+
+                showFloatingMessage("WIELKI PŁOMIEŃ");
+                break;
+            }
+
+            case "mnich":
+                createHealingSpirit(player);
+                showFloatingMessage("DUCH LECZENIA");
+                break;
+
+            case "mag_lodu":
+                player.tripleFreezeAttack = true;
+                showFloatingMessage("3 ZAMRAŻAJĄCE ATAKI");
+                break;
+
+            case "samuraj":
+                player.samuraiStunAttack = true;
+                showFloatingMessage("NASTĘPNY ATAK ZATRZYMUJE");
+                break;
+
+            case "centaur":
+                player.speed = player.normalSpeed * 1.60;
+                player.centaurSpeedUntil = time + 2500;
+                showFloatingMessage("+60% SZYBKOŚCI");
+                break;
+
+            default:
+                showFloatingMessage("GADŻET!");
+        }
+    };
+
+    function pointInsideRect(x, y, rect) {
+        return (
+            x >= rect.x &&
+            x <= rect.x + rect.w &&
+            y >= rect.y &&
+            y <= rect.y + rect.h
+        );
+    }
+
+    function isOnSpecialTerrain(fighter) {
+        const overWall = walls.some(wall =>
+            pointInsideRect(fighter.x, fighter.y, wall)
+        );
+
+        const overBush = bushes.some(bush =>
+            pointInsideRect(fighter.x, fighter.y, bush)
+        );
+
+        const overWater = waterPools.some(pool =>
+            pointInsideRect(fighter.x, fighter.y, pool)
+        );
+
+        return overWall || overBush || overWater;
+    }
+
+    moveFighter = function(fighter, dx, dy) {
+        initUpgradeData(fighter);
+
+        let mx = dx;
+        let my = dy;
+
+        if (
+            fighter.heroId === "duch" &&
+            !isOnSpecialTerrain(fighter)
+        ) {
+            mx *= 1.10;
+            my *= 1.10;
+        }
+
+        oldMoveFighter(fighter, mx, my);
+    };
+
+    function applyProjectileStatusesBeforeUpdate() {
+        const time = now();
+
+        for (const projectile of projectiles) {
+            const nextPosition = {
+                x: projectile.x + projectile.vx,
+                y: projectile.y + projectile.vy
+            };
+
+            for (const target of fighters) {
+                if (
+                    target === projectile.owner ||
+                    !target.alive
+                ) continue;
+
+                if (
+                    distance(nextPosition, target) <
+                    projectile.radius + target.radius + 5
+                ) {
+                    if (
+                        projectile.upgradeStatus === "freeze" ||
+                        projectile.type === "freeze"
+                    ) {
+                        addStatus(target, "freeze", 1500);
+                    }
+
+                    if (
+                        projectile.upgradeStatus === "stun"
+                    ) {
+                        addStatus(target, "stun", 1600);
+                    }
+
+                    if (
+                        projectile.upgradeStatus === "burn" ||
+                        projectile.type === "fire"
+                    ) {
+                        addStatus(target, "burn", 4000);
+                    }
+                }
+            }
+        }
+
+        for (const wave of waves) {
+            for (const target of fighters) {
+                if (
+                    target === wave.owner ||
+                    !target.alive
+                ) continue;
+
+                if (
+                    distance(wave, target) <
+                    wave.size + target.radius + wave.speed + 4
+                ) {
+                    if (
+                        wave.upgradeStatus === "stun" ||
+                        wave.type === "stun"
+                    ) {
+                        addStatus(
+                            target,
+                            "stun",
+                            wave.statusDuration || 1500
+                        );
+                    }
+                }
+            }
+        }
+
+        for (const potion of potions) {
+            if (!potion.allPotionPowers) continue;
+
+            const nextPosition = {
+                x: potion.x + potion.vx,
+                y: potion.y + potion.vy
+            };
+
+            for (const target of fighters) {
+                if (
+                    target === potion.owner ||
+                    !target.alive
+                ) continue;
+
+                if (
+                    distance(nextPosition, target) <
+                    potion.radius + target.radius + 5
+                ) {
+                    damageFighter(
+                        target,
+                        potion.owner.damage * 1.25,
+                        potion.owner
+                    );
+                    addStatus(target, "stun", 1100);
+                    addStatus(target, "poison", 3500);
+
+                    potion.owner.speed =
+                        potion.owner.normalSpeed * 1.25;
+                    potion.owner.speedBoostUntil =
+                        time + 2500;
+
+                    healFighter(
+                        potion.owner,
+                        Math.round(potion.owner.maxHp * 0.18)
+                    );
+                }
+            }
+        }
+    }
+
+    function bounceProjectiles() {
+        for (const projectile of projectiles) {
+            if (!projectile.bouncesLeft) continue;
+
+            const nextX = projectile.x + projectile.vx;
+            const nextY = projectile.y + projectile.vy;
+
+            const hitX = isBlocked(
+                nextX,
+                projectile.y,
+                projectile.radius
+            );
+            const hitY = isBlocked(
+                projectile.x,
+                nextY,
+                projectile.radius
+            );
+
+            if (hitX || hitY) {
+                if (hitX) projectile.vx *= -1;
+                if (hitY) projectile.vy *= -1;
+
+                projectile.bouncesLeft--;
+                projectile.x += projectile.vx;
+                projectile.y += projectile.vy;
+            }
+        }
+    }
+
+    updateProjectiles = function(time) {
+        bounceProjectiles();
+        applyProjectileStatusesBeforeUpdate();
+
+        const temporarilyUnblocked = [];
+
+        for (const projectile of projectiles) {
+            if (projectile.bouncesLeft > 0) {
+                temporarilyUnblocked.push(projectile);
+            }
+        }
+
+        oldUpdateProjectiles(time);
+    };
+
+    updatePlayer = function() {
+        const savedMouseDown = mouse.down;
+        const savedJoystickActive = attackJoystick.active;
+
+        mouse.down = false;
+        attackJoystick.active = false;
+
+        oldUpdatePlayer();
+
+        mouse.down = savedMouseDown;
+        attackJoystick.active = savedJoystickActive;
+    };
+
+    function firePlayerAtWorld(targetX, targetY) {
+        if (
+            !player ||
+            !player.alive ||
+            phase !== "playing" ||
+            matchFinished
+        ) return;
+
+        attack(player, targetX, targetY);
+    }
+
+    window.addEventListener(
+        "mouseup",
+        function(event) {
+            if (event.button !== 0) return;
+
+            firePlayerAtWorld(
+                mouse.x + camera.x,
+                mouse.y + camera.y
+            );
+        },
+        true
+    );
+
+    attackPad.addEventListener(
+        "pointerup",
+        function() {
+            if (!attackJoystick.active) return;
+
+            firePlayerAtWorld(
+                player.x +
+                    attackJoystick.x *
+                    Math.max(player.range, 350),
+                player.y +
+                    attackJoystick.y *
+                    Math.max(player.range, 350)
+            );
+        },
+        true
+    );
+
+    function updatePassivePowers(time) {
+        fighters.forEach(fighter => {
+            initUpgradeData(fighter);
+            reloadAmmo(fighter, time);
+
+            if (
+                fighter.goblinSpeedUntil &&
+                time > fighter.goblinSpeedUntil
+            ) {
+                fighter.goblinSpeedUntil = 0;
+                fighter.speed = fighter.normalSpeed;
+            }
+
+            if (
+                fighter.centaurSpeedUntil &&
+                time > fighter.centaurSpeedUntil
+            ) {
+                fighter.centaurSpeedUntil = 0;
+                fighter.speed = fighter.normalSpeed;
+            }
+
+            if (
+                fighter.heroId === "ksiadz" &&
+                !fighter.isSummon &&
+                time - fighter.lastPassiveGhost >= 3000
+            ) {
+                fighter.lastPassiveGhost = time;
+                const before = fighters.length;
+                createGhost(fighter, Math.floor(Math.random() * 5));
+
+                const ghost = fighters[before];
+                if (ghost) {
+                    ghost.hp = 10;
+                    ghost.maxHp = 10;
+                    ghost.damage *= 0.65;
+                    ghost.speed *= 0.9;
+                    ghost.normalSpeed = ghost.speed;
+                }
+            }
+
+            if (
+                fighter.heroId === "golem" &&
+                !fighter.golemPowerUsed &&
+                fighter.hp < fighter.maxHp * 0.5
+            ) {
+                fighter.golemPowerUsed = true;
+
+                for (let i = 0; i < 20; i++) {
+                    const angle = Math.PI * 2 * i / 20;
+                    const direction = {
+                        x: Math.cos(angle),
+                        y: Math.sin(angle)
+                    };
+
+                    createWave(
+                        fighter,
+                        direction,
+                        fighter.damage * 2.6,
+                        "golem-massive"
+                    );
+
+                    const wave = waves[waves.length - 1];
+                    if (wave) {
+                        wave.size *= 2.2;
+                        wave.speed *= 1.25;
+                        wave.life *= 1.7;
+                        wave.ignoreWalls = true;
+                        wave.color = "#8b8b8b";
+                    }
+                }
+
+                createEffect(
+                    fighter.x,
+                    fighter.y,
+                    260,
+                    "#8b8b8b",
+                    900
+                );
+            }
+
+            if (
+                fighter.heroId === "mag_ognia" &&
+                time - fighter.lastFireAura > 600
+            ) {
+                fighter.lastFireAura = time;
+
+                getEnemies(fighter).forEach(enemy => {
+                    if (distance(fighter, enemy) <= 95) {
+                        addStatus(enemy, "burn", 2200);
+                        damageFighter(
+                            enemy,
+                            Math.max(2, fighter.damage * 0.12),
+                            fighter
+                        );
+                    }
+                });
+            }
+
+            if (fighter.healingSpirit && fighter.summonOwner) {
+                const owner = fighter.summonOwner;
+
+                if (!owner.alive) {
+                    fighter.alive = false;
+                } else {
+                    const direction = normalize(
+                        owner.x - fighter.x,
+                        owner.y - fighter.y
+                    );
+
+                    if (distance(fighter, owner) > 60) {
+                        oldMoveFighter(
+                            fighter,
+                            direction.x * fighter.speed,
+                            direction.y * fighter.speed
+                        );
+                    }
+
+                    if (
+                        distance(fighter, owner) <= 90 &&
+                        time - fighter.lastHealTick > 900
+                    ) {
+                        fighter.lastHealTick = time;
+                        healFighter(
+                            owner,
+                            Math.max(4, owner.maxHp * 0.035)
+                        );
+                    }
+                }
+            }
+
+            if (
+                fighter.poisonedUntil > time &&
+                time - fighter.lastPoisonTick > 700
+            ) {
+                fighter.lastPoisonTick = time;
+                oldDamageFighter(
+                    fighter,
+                    Math.max(2, fighter.maxHp * 0.018),
+                    null
+                );
+            }
+
+            if (
+                fighter.burningUntil > time &&
+                time - fighter.lastBurnTick > 550
+            ) {
+                fighter.lastBurnTick = time;
+                oldDamageFighter(
+                    fighter,
+                    Math.max(2, fighter.maxHp * 0.02),
+                    null
+                );
+            }
+        });
+    }
+
+    const oldGameLoop = gameLoop;
+    gameLoop = function(time) {
+        updatePassivePowers(time || now());
+        return oldGameLoop(time);
+    };
+
+    drawFighter = function(fighter) {
+        initUpgradeData(fighter);
+
+        const time = now();
+        const originalColor = fighter.color;
+
+        if (fighter.frozenUntil > time) {
+            fighter.color = "#9eeaff";
+        } else if (fighter.poisonedUntil > time) {
+            fighter.color = "#53cf62";
+        } else if (fighter.burningUntil > time) {
+            fighter.color = "#ff7138";
+        }
+
+        const originalAlpha = ctx.globalAlpha;
+
+        if (
+            fighter.invisibleUntil > time &&
+            fighter !== player
+        ) {
+            ctx.globalAlpha = 0.12;
+        } else if (
+            fighter.invisibleUntil > time &&
+            fighter === player
+        ) {
+            ctx.globalAlpha = 0.48;
+        }
+
+        oldDrawFighter(fighter);
+
+        ctx.globalAlpha = originalAlpha;
+        fighter.color = originalColor;
+
+        const x = screenX(fighter.x);
+        const y = screenY(fighter.y);
+
+        if (fighter.invulnerableUntil > time) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(
+                x,
+                y,
+                fighter.radius + 13,
+                0,
+                Math.PI * 2
+            );
+            ctx.strokeStyle = "#9ceaff";
+            ctx.lineWidth = 7;
+            ctx.globalAlpha = 0.85;
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        if (fighter === player) {
+            const barX = x - 30;
+            const barY = y - fighter.radius - 10;
+            const totalWidth = 60;
+            const gap = 2;
+            const segmentWidth =
+                (totalWidth - gap * 2) / 3;
+
+            for (let i = 0; i < 3; i++) {
+                ctx.fillStyle =
+                    i < fighter.ammo
+                        ? "#ff951f"
+                        : "#26160c";
+
+                ctx.fillRect(
+                    barX + i * (segmentWidth + gap),
+                    barY,
+                    segmentWidth,
+                    7
+                );
+
+                ctx.strokeStyle = "#160b05";
+                ctx.lineWidth = 1.5;
+                ctx.strokeRect(
+                    barX + i * (segmentWidth + gap),
+                    barY,
+                    segmentWidth,
+                    7
+                );
+            }
+        }
+    };
+
+    const originalCreateWave = createWave;
+    createWave = function(attacker, direction, damage, type) {
+        originalCreateWave(attacker, direction, damage, type);
+
+        const wave = waves[waves.length - 1];
+
+        if (!wave) return;
+
+        if (attacker.heroId === "szaman") {
+            wave.size *= 1.25;
+            wave.life *= 1.25;
+        }
+
+        if (type === "golem-massive") {
+            wave.ignoreWalls = true;
+            wave.color = "#888888";
+        }
+    };
+
+    const originalCreateProjectile = createProjectile;
+    createProjectile = function(attacker, direction, angle, damage, type) {
+        originalCreateProjectile(attacker, direction, angle, damage, type);
+
+        const projectile = projectiles[projectiles.length - 1];
+        if (!projectile) return;
+
+        initUpgradeData(attacker);
+
+        if (attacker.heroId === "czarodziej") {
+            projectile.radius *= 1.15;
+        }
+
+        if (attacker.heroId === "centaur") {
+            projectile.vx *= 1.5;
+            projectile.vy *= 1.5;
+        }
+
+        if (attacker.heroId === "wiedzma") {
+            projectile.bouncesLeft =
+                Math.max(projectile.bouncesLeft || 0, 1);
+        }
+
+        if (
+            attacker.heroId === "krol" &&
+            angle === 0
+        ) {
+            projectile.damage *= 1.20;
+        }
+    };
+
+    showFloatingMessage("NOWE MOCE I AMUNICJA AKTYWNE");
+})();
+</script>
 </body>
 </html>
