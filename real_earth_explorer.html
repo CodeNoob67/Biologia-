@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Real Earth Explorer</title>
+
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.2.0/dist/maplibre-gl.css">
+
+<style>
+html,body,#map{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  font-family:Arial,sans-serif;
+  background:#000;
+}
+
+#start{
+  position:fixed;
+  inset:0;
+  z-index:100;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  text-align:center;
+  background:linear-gradient(#68bfff,#10273d);
+}
+
+#startBox{
+  width:min(650px,calc(100% - 40px));
+  box-sizing:border-box;
+  padding:28px;
+  border:2px solid #fff;
+  border-radius:18px;
+  background:#000d;
+}
+
+#play{
+  padding:13px 30px;
+  border:0;
+  border-radius:11px;
+  font-size:22px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.panel{
+  position:fixed;
+  z-index:20;
+  padding:12px 14px;
+  border-radius:12px;
+  color:#fff;
+  background:#000b;
+  line-height:1.55;
+  backdrop-filter:blur(5px);
+}
+
+#hud{
+  left:14px;
+  top:14px;
+  min-width:245px;
+}
+
+#help{
+  right:14px;
+  top:14px;
+}
+
+#notice{
+  left:50%;
+  bottom:28px;
+  transform:translateX(-50%);
+  max-width:700px;
+  text-align:center;
+  font-weight:bold;
+}
+
+#crosshair{
+  position:fixed;
+  z-index:18;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:8px;
+  height:8px;
+  border:2px solid white;
+  border-radius:50%;
+  box-shadow:0 0 4px #000;
+  pointer-events:none;
+}
+
+#player{
+  width:34px;
+  height:55px;
+  transform-origin:50% 85%;
+  filter:drop-shadow(0 4px 3px #0008);
+}
+
+#player .head{
+  position:absolute;
+  left:9px;
+  top:0;
+  width:16px;
+  height:16px;
+  border-radius:50%;
+  background:#e2b084;
+  border:2px solid #281d18;
+}
+
+#player .body{
+  position:absolute;
+  left:7px;
+  top:17px;
+  width:20px;
+  height:23px;
+  border-radius:7px 7px 4px 4px;
+  background:#2861ba;
+  border:2px solid #162c50;
+}
+
+#player .arm{
+  position:absolute;
+  top:19px;
+  width:6px;
+  height:22px;
+  border-radius:4px;
+  background:#df4b40;
+}
+
+#player .arm.left{left:1px;transform:rotate(8deg)}
+#player .arm.right{right:1px;transform:rotate(-8deg)}
+
+#player .leg{
+  position:absolute;
+  top:39px;
+  width:7px;
+  height:16px;
+  border-radius:3px;
+  background:#1f2837;
+}
+
+#player .leg.left{left:8px}
+#player .leg.right{right:8px}
+
+.maplibregl-ctrl-attrib{
+  font-size:11px;
+}
+</style>
+</head>
+
+<body>
+<div id="map"></div>
+
+<div id="start">
+  <div id="startBox">
+    <h1>REAL EARTH EXPLORER</h1>
+    <p>
+      Cała prawdziwa Ziemia z rzeczywistymi miastami, drogami,
+      nazwami miejsc i wieloma budynkami 3D.
+    </p>
+    <p>
+      Świat jest doczytywany przez internet, dlatego może mieć rozmiar całej planety.
+    </p>
+    <button id="play">GRAJ</button>
+  </div>
+</div>
+
+<div id="hud" class="panel">
+  🌍 Pozycja: <span id="position">Warszawa</span><br>
+  🚶 Tryb: <span id="mode">pieszo</span><br>
+  🧭 Kierunek: <span id="bearing">0</span>°<br>
+  ⚡ Prędkość: <span id="speed">0</span> km/h<br>
+  🔎 Przybliżenie: <span id="zoom">16.5</span>
+</div>
+
+<div id="help" class="panel">
+  W — przód<br>
+  S — tył<br>
+  A — lewo<br>
+  D — prawo<br>
+  Mysz — obracanie postaci i kamery<br>
+  Shift — sprint<br>
+  1 — pieszo<br>
+  2 — samochód<br>
+  3 — samolot<br>
+  G — widok całej Ziemi<br>
+  T — powrót do Warszawy
+</div>
+
+<div id="notice" class="panel">
+  Przybliż mapę do poziomu 15–18, aby zobaczyć budynki 3D.
+</div>
+
+<div id="crosshair"></div>
+
+<script type="module">
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.2.0/dist/maplibre-gl.mjs";
+
+const startPosition = {
+  lng: 21.0122,
+  lat: 52.2297
+};
+
+let playerLng = startPosition.lng;
+let playerLat = startPosition.lat;
+
+let bearing = 0;
+let pitch = 67;
+
+let pointerLocked = false;
+let started = false;
+
+let mode = "foot";
+let currentSpeed = 0;
+
+const keys = {};
+
+const modeNames = {
+  foot: "pieszo",
+  car: "samochód",
+  plane: "samolot"
+};
+
+const normalSpeeds = {
+  foot: 6,
+  car: 75,
+  plane: 750
+};
+
+const boostSpeeds = {
+  foot: 14,
+  car: 150,
+  plane: 1050
+};
+
+const map = new maplibregl.Map({
+  container: "map",
+  style: "https://tiles.openfreemap.org/styles/liberty",
+  center: [playerLng, playerLat],
+  zoom: 16.5,
+  pitch,
+  bearing,
+  maxPitch: 85,
+  canvasContextAttributes: {
+    antialias: true
+  },
+  attributionControl: true
+});
+
+map.addControl(
+  new maplibregl.NavigationControl({
+    visualizePitch: true
+  }),
+  "bottom-right"
+);
+
+map.addControl(
+  new maplibregl.ScaleControl({
+    unit: "metric"
+  }),
+  "bottom-left"
+);
+
+const playerElement = document.createElement("div");
+playerElement.id = "player";
+playerElement.innerHTML = `
+  <div class="head"></div>
+  <div class="body"></div>
+  <div class="arm left"></div>
+  <div class="arm right"></div>
+  <div class="leg left"></div>
+  <div class="leg right"></div>
+`;
+
+const playerMarker = new maplibregl.Marker({
+  element: playerElement,
+  anchor: "bottom",
+  rotationAlignment: "map",
+  pitchAlignment: "map"
+})
+.setLngLat([playerLng, playerLat])
+.addTo(map);
+
+map.on("load", () => {
+  try {
+    map.setProjection({
+      type: "globe"
+    });
+  } catch (error) {
+    console.warn("Widok globu nie jest dostępny:", error);
+  }
+
+  const layers = map.getStyle().layers;
+  let firstLabelLayer;
+
+  for (const layer of layers) {
+    if (
+      layer.type === "symbol" &&
+      layer.layout &&
+      layer.layout["text-field"]
+    ) {
+      firstLabelLayer = layer.id;
+      break;
+    }
+  }
+
+  if (!map.getSource("real-world-buildings")) {
+    map.addSource("real-world-buildings", {
+      type: "vector",
+      url: "https://tiles.openfreemap.org/planet"
+    });
+  }
+
+  if (!map.getLayer("real-3d-buildings")) {
+    map.addLayer(
+      {
+        id: "real-3d-buildings",
+        source: "real-world-buildings",
+        "source-layer": "building",
+        type: "fill-extrusion",
+        minzoom: 15,
+        filter: [
+          "!=",
+          ["get", "hide_3d"],
+          true
+        ],
+        paint: {
+          "fill-extrusion-color": [
+            "interpolate",
+            ["linear"],
+            ["coalesce", ["get", "render_height"], 8],
+            0,
+            "#d8d4ce",
+            80,
+            "#c4c7ca",
+            250,
+            "#aeb7c2",
+            500,
+            "#9aa8bb"
+          ],
+          "fill-extrusion-height": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            15,
+            0,
+            16,
+            ["coalesce", ["get", "render_height"], 8]
+          ],
+          "fill-extrusion-base": [
+            "case",
+            [">=", ["zoom"], 16],
+            ["coalesce", ["get", "render_min_height"], 0],
+            0
+          ],
+          "fill-extrusion-opacity": 0.92
+        }
+      },
+      firstLabelLayer
+    );
+  }
+});
+
+document.getElementById("play").addEventListener("click", () => {
+  document.getElementById("start").style.display = "none";
+  started = true;
+  map.getCanvas().requestPointerLock();
+});
+
+document.addEventListener("pointerlockchange", () => {
+  pointerLocked =
+    document.pointerLockElement === map.getCanvas();
+});
+
+map.getCanvas().addEventListener("click", () => {
+  if (started && !pointerLocked) {
+    map.getCanvas().requestPointerLock();
+  }
+});
+
+document.addEventListener("mousemove", event => {
+  if (!pointerLocked) {
+    return;
+  }
+
+  bearing += event.movementX * 0.18;
+  pitch -= event.movementY * 0.12;
+
+  pitch = Math.max(
+    35,
+    Math.min(82, pitch)
+  );
+
+  bearing = normalizeBearing(bearing);
+});
+
+document.addEventListener("keydown", event => {
+  keys[event.code] = true;
+
+  if (event.code === "Digit1") {
+    setMode("foot");
+  }
+
+  if (event.code === "Digit2") {
+    setMode("car");
+  }
+
+  if (event.code === "Digit3") {
+    setMode("plane");
+  }
+
+  if (event.code === "KeyG") {
+    map.easeTo({
+      center: [playerLng, playerLat],
+      zoom: 1.4,
+      pitch: 0,
+      bearing,
+      duration: 1600
+    });
+  }
+
+  if (event.code === "KeyT") {
+    playerLng = startPosition.lng;
+    playerLat = startPosition.lat;
+
+    map.easeTo({
+      center: [playerLng, playerLat],
+      zoom: 16.5,
+      pitch: 67,
+      bearing,
+      duration: 1400
+    });
+  }
+});
+
+document.addEventListener("keyup", event => {
+  keys[event.code] = false;
+});
+
+function setMode(newMode) {
+  mode = newMode;
+  document.getElementById("mode").textContent =
+    modeNames[newMode];
+
+  if (newMode === "foot") {
+    document.getElementById("notice").textContent =
+      "Tryb pieszy. W/S porusza do przodu i do tyłu, A/D w lewo i w prawo.";
+  }
+
+  if (newMode === "car") {
+    document.getElementById("notice").textContent =
+      "Tryb samochodu. To prototyp ruchu po prawdziwej mapie; kolizje z drogami będą kolejnym etapem.";
+  }
+
+  if (newMode === "plane") {
+    document.getElementById("notice").textContent =
+      "Tryb samolotu. Oddal mapę kółkiem myszy, aby szybciej obserwować lot.";
+  }
+}
+
+function normalizeBearing(value) {
+  value %= 360;
+
+  if (value < 0) {
+    value += 360;
+  }
+
+  return value;
+}
+
+function destinationPoint(
+  lng,
+  lat,
+  directionDegrees,
+  distanceMeters
+) {
+  const earthRadius = 6371000;
+
+  const direction =
+    directionDegrees *
+    Math.PI /
+    180;
+
+  const latitude1 =
+    lat *
+    Math.PI /
+    180;
+
+  const longitude1 =
+    lng *
+    Math.PI /
+    180;
+
+  const angularDistance =
+    distanceMeters /
+    earthRadius;
+
+  const latitude2 = Math.asin(
+    Math.sin(latitude1) *
+    Math.cos(angularDistance) +
+    Math.cos(latitude1) *
+    Math.sin(angularDistance) *
+    Math.cos(direction)
+  );
+
+  const longitude2 =
+    longitude1 +
+    Math.atan2(
+      Math.sin(direction) *
+      Math.sin(angularDistance) *
+      Math.cos(latitude1),
+
+      Math.cos(angularDistance) -
+      Math.sin(latitude1) *
+      Math.sin(latitude2)
+    );
+
+  return {
+    lng:
+      (
+        longitude2 *
+        180 /
+        Math.PI +
+        540
+      ) %
+      360 -
+      180,
+
+    lat:
+      latitude2 *
+      180 /
+      Math.PI
+  };
+}
+
+function updateMovement(deltaSeconds) {
+  if (!started) {
+    return;
+  }
+
+  let forwardInput = 0;
+  let sideInput = 0;
+
+  if (keys.KeyW) {
+    forwardInput += 1;
+  }
+
+  if (keys.KeyS) {
+    forwardInput -= 1;
+  }
+
+  if (keys.KeyD) {
+    sideInput += 1;
+  }
+
+  if (keys.KeyA) {
+    sideInput -= 1;
+  }
+
+  const moving =
+    forwardInput !== 0 ||
+    sideInput !== 0;
+
+  if (!moving) {
+    currentSpeed = 0;
+    return;
+  }
+
+  const requestedSpeed =
+    keys.ShiftLeft || keys.ShiftRight
+      ? boostSpeeds[mode]
+      : normalSpeeds[mode];
+
+  currentSpeed = requestedSpeed;
+
+  let movementDirection =
+    bearing +
+    Math.atan2(
+      sideInput,
+      forwardInput
+    ) *
+    180 /
+    Math.PI;
+
+  const inputLength =
+    Math.min(
+      1,
+      Math.hypot(
+        forwardInput,
+        sideInput
+      )
+    );
+
+  const distanceMeters =
+    requestedSpeed /
+    3.6 *
+    deltaSeconds *
+    inputLength;
+
+  const next = destinationPoint(
+    playerLng,
+    playerLat,
+    movementDirection,
+    distanceMeters
+  );
+
+  playerLng = next.lng;
+  playerLat = Math.max(
+    -85,
+    Math.min(85, next.lat)
+  );
+}
+
+function updateView() {
+  playerMarker.setLngLat([
+    playerLng,
+    playerLat
+  ]);
+
+  playerElement.style.transform =
+    `rotate(${bearing}deg)`;
+
+  const currentZoom = map.getZoom();
+
+  let wantedZoom = currentZoom;
+
+  if (mode === "foot" && currentZoom < 16) {
+    wantedZoom = 16.5;
+  }
+
+  if (mode === "car" && currentZoom < 14) {
+    wantedZoom = 14.5;
+  }
+
+  if (mode === "plane" && currentZoom > 10) {
+    wantedZoom = 8.5;
+  }
+
+  map.jumpTo({
+    center: [
+      playerLng,
+      playerLat
+    ],
+    bearing,
+    pitch,
+    zoom: wantedZoom
+  });
+}
+
+function updateHUD() {
+  document.getElementById("position").textContent =
+    `${playerLat.toFixed(5)}, ${playerLng.toFixed(5)}`;
+
+  document.getElementById("bearing").textContent =
+    Math.round(bearing);
+
+  document.getElementById("speed").textContent =
+    Math.round(currentSpeed);
+
+  document.getElementById("zoom").textContent =
+    map.getZoom().toFixed(1);
+}
+
+let previousTime = performance.now();
+
+function gameLoop(currentTime) {
+  const deltaSeconds =
+    Math.min(
+      0.05,
+      (
+        currentTime -
+        previousTime
+      ) /
+      1000
+    );
+
+  previousTime = currentTime;
+
+  updateMovement(deltaSeconds);
+  updateView();
+  updateHUD();
+
+  requestAnimationFrame(gameLoop);
+}
+
+requestAnimationFrame(gameLoop);
+</script>
+</body>
+</html>
