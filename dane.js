@@ -14,6 +14,111 @@ const BOHATEROWIE = [
         cooldown: 650,
         ticketCost: 0
     },
+    
+    {
+    id: "szaman",
+    nazwa: "Szaman",
+    ikona: "🧿",
+    rzadkosc: "aleja",
+    moc: "Fala duchów",
+    opis: "Tworzy małe niebieskie fale uderzeniowe.",
+    hp: 130,
+    damage: 19,
+    speed: 3.6,
+    range: 520,
+    cooldown: 650,
+    ticketCost: 0
+},
+
+{
+    id: "wiking",
+    nazwa: "Wiking",
+    ikona: "🪓",
+    rzadkosc: "aleja",
+    moc: "Topór wojownika",
+    opis: "Ogromne obrażenia i dużo życia, ale wolny.",
+    hp: 240,
+    damage: 46,
+    speed: 2.4,
+    range: 170,
+    cooldown: 850,
+    ticketCost: 0
+},
+
+{
+    id: "mag_ognia",
+    nazwa: "Mag Ognia",
+    ikona: "🔥",
+    rzadkosc: "aleja",
+    moc: "Płomień",
+    opis: "Strzela ogniem na krótki dystans.",
+    hp: 120,
+    damage: 22,
+    speed: 3.4,
+    range: 250,
+    cooldown: 420,
+    ticketCost: 0
+},
+
+{
+    id: "mnich",
+    nazwa: "Mnich",
+    ikona: "🧘",
+    rzadkosc: "aleja",
+    moc: "Podwójna fala",
+    opis: "Każdy atak wysyła dwie fale energii.",
+    hp: 155,
+    damage: 20,
+    speed: 3.5,
+    range: 560,
+    cooldown: 650,
+    ticketCost: 0
+},
+
+{
+    id: "mag_lodu",
+    nazwa: "Mag Lodu",
+    ikona: "❄️",
+    rzadkosc: "aleja",
+    moc: "Mróz",
+    opis: "Na zmianę zamraża lub zadaje duże obrażenia lodem.",
+    hp: 125,
+    damage: 27,
+    speed: 3.2,
+    range: 560,
+    cooldown: 650,
+    ticketCost: 0
+},
+
+{
+    id: "samuraj",
+    nazwa: "Samuraj",
+    ikona: "🥷",
+    rzadkosc: "aleja",
+    moc: "Dwa miecze",
+    opis: "Bardzo szybki wojownik walczący mieczami.",
+    hp: 175,
+    damage: 34,
+    speed: 4.3,
+    range: 70,
+    cooldown: 450,
+    ticketCost: 0
+},
+
+{
+    id: "centaur",
+    nazwa: "Centaur",
+    ikona: "🐎",
+    rzadkosc: "aleja",
+    moc: "Eksplodujące strzały",
+    opis: "Szybko strzela wybuchającymi strzałami.",
+    hp: 155,
+    damage: 23,
+    speed: 4.4,
+    range: 760,
+    cooldown: 420,
+    ticketCost: 0
+}
 
     {
         id: "rycerz",
