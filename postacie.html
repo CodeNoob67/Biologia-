@@ -2014,6 +2014,51 @@ try {
             </div>
         `;
 }
+    /* ALEJA PUCHARÓW między STARTOWYMI a RZADKIMI */
+const medievalRarityOrder = {
+    startowy: 0,
+    aleja: 1,
+    rzadki: 2,
+    bardzo_rzadki: 3,
+    epicki: 4,
+    mityczny: 5,
+    legendarny: 6
+};
+
+BOHATEROWIE.sort((a,b) =>
+    (medievalRarityOrder[a.rzadkosc] ?? 99) -
+    (medievalRarityOrder[b.rzadkosc] ?? 99)
+);
+
+/* Pokazywanie prawdziwego opisu gadżetu i gwiezdnej mocy */
+const oldOpenDetailsMedieval = openDetails;
+
+openDetails = function(heroId) {
+    oldOpenDetailsMedieval(heroId);
+
+    const hero = getHero(heroId);
+    const boxes = document.querySelectorAll(".powers-panel .power-box");
+
+    if (boxes[0]) {
+        const p = boxes[0].querySelector("p");
+        if (p) {
+            p.textContent = hero.gadzetOpis ||
+                "Specjalna umiejętność, której możesz używać podczas walki.";
+        }
+    }
+
+    if (boxes[1]) {
+        const p = boxes[1].querySelector("p");
+        if (p) {
+            p.textContent = hero.starPowerOpis ||
+                "Stała wyjątkowa moc wzmacniająca zdolności tej postaci.";
+        }
+    }
+};
+
+renderCharacters();
+
+
 </script>
 
 </body>
