@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Koronne Starcie</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, Arial, sans-serif;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,.08), transparent 28%),
+        linear-gradient(135deg,#101825,#1b2738 55%,#111827);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      padding: 24px;
+    }
+    .app {
+      width: min(1180px, 100%);
+      display: grid;
+      grid-template-columns: 1fr 330px;
+      gap: 22px;
+      align-items: start;
+    }
+    .panel, .game {
+      background: rgba(10,15,24,.88);
+      border: 1px solid rgba(255,255,255,.1);
+      box-shadow: 0 16px 50px rgba(0,0,0,.35);
+      border-radius: 22px;
+    }
+    .game { padding: 20px; }
+    .panel { padding: 20px; position: sticky; top: 20px; }
+    h1 { margin: 0 0 4px; font-size: clamp(28px,4vw,44px); }
+    .subtitle { color:#aab5c7; margin-bottom: 18px; }
+    .topbar {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom: 14px;
+    }
+    .turn {
+      padding:10px 14px;
+      border-radius:12px;
+      background:#172033;
+      font-weight:800;
+    }
+    .board-wrap {
+      width: min(78vh, 760px, 100%);
+      aspect-ratio: 1/1;
+      margin: 0 auto;
+      border: 10px solid #3a2b22;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 35px rgba(0,0,0,.45);
+    }
+    #board {
+      width:100%;
+      height:100%;
+      display:grid;
+      grid-template-columns:repeat(8,1fr);
+      grid-template-rows:repeat(8,1fr);
+      user-select:none;
+    }
+    .cell {
+      position:relative;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      font-size: clamp(25px, 5.2vw, 58px);
+      transition:.12s;
+    }
+    .light { background:#e8d8b9; }
+    .dark { background:#8b5d43; }
+    .cell:hover { filter:brightness(1.08); }
+    .cell.selected { box-shadow: inset 0 0 0 5px #ffd54a; }
+    .cell.move::after {
+      content:"";
+      width:26%;
+      height:26%;
+      border-radius:50%;
+      background:rgba(36,184,82,.75);
+      position:absolute;
+      z-index:1;
+    }
+    .cell.capture::after {
+      content:"";
+      width:72%;
+      height:72%;
+      border-radius:50%;
+      border:6px solid rgba(220,45,45,.78);
+      position:absolute;
+      z-index:1;
+    }
+    .piece {
+      position:relative;
+      z-index:2;
+      width:74%;
+      height:74%;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow: inset 0 -5px 0 rgba(0,0,0,.17), 0 4px 8px rgba(0,0,0,.25);
+    }
+    .white-piece {
+      background:linear-gradient(#fff,#d7dce5);
+      color:#152033;
+      border:3px solid #f7f7f7;
+    }
+    .black-piece {
+      background:linear-gradient(#26364d,#111827);
+      color:#f7cc58;
+      border:3px solid #475569;
+    }
+    .piece small {
+      font-size: .19em;
+      position:absolute;
+      bottom:-16%;
+      color:#fff;
+      font-weight:800;
+      text-shadow:0 2px 4px #000;
+      white-space:nowrap;
+    }
+    button, input {
+      width:100%;
+      border:0;
+      border-radius:12px;
+      padding:12px 13px;
+      font-size:15px;
+    }
+    button {
+      color:white;
+      background:#2e68e6;
+      font-weight:800;
+      cursor:pointer;
+      margin-top:8px;
+    }
+    button:hover { filter:brightness(1.08); }
+    button.secondary { background:#374151; }
+    button.green { background:#198754; }
+    button.red { background:#bd3342; }
+    input {
+      background:#101827;
+      color:white;
+      border:1px solid #334155;
+      margin-top:8px;
+      outline:none;
+    }
+    .section {
+      border-top:1px solid rgba(255,255,255,.09);
+      margin-top:18px;
+      padding-top:18px;
+    }
+    .section:first-child { margin-top:0; border-top:0; padding-top:0; }
+    .section h3 { margin:0 0 8px; }
+    .status {
+      margin-top:10px;
+      padding:10px;
+      border-radius:10px;
+      background:#111827;
+      color:#b8c3d6;
+      font-size:14px;
+      min-height:39px;
+    }
+    .rules {
+      font-size:13px;
+      line-height:1.5;
+      color:#b8c3d6;
+    }
+    .legend {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:7px;
+      font-size:13px;
+      color:#d5ddeb;
+    }
+    .winner {
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.72);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:50;
+    }
+    .winner.show { display:flex; }
+    .winner-card {
+      background:#111827;
+      border:1px solid #334155;
+      border-radius:22px;
+      padding:32px;
+      width:min(430px,90vw);
+      text-align:center;
+    }
+    .winner-card h2 { font-size:36px; margin:0 0 8px; }
+    .tiny { color:#8290a6; font-size:12px; margin-top:8px; }
+    .online-badge {
+      display:inline-block;
+      padding:5px 9px;
+      background:#214136;
+      color:#81e6b1;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:800;
+    }
+    @media(max-width:900px){
+      body { padding:10px; }
+      .app { grid-template-columns:1fr; }
+      .panel { position:static; }
+      .board-wrap { width:100%; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <main class="game">
+    <div class="topbar">
+      <div>
+        <h1>♛ Koronne Starcie</h1>
+        <div class="subtitle">Szachy + warcaby + własne figury</div>
+      </div>
+      <div id="turnLabel" class="turn">Tura: Biali</div>
+    </div>
+
+    <div class="board-wrap">
+      <div id="board"></div>
+    </div>
+  </main>
+
+  <aside class="panel">
+    <div class="section">
+      <h3>Tryb gry</h3>
+      <button class="secondary" id="localBtn">👥 Gra lokalna</button>
+      <button class="secondary" id="resetBtn">↻ Nowa gra</button>
+      <div id="modeStatus" class="status">Tryb lokalny: grajcie na jednym urządzeniu.</div>
+    </div>
+
+    <div class="section">
+      <h3>🌐 Gra online</h3>
+      <input id="playerName" maxlength="18" placeholder="Twój nick" />
+      <button class="green" id="createRoomBtn">Utwórz publiczny pojedynek</button>
+
+      <input id="roomCode" maxlength="6" placeholder="Kod pokoju, np. K7PQ2A" />
+      <button id="joinRoomBtn">Dołącz do pokoju</button>
+
+      <button class="secondary" id="refreshRoomsBtn">Odśwież publiczne pokoje</button>
+      <div id="publicRooms" class="status">Brak pobranych pokoi.</div>
+      <div id="onlineStatus" class="status">Firebase nie jest jeszcze skonfigurowany.</div>
+      <div class="tiny">Po dodaniu konfiguracji Firebase ta sama strona działa na dwóch urządzeniach.</div>
+    </div>
+
+    <div class="section">
+      <h3>Figury</h3>
+      <div class="legend">
+        <div>♚ Król</div><div>1 pole</div>
+        <div>♜ Wieża</div><div>prosto</div>
+        <div>♞ Skoczek</div><div>ruch L</div>
+        <div>🏹 Łucznik</div><div>po skosie</div>
+        <div>🛡 Strażnik</div><div>jak warcaby</div>
+      </div>
+    </div>
+
+    <div class="section rules">
+      <h3>Zasady</h3>
+      Biali zaczynają. Kliknij swoją figurę, potem zielone pole.
+      Czerwone obramowanie oznacza możliwość zbicia. Strażnik porusza
+      się o 1 pole po skosie do przodu, ale bije po skosie w każdą stronę.
+      Wygrywa gracz, który zbije króla przeciwnika.
+    </div>
+  </aside>
+</div>
+
+<div class="winner" id="winnerOverlay">
+  <div class="winner-card">
+    <h2 id="winnerText">Wygrana!</h2>
+    <p id="winnerSub"></p>
+    <button id="winnerReset">Zagraj ponownie</button>
+  </div>
+</div>
+
+<script type="module">
+  /*
+    ============================================================
+    FIREBASE – ONLINE MULTIPLAYER
+    ============================================================
+
+    1. Wejdź na https://console.firebase.google.com/
+    2. Utwórz projekt.
+    3. Dodaj aplikację Web.
+    4. Włącz Authentication -> Sign-in method -> Anonymous.
+    5. Utwórz Firestore Database.
+    6. Wklej swój firebaseConfig poniżej.
+    7. Ustaw FIREBASE_ENABLED = true.
+
+    UWAGA: poniższe reguły Firestore są tylko prostym startem/testem:
+
+    rules_version = '2';
+    service cloud.firestore {
+      match /databases/{database}/documents {
+        match /rooms/{roomId} {
+          allow read: if true;
+          allow create: if request.auth != null;
+          allow update: if request.auth != null;
+        }
+      }
+    }
+
+    Do większej publicznej gry warto później zaostrzyć reguły.
+  */
+
+  const FIREBASE_ENABLED = false;
+
+  const firebaseConfig = {
+    apiKey: "WKLEJ_TUTAJ",
+    authDomain: "WKLEJ_TUTAJ",
+    projectId: "WKLEJ_TUTAJ",
+    storageBucket: "WKLEJ_TUTAJ",
+    messagingSenderId: "WKLEJ_TUTAJ",
+    appId: "WKLEJ_TUTAJ"
+  };
+
+  let firebaseApi = null;
+
+  if (FIREBASE_ENABLED) {
+    try {
+      const appMod = await import("https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js");
+      const authMod = await import("https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js");
+      const fsMod = await import("https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js");
+
+      const app = appMod.initializeApp(firebaseConfig);
+      const auth = authMod.getAuth(app);
+      const db = fsMod.getFirestore(app);
+      await authMod.signInAnonymously(auth);
+
+      firebaseApi = {
+        db,
+        auth,
+        doc: fsMod.doc,
+        setDoc: fsMod.setDoc,
+        getDoc: fsMod.getDoc,
+        updateDoc: fsMod.updateDoc,
+        onSnapshot: fsMod.onSnapshot,
+        collection: fsMod.collection,
+        query: fsMod.query,
+        where: fsMod.where,
+        getDocs: fsMod.getDocs,
+        serverTimestamp: fsMod.serverTimestamp
+      };
+
+      onlineStatus.textContent = "Połączono z Firebase. Możesz grać online.";
+    } catch (err) {
+      console.error(err);
+      onlineStatus.textContent = "Błąd Firebase: " + err.message;
+    }
+  }
+
+  const boardEl = document.getElementById("board");
+  const turnLabel = document.getElementById("turnLabel");
+  const winnerOverlay = document.getElementById("winnerOverlay");
+  const winnerText = document.getElementById("winnerText");
+  const winnerSub = document.getElementById("winnerSub");
+  const onlineStatus = document.getElementById("onlineStatus");
+  const modeStatus = document.getElementById("modeStatus");
+  const publicRooms = document.getElementById("publicRooms");
+
+  const ICONS = {
+    king: "♚",
+    rook: "♜",
+    knight: "♞",
+    archer: "🏹",
+    guard: "🛡"
+  };
+
+  const NAMES = {
+    king: "Król",
+    rook: "Wieża",
+    knight: "Skoczek",
+    archer: "Łucznik",
+    guard: "Strażnik"
+  };
+
+  let game = newGame();
+  let selected = null;
+  let legalMoves = [];
+
+  let online = {
+    active: false,
+    roomId: null,
+    myColor: null,
+    myUid: null,
+    unsubscribe: null
+  };
+
+  function newGame() {
+    const b = Array.from({length:8}, () => Array(8).fill(null));
+
+    const back = ["rook","knight","archer","king","king","archer","knight","rook"];
+
+    // Po jednym królu – drugi środkowy element zamieniamy na wieżę.
+    back[4] = "rook";
+
+    for (let c=0;c<8;c++) {
+      b[0][c] = { type: back[c], color:"black" };
+      b[1][c] = { type:"guard", color:"black" };
+      b[6][c] = { type:"guard", color:"white" };
+      b[7][c] = { type: back[c], color:"white" };
+    }
+
+    return {
+      board:b,
+      turn:"white",
+      winner:null,
+      moveNumber:1
+    };
+  }
+
+  function clone(obj) {
+    return JSON.parse(JSON.stringify(obj));
+  }
+
+  function render() {
+    boardEl.innerHTML = "";
+
+    for (let r=0;r<8;r++) {
+      for (let c=0;c<8;c++) {
+        const cell = document.createElement("div");
+        cell.className = "cell " + ((r+c)%2===0 ? "light":"dark");
+
+        if (selected && selected.r===r && selected.c===c) cell.classList.add("selected");
+
+        const move = legalMoves.find(m => m.r===r && m.c===c);
+        if (move) cell.classList.add(game.board[r][c] ? "capture" : "move");
+
+        const piece = game.board[r][c];
+        if (piece) {
+          const p = document.createElement("div");
+          p.className = "piece " + (piece.color==="white" ? "white-piece":"black-piece");
+          p.innerHTML = `<span>${ICONS[piece.type]}</span><small>${NAMES[piece.type]}</small>`;
+          cell.appendChild(p);
+        }
+
+        cell.addEventListener("click", () => onCellClick(r,c));
+        boardEl.appendChild(cell);
+      }
+    }
+
+    turnLabel.textContent = game.winner
+      ? "Koniec gry"
+      : "Tura: " + (game.turn==="white" ? "Biali" : "Czarni");
+
+    if (online.active) {
+      modeStatus.innerHTML =
+        `<span class="online-badge">ONLINE</span><br>` +
+        `Pokój: <b>${online.roomId}</b><br>` +
+        `Grasz jako: <b>${online.myColor==="white" ? "Biali" : "Czarni"}</b>`;
+    }
+  }
+
+  async function onCellClick(r,c) {
+    if (game.winner) return;
+
+    if (online.active && game.turn !== online.myColor) {
+      onlineStatus.textContent = "Teraz ruch przeciwnika.";
+      return;
+    }
+
+    const piece = game.board[r][c];
+
+    if (!selected) {
+      if (!piece || piece.color !== game.turn) return;
+      if (online.active && piece.color !== online.myColor) return;
+
+      selected = {r,c};
+      legalMoves = getLegalMoves(r,c);
+      render();
+      return;
+    }
+
+    if (selected.r===r && selected.c===c) {
+      selected = null;
+      legalMoves = [];
+      render();
+      return;
+    }
+
+    if (piece && piece.color===game.turn) {
+      if (online.active && piece.color !== online.myColor) return;
+      selected = {r,c};
+      legalMoves = getLegalMoves(r,c);
+      render();
+      return;
+    }
+
+    const legal = legalMoves.some(m => m.r===r && m.c===c);
+    if (!legal) return;
+
+    makeMove(selected.r, selected.c, r, c);
+    selected = null;
+    legalMoves = [];
+    render();
+
+    if (online.active) await pushOnlineState();
+  }
+
+  function makeMove(fr,fc,tr,tc) {
+    const moving = game.board[fr][fc];
+    const captured = game.board[tr][tc];
+
+    game.board[tr][tc] = moving;
+    game.board[fr][fc] = null;
+
+    if (captured && captured.type==="king") {
+      game.winner = moving.color;
+      showWinner(moving.color);
+      return;
+    }
+
+    // Awans Strażnika po dojściu na koniec planszy -> Wieża.
+    if (moving.type==="guard") {
+      if ((moving.color==="white" && tr===0) || (moving.color==="black" && tr===7)) {
+        moving.type = "rook";
+      }
+    }
+
+    game.turn = game.turn==="white" ? "black" : "white";
+    game.moveNumber++;
+  }
+
+  function getLegalMoves(r,c) {
+    const p = game.board[r][c];
+    if (!p) return [];
+
+    if (p.type==="king") return kingMoves(r,c,p.color);
+    if (p.type==="rook") return slidingMoves(r,c,p.color, [[1,0],[-1,0],[0,1],[0,-1]]);
+    if (p.type==="archer") return slidingMoves(r,c,p.color, [[1,1],[1,-1],[-1,1],[-1,-1]]);
+    if (p.type==="knight") return knightMoves(r,c,p.color);
+    if (p.type==="guard") return guardMoves(r,c,p.color);
+    return [];
+  }
+
+  function inBounds(r,c) {
+    return r>=0 && r<8 && c>=0 && c<8;
+  }
+
+  function canEnter(r,c,color) {
+    if (!inBounds(r,c)) return false;
+    const target = game.board[r][c];
+    return !target || target.color!==color;
+  }
+
+  function kingMoves(r,c,color) {
+    const out=[];
+    for (let dr=-1;dr<=1;dr++) {
+      for (let dc=-1;dc<=1;dc++) {
+        if (dr===0 && dc===0) continue;
+        const nr=r+dr,nc=c+dc;
+        if (canEnter(nr,nc,color)) out.push({r:nr,c:nc});
+      }
+    }
+    return out;
+  }
+
+  function knightMoves(r,c,color) {
+    const out=[];
+    const jumps=[[2,1],[2,-1],[-2,1],[-2,-1],[1,2],[1,-2],[-1,2],[-1,-2]];
+    for (const [dr,dc] of jumps) {
+      const nr=r+dr,nc=c+dc;
+      if (canEnter(nr,nc,color)) out.push({r:nr,c:nc});
+    }
+    return out;
+  }
+
+  function guardMoves(r,c,color) {
+    const out=[];
+    const dir = color==="white" ? -1 : 1;
+
+    // zwykły ruch jak pion/warcaby – po skosie do przodu
+    for (const dc of [-1,1]) {
+      const nr=r+dir,nc=c+dc;
+      if (inBounds(nr,nc) && !game.board[nr][nc]) {
+        out.push({r:nr,c:nc});
+      }
+    }
+
+    // bicie po skosie w każdą stronę o 1 pole
+    for (const dr of [-1,1]) {
+      for (const dc of [-1,1]) {
+        const nr=r+dr,nc=c+dc;
+        if (!inBounds(nr,nc)) continue;
+        const target=game.board[nr][nc];
+        if (target && target.color!==color) out.push({r:nr,c:nc});
+      }
+    }
+    return uniqueMoves(out);
+  }
+
+  function slidingMoves(r,c,color,dirs) {
+    const out=[];
+    for (const [dr,dc] of dirs) {
+      let nr=r+dr,nc=c+dc;
+      while (inBounds(nr,nc)) {
+        const target=game.board[nr][nc];
+        if (!target) {
+          out.push({r:nr,c:nc});
+        } else {
+          if (target.color!==color) out.push({r:nr,c:nc});
+          break;
+        }
+        nr+=dr;
+        nc+=dc;
+      }
+    }
+    return out;
+  }
+
+  function uniqueMoves(moves) {
+    const seen = new Set();
+    return moves.filter(m => {
+      const k=m.r+","+m.c;
+      if (seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    });
+  }
+
+  function showWinner(color) {
+    winnerText.textContent = (color==="white" ? "Biali" : "Czarni") + " wygrywają!";
+    winnerSub.textContent = "Król przeciwnika został zbity.";
+    winnerOverlay.classList.add("show");
+  }
+
+  function hideWinner() {
+    winnerOverlay.classList.remove("show");
+  }
+
+  async function resetGame(sync=true) {
+    game = newGame();
+    selected=null;
+    legalMoves=[];
+    hideWinner();
+    render();
+    if (sync && online.active) await pushOnlineState();
+  }
+
+  document.getElementById("resetBtn").onclick = () => resetGame(true);
+  document.getElementById("winnerReset").onclick = () => resetGame(true);
+
+  document.getElementById("localBtn").onclick = () => {
+    if (online.unsubscribe) online.unsubscribe();
+    online = {active:false, roomId:null, myColor:null, myUid:null, unsubscribe:null};
+    modeStatus.textContent = "Tryb lokalny: grajcie na jednym urządzeniu.";
+    resetGame(false);
+  };
+
+  function randomCode() {
+    const chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    let s="";
+    for (let i=0;i<6;i++) s += chars[Math.floor(Math.random()*chars.length)];
+    return s;
+  }
+
+  function requireFirebase() {
+    if (!FIREBASE_ENABLED || !firebaseApi) {
+      onlineStatus.innerHTML =
+        "Najpierw skonfiguruj Firebase w kodzie: wklej <b>firebaseConfig</b> i ustaw " +
+        "<b>FIREBASE_ENABLED = true</b>.";
+      return false;
+    }
+    return true;
+  }
+
+  document.getElementById("createRoomBtn").onclick = async () => {
+    if (!requireFirebase()) return;
+
+    const name = document.getElementById("playerName").value.trim() || "Gracz 1";
+    const code = randomCode();
+    const uid = firebaseApi.auth.currentUser.uid;
+
+    const roomRef = firebaseApi.doc(firebaseApi.db, "rooms", code);
+    await firebaseApi.setDoc(roomRef, {
+      code,
+      status:"waiting",
+      public:true,
+      hostUid:uid,
+      hostName:name,
+      guestUid:null,
+      guestName:null,
+      game:newGame(),
+      updatedAt: firebaseApi.serverTimestamp()
+    });
+
+    enterOnlineRoom(code, "white");
+    onlineStatus.innerHTML = `Utworzono pokój <b>${code}</b>. Podaj ten kod drugiemu graczowi.`;
+  };
+
+  document.getElementById("joinRoomBtn").onclick = async () => {
+    if (!requireFirebase()) return;
+
+    const code = document.getElementById("roomCode").value.trim().toUpperCase();
+    if (!code) return;
+
+    const name = document.getElementById("playerName").value.trim() || "Gracz 2";
+    const uid = firebaseApi.auth.currentUser.uid;
+    const roomRef = firebaseApi.doc(firebaseApi.db, "rooms", code);
+    const snap = await firebaseApi.getDoc(roomRef);
+
+    if (!snap.exists()) {
+      onlineStatus.textContent = "Nie ma pokoju o takim kodzie.";
+      return;
+    }
+
+    const data = snap.data();
+
+    if (data.hostUid === uid) {
+      enterOnlineRoom(code, "white");
+      return;
+    }
+
+    if (data.guestUid && data.guestUid !== uid) {
+      onlineStatus.textContent = "Ten pokój ma już dwóch graczy.";
+      return;
+    }
+
+    await firebaseApi.updateDoc(roomRef, {
+      guestUid:uid,
+      guestName:name,
+      status:"playing",
+      updatedAt: firebaseApi.serverTimestamp()
+    });
+
+    enterOnlineRoom(code, "black");
+  };
+
+  async function enterOnlineRoom(code, color) {
+    if (online.unsubscribe) online.unsubscribe();
+
+    online.active=true;
+    online.roomId=code;
+    online.myColor=color;
+    online.myUid=firebaseApi.auth.currentUser.uid;
+
+    const roomRef = firebaseApi.doc(firebaseApi.db, "rooms", code);
+
+    online.unsubscribe = firebaseApi.onSnapshot(roomRef, snap => {
+      if (!snap.exists()) {
+        onlineStatus.textContent = "Pokój został usunięty.";
+        return;
+      }
+
+      const data = snap.data();
+      if (data.game) {
+        game = clone(data.game);
+        selected=null;
+        legalMoves=[];
+        render();
+
+        if (game.winner) showWinner(game.winner);
+      }
+
+      if (data.status==="waiting") {
+        onlineStatus.textContent = "Czekam na drugiego gracza… Kod: " + code;
+      } else {
+        onlineStatus.textContent =
+          `Połączono: ${data.hostName || "Biali"} vs ${data.guestName || "Czarni"}`;
+      }
+    });
+
+    render();
+  }
+
+  async function pushOnlineState() {
+    if (!online.active || !firebaseApi) return;
+
+    const roomRef = firebaseApi.doc(firebaseApi.db, "rooms", online.roomId);
+    await firebaseApi.updateDoc(roomRef, {
+      game: clone(game),
+      updatedAt: firebaseApi.serverTimestamp()
+    });
+  }
+
+  document.getElementById("refreshRoomsBtn").onclick = async () => {
+    if (!requireFirebase()) return;
+
+    publicRooms.textContent = "Pobieranie…";
+
+    try {
+      const roomsRef = firebaseApi.collection(firebaseApi.db, "rooms");
+      const q = firebaseApi.query(
+        roomsRef,
+        firebaseApi.where("public","==",true),
+        firebaseApi.where("status","==","waiting")
+      );
+      const snaps = await firebaseApi.getDocs(q);
+
+      const rooms=[];
+      snaps.forEach(s => rooms.push(s.data()));
+
+      if (!rooms.length) {
+        publicRooms.textContent = "Brak publicznych pojedynków oczekujących na gracza.";
+        return;
+      }
+
+      publicRooms.innerHTML = "";
+      rooms.slice(0,12).forEach(room => {
+        const row=document.createElement("div");
+        row.style.cssText =
+          "padding:9px;margin:6px 0;background:#1b2638;border-radius:8px;cursor:pointer";
+        row.innerHTML = `<b>${room.hostName || "Gracz"}</b> — kod <b>${room.code}</b>`;
+        row.onclick=()=>{
+          document.getElementById("roomCode").value=room.code;
+          onlineStatus.textContent="Kod wpisany. Kliknij „Dołącz do pokoju”.";
+        };
+        publicRooms.appendChild(row);
+      });
+    } catch(err) {
+      console.error(err);
+      publicRooms.textContent = "Nie udało się pobrać pokoi: " + err.message;
+    }
+  };
+
+  render();
+</script>
+</body>
+</html>
