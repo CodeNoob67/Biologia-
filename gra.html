@@ -1,1776 +1,311 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <meta charset="UTF-8">
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>Medieval Arena</title>
-
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            overflow: hidden;
-            font-family: Arial, sans-serif;
-            color: white;
-
-            background:
-                radial-gradient(
-                    circle at center,
-                    #25d8ff 0%,
-                    #079fe0 55%,
-                    #0876bd 100%
-                );
-        }
-
-        button,
-        input,
-        select {
-            font-family: inherit;
-        }
-
-        button {
-            color: inherit;
-        }
-
-        .lobby {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .pattern {
-            position: absolute;
-            inset: 0;
-
-            opacity: 0.08;
-
-            background-image:
-                radial-gradient(
-                    circle,
-                    white 3px,
-                    transparent 4px
-                );
-
-            background-size: 70px 70px;
-        }
-
-        .top {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 20;
-
-            height: 82px;
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            padding: 8px 14px 8px 0;
-
-            background:
-                linear-gradient(
-                    #2f3b53,
-                    #182238
-                );
-
-            border-bottom: 4px solid #101725;
-
-            box-shadow:
-                0 5px 0 #00000055;
-        }
-
-        .top-left-menu {
-            height: 66px;
-
-            display: flex;
-            align-items: stretch;
-
-            gap: 0;
-        }
-
-        .profile-button {
-            min-width: 265px;
-            height: 66px;
-
-            display: flex;
-            align-items: center;
-            gap: 10px;
-
-            padding: 4px 12px 4px 5px;
-
-            color: white;
-            text-align: left;
-
-            background:
-                linear-gradient(
-                    #3c4c68,
-                    #24324a
-                );
-
-            border: 4px solid #101725;
-            border-radius: 0;
-
-            box-shadow:
-                0 5px 0 #00000066;
-
-            cursor: pointer;
-
-            transition:
-                filter 0.15s,
-                transform 0.15s;
-        }
-
-        .profile-button:hover {
-            filter: brightness(1.12);
-        }
-
-        .profile-button:active {
-            transform: translateY(3px);
-
-            box-shadow:
-                0 2px 0 #00000066;
-        }
-
-        .profile-button-content {
-            min-width: 0;
-
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .avatar,
-        .profile-preview {
-            display: grid;
-            place-items: center;
-
-            overflow: hidden;
-
-            background: #1d95e8;
-
-            border: 4px solid #111827;
-            border-radius: 10px;
-        }
-
-        .avatar {
-            width: 52px;
-            height: 52px;
-
-            flex: 0 0 52px;
-
-            font-size: 29px;
-        }
-
-        .profile-preview {
-            width: 130px;
-            height: 130px;
-
-            margin: 0 auto 15px;
-
-            font-size: 64px;
-        }
-
-        .avatar img,
-        .profile-preview img {
-            width: 100%;
-            height: 100%;
-
-            object-fit: cover;
-        }
-
-        .player-name {
-            max-width: 170px;
-
-            overflow: hidden;
-
-            font-size: 17px;
-            font-weight: 1000;
-
-            white-space: nowrap;
-            text-overflow: ellipsis;
-        }
-
-        .profile-edit {
-            color: #bcdcff;
-
-            font-size: 10px;
-            font-weight: 800;
-        }
-
-        .profile-wins {
-            margin-top: 3px;
-            padding: 2px 7px;
-
-            font-size: 11px;
-            font-weight: 1000;
-
-            background: #182238;
-
-            border: 2px solid #101724;
-            border-radius: 6px;
-        }
-
-        .trophy-road-button {
-            min-width: 210px;
-            height: 66px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-
-            margin-left: -4px;
-            padding: 6px 14px;
-
-            color: white;
-            text-decoration: none;
-
-            background:
-                linear-gradient(
-                    #ffbe24,
-                    #e67e00
-                );
-
-            border: 4px solid #4a2800;
-            border-radius: 0 12px 12px 0;
-
-            box-shadow:
-                0 5px 0 #00000066;
-
-            cursor: pointer;
-
-            transition:
-                filter 0.15s,
-                transform 0.15s;
-        }
-
-        .trophy-road-button:hover {
-            filter: brightness(1.1);
-        }
-
-        .trophy-road-button:active {
-            transform: translateY(3px);
-
-            box-shadow:
-                0 2px 0 #00000066;
-        }
-
-        .trophy-road-icon {
-            font-size: 37px;
-
-            filter:
-                drop-shadow(
-                    2px 3px 0 #7a3b00
-                );
-        }
-
-        .trophy-road-content {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .trophy-road-title {
-            font-size: 13px;
-            font-weight: 1000;
-
-            text-shadow:
-                2px 2px #7a3b00;
-        }
-
-        .trophy-road-total {
-            margin-top: 2px;
-
-            color: #fff7ae;
-
-            font-size: 17px;
-            font-weight: 1000;
-
-            text-shadow:
-                2px 2px #7a3b00;
-        }
-
-        .currencies {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .currency {
-            min-width: 80px;
-            padding: 9px 12px;
-
-            text-align: center;
-
-            font-size: 18px;
-            font-weight: 900;
-
-            background: #263248;
-
-            border: 3px solid #111827;
-            border-radius: 10px;
-        }
-
-        .admin-button {
-            width: 52px;
-            height: 52px;
-
-            color: white;
-            font-size: 29px;
-
-            background:
-                linear-gradient(
-                    #60718e,
-                    #34445e
-                );
-
-            border: 3px solid #111827;
-            border-radius: 9px;
-
-            cursor: pointer;
-        }
-
-        .rank {
-            position: absolute;
-            top: 96px;
-            left: 50%;
-            z-index: 3;
-
-            transform: translateX(-50%);
-
-            display: flex;
-            gap: 8px;
-        }
-
-        .rank-box {
-            padding: 7px 12px;
-
-            background: #283349;
-
-            border: 3px solid #101724;
-            border-radius: 9px;
-
-            font-weight: 900;
-        }
-
-        .side {
-            position: absolute;
-            top: 140px;
-            z-index: 4;
-
-            display: flex;
-            flex-direction: column;
-            gap: 13px;
-        }
-
-        .side.left {
-            left: 12px;
-        }
-
-        .side.right {
-            right: 12px;
-        }
-
-        .side a,
-        .side button {
-            width: 85px;
-            min-height: 58px;
-
-            display: grid;
-            place-items: center;
-
-            padding: 5px;
-
-            color: white;
-            text-align: center;
-            text-decoration: none;
-
-            font-size: 12px;
-            font-weight: 900;
-
-            background:
-                linear-gradient(
-                    #435670,
-                    #202d42
-                );
-
-            border: 3px solid #101724;
-            border-radius: 9px;
-
-            box-shadow:
-                0 4px 0 #00000066;
-
-            cursor: pointer;
-        }
-
-        .hero-area {
-            position: absolute;
-            left: 50%;
-            top: 54%;
-            z-index: 2;
-
-            transform:
-                translate(-50%, -50%);
-
-            width: 370px;
-            height: 480px;
-
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-end;
-        }
-
-        .trophy-rank-row {
-            position: relative;
-            z-index: 3;
-
-            display: flex;
-            align-items: center;
-
-            margin-bottom: 9px;
-
-            filter:
-                drop-shadow(
-                    0 4px 0 #00000066
-                );
-        }
-
-        .hero-tier-badge {
-            position: relative;
-            z-index: 2;
-
-            width: 68px;
-            height: 61px;
-
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-
-            color: white;
-
-            border: 4px solid #111827;
-
-            clip-path:
-                polygon(
-                    50% 0%,
-                    93% 18%,
-                    86% 82%,
-                    50% 100%,
-                    14% 82%,
-                    7% 18%
-                );
-
-            text-shadow:
-                2px 2px black;
-        }
-
-        .tier-word {
-            font-size: 10px;
-            font-weight: 1000;
-            line-height: 11px;
-        }
-
-        #heroTierNumber {
-            font-size: 22px;
-            font-weight: 1000;
-            line-height: 22px;
-        }
-
-        .trophy-progress {
-            position: relative;
-
-            width: 180px;
-            height: 39px;
-
-            margin-left: -5px;
-
-            overflow: hidden;
-
-            background:
-                linear-gradient(
-                    #67183a,
-                    #411024
-                );
-
-            border: 4px solid #111827;
-            border-left-width: 2px;
-            border-radius: 0 10px 10px 0;
-        }
-
-        .trophy-progress-fill {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-
-            width: 0%;
-
-            background:
-                linear-gradient(
-                    90deg,
-                    #e87717,
-                    #ffab23
-                );
-
-            transition:
-                width 0.35s ease;
-        }
-
-        .trophy-progress-fill::after {
-            content: "";
-
-            position: absolute;
-            top: 0;
-            right: -3px;
-
-            width: 7px;
-            height: 100%;
-
-            background: white;
-
-            box-shadow:
-                0 0 5px white,
-                0 0 11px white,
-                0 0 16px #fff3a8;
-        }
-
-        .trophy-progress-fill.empty::after {
-            display: none;
-        }
-
-        .trophy-progress-content {
-            position: absolute;
-            inset: 0;
-            z-index: 2;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 7px;
-
-            color: white;
-
-            font-size: 18px;
-            font-weight: 1000;
-
-            text-shadow:
-                2px 2px black;
-        }
-
-        .trophy-progress-content small {
-            color: #ffe2b1;
-            font-size: 11px;
-        }
-
-        .tier-color-1 {
-            background:
-                linear-gradient(
-                    #f0a42d,
-                    #b85816
-                );
-        }
-
-        .tier-color-5 {
-            background:
-                linear-gradient(
-                    #d2d5df,
-                    #736d88
-                );
-        }
-
-        .tier-color-10 {
-            background:
-                linear-gradient(
-                    #ffd84c,
-                    #e28a13
-                );
-        }
-
-        .tier-color-15 {
-            background:
-                linear-gradient(
-                    #30e6f2,
-                    #0786ad
-                );
-        }
-
-        .tier-color-20 {
-            background:
-                linear-gradient(
-                    #f94be7,
-                    #9833a9
-                );
-        }
-
-        .tier-color-25 {
-            background:
-                linear-gradient(
-                    #43ed79,
-                    #15934e
-                );
-        }
-
-        .tier-color-30 {
-            background:
-                linear-gradient(
-                    #ff5353,
-                    #a51f2f
-                );
-        }
-
-        .tier-color-35 {
-            background:
-                linear-gradient(
-                    #8262c9,
-                    #30254f
-                );
-        }
-
-        .tier-color-40 {
-            color: #182238;
-
-            background:
-                linear-gradient(
-                    #e8ffff,
-                    #74cce6
-                );
-
-            text-shadow: none;
-        }
-
-        .tier-color-45 {
-            background:
-                linear-gradient(
-                    #90f3ee,
-                    #8653cd
-                );
-        }
-
-        .tier-color-50 {
-            background:
-                linear-gradient(
-                    135deg,
-                    #46e6f0,
-                    #f5f5f5,
-                    #e454f4
-                );
-        }
-
-        .tier-color-max {
-            background:
-                linear-gradient(
-                    135deg,
-                    #3be6ef,
-                    white,
-                    #f348e2,
-                    #ffca38
-                );
-        }
-
-        .hero-icon {
-            z-index: 2;
-
-            font-size: 180px;
-
-            filter:
-                drop-shadow(
-                    0 15px 6px #00466e88
-                );
-
-            animation:
-                heroIdle 2.2s
-                ease-in-out infinite;
-        }
-
-        @keyframes heroIdle {
-            50% {
-                transform:
-                    translateY(-12px);
-            }
-        }
-
-        .hero-name {
-            z-index: 3;
-
-            padding: 7px 15px;
-
-            background: #28344b;
-
-            border: 3px solid #111827;
-            border-radius: 10px;
-
-            font-size: 20px;
-            font-weight: 900;
-        }
-
-        .hero-power {
-            z-index: 3;
-
-            margin-top: 6px;
-
-            color: #fff080;
-
-            font-weight: 900;
-
-            text-shadow:
-                2px 2px black;
-        }
-
-        .bottom-left,
-        .bottom-center,
-        .bottom-right {
-            position: absolute;
-            bottom: 18px;
-            z-index: 4;
-        }
-
-        .bottom-left {
-            left: 15px;
-            width: 260px;
-        }
-
-        .bottom-center {
-            left: 50%;
-            width: 370px;
-
-            transform:
-                translateX(-50%);
-        }
-
-        .bottom-right {
-            right: 17px;
-            width: 280px;
-        }
-
-        .pass,
-        .event,
-        .play {
-            width: 100%;
-
-            border: 4px solid #111827;
-            border-radius: 12px;
-
-            box-shadow:
-                0 6px 0 #00000066;
-
-            font-weight: 900;
-        }
-
-        .pass {
-            padding: 12px;
-
-            color: #111827;
-
-            background:
-                linear-gradient(
-                    90deg,
-                    #f0c900,
-                    #f79e00
-                );
-        }
-
-        .event {
-            padding: 11px 15px;
-
-            color: white;
-
-            background:
-                linear-gradient(
-                    #222c3d,
-                    #111827
-                );
-
-            cursor: pointer;
-        }
-
-        .play {
-            padding: 22px;
-
-            color: #111827;
-
-            font-size: 34px;
-
-            background:
-                linear-gradient(
-                    #ffd934,
-                    #f0a900
-                );
-
-            cursor: pointer;
-        }
-
-        .overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 100;
-
-            display: none;
-            align-items: center;
-            justify-content: center;
-
-            padding: 20px;
-
-            background: #000000bb;
-        }
-
-        .overlay.visible {
-            display: flex;
-        }
-
-        .window {
-            position: relative;
-
-            width: min(700px, 95%);
-            max-height: 92vh;
-
-            overflow-y: auto;
-
-            padding: 28px;
-
-            text-align: center;
-
-            background:
-                linear-gradient(
-                    #374762,
-                    #1b263a
-                );
-
-            border: 5px solid #111827;
-            border-radius: 20px;
-        }
-
-        .window h2 {
-            margin-top: 0;
-            color: #ffd83d;
-        }
-
-        .close {
-            position: absolute;
-            top: 10px;
-            right: 12px;
-
-            width: 45px;
-            height: 45px;
-
-            color: white;
-            font-size: 22px;
-
-            background: #d83c3c;
-
-            border: 3px solid #111827;
-            border-radius: 10px;
-
-            cursor: pointer;
-        }
-
-        .maps {
-            display: grid;
-
-            grid-template-columns:
-                repeat(3, 1fr);
-
-            gap: 15px;
-        }
-
-        .map-button {
-            padding: 15px;
-
-            color: white;
-
-            font-size: 18px;
-            font-weight: 900;
-
-            border: 4px solid #111827;
-            border-radius: 14px;
-
-            cursor: pointer;
-        }
-
-        .green-map {
-            background: #27984c;
-        }
-
-        .red-map {
-            background: #b73b39;
-        }
-
-        .yellow-map {
-            background: #ca9828;
-        }
-
-        .section {
-            margin: 15px 0;
-            padding: 15px;
-
-            text-align: left;
-
-            background: #202c42;
-
-            border: 3px solid #101827;
-            border-radius: 14px;
-        }
-
-        .section-title {
-            display: block;
-
-            margin-bottom: 9px;
-
-            font-weight: 900;
-        }
-
-        .input {
-            width: 100%;
-
-            padding: 12px;
-
-            color: #111827;
-
-            font-size: 17px;
-            font-weight: 800;
-
-            background: white;
-
-            border: 3px solid #111827;
-            border-radius: 10px;
-        }
-
-        .input + .input {
-            margin-top: 10px;
-        }
-
-        .help {
-            margin-top: 7px;
-
-            color: #cad7e8;
-
-            font-size: 12px;
-        }
-
-        .hero-checks {
-            display: grid;
-
-            grid-template-columns:
-                repeat(2, 1fr);
-
-            gap: 8px;
-        }
-
-        .hero-check {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-
-            padding: 9px;
-
-            background: #111827;
-
-            border: 2px solid #46536a;
-            border-radius: 9px;
-
-            cursor: pointer;
-        }
-
-        .hero-check input {
-            width: 20px;
-            height: 20px;
-        }
-
-        .action,
-        .secondary {
-            width: 100%;
-
-            padding: 13px;
-
-            font-weight: 1000;
-
-            border: 4px solid #111827;
-            border-radius: 12px;
-
-            cursor: pointer;
-        }
-
-        .action {
-            color: #111827;
-
-            background:
-                linear-gradient(
-                    #ffd93d,
-                    #eca500
-                );
-        }
-
-        .secondary {
-            margin-top: 8px;
-
-            color: white;
-
-            background: #435670;
-        }
-
-        .message {
-            min-height: 28px;
-
-            margin-top: 12px;
-
-            color: #7dff95;
-
-            font-weight: 900;
-        }
-
-        .message.error {
-            color: #ff7474;
-        }
-
-        .trophy-animation-layer {
-            position: fixed;
-            inset: 0;
-            z-index: 2000;
-
-            pointer-events: none;
-        }
-
-        .flying-trophy {
-            position: fixed;
-            left: 50%;
-            top: 52%;
-
-            font-size: 42px;
-
-            animation:
-                trophyFly 1.25s
-                ease forwards;
-        }
-
-        .trophy-change-popup {
-            position: fixed;
-            left: 50%;
-            top: 42%;
-
-            transform:
-                translate(-50%, -50%);
-
-            padding: 10px 20px;
-
-            color: white;
-
-            font-size: 34px;
-            font-weight: 1000;
-
-            background: #111827dd;
-
-            border: 4px solid #050912;
-            border-radius: 12px;
-
-            text-shadow:
-                3px 3px black;
-
-            animation:
-                trophyPopup 1.2s
-                ease forwards;
-        }
-
-        .trophy-change-popup.negative {
-            color: #ff6b6b;
-        }
-
-        .trophy-counter-bounce {
-            animation:
-                trophyCounterBounce
-                0.55s ease;
-        }
-
-        @keyframes trophyFly {
-            0% {
-                left: 50%;
-                top: 54%;
-
-                opacity: 0;
-
-                transform:
-                    scale(0.3)
-                    rotate(-20deg);
-            }
-
-            20% {
-                opacity: 1;
-
-                transform:
-                    scale(1.2)
-                    rotate(10deg);
-            }
-
-            100% {
-                left: 365px;
-                top: 48px;
-
-                opacity: 0;
-
-                transform:
-                    scale(0.4)
-                    rotate(360deg);
-            }
-        }
-
-        @keyframes trophyPopup {
-            0% {
-                opacity: 0;
-
-                transform:
-                    translate(-50%, -50%)
-                    scale(0.3);
-            }
-
-            25% {
-                opacity: 1;
-
-                transform:
-                    translate(-50%, -50%)
-                    scale(1.2);
-            }
-
-            75% {
-                opacity: 1;
-
-                transform:
-                    translate(-50%, -50%)
-                    scale(1);
-            }
-
-            100% {
-                opacity: 0;
-
-                transform:
-                    translate(-50%, -70%)
-                    scale(0.8);
-            }
-        }
-
-        @keyframes trophyCounterBounce {
-            0%,
-            100% {
-                transform: scale(1);
-            }
-
-            45% {
-                transform: scale(1.5);
-            }
-
-            70% {
-                transform: scale(0.9);
-            }
-        }
-
-        @media (max-width: 1000px) {
-            .profile-button {
-                min-width: 70px;
-                width: 70px;
-
-                justify-content: center;
-
-                padding: 4px;
-            }
-
-            .profile-button-content {
-                display: none;
-            }
-
-            .trophy-road-button {
-                min-width: 72px;
-                width: 72px;
-
-                padding: 4px;
-            }
-
-            .trophy-road-content {
-                display: none;
-            }
-
-            @keyframes trophyFly {
-                0% {
-                    left: 50%;
-                    top: 54%;
-
-                    opacity: 0;
-
-                    transform:
-                        scale(0.3);
-                }
-
-                100% {
-                    left: 105px;
-                    top: 48px;
-
-                    opacity: 0;
-
-                    transform:
-                        scale(0.4)
-                        rotate(360deg);
-                }
-            }
-        }
-
-        @media (max-width: 700px) {
-            .top {
-                height: auto;
-                min-height: 82px;
-
-                padding: 6px 6px 6px 0;
-            }
-
-            .currencies {
-                gap: 5px;
-            }
-
-            .currency {
-                min-width: 50px;
-
-                padding: 7px 4px;
-
-                font-size: 13px;
-            }
-
-            .admin-button {
-                width: 44px;
-                height: 44px;
-
-                font-size: 23px;
-            }
-
-            .maps,
-            .hero-checks {
-                grid-template-columns: 1fr;
-            }
-
-            .hero-icon {
-                font-size: 135px;
-            }
-
-            .trophy-progress {
-                width: 150px;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Medieval Arena</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+    margin:0;
+    min-height:100vh;
+    overflow:hidden;
+    font-family:Arial,sans-serif;
+    color:#fff;
+    background:radial-gradient(circle at center,#25d8ff,#079fe0 58%,#0876bd);
+}
+button,input,textarea,select{font:inherit}
+button{color:inherit;cursor:pointer}
+.lobby{position:relative;width:100vw;height:100vh;overflow:hidden}
+.pattern{
+    position:absolute;inset:0;opacity:.09;
+    background-image:radial-gradient(circle,#fff 3px,transparent 4px);
+    background-size:70px 70px
+}
+.top{
+    position:absolute;top:0;left:0;right:0;z-index:20;height:82px;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:8px 14px 8px 0;
+    background:linear-gradient(#2f3b53,#182238);
+    border-bottom:4px solid #101725;box-shadow:0 5px 0 #0005
+}
+.top-left{display:flex;height:66px}
+.profile-button,.road-button{
+    height:66px;border:4px solid #101725;box-shadow:0 5px 0 #0006;
+    font-weight:900
+}
+.profile-button{
+    min-width:255px;display:flex;align-items:center;gap:10px;
+    padding:4px 12px 4px 5px;text-align:left;
+    background:linear-gradient(#3c4c68,#24324a)
+}
+.avatar{
+    width:52px;height:52px;display:grid;place-items:center;overflow:hidden;
+    flex:0 0 52px;font-size:29px;background:#1d95e8;
+    border:4px solid #111827;border-radius:10px
+}
+.avatar img,.profile-preview img{width:100%;height:100%;object-fit:cover}
+.player-name{max-width:165px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:17px}
+.small{font-size:10px;color:#bcdcff}
+.road-button{
+    min-width:200px;margin-left:-4px;padding:6px 14px;
+    background:linear-gradient(#ffbe24,#e67e00);border-color:#4a2800;
+    border-radius:0 12px 12px 0;text-decoration:none;
+    display:flex;align-items:center;justify-content:center;gap:8px
+}
+.currencies{display:flex;gap:10px;align-items:center}
+.currency{min-width:82px;padding:9px 12px;text-align:center;font-size:18px;font-weight:900;background:#263248;border:3px solid #111827;border-radius:10px}
+.admin-button{width:52px;height:52px;font-size:28px;background:linear-gradient(#60718e,#34445e);border:3px solid #111827;border-radius:9px}
+.rank{position:absolute;top:96px;left:50%;transform:translateX(-50%);z-index:3;display:flex;gap:8px}
+.rank-box{padding:7px 12px;background:#283349;border:3px solid #101724;border-radius:9px;font-weight:900}
+.side{position:absolute;top:140px;z-index:4;display:flex;flex-direction:column;gap:13px}
+.side.left{left:12px}.side.right{right:12px}
+.side a,.side button{
+    width:88px;min-height:60px;display:grid;place-items:center;padding:5px;
+    color:#fff;text-align:center;text-decoration:none;font-size:12px;font-weight:900;
+    background:linear-gradient(#435670,#202d42);
+    border:3px solid #101724;border-radius:9px;box-shadow:0 4px 0 #0006
+}
+.hero-area{
+    position:absolute;left:50%;top:53%;transform:translate(-50%,-50%);
+    width:380px;height:470px;display:flex;flex-direction:column;
+    align-items:center;justify-content:flex-end
+}
+.hero-icon{font-size:180px;filter:drop-shadow(0 15px 6px #00466e88);animation:idle 2.2s ease-in-out infinite}
+@keyframes idle{50%{transform:translateY(-12px)}}
+.hero-name{padding:7px 15px;background:#28344b;border:3px solid #111827;border-radius:10px;font-size:20px;font-weight:900}
+.hero-power{margin-top:6px;color:#fff080;font-weight:900;text-shadow:2px 2px #000}
+.bottom{position:absolute;bottom:18px;z-index:4}
+.bottom.left{left:15px;width:260px}.bottom.center{left:50%;transform:translateX(-50%);width:370px}.bottom.right{right:17px;width:280px}
+.pass,.event,.play{width:100%;border:4px solid #111827;border-radius:12px;box-shadow:0 6px 0 #0006;font-weight:900}
+.pass{padding:12px;color:#111827;background:linear-gradient(90deg,#f0c900,#f79e00)}
+.event{padding:11px 15px;background:linear-gradient(#222c3d,#111827)}
+.play{padding:22px;color:#111827;font-size:34px;background:linear-gradient(#ffd934,#f0a900)}
+.overlay{
+    position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;
+    padding:20px;background:#000b
+}
+.overlay.visible{display:flex}
+.window{
+    position:relative;width:min(760px,96vw);max-height:92vh;overflow-y:auto;
+    padding:28px;text-align:center;background:linear-gradient(#374762,#1b263a);
+    border:5px solid #111827;border-radius:20px
+}
+.window.wide{width:min(930px,97vw)}
+.window h2{margin-top:0;color:#ffd83d}
+.close{position:absolute;top:10px;right:12px;width:45px;height:45px;font-size:22px;background:#d83c3c;border:3px solid #111827;border-radius:10px}
+.section{margin:15px 0;padding:15px;text-align:left;background:#202c42;border:3px solid #101827;border-radius:14px}
+.section-title{display:block;margin-bottom:9px;font-weight:900}
+.input{width:100%;padding:12px;color:#111827;font-size:16px;font-weight:800;background:#fff;border:3px solid #111827;border-radius:10px}
+.input+.input{margin-top:10px}
+textarea.input{min-height:115px;resize:vertical}
+.action,.secondary,.danger{
+    width:100%;padding:13px;font-weight:1000;border:4px solid #111827;border-radius:12px
+}
+.action{color:#111827;background:linear-gradient(#ffd93d,#eca500)}
+.secondary{margin-top:8px;background:#435670}
+.danger{margin-top:8px;background:#c83d3d}
+.message{min-height:26px;margin-top:10px;color:#7dff95;font-weight:900}
+.message.error{color:#ff7474}
+.maps,.club-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.map-button{padding:16px;font-size:17px;font-weight:900;border:4px solid #111827;border-radius:13px}
+.green{background:#27984c}.red{background:#b73b39}.yellow{background:#ca9828}
+.news-card,.club-card{
+    margin:12px 0;padding:16px;text-align:left;background:#202d45;
+    border:3px solid #101827;border-radius:13px
+}
+.news-card h3{margin:0 0 8px;color:#ffd83d}
+.news-card h4{margin:0 0 8px;font-size:20px}
+.news-card p{line-height:1.45;white-space:pre-wrap}
+.club-card{display:flex;justify-content:space-between;gap:15px;align-items:center}
+.club-info{min-width:0}
+.club-name{font-size:20px;font-weight:1000;color:#ffd83d}
+.club-meta{margin-top:5px;color:#c9d7ea;font-size:13px}
+.club-desc{margin-top:8px;white-space:pre-wrap}
+.club-button{min-width:120px;padding:10px;color:#111827;font-weight:900;background:#ffd43b;border:3px solid #111827;border-radius:9px}
+.members{margin-top:10px;display:flex;flex-wrap:wrap;gap:7px}
+.member{padding:6px 9px;background:#111827;border:2px solid #52617a;border-radius:8px;font-size:13px}
+.tabs{display:flex;gap:8px;margin-bottom:14px}
+.tab{flex:1;padding:11px;background:#435670;border:3px solid #111827;border-radius:10px;font-weight:900}
+.tab.active{color:#111827;background:#ffd43b}
+.hidden{display:none!important}
+.admin-note{padding:10px;color:#ffd8d8;background:#702626;border:2px solid #ff7777;border-radius:9px}
+.profile-preview{width:130px;height:130px;margin:0 auto 15px;display:grid;place-items:center;overflow:hidden;font-size:64px;background:#1d95e8;border:4px solid #111827;border-radius:10px}
+@media(max-width:750px){
+    .road-button{display:none}.rank{top:90px}.side{top:135px}
+    .side a,.side button{width:72px;min-height:54px;font-size:10px}
+    .hero-icon{font-size:130px}.hero-area{width:260px}
+    .bottom.left{display:none}.bottom.center{width:260px}.bottom.right{width:190px}
+    .club-grid,.maps{grid-template-columns:1fr}
+}
+</style>
 </head>
 
 <body>
-
 <div class="lobby">
-
     <div class="pattern"></div>
 
     <header class="top">
-
-        <div class="top-left-menu">
-
-            <button
-                class="profile-button"
-                onclick="openProfile()"
-            >
-                <div
-                    id="topAvatar"
-                    class="avatar"
-                >
-                    👑
-                </div>
-
-                <div class="profile-button-content">
-
-                    <div
-                        id="topName"
-                        class="player-name"
-                    >
-                        MedievalPlayer
-                    </div>
-
-                    <div class="profile-edit">
-                        PROFIL
-                    </div>
-
-                    <div class="profile-wins">
-                        Wygrane:
-                        <span data-wins>0</span>
-                    </div>
-
+        <div class="top-left">
+            <button class="profile-button" onclick="openProfile()">
+                <div id="topAvatar" class="avatar">👑</div>
+                <div>
+                    <div id="topName" class="player-name">Gracz</div>
+                    <div class="small">KLIKNIJ, ABY EDYTOWAĆ</div>
+                    <div class="small">ZWYCIĘSTWA: <span data-wins>0</span></div>
                 </div>
             </button>
 
-            <a
-                href="aleja.html"
-                class="trophy-road-button"
-            >
-                <div class="trophy-road-icon">
-                    🏆
-                </div>
-
-                <div class="trophy-road-content">
-
-                    <div class="trophy-road-title">
-                        ALEJA PUCHARÓW
-                    </div>
-
-                    <div class="trophy-road-total">
-                        🏆
-                        <span id="roadTotalTrophies">
-                            0
-                        </span>
-                    </div>
-
-                </div>
+            <a href="aleja.html" class="road-button">
+                <span style="font-size:34px">🏆</span>
+                <span>ALEJA PUCHARÓW<br>🏆 <span id="roadTotalTrophies">0</span></span>
             </a>
-
         </div>
 
         <div class="currencies">
-
-            <div class="currency">
-                🪙 <span data-coins>0</span>
-            </div>
-
-            <div class="currency">
-                🎟️ <span data-tickets>0</span>
-            </div>
-
-            <button
-                class="admin-button"
-                onclick="openAdmin()"
-                title="Panel administratora"
-            >
-                ☰
-            </button>
-
+            <div class="currency">🪙 <span data-coins>0</span></div>
+            <div class="currency">🎟️ <span data-tickets>0</span></div>
+            <button class="admin-button" onclick="openAdmin()">☰</button>
         </div>
-
     </header>
 
     <div class="rank">
-
-        <div class="rank-box">
-            RANGA 1
-        </div>
-
-        <div class="rank-box">
-            🏆
-            <span id="totalTrophies">
-                0
-            </span>
-        </div>
-
-        <div class="rank-box">
-            ZWYCIĘSTWA:
-            <span data-wins>0</span>
-        </div>
-
+        <div class="rank-box">RANGA 1</div>
+        <div class="rank-box">🏆 <span id="totalTrophies">0</span></div>
+        <div class="rank-box">ZWYCIĘSTWA: <span data-wins>0</span></div>
     </div>
 
     <div class="side left">
-
-        <a href="sklep.html">
-            🛒<br>SKLEP
-        </a>
-
-        <a href="postacie.html">
-            🧙<br>POSTACIE
-        </a>
-
-        <button onclick="dailyReward()">
-            🎁<br>NAGRODY
-        </button>
-
-        <button>
-            📜<br>WIEŚCI
-        </button>
-
+        <a href="sklep.html">🛒<br>SKLEP</a>
+        <a href="postacie.html">🧙<br>POSTACIE</a>
+        <button onclick="dailyReward()">🎁<br>NAGRODY</button>
+        <button onclick="openNews()">📜<br>WIEŚCI</button>
     </div>
 
     <div class="side right">
-
-        <button>
-            🤝<br>ZNAJOMI
-        </button>
-
-        <button>
-            🛡️<br>KLAN
-        </button>
-
-        <button>
-            💬<br>CZAT
-        </button>
-
+        <button onclick="openClubs()">🛡️<br>KLUBY</button>
+        <button onclick="alert('Znajomi zostaną dodani później.')">🤝<br>ZNAJOMI</button>
+        <button onclick="alert('Czat zostanie dodany później.')">💬<br>CZAT</button>
     </div>
 
     <main class="hero-area">
-
-        <div class="trophy-rank-row">
-
-            <div
-                id="heroTierBadge"
-                class="hero-tier-badge tier-color-1"
-            >
-                <span class="tier-word">
-                    TIER
-                </span>
-
-                <span id="heroTierNumber">
-                    1
-                </span>
-            </div>
-
-            <div class="trophy-progress">
-
-                <div
-                    id="trophyProgressFill"
-                    class="trophy-progress-fill empty"
-                ></div>
-
-                <div class="trophy-progress-content">
-
-                    <span>🏆</span>
-
-                    <span id="selectedHeroTrophies">
-                        0
-                    </span>
-
-                    <small id="trophyProgressSmall">
-                        0/20
-                    </small>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div
-            id="heroIcon"
-            class="hero-icon"
-        >
-            🧑‍🌾
-        </div>
-
-        <div
-            id="heroName"
-            class="hero-name"
-        >
-            Farmer
-        </div>
-
-        <div
-            id="heroPower"
-            class="hero-power"
-        >
-            Moc: Rzut widłami
-        </div>
-
+        <div id="heroIcon" class="hero-icon">🧑‍🌾</div>
+        <div id="heroName" class="hero-name">Farmer</div>
+        <div id="heroPower" class="hero-power">Moc: Rzut widłami</div>
     </main>
 
-    <section class="bottom-left">
-
-        <div class="pass">
-            🎫 KRÓLEWSKA DROGA<br>
-            45 / 100
-        </div>
-
+    <section class="bottom left"><div class="pass">🎫 KRÓLEWSKA DROGA<br>45 / 100</div></section>
+    <section class="bottom center">
+        <button class="event" onclick="openMap()">⚔️ BITWA KRÓLESTW<br><span id="mapName" style="color:#5cff73">Zielona Dolina</span><br><small>Kliknij, aby zmienić mapę</small></button>
     </section>
-
-    <section class="bottom-center">
-
-        <button
-            class="event"
-            onclick="openMap()"
-        >
-            ⚔️ BITWA KRÓLESTW<br>
-
-            <span
-                id="mapName"
-                style="color:#5cff73"
-            >
-                Zielona Dolina
-            </span>
-
-            <br>
-
-            <small>
-                Kliknij, aby zmienić mapę
-            </small>
-        </button>
-
+    <section class="bottom right">
+        <button class="play" onclick="location.href='walka.html'">GRAJ</button>
     </section>
-
-    <section class="bottom-right">
-
-        <button
-            class="play"
-            onclick="location.href='walka.html'"
-        >
-            GRAJ
-        </button>
-
-    </section>
-
 </div>
 
-<div
-    id="mapOverlay"
-    class="overlay"
->
+<div id="mapOverlay" class="overlay">
     <div class="window">
-
-        <button
-            class="close"
-            onclick="closeMap()"
-        >
-            ✖
-        </button>
-
+        <button class="close" onclick="closeOverlay('mapOverlay')">✖</button>
         <h2>WYBIERZ MAPĘ</h2>
-
         <div class="maps">
-
-            <button
-                class="map-button green-map"
-                onclick="selectMap('green')"
-            >
-                🌳<br>Zielona Dolina
-            </button>
-
-            <button
-                class="map-button red-map"
-                onclick="selectMap('red')"
-            >
-                🌋<br>Czerwona Twierdza
-            </button>
-
-            <button
-                class="map-button yellow-map"
-                onclick="selectMap('yellow')"
-            >
-                🏜️<br>Złota Pustynia
-            </button>
-
+            <button class="map-button green" onclick="selectMap('green')">🌳<br>Zielona Dolina</button>
+            <button class="map-button red" onclick="selectMap('red')">🌋<br>Czerwona Twierdza</button>
+            <button class="map-button yellow" onclick="selectMap('yellow')">🏜️<br>Złota Pustynia</button>
         </div>
-
     </div>
 </div>
 
-<div
-    id="profileOverlay"
-    class="overlay"
->
+<div id="profileOverlay" class="overlay">
     <div class="window">
-
-        <button
-            class="close"
-            onclick="closeProfile()"
-        >
-            ✖
-        </button>
-
+        <button class="close" onclick="closeOverlay('profileOverlay')">✖</button>
         <h2>TWÓJ PROFIL</h2>
-
-        <div
-            id="profilePreview"
-            class="profile-preview"
-        >
-            👑
-        </div>
-
+        <div id="profilePreview" class="profile-preview">👑</div>
         <div class="section">
-
-            <span class="section-title">
-                👤 Nazwa gracza
-            </span>
-
-            <input
-                id="profileName"
-                class="input"
-                maxlength="20"
-                placeholder="Wpisz nazwę"
-            >
-
+            <span class="section-title">👤 Nazwa gracza</span>
+            <input id="profileName" class="input" maxlength="20">
         </div>
-
         <div class="section">
-
-            <span class="section-title">
-                🖼️ Zdjęcie profilowe
-            </span>
-
-            <input
-                id="avatarFile"
-                class="input"
-                type="file"
-                accept="image/*"
-            >
-
-            <button
-                class="secondary"
-                onclick="removeAvatar()"
-            >
-                USUŃ ZDJĘCIE / UŻYJ KORONY
-            </button>
-
+            <span class="section-title">🖼️ Zdjęcie profilowe</span>
+            <input id="avatarFile" class="input" type="file" accept="image/*">
+            <button class="secondary" onclick="removeAvatar()">USUŃ ZDJĘCIE / UŻYJ KORONY</button>
         </div>
-
-        <button
-            class="action"
-            onclick="saveProfileData()"
-        >
-            ZAPISZ PROFIL
-        </button>
-
-        <div
-            id="profileMessage"
-            class="message"
-        ></div>
-
+        <button class="action" onclick="saveProfile()">ZAPISZ PROFIL</button>
+        <div id="profileMessage" class="message"></div>
     </div>
 </div>
 
-<div
-    id="adminOverlay"
-    class="overlay"
->
-    <div class="window">
+<div id="newsOverlay" class="overlay">
+    <div class="window wide">
+        <button class="close" onclick="closeOverlay('newsOverlay')">✖</button>
+        <h2>📜 WIEŚCI</h2>
+        <div id="newsList"></div>
 
-        <button
-            class="close"
-            onclick="closeAdmin()"
-        >
-            ✖
-        </button>
+        <div id="newsAdmin" class="section hidden">
+            <span class="section-title">DODAJ NOWĄ WIEŚĆ — TYLKO OSKAR</span>
+            <input id="newsUpdate" class="input" value="AKTUALIZACJA 1" placeholder="AKTUALIZACJA 1">
+            <input id="newsDate" class="input" type="date">
+            <input id="newsHeading" class="input" placeholder="Np. Nowe postacie!">
+            <textarea id="newsText" class="input" placeholder="Np. Do gry dodano aleję pucharów..."></textarea>
+            <button class="action" onclick="addNews()">OPUBLIKUJ WIEŚĆ</button>
+            <div id="newsMessage" class="message"></div>
+        </div>
+    </div>
+</div>
 
-        <h2>PANEL ADMINISTRATORA</h2>
+<div id="clubsOverlay" class="overlay">
+    <div class="window wide">
+        <button class="close" onclick="closeOverlay('clubsOverlay')">✖</button>
+        <h2>🛡️ KLUBY</h2>
 
-        <div class="section">
-
-            <span class="section-title">
-                👤 Nazwa odbiorcy
-            </span>
-
-            <input
-                id="adminTargetName"
-                class="input"
-                placeholder="Dokładna nazwa gracza"
-            >
-
+        <div class="tabs">
+            <button id="clubsTabList" class="tab active" onclick="showClubTab('list')">LISTA KLUBÓW</button>
+            <button id="clubsTabMine" class="tab" onclick="showClubTab('mine')">MÓJ KLUB</button>
+            <button id="clubsTabCreate" class="tab" onclick="showClubTab('create')">STWÓRZ KLUB</button>
         </div>
 
-        <div class="section">
-
-            <span class="section-title">
-                🪙 Monety
-            </span>
-
-            <input
-                id="adminCoins"
-                class="input"
-                type="number"
-                min="0"
-                step="1"
-                placeholder="0"
-            >
-
+        <div id="clubsListPanel">
+            <div id="clubsList"></div>
         </div>
 
-        <div class="section">
-
-            <span class="section-title">
-                🎟️ Bilety
-            </span>
-
-            <input
-                id="adminTickets"
-                class="input"
-                type="number"
-                min="0"
-                step="1"
-                placeholder="0"
-            >
-
+        <div id="myClubPanel" class="hidden">
+            <div id="myClubContent"></div>
         </div>
 
-        <div class="section">
-
-            <span class="section-title">
-                🧙 Odblokuj postacie
-            </span>
-
-            <div
-                id="adminHeroChecks"
-                class="hero-checks"
-            ></div>
-
-        </div>
-
-        <div class="section">
-
-            <span class="section-title">
-                🏆 Pucharki postaci
-            </span>
-
-            <select
-                id="adminTrophyHero"
-                class="input"
-            ></select>
-
-            <select
-                id="adminTrophyMode"
-                class="input"
-            >
-                <option value="add">
-                    Dodaj lub odejmij
-                </option>
-
-                <option value="set">
-                    Ustaw dokładną liczbę
-                </option>
-            </select>
-
-            <input
-                id="adminTrophyAmount"
-                class="input"
-                type="number"
-                step="1"
-                placeholder="np. 100 albo -20"
-            >
-
-            <div class="help">
-                Liczba pucharków nigdy nie spadnie poniżej 0.
+        <div id="createClubPanel" class="hidden">
+            <div class="section">
+                <span class="section-title">Nazwa klubu</span>
+                <input id="clubName" class="input" maxlength="24" placeholder="Np. Królewscy Wojownicy">
+                <span class="section-title" style="margin-top:12px">Opis</span>
+                <textarea id="clubDescription" class="input" maxlength="200" placeholder="Napisz coś o klubie..."></textarea>
+                <span class="section-title" style="margin-top:12px">Minimalna liczba pucharków</span>
+                <input id="clubRequiredTrophies" class="input" type="number" min="0" value="0">
+                <button class="action" onclick="createClub()">STWÓRZ KLUB</button>
+                <div id="clubMessage" class="message"></div>
             </div>
-
         </div>
-
-        <button
-            class="action"
-            onclick="adminConfirm()"
-        >
-            POTWIERDŹ I DODAJ WSZYSTKO
-        </button>
-
-        <div
-            id="adminMessage"
-            class="message"
-        ></div>
-
     </div>
 </div>
 
-<div
-    id="trophyAnimationLayer"
-    class="trophy-animation-layer"
-></div>
+<div id="adminOverlay" class="overlay">
+    <div class="window">
+        <button class="close" onclick="closeOverlay('adminOverlay')">✖</button>
+        <h2>PANEL ADMINISTRATORA</h2>
+        <div id="adminLocked" class="admin-note">Panel działa tylko, gdy nazwa profilu to dokładnie „Oskar”.</div>
+        <div id="adminContent" class="hidden">
+            <div class="section">
+                <span class="section-title">🪙 Dodaj monety</span>
+                <input id="adminCoins" class="input" type="number" min="0" value="0">
+            </div>
+            <div class="section">
+                <span class="section-title">🎟️ Dodaj bilety</span>
+                <input id="adminTickets" class="input" type="number" min="0" value="0">
+            </div>
+            <button class="action" onclick="adminGive()">DODAJ ZASOBY</button>
+            <div id="adminMessage" class="message"></div>
+        </div>
+    </div>
+</div>
 
 <script src="dane.js"></script>
 <script src="common.js"></script>
@@ -1778,1621 +313,283 @@
 <script>
 "use strict";
 
-const ACCOUNTS_KEY =
-    "medievalArenaAccounts_v1";
+const PROFILE_KEY="medievalArenaProfile_v3";
+const CLUBS_KEY="medievalArenaClubs_v1";
+const NEWS_KEY="medievalArenaNews_v1";
+const PLAYER_CLUB_KEY="medievalArenaPlayerClub_v1";
+const MAPS={green:"Zielona Dolina",red:"Czerwona Twierdza",yellow:"Złota Pustynia"};
 
-const CURRENT_ACCOUNT_KEY =
-    "medievalArenaCurrentAccount_v1";
+const ADJECTIVES=["Light","Curious","Tall","Glorious","Brave","Silent","Golden","Swift","Royal","Mystic","Happy","Clever","Wild","Tiny","Mighty","Frozen","Burning","Lucky"];
+const NOUNS=["Sword","Leg","Deer","Paper","Knight","Wolf","Shield","Dragon","Crown","Arrow","Castle","Horse","Raven","Goblin","Stone","Hammer","Spirit","Wizard"];
 
-const ADMIN_FORM_KEY =
-    "medievalArenaLastAdminForm_v1";
+let pendingAvatar="";
 
-const MAPS = {
-    green: "Zielona Dolina",
-    red: "Czerwona Twierdza",
-    yellow: "Złota Pustynia"
-};
-
-let pendingAvatar = "";
-
-function byId(id) {
-    return document.getElementById(id);
+function byId(id){return document.getElementById(id)}
+function readJson(key,fallback){
+    try{return JSON.parse(localStorage.getItem(key))??fallback}catch{return fallback}
 }
-
-function safeParse(value, fallback) {
-    try {
-        return value
-            ? JSON.parse(value)
-            : fallback;
-    } catch {
-        return fallback;
+function saveJson(key,value){localStorage.setItem(key,JSON.stringify(value))}
+function randomItem(a){return a[Math.floor(Math.random()*a.length)]}
+function randomName(){return randomItem(ADJECTIVES)+" "+randomItem(NOUNS)}
+function getProfile(){
+    let profile=readJson(PROFILE_KEY,null);
+    if(!profile){
+        profile={name:randomName(),avatar:"",playerId:crypto.randomUUID?crypto.randomUUID():"p-"+Date.now()+"-"+Math.random()};
+        saveJson(PROFILE_KEY,profile)
     }
+    return profile
+}
+function saveProfileObject(p){saveJson(PROFILE_KEY,p)}
+function isOskar(){return getProfile().name==="Oskar"}
+function escapeHtml(text){
+    return String(text??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")
+}
+function closeOverlay(id){byId(id).classList.remove("visible")}
+function openOverlay(id){byId(id).classList.add("visible")}
+function renderAvatar(el,avatar){
+    el.innerHTML="";
+    if(avatar){const img=document.createElement("img");img.src=avatar;el.appendChild(img)}
+    else el.textContent="👑"
+}
+function totalTrophies(){
+    const state=getState();
+    return Object.values(state.heroTrophies||{}).reduce((s,n)=>s+Math.max(0,Number(n)||0),0)
+}
+function renderLobby(){
+    const state=getState();
+    const hero=getHero(state.selected)||BOHATEROWIE[0];
+    const profile=getProfile();
+    byId("heroIcon").textContent=hero.ikona;
+    byId("heroName").textContent=hero.nazwa;
+    byId("heroPower").textContent="Moc: "+hero.moc;
+    byId("topName").textContent=profile.name;
+    renderAvatar(byId("topAvatar"),profile.avatar);
+    const total=totalTrophies();
+    byId("totalTrophies").textContent=total;
+    byId("roadTotalTrophies").textContent=total;
+    if(typeof updateTopbar==="function")updateTopbar()
+}
+function dailyReward(){
+    const state=getState();
+    const today=new Date().toDateString();
+    if(state.lastReward===today){alert("Dzisiejsza nagroda została już odebrana.");return}
+    state.lastReward=today;
+    state.tickets=(Number(state.tickets)||0)+3;
+    state.coins=(Number(state.coins)||0)+50;
+    saveState(state);renderLobby();alert("Dostajesz 3 bilety i 50 monet!")
+}
+function openMap(){openOverlay("mapOverlay")}
+function selectMap(id){
+    localStorage.setItem("selectedMap",MAPS[id]?id:"green");
+    byId("mapName").textContent=MAPS[id]||MAPS.green;
+    closeOverlay("mapOverlay")
+}
+function loadMap(){
+    const id=localStorage.getItem("selectedMap")||"green";
+    byId("mapName").textContent=MAPS[id]||MAPS.green
 }
 
-function normalizeName(name) {
-    return String(name || "")
-        .trim()
-        .replace(/\s+/g, " ")
-        .toLowerCase();
+/* PROFIL */
+function openProfile(){
+    const p=getProfile();
+    pendingAvatar=p.avatar||"";
+    byId("profileName").value=p.name;
+    renderAvatar(byId("profilePreview"),pendingAvatar);
+    byId("profileMessage").textContent="";
+    openOverlay("profileOverlay")
+}
+function removeAvatar(){pendingAvatar="";renderAvatar(byId("profilePreview"),"")}
+byId("avatarFile").addEventListener("change",e=>{
+    const file=e.target.files[0];if(!file)return;
+    if(file.size>800000){byId("profileMessage").textContent="Zdjęcie jest za duże. Maksymalnie 800 KB.";return}
+    const reader=new FileReader();
+    reader.onload=()=>{pendingAvatar=reader.result;renderAvatar(byId("profilePreview"),pendingAvatar)};
+    reader.readAsDataURL(file)
+});
+function saveProfile(){
+    const name=byId("profileName").value.trim().replace(/\s+/g," ");
+    if(name.length<3||name.length>20){byId("profileMessage").textContent="Nazwa musi mieć od 3 do 20 znaków.";return}
+    const p=getProfile();p.name=name;p.avatar=pendingAvatar;saveProfileObject(p);
+    renderLobby();byId("profileMessage").textContent="Profil zapisany.";
+    setTimeout(()=>closeOverlay("profileOverlay"),450)
 }
 
-function copyState(state) {
-    return {
-        tickets:
-            Number(state.tickets) || 0,
+/* WIEŚCI */
+function defaultNews(){
+    return [{
+        id:"default-1",
+        update:"AKTUALIZACJA 1",
+        date:"05/08/2026",
+        heading:"Nowe postacie!",
+        text:"Do gry dodano aleję pucharów...",
+        author:"Oskar"
+    }]
+}
+function getNews(){
+    const news=readJson(NEWS_KEY,null);
+    if(Array.isArray(news))return news;
+    saveJson(NEWS_KEY,defaultNews());return defaultNews()
+}
+function openNews(){
+    renderNews();
+    byId("newsAdmin").classList.toggle("hidden",!isOskar());
+    byId("newsDate").value=new Date().toISOString().slice(0,10);
+    openOverlay("newsOverlay")
+}
+function renderNews(){
+    const list=byId("newsList");
+    const news=getNews();
+    list.innerHTML=news.map((n,index)=>`
+        <article class="news-card">
+            <h3>${escapeHtml(n.update)} - ${escapeHtml(n.date)}</h3>
+            <h4>${escapeHtml(n.heading)}</h4>
+            <p>${escapeHtml(n.text)}</p>
+            ${isOskar()?`<button class="danger" onclick="deleteNews(${index})">USUŃ TEN WPIS</button>`:""}
+        </article>
+    `).join("")
+}
+function addNews(){
+    if(!isOskar()){alert("Tylko Oskar może dodawać wieści.");return}
+    const update=byId("newsUpdate").value.trim();
+    const dateValue=byId("newsDate").value;
+    const heading=byId("newsHeading").value.trim();
+    const text=byId("newsText").value.trim();
+    if(!update||!dateValue||!heading||!text){byId("newsMessage").textContent="Uzupełnij wszystkie pola.";return}
+    const [y,m,d]=dateValue.split("-");
+    const news=getNews();
+    news.unshift({id:"n-"+Date.now(),update,date:`${d}/${m}/${y}`,heading,text,author:"Oskar"});
+    saveJson(NEWS_KEY,news);
+    byId("newsHeading").value="";byId("newsText").value="";
+    byId("newsMessage").textContent="Wieść opublikowana.";renderNews()
+}
+function deleteNews(index){
+    if(!isOskar())return;
+    const news=getNews();news.splice(index,1);saveJson(NEWS_KEY,news);renderNews()
+}
 
-        coins:
-            Number(state.coins) || 0,
-
-        selected:
-            state.selected || "farmer",
-
-        unlocked:
-            Array.isArray(state.unlocked)
-                ? [...new Set(state.unlocked)]
-                : ["farmer"],
-
-        wins:
-            Number(state.wins) || 0,
-
-        heroTrophies:
-            state.heroTrophies &&
-            typeof state.heroTrophies === "object"
-                ? {...state.heroTrophies}
-                : {},
-
-        lastReward:
-            state.lastReward || null
+/* KLUBY */
+function getClubs(){return readJson(CLUBS_KEY,[])}
+function saveClubs(clubs){saveJson(CLUBS_KEY,clubs)}
+function getMyClubId(){return localStorage.getItem(PLAYER_CLUB_KEY)||""}
+function setMyClubId(id){id?localStorage.setItem(PLAYER_CLUB_KEY,id):localStorage.removeItem(PLAYER_CLUB_KEY)}
+function currentMember(){
+    const p=getProfile();
+    return {id:p.playerId,name:p.name,trophies:totalTrophies(),joinedAt:Date.now()}
+}
+function openClubs(){showClubTab("list");renderClubs();openOverlay("clubsOverlay")}
+function showClubTab(tab){
+    ["list","mine","create"].forEach(name=>{
+        byId("clubsTab"+name.charAt(0).toUpperCase()+name.slice(1)).classList.toggle("active",name===tab)
+    });
+    byId("clubsListPanel").classList.toggle("hidden",tab!=="list");
+    byId("myClubPanel").classList.toggle("hidden",tab!=="mine");
+    byId("createClubPanel").classList.toggle("hidden",tab!=="create");
+    if(tab==="list")renderClubs();
+    if(tab==="mine")renderMyClub()
+}
+function renderClubs(){
+    const clubs=getClubs();
+    const myId=getMyClubId();
+    byId("clubsList").innerHTML=clubs.length?clubs.map(club=>`
+        <div class="club-card">
+            <div class="club-info">
+                <div class="club-name">${escapeHtml(club.name)}</div>
+                <div class="club-meta">👑 ${escapeHtml(club.ownerName)} • 👥 ${club.members.length}/30 • 🏆 Wymagane: ${club.requiredTrophies}</div>
+                <div class="club-desc">${escapeHtml(club.description||"Brak opisu.")}</div>
+            </div>
+            <button class="club-button" onclick="joinClub('${club.id}')" ${myId?"disabled":""}>
+                ${myId===club.id?"TWÓJ KLUB":myId?"JUŻ JESTEŚ W KLUBIE":"DOŁĄCZ"}
+            </button>
+        </div>
+    `).join(""):`<div class="section">Nie ma jeszcze żadnego klubu. Stwórz pierwszy!</div>`
+}
+function createClub(){
+    if(getMyClubId()){byId("clubMessage").textContent="Najpierw opuść obecny klub.";return}
+    const name=byId("clubName").value.trim();
+    const description=byId("clubDescription").value.trim();
+    const required=Math.max(0,Math.floor(Number(byId("clubRequiredTrophies").value)||0));
+    if(name.length<3||name.length>24){byId("clubMessage").textContent="Nazwa musi mieć od 3 do 24 znaków.";return}
+    const clubs=getClubs();
+    if(clubs.some(c=>c.name.toLowerCase()===name.toLowerCase())){byId("clubMessage").textContent="Taki klub już istnieje.";return}
+    const p=getProfile();
+    const club={
+        id:"club-"+Date.now()+"-"+Math.random().toString(36).slice(2,7),
+        name,description,requiredTrophies:required,
+        ownerId:p.playerId,ownerName:p.name,
+        createdAt:Date.now(),members:[currentMember()]
     };
+    clubs.push(club);saveClubs(clubs);setMyClubId(club.id);
+    byId("clubName").value="";byId("clubDescription").value="";
+    showClubTab("mine")
+}
+function joinClub(id){
+    if(getMyClubId()){alert("Najpierw opuść obecny klub.");return}
+    const clubs=getClubs();const club=clubs.find(c=>c.id===id);
+    if(!club)return;
+    if(totalTrophies()<club.requiredTrophies){alert("Masz za mało pucharków.");return}
+    if(club.members.length>=30){alert("Klub jest pełny.");return}
+    const member=currentMember();
+    if(!club.members.some(m=>m.id===member.id))club.members.push(member);
+    saveClubs(clubs);setMyClubId(id);renderClubs();alert("Dołączono do klubu "+club.name+"!")
+}
+function leaveClub(){
+    const id=getMyClubId();if(!id)return;
+    const clubs=getClubs();const club=clubs.find(c=>c.id===id);const p=getProfile();
+    if(!club){setMyClubId("");renderMyClub();return}
+    if(club.ownerId===p.playerId&&club.members.length>1){alert("Właściciel nie może odejść, dopóki są inni członkowie.");return}
+    if(club.ownerId===p.playerId){
+        saveClubs(clubs.filter(c=>c.id!==id))
+    }else{
+        club.members=club.members.filter(m=>m.id!==p.playerId);saveClubs(clubs)
+    }
+    setMyClubId("");renderMyClub()
+}
+function renderMyClub(){
+    const id=getMyClubId();const club=getClubs().find(c=>c.id===id);
+    if(!club){setMyClubId("");byId("myClubContent").innerHTML=`<div class="section">Nie należysz do żadnego klubu.</div>`;return}
+    const p=getProfile();
+    byId("myClubContent").innerHTML=`
+        <div class="club-card" style="display:block">
+            <div class="club-name">${escapeHtml(club.name)}</div>
+            <div class="club-meta">👑 ${escapeHtml(club.ownerName)} • 👥 ${club.members.length}/30 • 🏆 Wymagane: ${club.requiredTrophies}</div>
+            <div class="club-desc">${escapeHtml(club.description||"Brak opisu.")}</div>
+            <div class="members">
+                ${club.members.map(m=>`<span class="member">${m.id===club.ownerId?"👑 ":""}${escapeHtml(m.name)} • 🏆 ${m.trophies}</span>`).join("")}
+            </div>
+            <button class="danger" onclick="leaveClub()">${club.ownerId===p.playerId?"USUŃ KLUB":"OPUŚĆ KLUB"}</button>
+        </div>
+    `
 }
 
-function getAccounts() {
-    return safeParse(
-        localStorage.getItem(ACCOUNTS_KEY),
-        {}
-    );
+/* PANEL */
+function openAdmin(){
+    const admin=isOskar();
+    byId("adminLocked").classList.toggle("hidden",admin);
+    byId("adminContent").classList.toggle("hidden",!admin);
+    openOverlay("adminOverlay")
+}
+function adminGive(){
+    if(!isOskar()){alert("Tylko Oskar ma dostęp.");return}
+    const coins=Math.max(0,Math.floor(Number(byId("adminCoins").value)||0));
+    const tickets=Math.max(0,Math.floor(Number(byId("adminTickets").value)||0));
+    const state=getState();
+    state.coins=(Number(state.coins)||0)+coins;
+    state.tickets=(Number(state.tickets)||0)+tickets;
+    saveState(state);renderLobby();
+    byId("adminMessage").textContent=`Dodano ${coins} monet i ${tickets} biletów.`
 }
 
-function saveAccounts(accounts) {
-    localStorage.setItem(
-        ACCOUNTS_KEY,
-        JSON.stringify(accounts)
-    );
-}
-
-function ensureCurrentAccount() {
-    const accounts =
-        getAccounts();
-
-    let key =
-        localStorage.getItem(
-            CURRENT_ACCOUNT_KEY
-        );
-
-    if (
-        key &&
-        accounts[key]
-    ) {
-        return key;
-    }
-
-    let name =
-        "MedievalPlayer";
-
-    let number =
-        2;
-
-    while (
-        accounts[
-            normalizeName(name)
-        ]
-    ) {
-        name =
-            "MedievalPlayer" +
-            number;
-
-        number++;
-    }
-
-    key =
-        normalizeName(name);
-
-    accounts[key] = {
-        name: name,
-        avatar: "",
-        state:
-            copyState(
-                getState()
-            )
-    };
-
-    saveAccounts(accounts);
-
-    localStorage.setItem(
-        CURRENT_ACCOUNT_KEY,
-        key
-    );
-
-    return key;
-}
-
-function syncCurrentStateToAccount() {
-    const key =
-        ensureCurrentAccount();
-
-    const accounts =
-        getAccounts();
-
-    accounts[key].state =
-        copyState(
-            getState()
-        );
-
-    saveAccounts(accounts);
-}
-
-function getTotalTrophies(state) {
-    return Object.values(
-        state.heroTrophies || {}
-    ).reduce(
-        function(total, amount) {
-            return (
-                total +
-                Math.max(
-                    0,
-                    Number(amount) || 0
-                )
-            );
-        },
-        0
-    );
-}
-
-function getTrophyTier(amount) {
-    const trophies =
-        Math.max(
-            0,
-            Math.floor(
-                Number(amount) || 0
-            )
-        );
-
-    const tier =
-        trophies < 20
-            ? 1
-            : Math.floor(
-                trophies / 10
-            );
-
-    let colorTier;
-
-    if (tier < 5) {
-        colorTier = 1;
-    } else if (tier < 10) {
-        colorTier = 5;
-    } else if (tier < 15) {
-        colorTier = 10;
-    } else if (tier < 20) {
-        colorTier = 15;
-    } else if (tier < 25) {
-        colorTier = 20;
-    } else if (tier < 30) {
-        colorTier = 25;
-    } else if (tier < 35) {
-        colorTier = 30;
-    } else if (tier < 40) {
-        colorTier = 35;
-    } else if (tier < 45) {
-        colorTier = 40;
-    } else if (tier < 50) {
-        colorTier = 45;
-    } else if (tier < 100) {
-        colorTier = 50;
-    } else {
-        return {
-            tier: tier,
-            className:
-                "tier-color-max"
-        };
-    }
-
-    return {
-        tier: tier,
-        className:
-            "tier-color-" +
-            colorTier
-    };
-}
-
-function getTierProgress(amount) {
-    const trophies =
-        Math.max(
-            0,
-            Math.floor(
-                Number(amount) || 0
-            )
-        );
-
-    if (trophies < 20) {
-        return {
-            current:
-                trophies,
-
-            required:
-                20,
-
-            percent:
-                trophies /
-                20 *
-                100
-        };
-    }
-
-    const current =
-        trophies % 10;
-
-    return {
-        current:
-            current,
-
-        required:
-            10,
-
-        percent:
-            current /
-            10 *
-            100
-    };
-}
-
-function renderAvatar(element, avatar) {
-    if (!element) {
-        return;
-    }
-
-    element.innerHTML =
-        "";
-
-    if (avatar) {
-        const image =
-            document.createElement(
-                "img"
-            );
-
-        image.src =
-            avatar;
-
-        element.appendChild(
-            image
-        );
-    } else {
-        element.textContent =
-            "👑";
-    }
-}
-
-function updateTrophyCounters(total) {
-    const safeTotal =
-        Math.max(
-            0,
-            Math.floor(
-                Number(total) || 0
-            )
-        );
-
-    if (
-        byId("totalTrophies")
-    ) {
-        byId(
-            "totalTrophies"
-        ).textContent =
-            safeTotal;
-    }
-
-    if (
-        byId(
-            "roadTotalTrophies"
-        )
-    ) {
-        byId(
-            "roadTotalTrophies"
-        ).textContent =
-            safeTotal;
-    }
-}
-
-function renderLobby() {
-    const state =
-        getState();
-
-    if (
-        !state.heroTrophies ||
-        typeof state.heroTrophies !==
-        "object"
-    ) {
-        state.heroTrophies =
-            {};
-
-        saveState(
-            state
-        );
-    }
-
-    const hero =
-        getHero(
-            state.selected
-        ) ||
-        BOHATEROWIE[0];
-
-    const account =
-        getAccounts()[
-            ensureCurrentAccount()
-        ];
-
-    const trophies =
-        Math.max(
-            0,
-            Number(
-                state.heroTrophies[
-                    state.selected
-                ]
-            ) || 0
-        );
-
-    const tier =
-        getTrophyTier(
-            trophies
-        );
-
-    const progress =
-        getTierProgress(
-            trophies
-        );
-
-    byId(
-        "heroIcon"
-    ).textContent =
-        hero.ikona;
-
-    byId(
-        "heroName"
-    ).textContent =
-        hero.nazwa;
-
-    byId(
-        "heroPower"
-    ).textContent =
-        "Moc: " +
-        hero.moc;
-
-    byId(
-        "heroTierNumber"
-    ).textContent =
-        tier.tier;
-
-    byId(
-        "heroTierBadge"
-    ).className =
-        "hero-tier-badge " +
-        tier.className;
-
-    byId(
-        "selectedHeroTrophies"
-    ).textContent =
-        trophies;
-
-    byId(
-        "trophyProgressFill"
-    ).style.width =
-        progress.percent +
-        "%";
-
-    byId(
-        "trophyProgressFill"
-    ).classList.toggle(
-        "empty",
-        progress.current === 0
-    );
-
-    byId(
-        "trophyProgressSmall"
-    ).textContent =
-        progress.current +
-        "/" +
-        progress.required;
-
-    updateTrophyCounters(
-        getTotalTrophies(
-            state
-        )
-    );
-
-    byId(
-        "topName"
-    ).textContent =
-        account.name;
-
-    renderAvatar(
-        byId(
-            "topAvatar"
-        ),
-        account.avatar
-    );
-
-    updateTopbar();
-    syncCurrentStateToAccount();
-}
-
-function dailyReward() {
-    const state =
-        getState();
-
-    const today =
-        new Date()
-            .toDateString();
-
-    if (
-        state.lastReward ===
-        today
-    ) {
-        alert(
-            "Dzisiejsza nagroda została już odebrana."
-        );
-
-        return;
-    }
-
-    state.lastReward =
-        today;
-
-    state.tickets =
-        (
-            Number(
-                state.tickets
-            ) || 0
-        ) + 3;
-
-    state.coins =
-        (
-            Number(
-                state.coins
-            ) || 0
-        ) + 50;
-
-    saveState(
-        state
-    );
-
-    syncCurrentStateToAccount();
-    renderLobby();
-
-    alert(
-        "Dostajesz 3 bilety i 50 monet!"
-    );
-}
-
-function openMap() {
-    byId(
-        "mapOverlay"
-    ).classList.add(
-        "visible"
-    );
-}
-
-function closeMap() {
-    byId(
-        "mapOverlay"
-    ).classList.remove(
-        "visible"
-    );
-}
-
-function selectMap(mapId) {
-    const selected =
-        MAPS[mapId]
-            ? mapId
-            : "green";
-
-    localStorage.setItem(
-        "selectedMap",
-        selected
-    );
-
-    byId(
-        "mapName"
-    ).textContent =
-        MAPS[selected];
-
-    closeMap();
-}
-
-function loadMap() {
-    const stored =
-        localStorage.getItem(
-            "selectedMap"
-        );
-
-    const selected =
-        MAPS[stored]
-            ? stored
-            : "green";
-
-    byId(
-        "mapName"
-    ).textContent =
-        MAPS[selected];
-}
-
-function openProfile() {
-    syncCurrentStateToAccount();
-
-    const account =
-        getAccounts()[
-            ensureCurrentAccount()
-        ];
-
-    pendingAvatar =
-        account.avatar ||
-        "";
-
-    byId(
-        "profileName"
-    ).value =
-        account.name;
-
-    byId(
-        "avatarFile"
-    ).value =
-        "";
-
-    renderAvatar(
-        byId(
-            "profilePreview"
-        ),
-        pendingAvatar
-    );
-
-    showProfileMessage(
-        ""
-    );
-
-    byId(
-        "profileOverlay"
-    ).classList.add(
-        "visible"
-    );
-}
-
-function closeProfile() {
-    byId(
-        "profileOverlay"
-    ).classList.remove(
-        "visible"
-    );
-}
-
-function removeAvatar() {
-    pendingAvatar =
-        "";
-
-    byId(
-        "avatarFile"
-    ).value =
-        "";
-
-    renderAvatar(
-        byId(
-            "profilePreview"
-        ),
-        ""
-    );
-}
-
-byId(
-    "avatarFile"
-).addEventListener(
-    "change",
-    function(event) {
-        const file =
-            event.target.files[0];
-
-        if (!file) {
-            return;
-        }
-
-        const reader =
-            new FileReader();
-
-        reader.onload =
-            function() {
-                pendingAvatar =
-                    reader.result;
-
-                renderAvatar(
-                    byId(
-                        "profilePreview"
-                    ),
-                    pendingAvatar
-                );
-            };
-
-        reader.readAsDataURL(
-            file
-        );
-    }
-);
-
-function saveProfileData() {
-    const name =
-        byId(
-            "profileName"
-        )
-        .value
-        .trim()
-        .replace(
-            /\s+/g,
-            " "
-        );
-
-    if (
-        name.length < 3 ||
-        name.length > 20 ||
-        !/^[\p{L}\p{N}_ -]+$/u.test(
-            name
-        )
-    ) {
-        showProfileMessage(
-            "Niepoprawna nazwa.",
-            true
-        );
-
-        return;
-    }
-
-    syncCurrentStateToAccount();
-
-    const accounts =
-        getAccounts();
-
-    const oldKey =
-        ensureCurrentAccount();
-
-    const newKey =
-        normalizeName(
-            name
-        );
-
-    if (
-        newKey !== oldKey &&
-        accounts[newKey]
-    ) {
-        showProfileMessage(
-            "Ta nazwa jest już zajęta.",
-            true
-        );
-
-        return;
-    }
-
-    const account = {
-        ...accounts[oldKey],
-
-        name:
-            name,
-
-        avatar:
-            pendingAvatar,
-
-        state:
-            copyState(
-                getState()
-            )
-    };
-
-    if (
-        newKey !== oldKey
-    ) {
-        delete accounts[
-            oldKey
-        ];
-    }
-
-    accounts[newKey] =
-        account;
-
-    saveAccounts(
-        accounts
-    );
-
-    localStorage.setItem(
-        CURRENT_ACCOUNT_KEY,
-        newKey
-    );
-
-    renderLobby();
-
-    showProfileMessage(
-        "Profil został zapisany."
-    );
-
-    setTimeout(
-        closeProfile,
-        500
-    );
-}
-
-function showProfileMessage(
-    text,
-    error = false
-) {
-    const element =
-        byId(
-            "profileMessage"
-        );
-
-    element.textContent =
-        text;
-
-    element.classList.toggle(
-        "error",
-        error
-    );
-}
-
-function loadAdminHeroes() {
-    const checks =
-        byId(
-            "adminHeroChecks"
-        );
-
-    const select =
-        byId(
-            "adminTrophyHero"
-        );
-
-    checks.innerHTML =
-        "";
-
-    select.innerHTML =
-        "";
-
-    BOHATEROWIE.forEach(
-        function(hero) {
-            const label =
-                document.createElement(
-                    "label"
-                );
-
-            label.className =
-                "hero-check";
-
-            const checkbox =
-                document.createElement(
-                    "input"
-                );
-
-            checkbox.type =
-                "checkbox";
-
-            checkbox.value =
-                hero.id;
-
-            const text =
-                document.createElement(
-                    "span"
-                );
-
-            text.textContent =
-                hero.ikona +
-                " " +
-                hero.nazwa;
-
-            label.appendChild(
-                checkbox
-            );
-
-            label.appendChild(
-                text
-            );
-
-            checks.appendChild(
-                label
-            );
-
-            const option =
-                document.createElement(
-                    "option"
-                );
-
-            option.value =
-                hero.id;
-
-            option.textContent =
-                hero.ikona +
-                " " +
-                hero.nazwa;
-
-            select.appendChild(
-                option
-            );
-        }
-    );
-}
-
-function saveAdminForm() {
-    const selectedHeroes =
-        Array.from(
-            byId(
-                "adminHeroChecks"
-            ).querySelectorAll(
-                "input:checked"
-            )
-        ).map(
-            function(input) {
-                return input.value;
-            }
-        );
-
-    const data = {
-        targetName:
-            byId(
-                "adminTargetName"
-            ).value,
-
-        coins:
-            byId(
-                "adminCoins"
-            ).value,
-
-        tickets:
-            byId(
-                "adminTickets"
-            ).value,
-
-        trophyHero:
-            byId(
-                "adminTrophyHero"
-            ).value,
-
-        trophyMode:
-            byId(
-                "adminTrophyMode"
-            ).value,
-
-        trophyAmount:
-            byId(
-                "adminTrophyAmount"
-            ).value,
-
-        selectedHeroes:
-            selectedHeroes
-    };
-
-    localStorage.setItem(
-        ADMIN_FORM_KEY,
-        JSON.stringify(
-            data
-        )
-    );
-}
-
-function loadAdminForm() {
-    const saved =
-        safeParse(
-            localStorage.getItem(
-                ADMIN_FORM_KEY
-            ),
-            null
-        );
-
-    if (!saved) {
-        return false;
-    }
-
-    byId(
-        "adminTargetName"
-    ).value =
-        saved.targetName ||
-        "";
-
-    byId(
-        "adminCoins"
-    ).value =
-        saved.coins ||
-        "";
-
-    byId(
-        "adminTickets"
-    ).value =
-        saved.tickets ||
-        "";
-
-    byId(
-        "adminTrophyHero"
-    ).value =
-        saved.trophyHero ||
-        "farmer";
-
-    byId(
-        "adminTrophyMode"
-    ).value =
-        saved.trophyMode ===
-        "set"
-            ? "set"
-            : "add";
-
-    byId(
-        "adminTrophyAmount"
-    ).value =
-        saved.trophyAmount ||
-        "";
-
-    const selectedHeroes =
-        Array.isArray(
-            saved.selectedHeroes
-        )
-            ? saved.selectedHeroes
-            : [];
-
-    byId(
-        "adminHeroChecks"
-    )
-    .querySelectorAll(
-        "input"
-    )
-    .forEach(
-        function(input) {
-            input.checked =
-                selectedHeroes.includes(
-                    input.value
-                );
-        }
-    );
-
-    return true;
-}
-
-function openAdmin() {
-    syncCurrentStateToAccount();
-
-    loadAdminHeroes();
-
-    const loaded =
-        loadAdminForm();
-
-    if (!loaded) {
-        const account =
-            getAccounts()[
-                ensureCurrentAccount()
-            ];
-
-        byId(
-            "adminTargetName"
-        ).value =
-            account.name;
-    }
-
-    byId(
-        "adminTrophyMode"
-    ).value =
-        "add";
-
-    showAdminMessage(
-        ""
-    );
-
-    byId(
-        "adminOverlay"
-    ).classList.add(
-        "visible"
-    );
-}
-
-function closeAdmin() {
-    saveAdminForm();
-
-    byId(
-        "adminOverlay"
-    ).classList.remove(
-        "visible"
-    );
-}
-
-function readNonNegativeInteger(id) {
-    const raw =
-        byId(id)
-            .value
-            .trim();
-
-    if (
-        raw === ""
-    ) {
-        return 0;
-    }
-
-    const value =
-        Number(raw);
-
-    if (
-        !Number.isInteger(
-            value
-        ) ||
-        value < 0
-    ) {
-        return null;
-    }
-
-    return value;
-}
-
-function adminConfirm() {
-    const targetKey =
-        normalizeName(
-            byId(
-                "adminTargetName"
-            ).value
-        );
-
-    const coins =
-        readNonNegativeInteger(
-            "adminCoins"
-        );
-
-    const tickets =
-        readNonNegativeInteger(
-            "adminTickets"
-        );
-
-    const selectedHeroes =
-        Array.from(
-            byId(
-                "adminHeroChecks"
-            ).querySelectorAll(
-                "input:checked"
-            )
-        ).map(
-            function(input) {
-                return input.value;
-            }
-        );
-
-    const trophyHero =
-        byId(
-            "adminTrophyHero"
-        ).value;
-
-    const trophyMode =
-        byId(
-            "adminTrophyMode"
-        ).value;
-
-    const trophyRaw =
-        byId(
-            "adminTrophyAmount"
-        )
-        .value
-        .trim();
-
-    if (!targetKey) {
-        showAdminMessage(
-            "Podaj nazwę odbiorcy.",
-            true
-        );
-
-        return;
-    }
-
-    if (
-        coins === null ||
-        tickets === null
-    ) {
-        showAdminMessage(
-            "Monety i bilety muszą być liczbami całkowitymi od 0.",
-            true
-        );
-
-        return;
-    }
-
-    let trophyAmount =
-        0;
-
-    if (
-        trophyRaw !== ""
-    ) {
-        trophyAmount =
-            Number(
-                trophyRaw
-            );
-
-        if (
-            !Number.isInteger(
-                trophyAmount
-            )
-        ) {
-            showAdminMessage(
-                "Wpisz poprawną liczbę pucharków.",
-                true
-            );
-
-            return;
-        }
-    }
-
-    syncCurrentStateToAccount();
-
-    const accounts =
-        getAccounts();
-
-    if (
-        !accounts[
-            targetKey
-        ]
-    ) {
-        showAdminMessage(
-            "Nie znaleziono takiego gracza.",
-            true
-        );
-
-        return;
-    }
-
-    const state =
-        copyState(
-            accounts[
-                targetKey
-            ].state || {}
-        );
-
-    state.coins +=
-        coins;
-
-    state.tickets +=
-        tickets;
-
-    selectedHeroes.forEach(
-        function(heroId) {
-            if (
-                !state.unlocked.includes(
-                    heroId
-                )
-            ) {
-                state.unlocked.push(
-                    heroId
-                );
-            }
-        }
-    );
-
-    if (
-        !state.heroTrophies ||
-        typeof state.heroTrophies !==
-        "object"
-    ) {
-        state.heroTrophies =
-            {};
-    }
-
-    if (
-        trophyRaw !== ""
-    ) {
-        const current =
-            Math.max(
-                0,
-                Number(
-                    state.heroTrophies[
-                        trophyHero
-                    ]
-                ) || 0
-            );
-
-        if (
-            trophyMode ===
-            "add"
-        ) {
-            state.heroTrophies[
-                trophyHero
-            ] =
-                Math.max(
-                    0,
-                    current +
-                    trophyAmount
-                );
-        }
-
-        if (
-            trophyMode ===
-            "set"
-        ) {
-            state.heroTrophies[
-                trophyHero
-            ] =
-                Math.max(
-                    0,
-                    trophyAmount
-                );
-        }
-    }
-
-    accounts[
-        targetKey
-    ].state =
-        state;
-
-    saveAccounts(
-        accounts
-    );
-
-    if (
-        targetKey ===
-        ensureCurrentAccount()
-    ) {
-        saveState(
-            state
-        );
-
-        renderLobby();
-    }
-
-    saveAdminForm();
-
-    showAdminMessage(
-        "Zmiany zostały zapisane dla gracza „" +
-        accounts[targetKey].name +
-        "”."
-    );
-}
-
-function showAdminMessage(
-    text,
-    error = false
-) {
-    const element =
-        byId(
-            "adminMessage"
-        );
-
-    element.textContent =
-        text;
-
-    element.classList.toggle(
-        "error",
-        error
-    );
-}
-
-function showTrophyAnimation() {
-    const saved =
-        localStorage.getItem(
-            "pendingTrophyAnimation"
-        );
-
-    const state =
-        getState();
-
-    const finalTotal =
-        getTotalTrophies(
-            state
-        );
-
-    if (!saved) {
-        updateTrophyCounters(
-            finalTotal
-        );
-
-        return;
-    }
-
-    let result;
-
-    try {
-        result =
-            JSON.parse(
-                saved
-            );
-    } catch {
-        localStorage.removeItem(
-            "pendingTrophyAnimation"
-        );
-
-        updateTrophyCounters(
-            finalTotal
-        );
-
-        return;
-    }
-
-    localStorage.removeItem(
-        "pendingTrophyAnimation"
-    );
-
-    const change =
-        Number(
-            result.change
-        ) || 0;
-
-    const previousTotal =
-        Math.max(
-            0,
-            finalTotal -
-            change
-        );
-
-    updateTrophyCounters(
-        previousTotal
-    );
-
-    const layer =
-        byId(
-            "trophyAnimationLayer"
-        );
-
-    if (!layer) {
-        updateTrophyCounters(
-            finalTotal
-        );
-
-        return;
-    }
-
-    const popup =
-        document.createElement(
-            "div"
-        );
-
-    popup.className =
-        "trophy-change-popup";
-
-    if (
-        change < 0
-    ) {
-        popup.classList.add(
-            "negative"
-        );
-    }
-
-    popup.textContent =
-        "🏆 " +
-        (
-            change > 0
-                ? "+"
-                : ""
-        ) +
-        change;
-
-    layer.appendChild(
-        popup
-    );
-
-    const amount =
-        change > 0
-            ? Math.min(
-                  change,
-                  10
-              )
-            : 1;
-
-    for (
-        let index = 0;
-        index < amount;
-        index++
-    ) {
-        setTimeout(
-            function() {
-                const trophy =
-                    document.createElement(
-                        "div"
-                    );
-
-                trophy.className =
-                    "flying-trophy";
-
-                trophy.textContent =
-                    change >= 0
-                        ? "🏆"
-                        : "💔";
-
-                layer.appendChild(
-                    trophy
-                );
-
-                setTimeout(
-                    function() {
-                        trophy.remove();
-                    },
-                    1400
-                );
-            },
-            index * 65
-        );
-    }
-
-    const animationStart =
-        performance.now();
-
-    function animateNumber(time) {
-        const progress =
-            Math.min(
-                1,
-                (
-                    time -
-                    animationStart
-                ) /
-                1000
-            );
-
-        const eased =
-            1 -
-            Math.pow(
-                1 - progress,
-                3
-            );
-
-        const current =
-            Math.round(
-                previousTotal +
-                (
-                    finalTotal -
-                    previousTotal
-                ) *
-                eased
-            );
-
-        updateTrophyCounters(
-            current
-        );
-
-        if (
-            progress < 1
-        ) {
-            requestAnimationFrame(
-                animateNumber
-            );
-        } else {
-            updateTrophyCounters(
-                finalTotal
-            );
-
-            const counter =
-                byId(
-                    "roadTotalTrophies"
-                );
-
-            if (counter) {
-                counter.classList.add(
-                    "trophy-counter-bounce"
-                );
-
-                setTimeout(
-                    function() {
-                        counter
-                            .classList
-                            .remove(
-                                "trophy-counter-bounce"
-                            );
-                    },
-                    600
-                );
-            }
-        }
-    }
-
-    requestAnimationFrame(
-        animateNumber
-    );
-
-    setTimeout(
-        function() {
-            popup.remove();
-        },
-        1300
-    );
-}
-
-[
-    "adminTargetName",
-    "adminCoins",
-    "adminTickets",
-    "adminTrophyHero",
-    "adminTrophyMode",
-    "adminTrophyAmount"
-].forEach(
-    function(id) {
-        byId(id)
-            .addEventListener(
-                "input",
-                saveAdminForm
-            );
-
-        byId(id)
-            .addEventListener(
-                "change",
-                saveAdminForm
-            );
-    }
-);
-
-byId(
-    "adminHeroChecks"
-).addEventListener(
-    "change",
-    saveAdminForm
-);
-
-[
-    "mapOverlay",
-    "profileOverlay",
-    "adminOverlay"
-].forEach(
-    function(id) {
-        byId(id)
-            .addEventListener(
-                "click",
-                function(event) {
-                    if (
-                        event.target !==
-                        this
-                    ) {
-                        return;
-                    }
-
-                    if (
-                        id ===
-                        "adminOverlay"
-                    ) {
-                        closeAdmin();
-                    } else {
-                        this.classList.remove(
-                            "visible"
-                        );
-                    }
-                }
-            );
-    }
-);
-
-document.addEventListener(
-    "keydown",
-    function(event) {
-        if (
-            event.key ===
-            "Escape"
-        ) {
-            closeMap();
-            closeProfile();
-
-            if (
-                byId(
-                    "adminOverlay"
-                )
-                .classList
-                .contains(
-                    "visible"
-                )
-            ) {
-                closeAdmin();
-            }
-        }
-    }
-);
-
-window.addEventListener(
-    "beforeunload",
-    function() {
-        syncCurrentStateToAccount();
-        saveAdminForm();
-    }
-);
-
-ensureCurrentAccount();
+/* ZAMYKANIE */
+document.querySelectorAll(".overlay").forEach(overlay=>{
+    overlay.addEventListener("click",e=>{if(e.target===overlay)overlay.classList.remove("visible")})
+});
+document.addEventListener("keydown",e=>{
+    if(e.key==="Escape")document.querySelectorAll(".overlay.visible").forEach(o=>o.classList.remove("visible"))
+});
+
+getProfile();
 loadMap();
 renderLobby();
-
-setTimeout(
-    showTrophyAnimation,
-    300
-);
 </script>
-
 </body>
 </html>
