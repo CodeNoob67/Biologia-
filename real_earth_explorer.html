@@ -3,832 +3,504 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Real Earth Life 3D</title>
-
-<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.2.0/dist/maplibre-gl.css">
-
+<title>Airport Journey 3D</title>
 <style>
-html,body,#map{
-  margin:0;
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  font-family:Arial,sans-serif;
-  background:#000;
-}
-
-#start{
-  position:fixed;
-  inset:0;
-  z-index:100;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#fff;
-  text-align:center;
-  background:linear-gradient(#69c4ff,#10283f);
-}
-
-#startBox{
-  width:min(660px,calc(100% - 40px));
-  padding:28px;
-  box-sizing:border-box;
-  border:2px solid #fff;
-  border-radius:18px;
-  background:#000d;
-}
-
-button{
-  padding:12px 25px;
-  border:0;
-  border-radius:10px;
-  font-size:19px;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-.panel{
-  position:fixed;
-  z-index:20;
-  padding:12px 14px;
-  border-radius:12px;
-  color:#fff;
-  background:#000b;
-  line-height:1.55;
-  backdrop-filter:blur(5px);
-}
-
-#hud{
-  left:14px;
-  top:14px;
-  min-width:250px;
-}
-
-#help{
-  right:14px;
-  top:14px;
-}
-
-#notice{
-  left:50%;
-  bottom:22px;
-  transform:translateX(-50%);
-  max-width:720px;
-  text-align:center;
-  font-weight:bold;
-}
-
-#player{
-  position:relative;
-  width:38px;
-  height:64px;
-  transform-origin:50% 88%;
-  filter:drop-shadow(0 5px 4px #0009);
-}
-
-#player .head{
-  position:absolute;
-  left:10px;
-  top:0;
-  width:18px;
-  height:18px;
-  border-radius:50%;
-  background:#e1ae83;
-  border:2px solid #2d2019;
-}
-
-#player .hair{
-  position:absolute;
-  left:10px;
-  top:0;
-  width:18px;
-  height:9px;
-  border-radius:12px 12px 3px 3px;
-  background:#2d211d;
-}
-
-#player .body{
-  position:absolute;
-  left:7px;
-  top:19px;
-  width:24px;
-  height:27px;
-  border-radius:8px 8px 5px 5px;
-  background:#285fb5;
-  border:2px solid #142d58;
-}
-
-#player .shirt{
-  position:absolute;
-  left:10px;
-  top:24px;
-  width:18px;
-  height:15px;
-  background:#df493f;
-  border-radius:3px;
-}
-
-#player .arm{
-  position:absolute;
-  top:21px;
-  width:6px;
-  height:26px;
-  border-radius:5px;
-  background:#285fb5;
-}
-
-#player .arm.left{left:1px}
-#player .arm.right{right:1px}
-
-#player .leg{
-  position:absolute;
-  top:45px;
-  width:8px;
-  height:18px;
-  border-radius:4px;
-  background:#1e2735;
-}
-
-#player .leg.left{left:8px}
-#player .leg.right{right:8px}
-
-.car{
-  position:relative;
-  width:52px;
-  height:30px;
-  transform-origin:50% 50%;
-  filter:drop-shadow(0 5px 4px #0009);
-}
-
-.car-body{
-  position:absolute;
-  left:3px;
-  top:10px;
-  width:46px;
-  height:15px;
-  border-radius:7px;
-  background:var(--car-color);
-  border:2px solid #222;
-}
-
-.car-roof{
-  position:absolute;
-  left:14px;
-  top:3px;
-  width:26px;
-  height:13px;
-  border-radius:7px 7px 3px 3px;
-  background:#7fb8d8;
-  border:2px solid #222;
-}
-
-.car-wheel{
-  position:absolute;
-  top:22px;
-  width:9px;
-  height:9px;
-  border-radius:50%;
-  background:#111;
-}
-
-.car-wheel.left{left:8px}
-.car-wheel.right{right:8px}
-
-.airport{
-  width:30px;
-  height:30px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:24px;
-  border-radius:50%;
-  background:#fff;
-  border:3px solid #1c5aa6;
-  box-shadow:0 4px 6px #0008;
-}
-
-#dialogue{
-  position:fixed;
-  inset:0;
-  z-index:80;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  background:#0009;
-}
-
-#dialogueBox{
-  width:min(600px,calc(100% - 40px));
-  padding:24px;
-  box-sizing:border-box;
-  border:2px solid #fff;
-  border-radius:16px;
-  color:#fff;
-  background:#10151eee;
-}
-
-#npcName{
-  margin-top:0;
-  color:#ffe06b;
-}
-
-#destinationInput{
-  width:100%;
-  margin-top:12px;
-  padding:12px;
-  box-sizing:border-box;
-  border:0;
-  border-radius:8px;
-  font-size:18px;
-}
-
-.dialogueButtons{
-  display:flex;
-  gap:10px;
-  margin-top:14px;
-}
-
-#suggestions{
-  margin-top:12px;
-  color:#cfe4ff;
-  font-size:14px;
-}
-
-.maplibregl-ctrl-attrib{
-  font-size:11px;
-}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000;font-family:Arial,sans-serif}
+canvas{display:block}
+#start{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:linear-gradient(#78cfff,#193a57);color:white;text-align:center}
+#startBox{width:min(680px,calc(100% - 40px));padding:28px;box-sizing:border-box;background:#000c;border:2px solid white;border-radius:18px}
+button{padding:12px 24px;border:0;border-radius:10px;font-size:19px;font-weight:bold;cursor:pointer}
+#hud{position:fixed;left:15px;top:15px;z-index:20;color:white;background:#000a;padding:13px;border-radius:11px;line-height:1.6;min-width:255px}
+#help{position:fixed;right:15px;top:15px;z-index:20;color:white;background:#000a;padding:13px;border-radius:11px;line-height:1.55}
+#message{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:20;color:white;background:#000b;padding:12px 18px;border-radius:11px;font-weight:bold;text-align:center;max-width:760px}
+#dialogue{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;background:#000a}
+#dialogueBox{width:min(650px,calc(100% - 40px));padding:24px;box-sizing:border-box;background:#101722f2;border:2px solid white;border-radius:16px;color:white}
+#npcName{color:#ffe16a;margin-top:0}
+#npcQuestion{font-size:21px;line-height:1.5}
+#answer{width:100%;box-sizing:border-box;padding:13px;border:0;border-radius:9px;font-size:18px;margin-top:10px}
+.dialogueButtons{display:flex;gap:10px;margin-top:14px}
+#feedback{margin-top:14px;font-weight:bold}
+#flightOverlay{position:fixed;inset:0;z-index:70;display:none;align-items:center;justify-content:center;background:linear-gradient(#68c6ff,#dff4ff);color:#0f2940;text-align:center}
+#flightCard{background:#ffffffdd;padding:26px;border-radius:18px;box-shadow:0 10px 35px #0004}
+#planeIcon{font-size:80px;animation:fly 2.5s ease-in-out infinite}
+@keyframes fly{0%{transform:translateX(-80px) translateY(15px) rotate(-8deg)}50%{transform:translateX(80px) translateY(-15px) rotate(6deg)}100%{transform:translateX(-80px) translateY(15px) rotate(-8deg)}}
 </style>
+<script type="importmap">
+{
+  "imports":{
+    "three":"https://unpkg.com/three@0.185.0/build/three.module.js"
+  }
+}
+</script>
 </head>
-
 <body>
-<div id="map"></div>
 
 <div id="start">
   <div id="startBox">
-    <h1>REAL EARTH LIFE 3D</h1>
+    <h1>AIRPORT JOURNEY 3D</h1>
     <p>
-      Poruszaj się po prawdziwej mapie świata, zabieraj samochody
-      i rozmawiaj z pracownikami lotnisk.
+      Zaczynasz przed lotniskiem we Wrocławiu. Podejdź do kasy,
+      porozmawiaj z NPC i odpowiedz poprawnie w języku kraju,
+      w którym się znajdujesz.
     </p>
     <button id="play">GRAJ</button>
+    <p style="font-size:13px">Gra korzysta z Three.js i wymaga internetu.</p>
   </div>
 </div>
 
-<div id="hud" class="panel">
-  🌍 Pozycja: <span id="position">Paryż</span><br>
-  🚶 Tryb: <span id="mode">pieszo</span><br>
-  🧭 Kierunek: <span id="bearing">0</span>°<br>
-  ⚡ Prędkość: <span id="speed">0</span> km/h<br>
-  🚗 Najbliższy pojazd: <span id="nearCar">brak</span>
+<div id="hud">
+  🌍 Miasto: <span id="cityName">Wrocław</span><br>
+  🗣 Język rozmowy: <span id="languageName">polski</span><br>
+  🎫 Etap: <span id="stageName">idź do kasy</span><br>
+  ✈ Cel lotu: <span id="destinationName">brak</span>
 </div>
 
-<div id="help" class="panel">
+<div id="help">
   W — przód<br>
   S — tył<br>
   A — lewo<br>
   D — prawo<br>
   Mysz — obrót kamery i postaci<br>
-  E — wejdź / wyjdź z auta<br>
-  F — porozmawiaj na lotnisku<br>
-  Shift — sprint / szybsza jazda<br>
-  G — widok całej Ziemi<br>
-  T — powrót do Paryża
+  Shift — sprint<br>
+  E — rozmowa / wejście na pokład<br>
+  Esc — wyjście z rozmowy
 </div>
 
-<div id="notice" class="panel">
-  Podejdź do samochodu i naciśnij E albo podejdź do lotniska i naciśnij F.
-</div>
+<div id="message">Podejdź do kasy oznaczonej żółtym napisem.</div>
 
 <div id="dialogue">
   <div id="dialogueBox">
     <h2 id="npcName">Pracownik lotniska</h2>
-    <p id="npcText"></p>
-    <input id="destinationInput" type="text" placeholder="Wpisz miasto, np. Warszawa">
+    <p id="npcQuestion"></p>
+    <input id="answer" type="text" autocomplete="off">
     <div class="dialogueButtons">
-      <button id="flyButton">Leć</button>
-      <button id="cancelButton">Anuluj</button>
+      <button id="submitAnswer">Odpowiedz</button>
+      <button id="closeDialogue">Anuluj</button>
     </div>
-    <div id="suggestions"></div>
+    <div id="feedback"></div>
+  </div>
+</div>
+
+<div id="flightOverlay">
+  <div id="flightCard">
+    <div id="planeIcon">✈️</div>
+    <h1 id="flightTitle">Lot do Londynu</h1>
+    <p id="flightText">Samolot wystartował...</p>
   </div>
 </div>
 
 <script type="module">
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.2.0/dist/maplibre-gl.mjs";
+import * as THREE from "three";
 
-const START = {
-  name: "Paryż",
-  lng: 2.3522,
-  lat: 48.8566
-};
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0x7fcfff);
+scene.fog=new THREE.Fog(0x7fcfff,450,1800);
 
-const cityDatabase = [
-  {name:"Paryż", aliases:["paris"], lng:2.3522, lat:48.8566, language:"fr", airport:"Charles de Gaulle"},
-  {name:"Warszawa", aliases:["warsaw"], lng:21.0122, lat:52.2297, language:"pl", airport:"Lotnisko Chopina"},
-  {name:"Londyn", aliases:["london"], lng:-0.1276, lat:51.5072, language:"en", airport:"Heathrow"},
-  {name:"Berlin", aliases:[], lng:13.4050, lat:52.5200, language:"de", airport:"Berlin Brandenburg"},
-  {name:"Madryt", aliases:["madrid"], lng:-3.7038, lat:40.4168, language:"es", airport:"Barajas"},
-  {name:"Rzym", aliases:["rome"], lng:12.4964, lat:41.9028, language:"it", airport:"Fiumicino"},
-  {name:"Praga", aliases:["prague"], lng:14.4378, lat:50.0755, language:"cs", airport:"Václav Havel"},
-  {name:"Nowy Jork", aliases:["new york","nyc"], lng:-74.0060, lat:40.7128, language:"en", airport:"JFK"},
-  {name:"Los Angeles", aliases:["la"], lng:-118.2437, lat:34.0522, language:"en", airport:"LAX"},
-  {name:"Toronto", aliases:[], lng:-79.3832, lat:43.6532, language:"en", airport:"Pearson"},
-  {name:"Meksyk", aliases:["mexico city"], lng:-99.1332, lat:19.4326, language:"es", airport:"Benito Juárez"},
-  {name:"Rio de Janeiro", aliases:["rio"], lng:-43.1729, lat:-22.9068, language:"pt", airport:"Galeão"},
-  {name:"Buenos Aires", aliases:[], lng:-58.3816, lat:-34.6037, language:"es", airport:"Ezeiza"},
-  {name:"Kair", aliases:["cairo"], lng:31.2357, lat:30.0444, language:"ar", airport:"Cairo International"},
-  {name:"Dubaj", aliases:["dubai"], lng:55.2708, lat:25.2048, language:"ar", airport:"Dubai International"},
-  {name:"Tokio", aliases:["tokyo"], lng:139.6917, lat:35.6895, language:"ja", airport:"Haneda"},
-  {name:"Pekin", aliases:["beijing"], lng:116.4074, lat:39.9042, language:"zh", airport:"Capital International"},
-  {name:"Seul", aliases:["seoul"], lng:126.9780, lat:37.5665, language:"ko", airport:"Incheon"},
-  {name:"Delhi", aliases:["new delhi"], lng:77.2090, lat:28.6139, language:"hi", airport:"Indira Gandhi"},
-  {name:"Sydney", aliases:[], lng:151.2093, lat:-33.8688, language:"en", airport:"Kingsford Smith"}
-];
+const camera=new THREE.PerspectiveCamera(72,innerWidth/innerHeight,.1,3000);
+const renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(innerWidth,innerHeight);
+renderer.shadowMap.enabled=true;
+document.body.appendChild(renderer.domElement);
 
-const npcPhrases = {
-  fr: {
-    name:"Employé de l'aéroport",
-    text:"Bonjour ! Où voulez-vous aller ? Écrivez le nom de la ville.",
-    placeholder:"Écrivez une ville, par exemple Varsovie",
-    fly:"Voler",
-    cancel:"Annuler"
+scene.add(new THREE.HemisphereLight(0xffffff,0x49623b,2.3));
+const sun=new THREE.DirectionalLight(0xffffff,2.6);
+sun.position.set(250,450,180);
+sun.castShadow=true;
+scene.add(sun);
+
+const clock=new THREE.Clock();
+const keys={};
+let yaw=0;
+let pitch=-.12;
+let locked=false;
+let dialogueOpen=false;
+let messageTimer=0;
+let canBoard=false;
+let selectedDestination=null;
+let currentAirportKey="wroclaw";
+let environmentGroup=new THREE.Group();
+scene.add(environmentGroup);
+
+const airports={
+  wroclaw:{
+    city:"Wrocław",
+    country:"Polska",
+    language:"pl",
+    languageName:"polski",
+    terminal:"Port Lotniczy Wrocław",
+    npcName:"Pracownik lotniska",
+    question:"Dzień dobry! Dokąd chcesz polecieć?",
+    placeholder:"Np. Chcę lecieć do Londynu",
+    destinations:["london","paris","berlin","madrid"]
   },
-  pl: {
-    name:"Pracownik lotniska",
-    text:"Dzień dobry! Dokąd chcesz lecieć? Wpisz nazwę miasta.",
-    placeholder:"Wpisz miasto, np. Paryż",
-    fly:"Leć",
-    cancel:"Anuluj"
+  london:{
+    city:"Londyn",
+    country:"Wielka Brytania",
+    language:"en",
+    languageName:"angielski",
+    terminal:"London Airport",
+    npcName:"Airport employee",
+    question:"Hello! Where would you like to fly?",
+    placeholder:"For example: I want to fly to Paris",
+    destinations:["wroclaw","paris","berlin","madrid"]
   },
-  en: {
-    name:"Airport employee",
-    text:"Hello! Where would you like to fly? Type the city name.",
-    placeholder:"Type a city, for example Paris",
-    fly:"Fly",
-    cancel:"Cancel"
+  paris:{
+    city:"Paryż",
+    country:"Francja",
+    language:"fr",
+    languageName:"francuski",
+    terminal:"Aéroport de Paris",
+    npcName:"Employé de l'aéroport",
+    question:"Bonjour ! Où voulez-vous aller ?",
+    placeholder:"Par exemple : Je veux aller à Londres",
+    destinations:["wroclaw","london","berlin","madrid"]
   },
-  de: {
-    name:"Flughafenmitarbeiter",
-    text:"Guten Tag! Wohin möchten Sie fliegen? Geben Sie den Stadtnamen ein.",
-    placeholder:"Stadt eingeben, zum Beispiel Paris",
-    fly:"Fliegen",
-    cancel:"Abbrechen"
+  berlin:{
+    city:"Berlin",
+    country:"Niemcy",
+    language:"de",
+    languageName:"niemiecki",
+    terminal:"Flughafen Berlin",
+    npcName:"Flughafenmitarbeiter",
+    question:"Guten Tag! Wohin möchten Sie fliegen?",
+    placeholder:"Zum Beispiel: Ich möchte nach London fliegen",
+    destinations:["wroclaw","london","paris","madrid"]
   },
-  es: {
-    name:"Empleado del aeropuerto",
-    text:"¡Hola! ¿Adónde quieres volar? Escribe el nombre de la ciudad.",
-    placeholder:"Escribe una ciudad, por ejemplo París",
-    fly:"Volar",
-    cancel:"Cancelar"
-  },
-  it: {
-    name:"Impiegato dell'aeroporto",
-    text:"Buongiorno! Dove vuoi volare? Scrivi il nome della città.",
-    placeholder:"Scrivi una città, per esempio Parigi",
-    fly:"Vola",
-    cancel:"Annulla"
-  },
-  pt: {
-    name:"Funcionário do aeroporto",
-    text:"Olá! Para onde você quer voar? Digite o nome da cidade.",
-    placeholder:"Digite uma cidade, por exemplo Paris",
-    fly:"Voar",
-    cancel:"Cancelar"
-  },
-  ar: {
-    name:"موظف المطار",
-    text:"مرحباً! إلى أين تريد السفر؟ اكتب اسم المدينة.",
-    placeholder:"اكتب اسم مدينة",
-    fly:"سافر",
-    cancel:"إلغاء"
-  },
-  ja: {
-    name:"空港スタッフ",
-    text:"こんにちは！どこへ行きたいですか？都市名を入力してください。",
-    placeholder:"都市名を入力してください",
-    fly:"飛ぶ",
-    cancel:"キャンセル"
-  },
-  zh: {
-    name:"机场工作人员",
-    text:"你好！你想去哪里？请输入城市名称。",
-    placeholder:"请输入城市名称",
-    fly:"飞行",
-    cancel:"取消"
-  },
-  ko: {
-    name:"공항 직원",
-    text:"안녕하세요! 어디로 가고 싶으신가요? 도시 이름을 입력하세요.",
-    placeholder:"도시 이름을 입력하세요",
-    fly:"비행",
-    cancel:"취소"
-  },
-  hi: {
-    name:"हवाई अड्डा कर्मचारी",
-    text:"नमस्ते! आप कहाँ जाना चाहते हैं? शहर का नाम लिखें।",
-    placeholder:"शहर का नाम लिखें",
-    fly:"उड़ें",
-    cancel:"रद्द करें"
-  },
-  cs: {
-    name:"Pracovník letiště",
-    text:"Dobrý den! Kam chcete letět? Napište název města.",
-    placeholder:"Napište město, například Paříž",
-    fly:"Letět",
-    cancel:"Zrušit"
+  madrid:{
+    city:"Madryt",
+    country:"Hiszpania",
+    language:"es",
+    languageName:"hiszpański",
+    terminal:"Aeropuerto de Madrid",
+    npcName:"Empleado del aeropuerto",
+    question:"¡Hola! ¿Adónde quieres volar?",
+    placeholder:"Por ejemplo: Quiero volar a Londres",
+    destinations:["wroclaw","london","paris","berlin"]
   }
 };
 
-let playerLng = START.lng;
-let playerLat = START.lat;
-let bearing = 0;
-let pitch = 78;
-let mode = "foot";
-let currentSpeed = 0;
-let currentCar = null;
-let pointerLocked = false;
-let started = false;
-let dialogueOpen = false;
-let currentCity = cityDatabase[0];
+const destinationNames={
+  wroclaw:"Wrocław",
+  london:"Londyn",
+  paris:"Paryż",
+  berlin:"Berlin",
+  madrid:"Madryt"
+};
 
-const keys = {};
-const carMarkers = [];
-const airportMarkers = [];
-
-const map = new maplibregl.Map({
-  container:"map",
-  style:"https://tiles.openfreemap.org/styles/liberty",
-  center:[playerLng,playerLat],
-  zoom:18.2,
-  pitch,
-  bearing,
-  maxPitch:85,
-  canvasContextAttributes:{antialias:true}
-});
-
-map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),"bottom-right");
-map.addControl(new maplibregl.ScaleControl({unit:"metric"}),"bottom-left");
-
-const playerElement = document.createElement("div");
-playerElement.id = "player";
-playerElement.innerHTML = `
-  <div class="head"></div>
-  <div class="hair"></div>
-  <div class="body"></div>
-  <div class="shirt"></div>
-  <div class="arm left"></div>
-  <div class="arm right"></div>
-  <div class="leg left"></div>
-  <div class="leg right"></div>
-`;
-
-const playerMarker = new maplibregl.Marker({
-  element:playerElement,
-  anchor:"bottom",
-  rotationAlignment:"map",
-  pitchAlignment:"map"
-})
-.setLngLat([playerLng,playerLat])
-.addTo(map);
-
-map.on("load",()=>{
-  try{
-    map.setProjection({type:"globe"});
-  }catch(error){
-    console.warn(error);
+const acceptedAnswers={
+  pl:{
+    london:["do londynu","chcę lecieć do londynu","chce leciec do londynu","lecę do londynu","lece do londynu"],
+    paris:["do paryża","do paryza","chcę lecieć do paryża","chce leciec do paryza"],
+    berlin:["do berlina","chcę lecieć do berlina","chce leciec do berlina"],
+    madrid:["do madrytu","chcę lecieć do madrytu","chce leciec do madrytu"]
+  },
+  en:{
+    wroclaw:["to wroclaw","i want to fly to wroclaw","i want to go to wroclaw"],
+    paris:["to paris","i want to fly to paris","i want to go to paris"],
+    berlin:["to berlin","i want to fly to berlin","i want to go to berlin"],
+    madrid:["to madrid","i want to fly to madrid","i want to go to madrid"]
+  },
+  fr:{
+    wroclaw:["à wroclaw","a wroclaw","je veux aller à wroclaw","je veux aller a wroclaw"],
+    london:["à londres","a londres","je veux aller à londres","je veux aller a londres"],
+    berlin:["à berlin","a berlin","je veux aller à berlin","je veux aller a berlin"],
+    madrid:["à madrid","a madrid","je veux aller à madrid","je veux aller a madrid"]
+  },
+  de:{
+    wroclaw:["nach wroclaw","ich möchte nach wroclaw fliegen","ich mochte nach wroclaw fliegen"],
+    london:["nach london","ich möchte nach london fliegen","ich mochte nach london fliegen"],
+    paris:["nach paris","ich möchte nach paris fliegen","ich mochte nach paris fliegen"],
+    madrid:["nach madrid","ich möchte nach madrid fliegen","ich mochte nach madrid fliegen"]
+  },
+  es:{
+    wroclaw:["a wroclaw","quiero volar a wroclaw","quiero ir a wroclaw"],
+    london:["a londres","quiero volar a londres","quiero ir a londres"],
+    paris:["a parís","a paris","quiero volar a parís","quiero volar a paris"],
+    berlin:["a berlín","a berlin","quiero volar a berlín","quiero volar a berlin"]
   }
+};
 
-  const layers = map.getStyle().layers;
-  let firstLabelLayer;
+const hud={
+  city:document.getElementById("cityName"),
+  language:document.getElementById("languageName"),
+  stage:document.getElementById("stageName"),
+  destination:document.getElementById("destinationName"),
+  message:document.getElementById("message")
+};
 
-  for(const layer of layers){
-    if(layer.type==="symbol" && layer.layout && layer.layout["text-field"]){
-      firstLabelLayer = layer.id;
-      break;
-    }
-  }
-
-  if(!map.getSource("real-world-buildings")){
-    map.addSource("real-world-buildings",{
-      type:"vector",
-      url:"https://tiles.openfreemap.org/planet"
-    });
-  }
-
-  if(!map.getLayer("real-3d-buildings")){
-    map.addLayer({
-      id:"real-3d-buildings",
-      source:"real-world-buildings",
-      "source-layer":"building",
-      type:"fill-extrusion",
-      minzoom:15,
-      paint:{
-        "fill-extrusion-color":[
-          "interpolate",
-          ["linear"],
-          ["coalesce",["get","render_height"],8],
-          0,"#d7d2ca",
-          70,"#c3c8cc",
-          180,"#abb8c5",
-          400,"#8fa2b8"
-        ],
-        "fill-extrusion-height":[
-          "interpolate",
-          ["linear"],
-          ["zoom"],
-          15,0,
-          16,["coalesce",["get","render_height"],8]
-        ],
-        "fill-extrusion-base":[
-          "coalesce",
-          ["get","render_min_height"],
-          0
-        ],
-        "fill-extrusion-opacity":0.94
-      }
-    },firstLabelLayer);
-  }
-
-  spawnWorldObjects();
-});
-
-function spawnWorldObjects(){
-  for(const city of cityDatabase){
-    createAirportMarker(city);
-
-    for(let i=0;i<4;i++){
-      const angle = Math.random()*Math.PI*2;
-      const distance = 0.001 + Math.random()*0.0025;
-
-      createCarMarker(
-        city.lng + Math.cos(angle)*distance,
-        city.lat + Math.sin(angle)*distance,
-        randomCarColor()
-      );
-    }
-  }
+function mat(color,rough=.8,metal=0){
+  return new THREE.MeshStandardMaterial({color,roughness:rough,metalness:metal});
 }
 
-function randomCarColor(){
-  const colors = [
-    "#d83333",
-    "#2d63c8",
-    "#eeeeee",
-    "#202020",
-    "#e0b82c",
-    "#42a562",
-    "#a445b5"
-  ];
-
-  return colors[Math.floor(Math.random()*colors.length)];
+function addBox(parent,w,h,d,color,x,y,z){
+  const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat(color));
+  m.position.set(x,y,z);
+  m.castShadow=true;
+  m.receiveShadow=true;
+  parent.add(m);
+  return m;
 }
 
-function createCarMarker(lng,lat,color){
-  const el = document.createElement("div");
-  el.className = "car";
-  el.style.setProperty("--car-color",color);
-  el.innerHTML = `
-    <div class="car-roof"></div>
-    <div class="car-body"></div>
-    <div class="car-wheel left"></div>
-    <div class="car-wheel right"></div>
-  `;
+function addTextSprite(parent,text,x,y,z,scaleX=20,scaleY=5,bg="rgba(0,0,0,.7)",fg="#fff"){
+  const canvas=document.createElement("canvas");
+  canvas.width=512;
+  canvas.height=128;
+  const ctx=canvas.getContext("2d");
+  ctx.fillStyle=bg;
+  ctx.fillRect(0,0,512,128);
+  ctx.fillStyle=fg;
+  ctx.font="bold 44px Arial";
+  ctx.textAlign="center";
+  ctx.fillText(text,256,78);
 
-  const marker = new maplibregl.Marker({
-    element:el,
-    anchor:"center",
-    rotationAlignment:"map",
-    pitchAlignment:"map"
-  })
-  .setLngLat([lng,lat])
-  .addTo(map);
-
-  carMarkers.push({
-    marker,
-    element:el,
-    lng,
-    lat,
-    bearing:Math.random()*360,
-    occupied:false
-  });
+  const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(canvas)}));
+  sprite.position.set(x,y,z);
+  sprite.scale.set(scaleX,scaleY,1);
+  parent.add(sprite);
+  return sprite;
 }
 
-function createAirportMarker(city){
-  const el = document.createElement("div");
-  el.className = "airport";
-  el.textContent = "✈";
+function createPlayer(){
+  const g=new THREE.Group();
 
-  const marker = new maplibregl.Marker({
-    element:el,
-    anchor:"center"
-  })
-  .setLngLat([city.lng+0.007,city.lat+0.004])
-  .addTo(map);
+  const leftLeg=new THREE.Mesh(new THREE.CapsuleGeometry(.28,1.45,5,8),mat(0x202938));
+  leftLeg.position.set(-.43,1.05,0);
+  g.add(leftLeg);
 
-  airportMarkers.push({
-    marker,
-    city,
-    lng:city.lng+0.007,
-    lat:city.lat+0.004
-  });
+  const rightLeg=leftLeg.clone();
+  rightLeg.position.x=.43;
+  g.add(rightLeg);
+
+  const torso=new THREE.Mesh(new THREE.CapsuleGeometry(.82,1.9,6,12),mat(0x2d61ba));
+  torso.position.y=3.15;
+  g.add(torso);
+
+  const chest=new THREE.Mesh(new THREE.BoxGeometry(1.7,1.35,1.18),mat(0xe3483e));
+  chest.position.set(0,3.25,-.06);
+  g.add(chest);
+
+  const neck=new THREE.Mesh(new THREE.CylinderGeometry(.28,.28,.35,12),mat(0xdca97f));
+  neck.position.y=4.65;
+  g.add(neck);
+
+  const head=new THREE.Mesh(new THREE.SphereGeometry(.7,16,12),mat(0xe1ae83));
+  head.position.y=5.35;
+  g.add(head);
+
+  const hair=new THREE.Mesh(new THREE.SphereGeometry(.72,16,8,0,Math.PI*2,0,Math.PI*.48),mat(0x33241d));
+  hair.position.y=5.58;
+  g.add(hair);
+
+  const leftArm=new THREE.Mesh(new THREE.CapsuleGeometry(.21,1.35,5,8),mat(0x2d61ba));
+  leftArm.position.set(-.95,3.2,0);
+  leftArm.rotation.z=.12;
+  g.add(leftArm);
+
+  const rightArm=leftArm.clone();
+  rightArm.position.x=.95;
+  rightArm.rotation.z=-.12;
+  g.add(rightArm);
+
+  g.userData={leftLeg,rightLeg,leftArm,rightArm};
+  return g;
 }
+
+const player=createPlayer();
+player.position.set(0,0,42);
+scene.add(player);
+
+function createNPC(parent){
+  const g=new THREE.Group();
+
+  const body=new THREE.Mesh(new THREE.CapsuleGeometry(.75,1.8,6,10),mat(0x31466f));
+  body.position.y=2.6;
+  g.add(body);
+
+  const shirt=new THREE.Mesh(new THREE.BoxGeometry(1.5,1.2,1.1),mat(0xffffff));
+  shirt.position.set(0,2.7,-.1);
+  g.add(shirt);
+
+  const head=new THREE.Mesh(new THREE.SphereGeometry(.62,14,10),mat(0xdca87f));
+  head.position.y=4.5;
+  g.add(head);
+
+  const hair=new THREE.Mesh(new THREE.SphereGeometry(.64,14,7,0,Math.PI*2,0,Math.PI*.5),mat(0x3b2a21));
+  hair.position.y=4.7;
+  g.add(hair);
+
+  g.position.set(0,0,-14);
+  parent.add(g);
+  return g;
+}
+
+let npc=null;
+let deskPosition=new THREE.Vector3(0,0,-10);
+let boardingPosition=new THREE.Vector3(25,0,-45);
+
+function buildAirport(key){
+  environmentGroup.clear();
+
+  const airport=airports[key];
+
+  const ground=new THREE.Mesh(new THREE.PlaneGeometry(260,220),mat(0x787f7d));
+  ground.rotation.x=-Math.PI/2;
+  ground.receiveShadow=true;
+  environmentGroup.add(ground);
+
+  const grass=new THREE.Mesh(new THREE.PlaneGeometry(260,80),mat(0x4f8a43));
+  grass.rotation.x=-Math.PI/2;
+  grass.position.z=70;
+  grass.position.y=.02;
+  environmentGroup.add(grass);
+
+  const road=addBox(environmentGroup,90,.2,18,0x303338,0,.1,30);
+  road.receiveShadow=true;
+
+  const terminal=addBox(environmentGroup,90,24,38,0xd9dee2,0,12,-28);
+  const glass=addBox(environmentGroup,72,12,1.2,0x75b8d8,0,12,-8.5);
+  glass.material.transparent=true;
+  glass.material.opacity=.65;
+
+  addTextSprite(environmentGroup,airport.terminal,0,28,-8,34,7,"rgba(15,35,60,.85)","#fff");
+
+  const roof=addBox(environmentGroup,96,1.4,42,0xb8c0c6,0,24.8,-28);
+
+  const desk=addBox(environmentGroup,12,2.5,4,0x8a5b32,0,1.25,-10);
+  addTextSprite(environmentGroup,"KASA / TICKETS",0,6,-9,14,3.5,"rgba(255,210,0,.9)","#111");
+
+  npc=createNPC(environmentGroup);
+
+  const runway=addBox(environmentGroup,42,.2,130,0x26292c,55,.11,-20);
+  for(let z=-78;z<=38;z+=12){
+    const light=addBox(environmentGroup,1,.35,2,0xffffff,55,.3,z);
+    light.material.emissive=new THREE.Color(0xffffff);
+  }
+
+  const plane=new THREE.Group();
+  const fuselage=new THREE.Mesh(new THREE.CylinderGeometry(1.4,1.75,15,18),mat(0xf4f4f4,.25,.3));
+  fuselage.rotation.x=Math.PI/2;
+  fuselage.position.y=3;
+  plane.add(fuselage);
+
+  const wing=new THREE.Mesh(new THREE.BoxGeometry(19,.45,3.2),mat(0xf4f4f4,.25,.3));
+  wing.position.y=3;
+  plane.add(wing);
+
+  const tailWing=new THREE.Mesh(new THREE.BoxGeometry(7,.3,2),mat(0xf4f4f4));
+  tailWing.position.set(0,4.2,5.1);
+  plane.add(tailWing);
+
+  const tail=new THREE.Mesh(new THREE.BoxGeometry(.35,3.2,2.2),mat(0xe24436));
+  tail.position.set(0,5,5.1);
+  plane.add(tail);
+
+  plane.position.set(55,0,-45);
+  environmentGroup.add(plane);
+
+  addTextSprite(environmentGroup,"WEJŚCIE NA POKŁAD",25,5,-45,18,4,"rgba(20,80,40,.85)","#fff");
+
+  for(let i=0;i<10;i++){
+    const x=(Math.random()-.5)*100;
+    const z=50+Math.random()*45;
+
+    const trunk=new THREE.Mesh(new THREE.CylinderGeometry(.5,.7,5,8),mat(0x6b4528));
+    trunk.position.set(x,2.5,z);
+    environmentGroup.add(trunk);
+
+    const crown=new THREE.Mesh(new THREE.SphereGeometry(2.8,8,7),mat(0x2e743b));
+    crown.position.set(x,6.5,z);
+    environmentGroup.add(crown);
+  }
+
+  player.position.set(0,0,42);
+  yaw=Math.PI;
+  pitch=-.12;
+  canBoard=false;
+  selectedDestination=null;
+
+  hud.city.textContent=airport.city;
+  hud.language.textContent=airport.languageName;
+  hud.stage.textContent="idź do kasy";
+  hud.destination.textContent="brak";
+  hud.message.textContent="Podejdź do kasy oznaczonej żółtym napisem.";
+}
+
+buildAirport(currentAirportKey);
 
 document.getElementById("play").onclick=()=>{
   document.getElementById("start").style.display="none";
-  started=true;
-  map.getCanvas().requestPointerLock();
+  renderer.domElement.requestPointerLock();
 };
 
 document.addEventListener("pointerlockchange",()=>{
-  pointerLocked=document.pointerLockElement===map.getCanvas();
+  locked=document.pointerLockElement===renderer.domElement;
 });
 
-map.getCanvas().addEventListener("click",()=>{
-  if(started && !pointerLocked && !dialogueOpen){
-    map.getCanvas().requestPointerLock();
-  }
+renderer.domElement.addEventListener("click",()=>{
+  if(!locked&&!dialogueOpen)renderer.domElement.requestPointerLock();
 });
 
-document.addEventListener("mousemove",event=>{
-  if(!pointerLocked || dialogueOpen)return;
-
-  bearing += event.movementX*0.16;
-  pitch -= event.movementY*0.09;
-
-  bearing = ((bearing%360)+360)%360;
-  pitch = Math.max(62,Math.min(84,pitch));
+document.addEventListener("mousemove",e=>{
+  if(!locked||dialogueOpen)return;
+  yaw-=e.movementX*.0022;
+  pitch-=e.movementY*.0018;
+  pitch=Math.max(-.65,Math.min(.4,pitch));
 });
 
-document.addEventListener("keydown",event=>{
-  keys[event.code]=true;
+addEventListener("keydown",e=>{
+  keys[e.code]=true;
 
-  if(event.code==="KeyE"){
-    toggleCar();
+  if(e.code==="KeyE"){
+    interact();
   }
 
-  if(event.code==="KeyF"){
-    tryAirportDialogue();
-  }
-
-  if(event.code==="KeyG"){
-    map.easeTo({
-      center:[playerLng,playerLat],
-      zoom:1.5,
-      pitch:0,
-      bearing,
-      duration:1500
-    });
-  }
-
-  if(event.code==="KeyT"){
-    teleportToCity(cityDatabase[0]);
+  if(e.code==="Escape"&&dialogueOpen){
+    closeDialogue();
   }
 });
 
-document.addEventListener("keyup",event=>{
-  keys[event.code]=false;
+addEventListener("keyup",e=>{
+  keys[e.code]=false;
 });
 
-function metersBetween(lng1,lat1,lng2,lat2){
-  const R=6371000;
-  const p1=lat1*Math.PI/180;
-  const p2=lat2*Math.PI/180;
-  const dp=(lat2-lat1)*Math.PI/180;
-  const dl=(lng2-lng1)*Math.PI/180;
-
-  const a=
-    Math.sin(dp/2)*Math.sin(dp/2)+
-    Math.cos(p1)*Math.cos(p2)*
-    Math.sin(dl/2)*Math.sin(dl/2);
-
-  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
-}
-
-function destinationPoint(lng,lat,directionDegrees,distanceMeters){
-  const R=6371000;
-  const direction=directionDegrees*Math.PI/180;
-  const lat1=lat*Math.PI/180;
-  const lng1=lng*Math.PI/180;
-  const angular=distanceMeters/R;
-
-  const lat2=Math.asin(
-    Math.sin(lat1)*Math.cos(angular)+
-    Math.cos(lat1)*Math.sin(angular)*Math.cos(direction)
-  );
-
-  const lng2=lng1+Math.atan2(
-    Math.sin(direction)*Math.sin(angular)*Math.cos(lat1),
-    Math.cos(angular)-Math.sin(lat1)*Math.sin(lat2)
-  );
-
-  return {
-    lng:((lng2*180/Math.PI+540)%360)-180,
-    lat:lat2*180/Math.PI
-  };
-}
-
-function nearestCar(){
-  let best=null;
-  let distance=Infinity;
-
-  for(const car of carMarkers){
-    if(car.occupied)continue;
-
-    const d=metersBetween(playerLng,playerLat,car.lng,car.lat);
-
-    if(d<distance){
-      distance=d;
-      best=car;
-    }
-  }
-
-  return {car:best,distance};
-}
-
-function toggleCar(){
+function interact(){
   if(dialogueOpen)return;
 
-  if(currentCar){
-    currentCar.occupied=false;
-    currentCar.lng=playerLng;
-    currentCar.lat=playerLat;
-    currentCar.marker.setLngLat([playerLng,playerLat]);
-    currentCar.element.style.display="block";
-    currentCar=null;
-    mode="foot";
-    document.getElementById("mode").textContent="pieszo";
-    document.getElementById("notice").textContent="Wysiadłeś z samochodu.";
+  const distanceToDesk=player.position.distanceTo(deskPosition);
+  const distanceToBoarding=player.position.distanceTo(boardingPosition);
+
+  if(distanceToDesk<8){
+    openDialogue();
     return;
   }
 
-  const nearest=nearestCar();
-
-  if(!nearest.car || nearest.distance>35){
-    document.getElementById("notice").textContent="Podejdź bliżej samochodu.";
-    return;
-  }
-
-  currentCar=nearest.car;
-  currentCar.occupied=true;
-  currentCar.element.style.display="none";
-  mode="car";
-  document.getElementById("mode").textContent="samochód";
-  document.getElementById("notice").textContent="Zabrałeś samochód. Naciśnij E, aby wysiąść.";
-}
-
-function nearestAirport(){
-  let best=null;
-  let distance=Infinity;
-
-  for(const airport of airportMarkers){
-    const d=metersBetween(playerLng,playerLat,airport.lng,airport.lat);
-
-    if(d<distance){
-      distance=d;
-      best=airport;
+  if(distanceToBoarding<9){
+    if(!canBoard){
+      hud.message.textContent="Najpierw odpowiedz poprawnie pracownikowi lotniska.";
+      return;
     }
-  }
 
-  return {airport:best,distance};
-}
-
-function tryAirportDialogue(){
-  if(dialogueOpen || currentCar)return;
-
-  const nearest=nearestAirport();
-
-  if(!nearest.airport || nearest.distance>120){
-    document.getElementById("notice").textContent="Podejdź bliżej oznaczenia lotniska.";
+    startFlight();
     return;
   }
 
-  openDialogue(nearest.airport.city);
+  hud.message.textContent="Podejdź bliżej kasy albo wejścia na pokład.";
 }
 
-function openDialogue(city){
-  currentCity=city;
+function openDialogue(){
   dialogueOpen=true;
+  if(locked)document.exitPointerLock();
 
-  if(pointerLocked){
-    document.exitPointerLock();
-  }
+  const airport=airports[currentAirportKey];
 
-  const phrase=npcPhrases[city.language] || npcPhrases.en;
-
-  document.getElementById("npcName").textContent=
-    `${phrase.name} — ${city.airport}`;
-
-  document.getElementById("npcText").textContent=phrase.text;
-  document.getElementById("destinationInput").placeholder=phrase.placeholder;
-  document.getElementById("flyButton").textContent=phrase.fly;
-  document.getElementById("cancelButton").textContent=phrase.cancel;
-
-  document.getElementById("suggestions").textContent=
-    "Dostępne miasta: " +
-    cityDatabase.map(c=>c.name).join(", ");
-
-  document.getElementById("destinationInput").value="";
+  document.getElementById("npcName").textContent=airport.npcName;
+  document.getElementById("npcQuestion").textContent=airport.question;
+  document.getElementById("answer").placeholder=airport.placeholder;
+  document.getElementById("answer").value="";
+  document.getElementById("feedback").textContent="";
   document.getElementById("dialogue").style.display="flex";
-  document.getElementById("destinationInput").focus();
+  document.getElementById("answer").focus();
 }
 
 function closeDialogue(){
@@ -836,175 +508,163 @@ function closeDialogue(){
   document.getElementById("dialogue").style.display="none";
 
   setTimeout(()=>{
-    if(started){
-      map.getCanvas().requestPointerLock();
-    }
+    renderer.domElement.requestPointerLock();
   },100);
 }
 
-document.getElementById("cancelButton").onclick=closeDialogue;
+document.getElementById("closeDialogue").onclick=closeDialogue;
 
-document.getElementById("flyButton").onclick=()=>{
-  const value=document.getElementById("destinationInput").value.trim().toLowerCase();
+document.getElementById("submitAnswer").onclick=checkAnswer;
 
-  if(!value){
-    document.getElementById("npcText").textContent="Wpisz nazwę miasta.";
-    return;
-  }
-
-  const destination=cityDatabase.find(city=>{
-    const allNames=[city.name,...city.aliases].map(name=>name.toLowerCase());
-    return allNames.includes(value);
-  });
-
-  if(!destination){
-    document.getElementById("npcText").textContent=
-      "Nie znalazłem tego miasta. Wybierz jedno z listy poniżej.";
-    return;
-  }
-
-  closeDialogue();
-  flyToCity(destination);
-};
-
-document.getElementById("destinationInput").addEventListener("keydown",event=>{
-  if(event.key==="Enter"){
-    document.getElementById("flyButton").click();
-  }
+document.getElementById("answer").addEventListener("keydown",e=>{
+  if(e.key==="Enter")checkAnswer();
 });
 
-function flyToCity(destination){
-  document.getElementById("notice").textContent=
-    `Lot do miasta ${destination.name}...`;
-
-  map.easeTo({
-    center:[destination.lng,destination.lat],
-    zoom:3.2,
-    pitch:25,
-    bearing,
-    duration:2500
-  });
-
-  setTimeout(()=>{
-    playerLng=destination.lng;
-    playerLat=destination.lat;
-
-    map.easeTo({
-      center:[playerLng,playerLat],
-      zoom:18.2,
-      pitch:78,
-      bearing,
-      duration:2500
-    });
-
-    document.getElementById("notice").textContent=
-      `Wylądowałeś w mieście ${destination.name}.`;
-  },2600);
+function normalizeText(text){
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[.,!?;:]/g,"")
+    .replace(/\s+/g," ");
 }
 
-function teleportToCity(city){
-  playerLng=city.lng;
-  playerLat=city.lat;
+function checkAnswer(){
+  const airport=airports[currentAirportKey];
+  const answer=normalizeText(document.getElementById("answer").value);
 
-  map.easeTo({
-    center:[playerLng,playerLat],
-    zoom:18.2,
-    pitch:78,
-    bearing,
-    duration:1200
-  });
-}
+  let foundDestination=null;
 
-function updateMovement(dt){
-  if(!started || dialogueOpen)return;
+  for(const destination of airport.destinations){
+    const accepted=acceptedAnswers[airport.language]?.[destination]||[];
 
-  let forward=0;
-  let side=0;
+    if(accepted.some(option=>normalizeText(option)===answer)){
+      foundDestination=destination;
+      break;
+    }
+  }
 
-  if(keys.KeyW)forward+=1;
-  if(keys.KeyS)forward-=1;
-  if(keys.KeyD)side+=1;
-  if(keys.KeyA)side-=1;
+  const feedback=document.getElementById("feedback");
 
-  if(forward===0 && side===0){
-    currentSpeed=0;
+  if(!foundDestination){
+    feedback.style.color="#ff8f8f";
+    feedback.textContent=
+      "Niepoprawna odpowiedź albo zły język. Napisz pełną odpowiedź w języku kraju, w którym jesteś.";
     return;
   }
 
-  const walkingSpeed=(keys.ShiftLeft||keys.ShiftRight)?15:6;
-  const carSpeed=(keys.ShiftLeft||keys.ShiftRight)?140:70;
+  selectedDestination=foundDestination;
+  canBoard=true;
 
-  currentSpeed=mode==="car"?carSpeed:walkingSpeed;
+  feedback.style.color="#92ff9b";
+  feedback.textContent=
+    `Poprawnie! Twój bilet do miasta ${destinationNames[foundDestination]} jest gotowy.`;
 
-  const movementDirection=
-    bearing+
-    Math.atan2(side,forward)*180/Math.PI;
+  hud.stage.textContent="idź na pokład";
+  hud.destination.textContent=destinationNames[foundDestination];
 
-  const distance=
-    currentSpeed/3.6*dt*Math.min(1,Math.hypot(forward,side));
+  setTimeout(()=>{
+    closeDialogue();
+    hud.message.textContent="Podejdź do zielonego napisu „WEJŚCIE NA POKŁAD” i naciśnij E.";
+  },1200);
+}
 
-  const next=destinationPoint(
-    playerLng,
-    playerLat,
-    movementDirection,
-    distance
+function startFlight(){
+  if(!selectedDestination)return;
+
+  document.getElementById("flightOverlay").style.display="flex";
+  document.getElementById("flightTitle").textContent=
+    `Lot do miasta ${destinationNames[selectedDestination]}`;
+  document.getElementById("flightText").textContent=
+    `Samolot wystartował z miasta ${airports[currentAirportKey].city}...`;
+
+  if(locked)document.exitPointerLock();
+
+  setTimeout(()=>{
+    currentAirportKey=selectedDestination;
+    buildAirport(currentAirportKey);
+
+    document.getElementById("flightTitle").textContent=
+      `Wylądowałeś w mieście ${airports[currentAirportKey].city}`;
+    document.getElementById("flightText").textContent=
+      `Jesteś teraz przed lotniskiem w kraju: ${airports[currentAirportKey].country}.`;
+  },3200);
+
+  setTimeout(()=>{
+    document.getElementById("flightOverlay").style.display="none";
+    renderer.domElement.requestPointerLock();
+  },5200);
+}
+
+function updatePlayer(dt){
+  const forward=new THREE.Vector3(Math.sin(yaw),0,Math.cos(yaw));
+  const right=new THREE.Vector3(forward.z,0,-forward.x);
+  const move=new THREE.Vector3();
+
+  if(keys.KeyW)move.add(forward);
+  if(keys.KeyS)move.sub(forward);
+  if(keys.KeyA)move.sub(right);
+  if(keys.KeyD)move.add(right);
+
+  player.rotation.y=yaw;
+
+  if(move.lengthSq()>0&&!dialogueOpen){
+    move.normalize();
+    const speed=keys.ShiftLeft?14:7;
+    player.position.addScaledVector(move,speed*dt);
+
+    const swing=Math.sin(performance.now()*.012)*.45;
+    player.userData.leftLeg.rotation.x=swing;
+    player.userData.rightLeg.rotation.x=-swing;
+    player.userData.leftArm.rotation.x=-swing;
+    player.userData.rightArm.rotation.x=swing;
+  }else{
+    player.userData.leftLeg.rotation.x=0;
+    player.userData.rightLeg.rotation.x=0;
+    player.userData.leftArm.rotation.x=0;
+    player.userData.rightArm.rotation.x=0;
+  }
+
+  player.position.x=THREE.MathUtils.clamp(player.position.x,-105,105);
+  player.position.z=THREE.MathUtils.clamp(player.position.z,-95,95);
+  player.position.y=0;
+
+  const camOffset=new THREE.Vector3(
+    -Math.sin(yaw)*8.5,
+    5.5,
+    -Math.cos(yaw)*8.5
   );
 
-  playerLng=next.lng;
-  playerLat=Math.max(-85,Math.min(85,next.lat));
+  camera.position.lerp(player.position.clone().add(camOffset),.16);
 
-  if(currentCar){
-    currentCar.lng=playerLng;
-    currentCar.lat=playerLat;
-    currentCar.bearing=bearing;
+  camera.lookAt(
+    player.position.x+Math.sin(yaw)*11,
+    player.position.y+3.6+Math.sin(pitch)*7,
+    player.position.z+Math.cos(yaw)*11
+  );
+}
+
+function animate(){
+  requestAnimationFrame(animate);
+
+  const dt=Math.min(clock.getDelta(),.04);
+
+  updatePlayer(dt);
+
+  if(messageTimer>0){
+    messageTimer-=dt;
+    if(messageTimer<=0)hud.message.textContent="";
   }
+
+  renderer.render(scene,camera);
 }
 
-function updateView(){
-  playerMarker.setLngLat([playerLng,playerLat]);
-  playerElement.style.display=mode==="car"?"none":"block";
-  playerElement.style.transform=`rotate(${bearing}deg)`;
+animate();
 
-  const wantedZoom=mode==="car"?17.4:18.7;
-  const wantedPitch=mode==="car"?76:80;
-
-  map.jumpTo({
-    center:[playerLng,playerLat],
-    bearing,
-    pitch:wantedPitch,
-    zoom:wantedZoom
-  });
-}
-
-function updateHUD(){
-  document.getElementById("position").textContent=
-    `${playerLat.toFixed(5)}, ${playerLng.toFixed(5)}`;
-
-  document.getElementById("bearing").textContent=Math.round(bearing);
-  document.getElementById("speed").textContent=Math.round(currentSpeed);
-
-  const nearest=nearestCar();
-
-  document.getElementById("nearCar").textContent=
-    nearest.car && nearest.distance<100
-      ? `${Math.round(nearest.distance)} m`
-      : "brak";
-}
-
-let previousTime=performance.now();
-
-function gameLoop(time){
-  const dt=Math.min(.05,(time-previousTime)/1000);
-  previousTime=time;
-
-  updateMovement(dt);
-  updateView();
-  updateHUD();
-
-  requestAnimationFrame(gameLoop);
-}
-
-requestAnimationFrame(gameLoop);
+addEventListener("resize",()=>{
+  camera.aspect=innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth,innerHeight);
+});
 </script>
 </body>
 </html>
