@@ -3,268 +3,217 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Snake</title>
 
 <style>
-
-*{
-    box-sizing:border-box;
+* {
+    box-sizing: border-box;
 }
 
-body{
-    margin:0;
-    min-height:100vh;
-    background:#101418;
-    color:white;
-    font-family:Arial,sans-serif;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    overflow:hidden;
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: #101418;
+    color: white;
+    font-family: Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
 }
 
-.screen{
-    display:none;
-    width:100%;
-    text-align:center;
+.screen {
+    display: none;
+    width: 100%;
+    text-align: center;
 }
 
-.screen.active{
-    display:block;
+.screen.active {
+    display: block;
 }
 
-/* =========================
-   POCZEKALNIA
-========================= */
-
-.panel{
-    width:min(450px,90vw);
-    margin:auto;
-    padding:30px;
-    background:#1b2229;
-    border:2px solid #34404a;
-    border-radius:22px;
+.panel {
+    width: min(450px, 92vw);
+    margin: auto;
+    padding: 30px;
+    background: #1b2229;
+    border: 2px solid #34404a;
+    border-radius: 22px;
 }
 
-h1{
-    font-size:55px;
-    margin:0 0 8px;
+h1 {
+    font-size: 55px;
+    margin: 0 0 8px;
 }
 
-.subtitle{
-    color:#9da7af;
-    margin-bottom:28px;
-    font-size:17px;
+.subtitle {
+    color: #9da7af;
+    margin-bottom: 28px;
 }
 
-label{
-    display:block;
-    text-align:left;
-    margin-bottom:8px;
-    font-size:17px;
+label {
+    display: block;
+    text-align: left;
+    margin-bottom: 8px;
+    font-size: 17px;
 }
 
-select{
-    width:100%;
-    padding:14px;
-    font-size:18px;
-    border-radius:10px;
-    border:2px solid #46535e;
-    background:#11171c;
-    color:white;
+select {
+    width: 100%;
+    padding: 14px;
+    font-size: 18px;
+    border-radius: 10px;
+    border: 2px solid #46535e;
+    background: #11171c;
+    color: white;
 }
 
-button{
-    border:0;
-    border-radius:12px;
-    padding:14px 20px;
-    font-size:17px;
-    font-weight:bold;
-    cursor:pointer;
-    transition:.15s;
+button {
+    border: 0;
+    border-radius: 12px;
+    padding: 14px 20px;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: .15s;
 }
 
-button:hover{
-    transform:scale(1.04);
+button:hover {
+    transform: scale(1.04);
 }
 
-#startButton{
-    width:100%;
-    margin-top:22px;
-    background:#42d965;
-    color:#07140a;
+#startButton {
+    width: 100%;
+    margin-top: 22px;
+    background: #42d965;
+    color: #07140a;
 }
 
-/* =========================
-   GRA
-========================= */
-
-#game{
-    width:100%;
+.gameHeader {
+    width: min(700px, 94vw);
+    margin: 0 auto 12px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 20px;
 }
 
-.gameHeader{
-    width:min(700px,94vw);
-    margin:0 auto 12px;
-    display:flex;
-    justify-content:space-between;
-    font-size:20px;
+#gameContainer {
+    position: relative;
+    margin: auto;
+    width: min(700px, 92vw);
+    aspect-ratio: 1 / 1;
 }
 
-#gameContainer{
-    position:relative;
-    margin:auto;
-    width:min(700px,92vw);
-    aspect-ratio:1/1;
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: #18251a;
+    border: 5px solid #3c4740;
+    border-radius: 20px;
 }
 
-canvas{
-    display:block;
-    width:100%;
-    height:100%;
-    background:#18251a;
-    border:5px solid #3c4740;
-    border-radius:20px;
+.controlsInfo {
+    margin-top: 13px;
+    color: #8c969e;
 }
 
-.controlsInfo{
-    margin-top:13px;
-    color:#8c969e;
+#gameOverScreen {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(5,8,10,.88);
+    align-items: center;
+    justify-content: center;
 }
 
-/* =========================
-   PRZEGRANA
-========================= */
-
-#gameOverScreen{
-    display:none;
-    position:fixed;
-    inset:0;
-    z-index:100;
-
-    background:rgba(5,8,10,.88);
-
-    align-items:center;
-    justify-content:center;
+#gameOverScreen.active {
+    display: flex;
 }
 
-#gameOverScreen.active{
-    display:flex;
+.gameOverBox {
+    width: min(430px,90vw);
+    padding: 35px;
+    background: #1b2229;
+    border: 2px solid #3c4853;
+    border-radius: 24px;
+    box-shadow: 0 20px 80px rgba(0,0,0,.6);
 }
 
-.gameOverBox{
-    width:min(430px,90vw);
-    padding:35px;
-
-    background:#1b2229;
-
-    border:2px solid #3c4853;
-    border-radius:24px;
-
-    box-shadow:
-        0 20px 80px rgba(0,0,0,.6);
+.gameOverBox h2 {
+    margin: 0;
+    color: #ff4d4d;
+    font-size: 50px;
 }
 
-.gameOverBox h2{
-    margin:0;
-
-    color:#ff4d4d;
-
-    font-size:50px;
-    letter-spacing:2px;
+.finalText {
+    margin-top: 18px;
+    font-size: 21px;
 }
 
-.finalText{
-    margin-top:18px;
-    font-size:21px;
+.buttons {
+    margin-top: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
-.buttons{
-    margin-top:25px;
-
-    display:flex;
-    flex-direction:column;
-    gap:12px;
+#restartButton {
+    background: #44dc68;
+    color: #07140a;
 }
 
-#restartButton{
-    background:#44dc68;
-    color:#07140a;
+#lobbyButton {
+    background: #3c4853;
+    color: white;
 }
 
-#lobbyButton{
-    background:#3c4853;
-    color:white;
+#mobileControls {
+    display: grid;
+    width: 190px;
+    grid-template-columns: repeat(3,60px);
+    grid-template-rows: repeat(2,60px);
+    gap: 5px;
+    margin: 18px auto;
 }
 
-/* =========================
-   TELEFON
-========================= */
-
-#mobileControls{
-    display:grid;
-
-    width:190px;
-
-    grid-template-columns:repeat(3,60px);
-    grid-template-rows:repeat(2,60px);
-
-    gap:5px;
-
-    margin:18px auto;
+.control {
+    padding: 0;
+    height: 60px;
+    background: #29343d;
+    color: white;
+    font-size: 25px;
 }
 
-.control{
-    padding:0;
+#up { grid-column: 2; }
 
-    background:#29343d;
-    color:white;
-
-    height:60px;
-
-    font-size:25px;
+#left {
+    grid-column: 1;
+    grid-row: 2;
 }
 
-#up{
-    grid-column:2;
+#down {
+    grid-column: 2;
+    grid-row: 2;
 }
 
-#left{
-    grid-column:1;
-    grid-row:2;
+#right {
+    grid-column: 3;
+    grid-row: 2;
 }
 
-#down{
-    grid-column:2;
-    grid-row:2;
-}
-
-#right{
-    grid-column:3;
-    grid-row:2;
-}
-
-@media(min-width:800px){
-
-    #mobileControls{
-        display:none;
+@media(min-width:800px) {
+    #mobileControls {
+        display: none;
     }
-
 }
-
 </style>
 </head>
 
-
 <body>
 
-<!-- =====================
-     POCZEKALNIA
-===================== -->
-
 <div id="lobby" class="screen active">
-
     <div class="panel">
 
         <h1>🐍 SNAKE</h1>
@@ -273,55 +222,27 @@ canvas{
             Zjadaj jabłka i rośnij!
         </div>
 
-
-        <label>
-            Wielkość mapy
-        </label>
-
+        <label>Wielkość mapy</label>
 
         <select id="mapSize">
-
             <option value="5">5 × 5</option>
-
             <option value="8">8 × 8</option>
-
-            <option value="10">
-                10 × 10
-            </option>
-
-            <option value="15">
-                15 × 15
-            </option>
-
-            <option value="20">
-                20 × 20
-            </option>
-
-            <option value="25">
-                25 × 25
-            </option>
-
+            <option value="10">10 × 10</option>
+            <option value="15">15 × 15</option>
+            <option value="20">20 × 20</option>
+            <option value="25">25 × 25</option>
         </select>
-
 
         <button id="startButton">
             ▶ ROZPOCZNIJ GRĘ
         </button>
 
     </div>
-
 </div>
-
-
-
-<!-- =====================
-     GRA
-===================== -->
 
 <div id="game" class="screen">
 
     <div class="gameHeader">
-
         <div>
             🍎 Wynik:
             <b id="score">0</b>
@@ -331,60 +252,26 @@ canvas{
             Mapa:
             <b id="mapInfo">8 × 8</b>
         </div>
-
     </div>
-
 
     <div id="gameContainer">
-
         <canvas id="gameCanvas"></canvas>
-
     </div>
-
 
     <div class="controlsInfo">
         Sterowanie: WASD lub strzałki
     </div>
 
-
     <div id="mobileControls">
-
-        <button
-            id="up"
-            class="control">
-            ▲
-        </button>
-
-        <button
-            id="left"
-            class="control">
-            ◀
-        </button>
-
-        <button
-            id="down"
-            class="control">
-            ▼
-        </button>
-
-        <button
-            id="right"
-            class="control">
-            ▶
-        </button>
-
+        <button id="up" class="control">▲</button>
+        <button id="left" class="control">◀</button>
+        <button id="down" class="control">▼</button>
+        <button id="right" class="control">▶</button>
     </div>
 
 </div>
 
-
-
-<!-- =====================
-     PRZEGRANA
-===================== -->
-
 <div id="gameOverScreen">
-
     <div class="gameOverBox">
 
         <h2 id="gameOverTitle">
@@ -392,18 +279,11 @@ canvas{
         </h2>
 
         <div class="finalText">
-
             Wynik:
-
-            <b id="finalScore">
-                0
-            </b>
-
+            <b id="finalScore">0</b>
         </div>
 
-
         <div class="buttons">
-
             <button id="restartButton">
                 🔄 Zagraj ponownie
             </button>
@@ -411,122 +291,101 @@ canvas{
             <button id="lobbyButton">
                 🏠 Przejdź do poczekalni
             </button>
-
         </div>
 
     </div>
-
 </div>
-
-
 
 <script>
 
-/* =========================
-   ELEMENTY
-========================= */
+const lobby = document.getElementById("lobby");
+const game = document.getElementById("game");
 
-const lobby =
-document.getElementById("lobby");
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
 
-const game =
-document.getElementById("game");
+const mapSelect = document.getElementById("mapSize");
 
-const canvas =
-document.getElementById("gameCanvas");
+const scoreElement = document.getElementById("score");
+const finalScore = document.getElementById("finalScore");
 
-const ctx =
-canvas.getContext("2d");
-
-const mapSelect =
-document.getElementById("mapSize");
-
-const scoreElement =
-document.getElementById("score");
-
-const finalScore =
-document.getElementById("finalScore");
-
-const mapInfo =
-document.getElementById("mapInfo");
+const mapInfo = document.getElementById("mapInfo");
 
 const gameOverScreen =
-document.getElementById(
-    "gameOverScreen"
-);
+    document.getElementById("gameOverScreen");
 
 const gameOverTitle =
-document.getElementById(
-    "gameOverTitle"
-);
-
-
-/* =========================
-   ZMIENNE GRY
-========================= */
+    document.getElementById("gameOverTitle");
 
 let mapSize = 8;
 
 let snake = [];
+let previousSnake = [];
 
 let apple = {
-    x:0,
-    y:0
+    x: 0,
+    y: 0
 };
 
 let direction = {
-    x:1,
-    y:0
+    x: 1,
+    y: 0
 };
 
 let nextDirection = {
-    x:1,
-    y:0
+    x: 1,
+    y: 0
 };
 
 let score = 0;
-
-let interval = null;
 
 let gameRunning = false;
 
 let cellSize = 50;
 
+/*
+=================================
+ PŁYNNA ANIMACJA
+=================================
 
-/* =========================
-   ZAPIS USTAWIEŃ
-========================= */
+Logika przesuwa węża np. co 180ms,
+ale canvas jest rysowany około 60 razy
+na sekundę.
+
+W międzyczasie obliczamy pozycję
+pomiędzy starą i nową kratką.
+*/
+
+let moveDuration = 180;
+let lastMoveTime = 0;
+let animationID = null;
+
+
+/* =============================
+   USTAWIENIA
+============================= */
 
 const savedSize =
-localStorage.getItem(
-    "snakeMapSize"
-);
+    localStorage.getItem("snakeMapSize");
 
-if(savedSize){
-
-    mapSelect.value =
-        savedSize;
-
+if (savedSize) {
+    mapSelect.value = savedSize;
 }
 
-
-function saveSettings(){
-
+function saveSettings() {
     localStorage.setItem(
         "snakeMapSize",
         mapSize
     );
-
 }
 
 
-/* =========================
+/* =============================
    START
-========================= */
+============================= */
 
-document
-.getElementById("startButton")
-.onclick = function(){
+document.getElementById("startButton").onclick =
+function() {
 
     mapSize =
         Number(mapSelect.value);
@@ -534,351 +393,320 @@ document
     saveSettings();
 
     startGame();
-
 };
 
 
-function startGame(){
+function startGame() {
 
-    clearInterval(interval);
+    if (animationID) {
+        cancelAnimationFrame(animationID);
+    }
 
-    gameOverScreen
-        .classList
-        .remove("active");
+    gameOverScreen.classList.remove("active");
 
-    lobby
-        .classList
-        .remove("active");
-
-    game
-        .classList
-        .add("active");
-
+    lobby.classList.remove("active");
+    game.classList.add("active");
 
     score = 0;
 
-    scoreElement.textContent =
-        score;
+    scoreElement.textContent = 0;
 
     mapInfo.textContent =
-        mapSize +
-        " × " +
-        mapSize;
-
+        mapSize + " × " + mapSize;
 
     const center =
-        Math.floor(
-            mapSize / 2
-        );
-
-
-    /*
-    Wąż zaczyna już z kilkoma
-    segmentami, żeby od początku
-    wyglądał jak wąż.
-    */
+        Math.floor(mapSize / 2);
 
     snake = [
-
         {
-            x:center,
-            y:center
+            x: center,
+            y: center
         },
-
         {
-            x:center - 1,
-            y:center
+            x: center - 1,
+            y: center
         },
-
         {
-            x:center - 2,
-            y:center
+            x: center - 2,
+            y: center
         }
-
     ];
 
-
-    /*
-    Dla bardzo małej mapy
-    poprawiamy początek.
-    */
-
-    if(mapSize === 5){
-
-        snake = [
-
-            {
-                x:2,
-                y:2
-            },
-
-            {
-                x:1,
-                y:2
-            },
-
-            {
-                x:0,
-                y:2
-            }
-
-        ];
-
-    }
-
+    previousSnake =
+        snake.map(part => ({...part}));
 
     direction = {
-        x:1,
-        y:0
+        x: 1,
+        y: 0
     };
 
     nextDirection = {
-        x:1,
-        y:0
+        x: 1,
+        y: 0
     };
 
+    /*
+    Tutaj ustawiasz szybkość gry.
+
+    Im mniejsza liczba,
+    tym szybszy wąż.
+
+    Animacja nadal będzie płynna.
+    */
+
+    if (mapSize <= 5)
+        moveDuration = 300;
+
+    else if (mapSize <= 8)
+        moveDuration = 230;
+
+    else if (mapSize <= 10)
+        moveDuration = 190;
+
+    else if (mapSize <= 15)
+        moveDuration = 160;
+
+    else
+        moveDuration = 135;
 
     resizeCanvas();
 
     spawnApple();
 
-    draw();
-
-
     gameRunning = true;
 
+    lastMoveTime =
+        performance.now();
 
-    let speed = 180;
-
-    if(mapSize <= 5)
-        speed = 330;
-
-    else if(mapSize <= 8)
-        speed = 240;
-
-    else if(mapSize <= 10)
-        speed = 200;
-
-    else if(mapSize <= 15)
-        speed = 165;
-
-    else
-        speed = 140;
-
-
-    interval =
-        setInterval(
-            gameLoop,
-            speed
+    animationID =
+        requestAnimationFrame(
+            animationLoop
         );
-
 }
 
 
-/* =========================
-   CANVAS
-========================= */
+/* =============================
+   GŁÓWNA ANIMACJA ~60 FPS
+============================= */
 
-function resizeCanvas(){
+function animationLoop(time) {
 
-    const size =
-        Math.min(
-            window.innerWidth * .90,
-            window.innerHeight * .68,
-            700
-        );
-
-
-    canvas.width = size;
-
-    canvas.height = size;
-
-
-    cellSize =
-        canvas.width /
-        mapSize;
-
-
-    draw();
-
-}
-
-
-/* =========================
-   PĘTLA
-========================= */
-
-function gameLoop(){
-
-    if(!gameRunning)
+    if (!gameRunning)
         return;
 
+    /*
+    Ile czasu minęło od
+    ostatniego ruchu o kratkę.
+    */
+
+    let elapsed =
+        time - lastMoveTime;
+
+
+    /*
+    Jeżeli minął cały czas jednego
+    ruchu, wykonujemy kolejny krok.
+    */
+
+    while (
+        elapsed >= moveDuration &&
+        gameRunning
+    ) {
+
+        previousSnake =
+            snake.map(
+                part => ({...part})
+            );
+
+        moveSnake();
+
+        lastMoveTime +=
+            moveDuration;
+
+        elapsed =
+            time - lastMoveTime;
+    }
+
+
+    /*
+    progress:
+
+    0 = stara kratka
+    0.5 = połowa drogi
+    1 = nowa kratka
+    */
+
+    const progress =
+        Math.min(
+            elapsed / moveDuration,
+            1
+        );
+
+
+    draw(progress);
+
+
+    animationID =
+        requestAnimationFrame(
+            animationLoop
+        );
+}
+
+
+/* =============================
+   LOGICZNY RUCH O KRATKĘ
+============================= */
+
+function moveSnake() {
+
+    if (!gameRunning)
+        return;
 
     direction = {
         ...nextDirection
     };
 
-
     const newHead = {
 
         x:
-        snake[0].x +
-        direction.x,
+            snake[0].x +
+            direction.x,
 
         y:
-        snake[0].y +
-        direction.y
+            snake[0].y +
+            direction.y
 
     };
 
 
-    /* =================
-       ŚCIANA
-    ================= */
+    /* ŚCIANA */
 
-    if(
+    if (
         newHead.x < 0 ||
         newHead.x >= mapSize ||
         newHead.y < 0 ||
         newHead.y >= mapSize
-    ){
+    ) {
 
         endGame(false);
-
         return;
-
     }
 
-
-    /*
-    Jeżeli wąż nie je jabłka,
-    ogon za chwilę się przesunie.
-    Dlatego ostatni segment można
-    pominąć przy sprawdzaniu kolizji.
-    */
 
     const eating =
         newHead.x === apple.x &&
         newHead.y === apple.y;
 
 
-    const lengthToCheck =
+    const checkLength =
         eating
-        ? snake.length
-        : snake.length - 1;
+            ? snake.length
+            : snake.length - 1;
 
 
-    for(
+    /* WJAZD W SIEBIE */
+
+    for (
         let i = 0;
-        i < lengthToCheck;
+        i < checkLength;
         i++
-    ){
+    ) {
 
-        if(
+        if (
             snake[i].x === newHead.x &&
             snake[i].y === newHead.y
-        ){
+        ) {
 
             endGame(false);
-
             return;
-
         }
-
     }
 
 
-    snake.unshift(
-        newHead
-    );
+    snake.unshift(newHead);
 
 
-    if(eating){
+    if (eating) {
 
         score++;
 
         scoreElement.textContent =
             score;
 
+        /*
+        Dodajemy segment do starego
+        ułożenia, żeby podczas wzrostu
+        animacja nie skakała.
+        */
 
-        if(
+        const last =
+            previousSnake[
+                previousSnake.length - 1
+            ];
+
+        previousSnake.push({
+            x: last.x,
+            y: last.y
+        });
+
+
+        if (
             snake.length >=
             mapSize * mapSize
-        ){
-
-            draw();
+        ) {
 
             endGame(true);
-
             return;
-
         }
-
 
         spawnApple();
 
-    }
-
-    else{
+    } else {
 
         snake.pop();
-
     }
-
-
-    draw();
-
 }
 
 
-/* =========================
+/* =============================
    JABŁKO
-========================= */
+============================= */
 
-function spawnApple(){
+function spawnApple() {
 
     const free = [];
 
-
-    for(
-        let y=0;
-        y<mapSize;
+    for (
+        let y = 0;
+        y < mapSize;
         y++
-    ){
+    ) {
 
-        for(
-            let x=0;
-            x<mapSize;
+        for (
+            let x = 0;
+            x < mapSize;
             x++
-        ){
+        ) {
 
             const occupied =
                 snake.some(
                     part =>
-                    part.x === x &&
-                    part.y === y
+                        part.x === x &&
+                        part.y === y
                 );
 
-
-            if(!occupied){
+            if (!occupied) {
 
                 free.push({
                     x,
                     y
                 });
-
             }
-
         }
-
     }
 
-
-    if(
-        free.length === 0
-    )
+    if (!free.length)
         return;
-
 
     apple =
         free[
@@ -887,22 +715,106 @@ function spawnApple(){
                 free.length
             )
         ];
-
 }
 
 
-/* =========================
+/* =============================
+   CANVAS
+============================= */
+
+function resizeCanvas() {
+
+    const size =
+        Math.min(
+            window.innerWidth * 0.90,
+            window.innerHeight * 0.68,
+            700
+        );
+
+    canvas.width = size;
+    canvas.height = size;
+
+    cellSize =
+        canvas.width / mapSize;
+}
+
+
+/* =============================
+   INTERPOLACJA
+============================= */
+
+function lerp(a, b, t) {
+
+    return (
+        a +
+        (b - a) * t
+    );
+}
+
+
+/*
+To tworzy aktualne, płynne
+pozycje wszystkich części węża.
+*/
+
+function getAnimatedSnake(progress) {
+
+    const result = [];
+
+    for (
+        let i = 0;
+        i < snake.length;
+        i++
+    ) {
+
+        const current =
+            snake[i];
+
+        /*
+        Poprzednia pozycja tej
+        samej części ciała.
+        */
+
+        let previous =
+            previousSnake[i];
+
+        if (!previous) {
+
+            previous =
+                previousSnake[
+                    previousSnake.length - 1
+                ] || current;
+        }
+
+
+        result.push({
+
+            x:
+                lerp(
+                    previous.x,
+                    current.x,
+                    progress
+                ),
+
+            y:
+                lerp(
+                    previous.y,
+                    current.y,
+                    progress
+                )
+
+        });
+    }
+
+    return result;
+}
+
+
+/* =============================
    RYSOWANIE
-========================= */
+============================= */
 
-function draw(){
-
-    if(
-        !canvas.width ||
-        !canvas.height
-    )
-        return;
-
+function draw(progress) {
 
     ctx.clearRect(
         0,
@@ -910,9 +822,6 @@ function draw(){
         canvas.width,
         canvas.height
     );
-
-
-    /* TŁO */
 
     ctx.fillStyle =
         "#18251a";
@@ -925,31 +834,25 @@ function draw(){
     );
 
 
-    /* DELIKATNA SIATKA */
+    /* SIATKA */
 
     ctx.strokeStyle =
         "rgba(255,255,255,0.035)";
 
     ctx.lineWidth = 1;
 
-
-    for(
-        let i=1;
-        i<mapSize;
+    for (
+        let i = 1;
+        i < mapSize;
         i++
-    ){
+    ) {
 
         const p =
             i * cellSize;
 
-
         ctx.beginPath();
 
-        ctx.moveTo(
-            p,
-            0
-        );
-
+        ctx.moveTo(p,0);
         ctx.lineTo(
             p,
             canvas.height
@@ -960,53 +863,56 @@ function draw(){
 
         ctx.beginPath();
 
-        ctx.moveTo(
-            0,
-            p
-        );
-
+        ctx.moveTo(0,p);
         ctx.lineTo(
             canvas.width,
             p
         );
 
         ctx.stroke();
-
     }
 
 
     drawApple();
 
-    drawSnake();
+    const animatedSnake =
+        getAnimatedSnake(progress);
 
+    drawSnake(
+        animatedSnake
+    );
 }
 
 
-/* =========================
-   PRAWDZIWIE WYGLĄDAJĄCY WĄŻ
-========================= */
+/* =============================
+   PŁYNNY WĄŻ
+============================= */
 
-function drawSnake(){
+function drawSnake(points) {
 
-    if(
-        snake.length === 0
-    )
+    if (!points.length)
         return;
 
-
     const radius =
-        cellSize * .32;
+        cellSize * 0.30;
 
 
     /*
-    Najpierw rysujemy grube
-    połączenia między segmentami.
-    Dzięki temu nie wygląda to
-    jak osobne klocki.
+    ==========================
+    CIAŁO JAK JEDNA LINIA
+    ==========================
+
+    Nie rysujemy już:
+
+    ● ● ● ● ●
+
+    tylko jedną grubą linię:
+
+    ●━━━━━━●
     */
 
     ctx.strokeStyle =
-        "#45df67";
+        "#43df68";
 
     ctx.lineWidth =
         radius * 2;
@@ -1017,130 +923,119 @@ function drawSnake(){
     ctx.lineJoin =
         "round";
 
-
     ctx.beginPath();
 
 
-    const firstX =
-        snake[0].x *
-        cellSize +
-        cellSize / 2;
-
-    const firstY =
-        snake[0].y *
-        cellSize +
-        cellSize / 2;
-
+    const first =
+        points[0];
 
     ctx.moveTo(
-        firstX,
-        firstY
+        first.x * cellSize +
+            cellSize / 2,
+
+        first.y * cellSize +
+            cellSize / 2
     );
 
 
-    for(
-        let i=1;
-        i<snake.length;
+    for (
+        let i = 1;
+        i < points.length;
         i++
-    ){
+    ) {
 
-        const x =
-            snake[i].x *
-            cellSize +
-            cellSize / 2;
-
-        const y =
-            snake[i].y *
-            cellSize +
-            cellSize / 2;
-
+        const part =
+            points[i];
 
         ctx.lineTo(
-            x,
-            y
+
+            part.x * cellSize +
+                cellSize / 2,
+
+            part.y * cellSize +
+                cellSize / 2
         );
-
     }
-
 
     ctx.stroke();
 
 
     /*
-    Zaokrąglone części ciała.
+    Ogon stopniowo zwężamy.
+    Dzięki temu wygląda bardziej
+    jak prawdziwy wąż.
     */
 
-    for(
-        let i=1;
-        i<snake.length;
+    for (
+        let i = 1;
+        i < points.length;
         i++
-    ){
+    ) {
 
         const part =
-            snake[i];
+            points[i];
 
-        const x =
-            part.x *
-            cellSize +
-            cellSize / 2;
+        const percent =
+            i /
+            Math.max(
+                points.length - 1,
+                1
+            );
 
-        const y =
-            part.y *
-            cellSize +
-            cellSize / 2;
+        const bodyRadius =
+            radius *
+            (
+                1 -
+                percent * 0.30
+            );
 
 
         ctx.beginPath();
 
         ctx.arc(
-            x,
-            y,
-            radius,
+
+            part.x * cellSize +
+                cellSize / 2,
+
+            part.y * cellSize +
+                cellSize / 2,
+
+            bodyRadius,
+
             0,
             Math.PI * 2
         );
 
         ctx.fillStyle =
-            "#45df67";
+            "#43df68";
 
         ctx.fill();
-
     }
 
 
-    drawSnakeHead();
-
+    drawSnakeHead(
+        points[0]
+    );
 }
 
 
-/* =========================
-   GŁOWA WĘŻA
-========================= */
+/* =============================
+   GŁOWA
+============================= */
 
-function drawSnakeHead(){
-
-    const head =
-        snake[0];
-
+function drawSnakeHead(head) {
 
     const x =
-        head.x *
-        cellSize +
+        head.x * cellSize +
         cellSize / 2;
 
     const y =
-        head.y *
-        cellSize +
+        head.y * cellSize +
         cellSize / 2;
 
-
     const radius =
-        cellSize * .38;
+        cellSize * 0.37;
 
-
-    /*
-    Głowa
-    */
 
     ctx.beginPath();
 
@@ -1153,22 +1048,20 @@ function drawSnakeHead(){
     );
 
     ctx.fillStyle =
-        "#66f184";
+        "#69f388";
 
     ctx.fill();
 
 
     /*
-    Położenie oczu zależne
-    od kierunku poruszania.
+    OCZY
     */
 
-    const eyeDistance =
-        radius * .38;
+    const side =
+        radius * 0.38;
 
-    const forward =
-        radius * .35;
-
+    const front =
+        radius * 0.38;
 
     let eye1X;
     let eye1Y;
@@ -1177,57 +1070,44 @@ function drawSnakeHead(){
     let eye2Y;
 
 
-    if(direction.x !== 0){
+    if (direction.x !== 0) {
 
         eye1X =
             x +
-            direction.x *
-            forward;
+            direction.x * front;
 
         eye2X =
             eye1X;
 
         eye1Y =
-            y -
-            eyeDistance;
+            y - side;
 
         eye2Y =
-            y +
-            eyeDistance;
+            y + side;
 
-    }
-
-    else{
+    } else {
 
         eye1Y =
             y +
-            direction.y *
-            forward;
+            direction.y * front;
 
         eye2Y =
             eye1Y;
 
         eye1X =
-            x -
-            eyeDistance;
+            x - side;
 
         eye2X =
-            x +
-            eyeDistance;
-
+            x + side;
     }
 
 
-    const eyeRadius =
+    const eyeSize =
         Math.max(
             2,
-            radius * .13
+            radius * 0.15
         );
 
-
-    /*
-    Białka oczu
-    */
 
     ctx.fillStyle =
         "white";
@@ -1238,7 +1118,7 @@ function drawSnakeHead(){
     ctx.arc(
         eye1X,
         eye1Y,
-        eyeRadius * 1.7,
+        eyeSize * 1.7,
         0,
         Math.PI * 2
     );
@@ -1251,7 +1131,7 @@ function drawSnakeHead(){
     ctx.arc(
         eye2X,
         eye2Y,
-        eyeRadius * 1.7,
+        eyeSize * 1.7,
         0,
         Math.PI * 2
     );
@@ -1260,25 +1140,25 @@ function drawSnakeHead(){
 
 
     /*
-    Źrenice
+    ŹRENICE
     */
 
     ctx.fillStyle =
-        "#111";
+        "#101010";
 
 
     ctx.beginPath();
 
     ctx.arc(
         eye1X +
-        direction.x *
-        eyeRadius * .5,
+            direction.x *
+            eyeSize * 0.55,
 
         eye1Y +
-        direction.y *
-        eyeRadius * .5,
+            direction.y *
+            eyeSize * 0.55,
 
-        eyeRadius,
+        eyeSize,
 
         0,
         Math.PI * 2
@@ -1291,48 +1171,40 @@ function drawSnakeHead(){
 
     ctx.arc(
         eye2X +
-        direction.x *
-        eyeRadius * .5,
+            direction.x *
+            eyeSize * 0.55,
 
         eye2Y +
-        direction.y *
-        eyeRadius * .5,
+            direction.y *
+            eyeSize * 0.55,
 
-        eyeRadius,
+        eyeSize,
 
         0,
         Math.PI * 2
     );
 
     ctx.fill();
-
 }
 
 
-/* =========================
+/* =============================
    JABŁKO
-========================= */
+============================= */
 
-function drawApple(){
+function drawApple() {
 
     const x =
-        apple.x *
-        cellSize +
+        apple.x * cellSize +
         cellSize / 2;
 
     const y =
-        apple.y *
-        cellSize +
+        apple.y * cellSize +
         cellSize / 2;
 
-
     const radius =
-        cellSize * .28;
+        cellSize * 0.27;
 
-
-    /*
-    Jabłko
-    */
 
     ctx.beginPath();
 
@@ -1351,7 +1223,7 @@ function drawApple(){
 
 
     /*
-    Ogonek
+    OGONEK
     */
 
     ctx.strokeStyle =
@@ -1360,9 +1232,8 @@ function drawApple(){
     ctx.lineWidth =
         Math.max(
             2,
-            cellSize * .06
+            cellSize * .05
         );
-
 
     ctx.beginPath();
 
@@ -1373,14 +1244,14 @@ function drawApple(){
 
     ctx.lineTo(
         x + radius * .12,
-        y - radius * 1.35
+        y - radius * 1.3
     );
 
     ctx.stroke();
 
 
     /*
-    Listek
+    LISTEK
     */
 
     ctx.fillStyle =
@@ -1393,7 +1264,7 @@ function drawApple(){
         y - radius * 1.05,
 
         radius * .42,
-        radius * .20,
+        radius * .2,
 
         -.5,
 
@@ -1402,28 +1273,29 @@ function drawApple(){
     );
 
     ctx.fill();
-
 }
 
 
-/* =========================
-   KONIEC
-========================= */
+/* =============================
+   KONIEC GRY
+============================= */
 
-function endGame(win){
+function endGame(win) {
 
     gameRunning = false;
 
-    clearInterval(
-        interval
-    );
+    if (animationID) {
 
+        cancelAnimationFrame(
+            animationID
+        );
+    }
 
     finalScore.textContent =
         score;
 
 
-    if(win){
+    if (win) {
 
         gameOverTitle.textContent =
             "WYGRANA! 🏆";
@@ -1431,138 +1303,113 @@ function endGame(win){
         gameOverTitle.style.color =
             "#4bea70";
 
-    }
-
-    else{
+    } else {
 
         gameOverTitle.textContent =
             "PRZEGRANA";
 
         gameOverTitle.style.color =
             "#ff4d4d";
-
     }
 
 
-    gameOverScreen
-        .classList
-        .add("active");
-
+    gameOverScreen.classList.add(
+        "active"
+    );
 }
 
 
-/* =========================
-   RESTART
-========================= */
+/* =============================
+   ZAGRAJ PONOWNIE
+============================= */
 
-document
-.getElementById(
+document.getElementById(
     "restartButton"
-)
-.onclick = function(){
-
-    /*
-    Ta sama mapa i te same
-    ustawienia.
-    */
+).onclick =
+function() {
 
     startGame();
-
 };
 
 
-/* =========================
+/* =============================
    POCZEKALNIA
-========================= */
+============================= */
 
-document
-.getElementById(
+document.getElementById(
     "lobbyButton"
-)
-.onclick = function(){
+).onclick =
+function() {
 
     gameRunning = false;
 
-    clearInterval(
-        interval
-    );
+    if (animationID) {
 
+        cancelAnimationFrame(
+            animationID
+        );
+    }
 
     saveSettings();
-
 
     mapSelect.value =
         mapSize;
 
+    gameOverScreen.classList.remove(
+        "active"
+    );
 
-    gameOverScreen
-        .classList
-        .remove("active");
+    game.classList.remove(
+        "active"
+    );
 
-    game
-        .classList
-        .remove("active");
-
-    lobby
-        .classList
-        .add("active");
-
+    lobby.classList.add(
+        "active"
+    );
 };
 
 
-/* =========================
+/* =============================
    KIERUNEK
-========================= */
+============================= */
 
-function changeDirection(
-    x,
-    y
-){
+function changeDirection(x,y) {
 
-    if(!gameRunning)
+    if (!gameRunning)
         return;
 
-
-    /*
-    Nie można natychmiast
-    zawrócić.
-    */
-
-    if(
+    if (
         x === -direction.x &&
         y === -direction.y
-    )
+    ) {
         return;
-
+    }
 
     nextDirection = {
         x,
         y
     };
-
 }
 
 
-/* =========================
+/* =============================
    KLAWIATURA
-========================= */
+============================= */
 
 document.addEventListener(
     "keydown",
-    function(e){
+    function(e) {
 
-        if(!gameRunning)
+        if (!gameRunning)
             return;
-
 
         const key =
             e.key.toLowerCase();
 
-
-        if(
+        if (
             key === "arrowup" ||
             key === "w"
-        ){
+        ) {
 
             e.preventDefault();
 
@@ -1570,14 +1417,12 @@ document.addEventListener(
                 0,
                 -1
             );
-
         }
 
-
-        else if(
+        else if (
             key === "arrowdown" ||
             key === "s"
-        ){
+        ) {
 
             e.preventDefault();
 
@@ -1585,14 +1430,12 @@ document.addEventListener(
                 0,
                 1
             );
-
         }
 
-
-        else if(
+        else if (
             key === "arrowleft" ||
             key === "a"
-        ){
+        ) {
 
             e.preventDefault();
 
@@ -1600,14 +1443,12 @@ document.addEventListener(
                 -1,
                 0
             );
-
         }
 
-
-        else if(
+        else if (
             key === "arrowright" ||
             key === "d"
-        ){
+        ) {
 
             e.preventDefault();
 
@@ -1615,74 +1456,44 @@ document.addEventListener(
                 1,
                 0
             );
-
         }
-
     }
 );
 
 
-/* =========================
+/* =============================
    TELEFON
-========================= */
+============================= */
 
-document
-.getElementById("up")
-.onclick =
-() =>
-changeDirection(
-    0,
-    -1
-);
+document.getElementById("up").onclick =
+() => changeDirection(0,-1);
 
+document.getElementById("down").onclick =
+() => changeDirection(0,1);
 
-document
-.getElementById("down")
-.onclick =
-() =>
-changeDirection(
-    0,
-    1
-);
+document.getElementById("left").onclick =
+() => changeDirection(-1,0);
+
+document.getElementById("right").onclick =
+() => changeDirection(1,0);
 
 
-document
-.getElementById("left")
-.onclick =
-() =>
-changeDirection(
-    -1,
-    0
-);
-
-
-document
-.getElementById("right")
-.onclick =
-() =>
-changeDirection(
-    1,
-    0
-);
-
-
-/* =========================
-   RESIZE
-========================= */
+/* =============================
+   ZMIANA ROZMIARU OKNA
+============================= */
 
 window.addEventListener(
     "resize",
-    function(){
+    function() {
 
-        if(
-            game.classList
-            .contains("active")
-        ){
+        if (
+            game.classList.contains(
+                "active"
+            )
+        ) {
 
             resizeCanvas();
-
         }
-
     }
 );
 
