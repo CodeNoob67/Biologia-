@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Snake</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: #101418;
+    color: white;
+    font-family: Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.screen {
+    display: none;
+    width: 100%;
+    text-align: center;
+}
+
+.screen.active {
+    display: block;
+}
+
+h1 {
+    font-size: 52px;
+    margin: 0 0 10px;
+}
+
+.subtitle {
+    color: #aaa;
+    margin-bottom: 30px;
+}
+
+.panel {
+    width: min(450px, 92vw);
+    margin: auto;
+    background: #1b2229;
+    border: 2px solid #303b45;
+    border-radius: 18px;
+    padding: 28px;
+}
+
+label {
+    display: block;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+select {
+    width: 100%;
+    padding: 13px;
+    font-size: 18px;
+    background: #101418;
+    color: white;
+    border: 2px solid #3b4854;
+    border-radius: 10px;
+    outline: none;
+}
+
+button {
+    border: none;
+    border-radius: 10px;
+    padding: 14px 24px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.15s;
+}
+
+button:hover {
+    transform: scale(1.04);
+}
+
+#startButton,
+#restartButton {
+    background: #39c75f;
+    color: #07130a;
+}
+
+#startButton {
+    width: 100%;
+    margin-top: 22px;
+}
+
+#lobbyButton {
+    background: #3b4854;
+    color: white;
+}
+
+.gameHeader {
+    width: min(650px, 94vw);
+    margin: auto auto 12px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 19px;
+}
+
+#gameBoard {
+    display: grid;
+    margin: auto;
+    background: #17251b;
+    border: 5px solid #39434c;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.cell {
+    border: 1px solid rgba(255,255,255,0.035);
+}
+
+.snake {
+    background: #43e66e;
+    border-radius: 20%;
+}
+
+.snakeHead {
+    background: #79ff99;
+    border-radius: 25%;
+}
+
+.apple {
+    background: #ff4141;
+    border-radius: 50%;
+    position: relative;
+}
+
+.apple::after {
+    content: "";
+    position: absolute;
+    width: 20%;
+    height: 30%;
+    background: #5dcf62;
+    left: 55%;
+    top: -15%;
+    transform: rotate(30deg);
+    border-radius: 5px;
+}
+
+.controlsInfo {
+    margin-top: 14px;
+    color: #89939c;
+}
+
+#gameOverScreen {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+#gameOverScreen.active {
+    display: flex;
+}
+
+.gameOverBox {
+    width: min(420px, 90vw);
+    background: #1b2229;
+    border: 2px solid #3a4650;
+    padding: 30px;
+    border-radius: 20px;
+}
+
+.gameOverBox h2 {
+    color: #ff5050;
+    font-size: 40px;
+    margin: 0 0 12px;
+}
+
+.buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.buttons button {
+    flex: 1;
+}
+
+#mobileControls {
+    margin: 20px auto 0;
+    width: 190px;
+    display: grid;
+    grid-template-columns: repeat(3, 60px);
+    grid-template-rows: repeat(2, 60px);
+    gap: 5px;
+}
+
+.control {
+    background: #29343d;
+    color: white;
+    padding: 0;
+    font-size: 25px;
+}
+
+#up {
+    grid-column: 2;
+}
+
+#left {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+#down {
+    grid-column: 2;
+    grid-row: 2;
+}
+
+#right {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+@media (min-width: 800px) {
+    #mobileControls {
+        display: none;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- POCZEKALNIA -->
+<div id="lobby" class="screen active">
+
+    <div class="panel">
+        <h1>🐍 SNAKE</h1>
+        <div class="subtitle">
+            Zjedz jak najwięcej jabłek!
+        </div>
+
+        <label for="mapSize">
+            Wielkość mapy
+        </label>
+
+        <select id="mapSize">
+            <option value="5">5 × 5</option>
+            <option value="8">8 × 8</option>
+            <option value="10">10 × 10</option>
+            <option value="15">15 × 15</option>
+            <option value="20">20 × 20</option>
+            <option value="25">25 × 25</option>
+        </select>
+
+        <button id="startButton">
+            ▶ ROZPOCZNIJ GRĘ
+        </button>
+    </div>
+
+</div>
+
+
+<!-- GRA -->
+<div id="game" class="screen">
+
+    <div class="gameHeader">
+        <div>
+            🍎 Wynik:
+            <b id="score">0</b>
+        </div>
+
+        <div>
+            Mapa:
+            <b id="mapInfo">8 × 8</b>
+        </div>
+    </div>
+
+    <div id="gameBoard"></div>
+
+    <div class="controlsInfo">
+        Sterowanie: WASD lub strzałki
+    </div>
+
+    <div id="mobileControls">
+        <button class="control" id="up">▲</button>
+        <button class="control" id="left">◀</button>
+        <button class="control" id="down">▼</button>
+        <button class="control" id="right">▶</button>
+    </div>
+
+</div>
+
+
+<!-- EKRAN PRZEGRANEJ -->
+<div id="gameOverScreen">
+
+    <div class="gameOverBox">
+
+        <h2>PRZEGRANA!</h2>
+
+        <p>
+            Twój wynik:
+            <b id="finalScore">0</b>
+        </p>
+
+        <div class="buttons">
+
+            <button id="restartButton">
+                🔄 Zagraj ponownie
+            </button>
+
+            <button id="lobbyButton">
+                🏠 Przejdź do poczekalni
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const lobby = document.getElementById("lobby");
+const game = document.getElementById("game");
+
+const gameBoard = document.getElementById("gameBoard");
+
+const mapSizeSelect = document.getElementById("mapSize");
+
+const scoreElement = document.getElementById("score");
+const finalScoreElement = document.getElementById("finalScore");
+const mapInfo = document.getElementById("mapInfo");
+
+const gameOverScreen =
+    document.getElementById("gameOverScreen");
+
+
+let mapSize = 8;
+
+let snake = [];
+
+let apple = {
+    x: 0,
+    y: 0
+};
+
+let direction = {
+    x: 1,
+    y: 0
+};
+
+let nextDirection = {
+    x: 1,
+    y: 0
+};
+
+let score = 0;
+
+let gameInterval = null;
+
+let gameRunning = false;
+
+
+/* =========================
+   WCZYTANIE USTAWIEŃ
+========================= */
+
+const savedMapSize =
+    localStorage.getItem("snakeMapSize");
+
+if (savedMapSize) {
+
+    mapSizeSelect.value = savedMapSize;
+
+}
+
+
+/* =========================
+   URUCHOMIENIE GRY
+========================= */
+
+document
+.getElementById("startButton")
+.addEventListener("click", function() {
+
+    mapSize =
+        Number(mapSizeSelect.value);
+
+    saveSettings();
+
+    startGame();
+
+});
+
+
+function saveSettings() {
+
+    localStorage.setItem(
+        "snakeMapSize",
+        mapSize
+    );
+
+}
+
+
+/* =========================
+   START GRY
+========================= */
+
+function startGame() {
+
+    clearInterval(gameInterval);
+
+    lobby.classList.remove("active");
+
+    game.classList.add("active");
+
+    gameOverScreen.classList.remove("active");
+
+    score = 0;
+
+    scoreElement.textContent = score;
+
+    mapInfo.textContent =
+        mapSize + " × " + mapSize;
+
+
+    /* początek węża */
+
+    const center =
+        Math.floor(mapSize / 2);
+
+    snake = [
+        {
+            x: center,
+            y: center
+        }
+    ];
+
+
+    direction = {
+        x: 1,
+        y: 0
+    };
+
+    nextDirection = {
+        x: 1,
+        y: 0
+    };
+
+
+    createBoard();
+
+    spawnApple();
+
+    drawGame();
+
+    gameRunning = true;
+
+
+    /*
+    Mniejsze mapy są trochę wolniejsze,
+    żeby nie były za trudne.
+    */
+
+    let speed = 180;
+
+    if (mapSize <= 5) {
+        speed = 300;
+    }
+
+    else if (mapSize <= 8) {
+        speed = 240;
+    }
+
+    else if (mapSize <= 10) {
+        speed = 210;
+    }
+
+    else if (mapSize >= 20) {
+        speed = 140;
+    }
+
+
+    gameInterval =
+        setInterval(gameLoop, speed);
+
+}
+
+
+/* =========================
+   TWORZENIE MAPY
+========================= */
+
+function createBoard() {
+
+    gameBoard.innerHTML = "";
+
+    const maxBoardSize =
+        Math.min(
+            window.innerWidth * 0.90,
+            window.innerHeight * 0.68,
+            650
+        );
+
+    const cellSize =
+        Math.floor(maxBoardSize / mapSize);
+
+    gameBoard.style.gridTemplateColumns =
+        `repeat(${mapSize}, ${cellSize}px)`;
+
+    gameBoard.style.gridTemplateRows =
+        `repeat(${mapSize}, ${cellSize}px)`;
+
+
+    for (
+        let i = 0;
+        i < mapSize * mapSize;
+        i++
+    ) {
+
+        const cell =
+            document.createElement("div");
+
+        cell.className = "cell";
+
+        gameBoard.appendChild(cell);
+
+    }
+
+}
+
+
+/* =========================
+   GŁÓWNA PĘTLA GRY
+========================= */
+
+function gameLoop() {
+
+    if (!gameRunning) return;
+
+    direction = nextDirection;
+
+
+    const newHead = {
+
+        x:
+            snake[0].x +
+            direction.x,
+
+        y:
+            snake[0].y +
+            direction.y
+
+    };
+
+
+    /* ŚCIANY */
+
+    if (
+        newHead.x < 0 ||
+        newHead.x >= mapSize ||
+        newHead.y < 0 ||
+        newHead.y >= mapSize
+    ) {
+
+        endGame();
+
+        return;
+
+    }
+
+
+    /* UDERZENIE W SIEBIE */
+
+    for (
+        let i = 0;
+        i < snake.length;
+        i++
+    ) {
+
+        if (
+            snake[i].x === newHead.x &&
+            snake[i].y === newHead.y
+        ) {
+
+            endGame();
+
+            return;
+
+        }
+
+    }
+
+
+    snake.unshift(newHead);
+
+
+    /* JABŁKO */
+
+    if (
+        newHead.x === apple.x &&
+        newHead.y === apple.y
+    ) {
+
+        score++;
+
+        scoreElement.textContent =
+            score;
+
+        /*
+        Nie usuwamy ogona,
+        więc wąż rośnie.
+        */
+
+        if (
+            snake.length ===
+            mapSize * mapSize
+        ) {
+
+            endGame(true);
+
+            return;
+
+        }
+
+        spawnApple();
+
+    }
+
+    else {
+
+        snake.pop();
+
+    }
+
+
+    drawGame();
+
+}
+
+
+/* =========================
+   LOSOWANIE JABŁKA
+========================= */
+
+function spawnApple() {
+
+    let freePositions = [];
+
+
+    for (
+        let y = 0;
+        y < mapSize;
+        y++
+    ) {
+
+        for (
+            let x = 0;
+            x < mapSize;
+            x++
+        ) {
+
+            let occupied = false;
+
+
+            for (
+                let i = 0;
+                i < snake.length;
+                i++
+            ) {
+
+                if (
+                    snake[i].x === x &&
+                    snake[i].y === y
+                ) {
+
+                    occupied = true;
+
+                    break;
+
+                }
+
+            }
+
+
+            if (!occupied) {
+
+                freePositions.push({
+                    x: x,
+                    y: y
+                });
+
+            }
+
+        }
+
+    }
+
+
+    if (
+        freePositions.length === 0
+    ) {
+
+        return;
+
+    }
+
+
+    apple =
+        freePositions[
+            Math.floor(
+                Math.random() *
+                freePositions.length
+            )
+        ];
+
+}
+
+
+/* =========================
+   RYSOWANIE
+========================= */
+
+function drawGame() {
+
+    const cells =
+        gameBoard.children;
+
+
+    for (
+        let i = 0;
+        i < cells.length;
+        i++
+    ) {
+
+        cells[i].className =
+            "cell";
+
+    }
+
+
+    /* JABŁKO */
+
+    const appleIndex =
+        apple.y * mapSize +
+        apple.x;
+
+    if (cells[appleIndex]) {
+
+        cells[appleIndex]
+            .classList
+            .add("apple");
+
+    }
+
+
+    /* WĄŻ */
+
+    snake.forEach(
+        function(part, index) {
+
+            const cellIndex =
+                part.y * mapSize +
+                part.x;
+
+            if (!cells[cellIndex]) {
+                return;
+            }
+
+
+            cells[cellIndex]
+                .classList
+                .add("snake");
+
+
+            if (index === 0) {
+
+                cells[cellIndex]
+                    .classList
+                    .add("snakeHead");
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================
+   KONIEC GRY
+========================= */
+
+function endGame(win = false) {
+
+    gameRunning = false;
+
+    clearInterval(gameInterval);
+
+
+    finalScoreElement.textContent =
+        score;
+
+
+    const title =
+        gameOverScreen
+        .querySelector("h2");
+
+
+    if (win) {
+
+        title.textContent =
+            "WYGRANA! 🏆";
+
+    }
+
+    else {
+
+        title.textContent =
+            "PRZEGRANA!";
+
+    }
+
+
+    gameOverScreen
+        .classList
+        .add("active");
+
+}
+
+
+/* =========================
+   ZAGRAJ PONOWNIE
+========================= */
+
+document
+.getElementById("restartButton")
+.addEventListener(
+    "click",
+    function() {
+
+        /*
+        Nie zmieniamy mapSize.
+        Gra startuje z identycznymi
+        ustawieniami.
+        */
+
+        startGame();
+
+    }
+);
+
+
+/* =========================
+   POWRÓT DO POCZEKALNI
+========================= */
+
+document
+.getElementById("lobbyButton")
+.addEventListener(
+    "click",
+    function() {
+
+        gameRunning = false;
+
+        clearInterval(gameInterval);
+
+        saveSettings();
+
+
+        mapSizeSelect.value =
+            mapSize;
+
+
+        gameOverScreen
+            .classList
+            .remove("active");
+
+        game.classList
+            .remove("active");
+
+        lobby.classList
+            .add("active");
+
+    }
+);
+
+
+/* =========================
+   STEROWANIE
+========================= */
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (!gameRunning) return;
+
+
+        const key =
+            event.key.toLowerCase();
+
+
+        if (
+            key === "arrowup" ||
+            key === "w"
+        ) {
+
+            event.preventDefault();
+
+            changeDirection(0, -1);
+
+        }
+
+
+        else if (
+            key === "arrowdown" ||
+            key === "s"
+        ) {
+
+            event.preventDefault();
+
+            changeDirection(0, 1);
+
+        }
+
+
+        else if (
+            key === "arrowleft" ||
+            key === "a"
+        ) {
+
+            event.preventDefault();
+
+            changeDirection(-1, 0);
+
+        }
+
+
+        else if (
+            key === "arrowright" ||
+            key === "d"
+        ) {
+
+            event.preventDefault();
+
+            changeDirection(1, 0);
+
+        }
+
+    }
+);
+
+
+function changeDirection(x, y) {
+
+    /*
+    Nie można od razu zawrócić
+    i wjechać w siebie.
+    */
+
+    if (
+        x === -direction.x &&
+        y === -direction.y
+    ) {
+
+        return;
+
+    }
+
+
+    nextDirection = {
+        x: x,
+        y: y
+    };
+
+}
+
+
+/* =========================
+   PRZYCISKI TELEFON
+========================= */
+
+document
+.getElementById("up")
+.addEventListener(
+    "click",
+    () =>
+        changeDirection(0, -1)
+);
+
+
+document
+.getElementById("down")
+.addEventListener(
+    "click",
+    () =>
+        changeDirection(0, 1)
+);
+
+
+document
+.getElementById("left")
+.addEventListener(
+    "click",
+    () =>
+        changeDirection(-1, 0)
+);
+
+
+document
+.getElementById("right")
+.addEventListener(
+    "click",
+    () =>
+        changeDirection(1, 0)
+);
+
+
+/* =========================
+   ZMIANA ROZMIARU OKNA
+========================= */
+
+window.addEventListener(
+    "resize",
+    function() {
+
+        if (gameRunning) {
+
+            createBoard();
+
+            drawGame();
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>
