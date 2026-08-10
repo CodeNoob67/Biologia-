@@ -1,0 +1,177 @@
+```html
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Moje strony</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #111827;
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 50px 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 700px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 42px;
+      margin-bottom: 40px;
+    }
+
+    .category {
+      background: #1f2937;
+      border-radius: 15px;
+      margin-bottom: 18px;
+      overflow: hidden;
+      border: 2px solid #374151;
+    }
+
+    .category-title {
+      width: 100%;
+      border: none;
+      background: #1f2937;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+      padding: 22px;
+      cursor: pointer;
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: 0.2s;
+    }
+
+    .category-title:hover {
+      background: #2d3748;
+    }
+
+    .arrow {
+      transition: transform 0.3s;
+    }
+
+    .category.active .arrow {
+      transform: rotate(180deg);
+    }
+
+    .pages {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease;
+      background: #111827;
+    }
+
+    .category.active .pages {
+      max-height: 400px;
+    }
+
+    .pages a {
+      display: block;
+      color: white;
+      text-decoration: none;
+      padding: 17px 25px;
+      font-size: 20px;
+      border-top: 1px solid #374151;
+      transition: 0.2s;
+    }
+
+    .pages a:hover {
+      background: #2563eb;
+      padding-left: 35px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <h1>🌐 Moje strony</h1>
+
+    <!-- NAUKA -->
+    <div class="category">
+
+      <button class="category-title">
+        📚 Nauka
+        <span class="arrow">▼</span>
+      </button>
+
+      <div class="pages">
+        <a href="index.html">index.html</a>
+      </div>
+
+    </div>
+
+
+    <!-- ZABAWY -->
+    <div class="category">
+
+      <button class="category-title">
+        🎲 Zabawy
+        <span class="arrow">▼</span>
+      </button>
+
+      <div class="pages">
+        <a href="chess.html">chess.html</a>
+        <a href="snake.html">snake.html</a>
+      </div>
+
+    </div>
+
+
+    <!-- GRY -->
+    <div class="category">
+
+      <button class="category-title">
+        🎮 Gry
+        <span class="arrow">▼</span>
+      </button>
+
+      <div class="pages">
+        <a href="gra.html">gra.html</a>
+        <a href="gra1.html">gra1.html</a>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <script>
+
+    const categories = document.querySelectorAll(".category");
+
+    categories.forEach(category => {
+
+      const button = category.querySelector(".category-title");
+
+      button.addEventListener("click", () => {
+
+        category.classList.toggle("active");
+
+      });
+
+    });
+
+  </script>
+
+</body>
+</html>
+```
