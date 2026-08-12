@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ziemia przez miliony lat</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    background: #02050c;
+    color: white;
+}
+
+#app {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+
+/* ===== GWIAZDY ===== */
+
+#stars {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 10% 20%, white 0 1px, transparent 2px),
+        radial-gradient(circle at 30% 70%, white 0 1px, transparent 2px),
+        radial-gradient(circle at 70% 40%, white 0 1px, transparent 2px),
+        radial-gradient(circle at 90% 80%, white 0 1px, transparent 2px),
+        radial-gradient(circle at 50% 10%, white 0 1px, transparent 2px),
+        radial-gradient(circle at 15% 90%, white 0 1px, transparent 2px);
+    background-size: 180px 180px;
+    opacity: .7;
+}
+
+/* ===== GÓRNY PANEL ===== */
+
+.topbar {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    background: rgba(10,20,35,.82);
+    backdrop-filter: blur(12px);
+
+    padding: 10px;
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 18px;
+}
+
+button {
+    border: none;
+    padding: 11px 18px;
+    border-radius: 12px;
+    cursor: pointer;
+
+    background: #17283c;
+    color: white;
+
+    font-size: 15px;
+    font-weight: bold;
+
+    transition: .2s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    background: #23405e;
+}
+
+button.active {
+    background: #1e88e5;
+}
+
+/* ===== INFO ===== */
+
+.info {
+    position: absolute;
+    left: 25px;
+    top: 100px;
+
+    width: 310px;
+
+    padding: 20px;
+
+    background: rgba(8,15,25,.82);
+    backdrop-filter: blur(10px);
+
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 18px;
+
+    z-index: 10;
+}
+
+.info h1 {
+    margin: 0 0 8px;
+    font-size: 25px;
+}
+
+.big-year {
+    font-size: 28px;
+    font-weight: bold;
+    color: #64b5f6;
+    margin-bottom: 12px;
+}
+
+.label {
+    color: #8ba6bd;
+    font-size: 12px;
+    text-transform: uppercase;
+    margin-top: 12px;
+}
+
+.value {
+    margin-top: 3px;
+    font-weight: bold;
+}
+
+.description {
+    margin-top: 15px;
+    line-height: 1.45;
+    color: #d7e4ee;
+}
+
+/* ===== ZIEMIA ===== */
+
+#earthView {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.earth {
+    width: 480px;
+    height: 480px;
+
+    border-radius: 50%;
+
+    position: relative;
+
+    background:
+        radial-gradient(circle at 35% 30%,
+        rgba(255,255,255,.25),
+        transparent 20%),
+
+        radial-gradient(circle at center,
+        #176ba0 0%,
+        #07527e 60%,
+        #031d35 100%);
+
+    box-shadow:
+        inset -60px -30px 100px rgba(0,0,0,.65),
+        inset 30px 20px 50px rgba(255,255,255,.08),
+        0 0 80px rgba(30,140,255,.25);
+
+    overflow: hidden;
+
+    cursor: grab;
+
+    transition: background 1s;
+}
+
+.earth:active {
+    cursor: grabbing;
+}
+
+.land {
+    position: absolute;
+
+    background: #5e8f43;
+
+    border-radius: 50% 45% 55% 40%;
+
+    transition:
+        transform 1s,
+        width 1s,
+        height 1s,
+        left 1s,
+        top 1s,
+        background 1s;
+}
+
+.land1 {
+    width: 170px;
+    height: 110px;
+    left: 70px;
+    top: 80px;
+    transform: rotate(25deg);
+}
+
+.land2 {
+    width: 130px;
+    height: 180px;
+    left: 210px;
+    top: 180px;
+    transform: rotate(-20deg);
+}
+
+.land3 {
+    width: 100px;
+    height: 75px;
+    left: 335px;
+    top: 110px;
+    transform: rotate(20deg);
+}
+
+.land4 {
+    width: 90px;
+    height: 65px;
+    left: 60px;
+    top: 310px;
+    transform: rotate(-30deg);
+}
+
+.cloud {
+    position: absolute;
+    background: rgba(255,255,255,.28);
+    filter: blur(7px);
+    border-radius: 50%;
+}
+
+.cloud1 {
+    width: 180px;
+    height: 25px;
+    top: 100px;
+    left: 130px;
+}
+
+.cloud2 {
+    width: 140px;
+    height: 20px;
+    top: 290px;
+    left: 70px;
+}
+
+.cloud3 {
+    width: 120px;
+    height: 18px;
+    top: 200px;
+    left: 300px;
+}
+
+/* ===== WIDOK ŻYCIA ===== */
+
+#lifeView {
+    display: none;
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+
+.environment {
+    position: absolute;
+    inset: 0;
+    transition: background 1s;
+}
+
+.sun {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+
+    right: 10%;
+    top: 12%;
+
+    border-radius: 50%;
+
+    background: #ffe76b;
+
+    box-shadow:
+        0 0 50px #ffd54f,
+        0 0 120px rgba(255,200,50,.5);
+}
+
+.ground {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    height: 32%;
+
+    background: #536d32;
+}
+
+.water {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    height: 58%;
+
+    background: linear-gradient(
+        rgba(35,155,200,.8),
+        #073c65
+    );
+}
+
+.organisms {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.organism {
+    position: absolute;
+    font-size: 70px;
+
+    filter: drop-shadow(0 10px 5px rgba(0,0,0,.35));
+
+    animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%,100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-15px);
+    }
+}
+
+.organism:nth-child(2) {
+    animation-delay: -1s;
+}
+
+.organism:nth-child(3) {
+    animation-delay: -2s;
+}
+
+.organism:nth-child(4) {
+    animation-delay: -3s;
+}
+
+/* ===== DOLNA OŚ CZASU ===== */
+
+.timeline {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: min(900px, 90vw);
+
+    background: rgba(8,15,25,.9);
+    backdrop-filter: blur(12px);
+
+    padding: 18px 22px;
+
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,.15);
+
+    z-index: 30;
+}
+
+.timeline-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+#slider {
+    width: 100%;
+    cursor: pointer;
+}
+
+.marks {
+    display: flex;
+    justify-content: space-between;
+
+    color: #8fa4b7;
+    font-size: 11px;
+
+    margin-top: 5px;
+}
+
+/* ===== SZYBKIE DATY ===== */
+
+.quick {
+    display: flex;
+    gap: 7px;
+    margin-top: 12px;
+    overflow-x: auto;
+}
+
+.quick button {
+    font-size: 12px;
+    padding: 7px 10px;
+    white-space: nowrap;
+}
+
+/* ===== RESPONSYWNOŚĆ ===== */
+
+@media(max-width:800px) {
+
+    .earth {
+        width: 330px;
+        height: 330px;
+        transform: scale(.85);
+    }
+
+    .info {
+        width: 240px;
+        left: 10px;
+        top: 80px;
+        font-size: 13px;
+    }
+
+    .info h1 {
+        font-size: 19px;
+    }
+
+    .big-year {
+        font-size: 21px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="app">
+
+<div id="stars"></div>
+
+<div class="topbar">
+    <button id="earthBtn" class="active">🌍 Ziemia</button>
+    <button id="lifeBtn">🦖 Życie</button>
+</div>
+
+<div class="info">
+
+    <h1>Historia Ziemi</h1>
+
+    <div class="big-year" id="yearDisplay">
+        4540 mln lat temu
+    </div>
+
+    <div class="label">Eon / era</div>
+    <div class="value" id="era">Hadeik</div>
+
+    <div class="label">Środowisko</div>
+    <div class="value" id="environmentText">
+        Młoda, gorąca Ziemia
+    </div>
+
+    <div class="label">Życie</div>
+    <div class="value" id="lifeText">
+        Brak znanego życia
+    </div>
+
+    <div class="description" id="description">
+        Ziemia dopiero się formuje.
+    </div>
+
+</div>
+
+<!-- ZIEMIA -->
+
+<div id="earthView">
+
+    <div class="earth" id="earth">
+
+        <div class="land land1"></div>
+        <div class="land land2"></div>
+        <div class="land land3"></div>
+        <div class="land land4"></div>
+
+        <div class="cloud cloud1"></div>
+        <div class="cloud cloud2"></div>
+        <div class="cloud cloud3"></div>
+
+    </div>
+
+</div>
+
+<!-- ŻYCIE -->
+
+<div id="lifeView">
+
+    <div class="environment" id="environment">
+
+        <div class="sun"></div>
+
+        <div class="ground" id="ground"></div>
+
+        <div class="water" id="water"></div>
+
+        <div class="organisms" id="organisms"></div>
+
+    </div>
+
+</div>
+
+<!-- OŚ CZASU -->
+
+<div class="timeline">
+
+    <div class="timeline-header">
+        <b>🌋 Powstanie Ziemi</b>
+        <b>🌍 Współczesność</b>
+    </div>
+
+    <input
+        id="slider"
+        type="range"
+        min="0"
+        max="4540"
+        step="1"
+        value="0"
+    >
+
+    <div class="marks">
+        <span>4540 mln</span>
+        <span>4000</span>
+        <span>3000</span>
+        <span>2000</span>
+        <span>1000</span>
+        <span>500</span>
+        <span>Dziś</span>
+    </div>
+
+    <div class="quick">
+
+        <button onclick="setTime(0)">🌋 4540 mln</button>
+
+        <button onclick="setMillionsAgo(3500)">
+            🦠 Pierwsze życie
+        </button>
+
+        <button onclick="setMillionsAgo(541)">
+            🪱 Kambr
+        </button>
+
+        <button onclick="setMillionsAgo(375)">
+            🐟 Dewon
+        </button>
+
+        <button onclick="setMillionsAgo(300)">
+            🌿 Karbon
+        </button>
+
+        <button onclick="setMillionsAgo(230)">
+            🦖 Dinozaury
+        </button>
+
+        <button onclick="setMillionsAgo(66)">
+            ☄️ 66 mln
+        </button>
+
+        <button onclick="setMillionsAgo(2)">
+            🦣 Epoka lodowcowa
+        </button>
+
+        <button onclick="setMillionsAgo(0)">
+            🧑 Dziś
+        </button>
+
+    </div>
+
+</div>
+
+</div>
+
+<script>
+
+/* =====================================================
+   ELEMENTY
+===================================================== */
+
+const slider = document.getElementById("slider");
+
+const yearDisplay =
+    document.getElementById("yearDisplay");
+
+const era =
+    document.getElementById("era");
+
+const environmentText =
+    document.getElementById("environmentText");
+
+const lifeText =
+    document.getElementById("lifeText");
+
+const description =
+    document.getElementById("description");
+
+const earth =
+    document.getElementById("earth");
+
+const earthView =
+    document.getElementById("earthView");
+
+const lifeView =
+    document.getElementById("lifeView");
+
+const earthBtn =
+    document.getElementById("earthBtn");
+
+const lifeBtn =
+    document.getElementById("lifeBtn");
+
+const environment =
+    document.getElementById("environment");
+
+const organisms =
+    document.getElementById("organisms");
+
+const water =
+    document.getElementById("water");
+
+const ground =
+    document.getElementById("ground");
+
+const lands =
+    document.querySelectorAll(".land");
+
+
+/* =====================================================
+   DANE GEOLOGICZNE
+===================================================== */
+
+const periods = [
+
+{
+    min: 4400,
+    era: "Hadeik",
+    environment: "Młoda, wulkaniczna Ziemia",
+    life: "Brak znanego życia",
+    description:
+    "Powierzchnia jest bardzo gorąca. Występuje silny wulkanizm, częste uderzenia asteroid i stopniowo powstają pierwsze oceany.",
+    type: "lava",
+    organisms: []
+},
+
+{
+    min: 4000,
+    era: "Hadeik",
+    environment: "Pierwsze oceany",
+    life: "Brak potwierdzonego życia",
+    description:
+    "Ziemia ochładza się. Para wodna kondensuje i powstają ogromne zbiorniki ciekłej wody.",
+    type: "earlyOcean",
+    organisms: []
+},
+
+{
+    min: 2500,
+    era: "Archaik",
+    environment: "Oceany i niewielkie kontynenty",
+    life: "Bakterie i archeony",
+    description:
+    "W oceanach istnieją już bardzo proste organizmy jednokomórkowe. Stromatolity stają się charakterystycznym elementem płytkich mórz.",
+    type: "microbe",
+    organisms: ["🦠","🦠","🦠","🫧"]
+},
+
+{
+    min: 1600,
+    era: "Proterozoik",
+    environment: "Oceany bogatsze w tlen",
+    life: "Eukarionty",
+    description:
+    "Rozwijają się komórki posiadające jądro. Z czasem pojawiają się bardziej złożone organizmy.",
+    type: "microbe",
+    organisms: ["🦠","🫧","🦠"]
+},
+
+{
+    min: 635,
+    era: "Proterozoik",
+    environment: "Morza ediakarskie",
+    life: "Pierwsze duże organizmy wielokomórkowe",
+    description:
+    "Na dnie mórz żyją miękkociałe organizmy ediakarskie. Życie staje się znacznie bardziej złożone.",
+    type: "ocean",
+    organisms: ["🪼","🪱","🪸","🪼"]
+},
+
+{
+    min: 485,
+    era: "Paleozoik — kambr",
+    environment: "Ciepłe płytkie morza",
+    life: "Trylobity i wiele zwierząt morskich",
+    description:
+    "Eksplozja kambryjska prowadzi do szybkiego zwiększenia różnorodności zwierząt.",
+    type: "ocean",
+    organisms: ["🦐","🪱","🪼","🐚","🦐"]
+},
+
+{
+    min: 419,
+    era: "Paleozoik — ordowik/sylur",
+    environment: "Morza i pierwsze rośliny lądowe",
+    life: "Ryby, bezkręgowce i proste rośliny",
+    description:
+    "Kręgowce rozwijają się w oceanach, a niewielkie rośliny zaczynają kolonizować ląd.",
+    type: "coast",
+    organisms: ["🐟","🐟","🦂","🌱"]
+},
+
+{
+    min: 359,
+    era: "Paleozoik — dewon",
+    environment: "Oceany, rzeki i pierwsze lasy",
+    life: "Ryby, Dunkleosteus i pierwsze czworonogi",
+    description:
+    "Dewon nazywany jest wiekiem ryb. W wodzie żyją wielkie ryby pancerne, a część kręgowców zaczyna wychodzić na ląd.",
+    type: "coast",
+    organisms: ["🐟","🐟","🦈","🌿","🐊"]
+},
+
+{
+    min: 299,
+    era: "Paleozoik — karbon",
+    environment: "Wilgotne bagienne lasy",
+    life: "Płazy i wielkie stawonogi",
+    description:
+    "Ogromne lasy rosną na bagnistych terenach. Wysoki poziom tlenu sprzyja dużym stawonogom.",
+    type: "forest",
+    organisms: ["🌿","🌴","🪲","🦎","🌿"]
+},
+
+{
+    min: 252,
+    era: "Paleozoik — perm",
+    environment: "Pangea i suche wnętrza kontynentu",
+    life: "Gady i synapsydy",
+    description:
+    "Większość lądów tworzy superkontynent Pangeę. Klimat w wielu regionach jest bardzo suchy.",
+    type: "desert",
+    organisms: ["🦎","🌿","🦎"]
+},
+
+{
+    min: 201,
+    era: "Mezozoik — trias",
+    environment: "Pangea",
+    life: "Pierwsze dinozaury i ssaki",
+    description:
+    "Pojawiają się pierwsze dinozaury. Żyją obok innych gadów oraz niewielkich wczesnych ssaków.",
+    type: "dinosaur",
+    organisms: ["🦖","🦎","🌴","🌿"]
+},
+
+{
+    min: 145,
+    era: "Mezozoik — jura",
+    environment: "Ciepły świat dinozaurów",
+    life: "Dinozaury, pterozaury i pierwsze ptaki",
+    description:
+    "Wielkie zauropody przemierzają lądy. Nad nimi latają pterozaury, a pojawiają się także pierwsze ptaki.",
+    type: "dinosaur",
+    organisms: ["🦕","🦖","🦅","🌲","🌿"]
+},
+
+{
+    min: 66,
+    era: "Mezozoik — kreda",
+    environment: "Ciepłe kontynenty i płytkie morza",
+    life: "Dinozaury i rośliny kwiatowe",
+    description:
+    "Dinozaury nadal dominują na lądzie. Rozprzestrzeniają się rośliny kwiatowe.",
+    type: "dinosaur",
+    organisms: ["🦖","🦕","🌺","🌿","🦅"]
+},
+
+{
+    min: 23,
+    era: "Kenozoik — paleogen",
+    environment: "Lasy i coraz chłodniejszy klimat",
+    life: "Ssaki i ptaki",
+    description:
+    "Po wymieraniu dinozaurów ssaki szybko zajmują wiele nowych nisz ekologicznych.",
+    type: "forest",
+    organisms: ["🐒","🐘","🦅","🌳"]
+},
+
+{
+    min: 2.58,
+    era: "Kenozoik — neogen",
+    environment: "Trawiaste równiny i lasy",
+    life: "Współczesne grupy ssaków",
+    description:
+    "Rozwijają się rozległe trawiaste ekosystemy. Żyją przodkowie wielu współczesnych zwierząt.",
+    type: "grass",
+    organisms: ["🐘","🦏","🐎","🐒","🌾"]
+},
+
+{
+    min: 0.0117,
+    era: "Czwartorzęd — plejstocen",
+    environment: "Epoka lodowcowa",
+    life: "Mamuty, wielkie ssaki i ludzie",
+    description:
+    "Lodowce pokrywają ogromne obszary półkuli północnej. Żyją mamuty i inne duże ssaki.",
+    type: "ice",
+    organisms: ["🦣","🐺","🦬","🧑"]
+},
+
+{
+    min: 0,
+    era: "Holocen — współczesność",
+    environment: "Współczesna Ziemia",
+    life: "Ogromna różnorodność organizmów",
+    description:
+    "Żyjemy w holocenie. Ludzie mają ogromny wpływ na ekosystemy całej planety.",
+    type: "modern",
+    organisms: ["🧑","🐘","🦅","🐋","🌳"]
+}
+
+];
+
+
+/* =====================================================
+   CZAS
+===================================================== */
+
+function getMillionsAgo() {
+
+    return 4540 - Number(slider.value);
+
+}
+
+function setMillionsAgo(mya) {
+
+    slider.value = 4540 - mya;
+
+    update();
+
+}
+
+function setTime(value) {
+
+    slider.value = value;
+
+    update();
+
+}
+
+
+/* =====================================================
+   ZNAJDŹ OKRES
+===================================================== */
+
+function findPeriod(mya) {
+
+    for(let i = 0; i < periods.length; i++) {
+
+        if(mya >= periods[i].min) {
+            return periods[i];
+        }
+
+    }
+
+    return periods[periods.length - 1];
+
+}
+
+
+/* =====================================================
+   WYGLĄD ZIEMI
+===================================================== */
+
+function updateEarth(mya, period) {
+
+    let ocean = "#176ba0";
+    let land = "#56883d";
+
+    if(period.type === "lava") {
+
+        earth.style.background =
+        "radial-gradient(circle at 35% 30%, #ffca80, transparent 15%), radial-gradient(circle, #c74716, #551207 70%, #120200)";
+
+        land = "#30120b";
+
+    }
+
+    else if(period.type === "earlyOcean") {
+
+        earth.style.background =
+        "radial-gradient(circle at 35% 30%, rgba(255,255,255,.25), transparent 20%), radial-gradient(circle, #376d77, #153842 70%, #06151b)";
+
+        land = "#44382c";
+
+    }
+
+    else if(period.type === "ice") {
+
+        earth.style.background =
+        "radial-gradient(circle at 35% 30%, rgba(255,255,255,.35), transparent 20%), radial-gradient(circle, #2185ad, #07516e 70%, #021927)";
+
+        land = "#d9eef1";
+
+    }
+
+    else {
+
+        earth.style.background =
+        "radial-gradient(circle at 35% 30%, rgba(255,255,255,.25), transparent 20%), radial-gradient(circle, #176ba0, #07527e 65%, #031d35)";
+
+    }
+
+    lands.forEach(l => {
+        l.style.background = land;
+    });
+
+
+    /*
+       UPROSZCZONE PRZESUWANIE KONTYNENTÓW
+    */
+
+    const progress =
+        1 - Math.min(mya / 1000, 1);
+
+    const l1 = document.querySelector(".land1");
+    const l2 = document.querySelector(".land2");
+    const l3 = document.querySelector(".land3");
+    const l4 = document.querySelector(".land4");
+
+
+    if(mya > 600) {
+
+        l1.style.left = "145px";
+        l1.style.top = "145px";
+
+        l2.style.left = "180px";
+        l2.style.top = "200px";
+
+        l3.style.left = "210px";
+        l3.style.top = "120px";
+
+        l4.style.left = "110px";
+        l4.style.top = "240px";
+
+    }
+
+    else if(mya > 180) {
+
+        /* PANGEA */
+
+        l1.style.left = "120px";
+        l1.style.top = "110px";
+
+        l2.style.left = "190px";
+        l2.style.top = "150px";
+
+        l3.style.left = "250px";
+        l3.style.top = "120px";
+
+        l4.style.left = "130px";
+        l4.style.top = "260px";
+
+    }
+
+    else {
+
+        /* ROZPAD KONTYNENTÓW */
+
+        l1.style.left =
+        (70 + mya * .2) + "px";
+
+        l1.style.top = "80px";
+
+        l2.style.left =
+        (210 - mya * .12) + "px";
+
+        l2.style.top = "180px";
+
+        l3.style.left =
+        (335 - mya * .35) + "px";
+
+        l3.style.top = "110px";
+
+        l4.style.left =
+        (60 + mya * .3) + "px";
+
+        l4.style.top = "310px";
+
+    }
+
+}
+
+
+/* =====================================================
+   ŚRODOWISKO ŻYCIA
+===================================================== */
+
+function updateLife(period) {
+
+    organisms.innerHTML = "";
+
+    water.style.display = "block";
+    ground.style.display = "block";
+
+
+    switch(period.type) {
+
+        case "lava":
+
+            environment.style.background =
+            "linear-gradient(#4b1109,#e55a16)";
+
+            ground.style.background = "#2b1009";
+            water.style.display = "none";
+
+        break;
+
+
+        case "earlyOcean":
+
+            environment.style.background =
+            "linear-gradient(#5d4638,#637b80)";
+
+            ground.style.background = "#3c3028";
+
+            water.style.background =
+            "linear-gradient(rgba(80,130,140,.85),#163c48)";
+
+        break;
+
+
+        case "microbe":
+
+            environment.style.background =
+            "linear-gradient(#809d86,#47767b)";
+
+            ground.style.background = "#6b5b3d";
+
+            water.style.background =
+            "linear-gradient(#388c93,#0b4856)";
+
+        break;
+
+
+        case "ocean":
+
+            environment.style.background =
+            "linear-gradient(#70c7e4,#0a668c)";
+
+            ground.style.background = "#806a46";
+
+            water.style.background =
+            "linear-gradient(rgba(46,170,215,.8),#054a75)";
+
+        break;
+
+
+        case "coast":
+
+            environment.style.background =
+            "linear-gradient(#78c5dd,#c4e4c1)";
+
+            ground.style.background = "#587e36";
+
+            water.style.height = "45%";
+
+        break;
+
+
+        case "forest":
+
+            environment.style.background =
+            "linear-gradient(#65a5b3,#9fc980)";
+
+            ground.style.background = "#31551f";
+
+            water.style.height = "20%";
+
+        break;
+
+
+        case "desert":
+
+            environment.style.background =
+            "linear-gradient(#d49b66,#f2c97b)";
+
+            ground.style.background = "#a76f38";
+
+            water.style.display = "none";
+
+        break;
+
+
+        case "dinosaur":
+
+            environment.style.background =
+            "linear-gradient(#6db9d3,#c6db8a)";
+
+            ground.style.background = "#497128";
+
+            water.style.height = "16%";
+
+        break;
+
+
+        case "grass":
+
+            environment.style.background =
+            "linear-gradient(#79bde0,#d4e7a3)";
+
+            ground.style.background = "#7e9a43";
+
+            water.style.display = "none";
+
+        break;
+
+
+        case "ice":
+
+            environment.style.background =
+            "linear-gradient(#9fc9dd,#e6f3f6)";
+
+            ground.style.background = "#e5f1f3";
+
+            water.style.height = "12%";
+
+        break;
+
+
+        default:
+
+            environment.style.background =
+            "linear-gradient(#65b9e8,#c8e7aa)";
+
+            ground.style.background = "#4f8b38";
+
+            water.style.height = "20%";
+
+    }
+
+
+    /* ORGANIZMY */
+
+    period.organisms.forEach((emoji,index) => {
+
+        const el =
+            document.createElement("div");
+
+        el.className = "organism";
+
+        el.textContent = emoji;
+
+        el.style.left =
+            (15 + index * 16) + "%";
+
+        if(
+            period.type === "ocean" ||
+            period.type === "microbe"
+        ) {
+
+            el.style.bottom =
+            (10 + (index % 3) * 13) + "%";
+
+        }
+
+        else {
+
+            el.style.bottom =
+            (24 + (index % 2) * 3) + "%";
+
+        }
+
+        el.style.fontSize =
+            (55 + (index % 3) * 15) + "px";
+
+        organisms.appendChild(el);
+
+    });
+
+}
+
+
+/* =====================================================
+   GŁÓWNA AKTUALIZACJA
+===================================================== */
+
+function update() {
+
+    const mya =
+        getMillionsAgo();
+
+    const period =
+        findPeriod(mya);
+
+
+    if(mya === 0) {
+
+        yearDisplay.textContent =
+        "Współczesność";
+
+    }
+
+    else if(mya < 1) {
+
+        yearDisplay.textContent =
+        Math.round(mya * 1000000)
+        .toLocaleString("pl-PL")
+        + " lat temu";
+
+    }
+
+    else {
+
+        yearDisplay.textContent =
+        Math.round(mya)
+        + " mln lat temu";
+
+    }
+
+
+    era.textContent =
+        period.era;
+
+    environmentText.textContent =
+        period.environment;
+
+    lifeText.textContent =
+        period.life;
+
+    description.textContent =
+        period.description;
+
+
+    updateEarth(mya, period);
+
+    updateLife(period);
+
+}
+
+
+/* =====================================================
+   PRZEŁĄCZANIE WIDOKÓW
+===================================================== */
+
+earthBtn.onclick = function() {
+
+    earthView.style.display = "flex";
+    lifeView.style.display = "none";
+
+    earthBtn.classList.add("active");
+    lifeBtn.classList.remove("active");
+
+};
+
+
+lifeBtn.onclick = function() {
+
+    earthView.style.display = "none";
+    lifeView.style.display = "block";
+
+    lifeBtn.classList.add("active");
+    earthBtn.classList.remove("active");
+
+};
+
+
+/* =====================================================
+   OBRACANIE ZIEMI MYSZKĄ
+===================================================== */
+
+let dragging = false;
+
+let startX = 0;
+let startY = 0;
+
+let rotationX = 0;
+let rotationY = 0;
+
+
+earth.addEventListener("mousedown", e => {
+
+    dragging = true;
+
+    startX = e.clientX;
+    startY = e.clientY;
+
+});
+
+
+window.addEventListener("mouseup", () => {
+
+    dragging = false;
+
+});
+
+
+window.addEventListener("mousemove", e => {
+
+    if(!dragging) return;
+
+
+    const dx =
+        e.clientX - startX;
+
+    const dy =
+        e.clientY - startY;
+
+
+    rotationY += dx * .4;
+
+    rotationX -= dy * .25;
+
+
+    rotationX =
+        Math.max(
+            -45,
+            Math.min(45, rotationX)
+        );
+
+
+    earth.style.transform =
+        `rotateX(${rotationX}deg)
+         rotateY(${rotationY}deg)`;
+
+
+    startX = e.clientX;
+    startY = e.clientY;
+
+});
+
+
+/* =====================================================
+   ZOOM
+===================================================== */
+
+let scale = 1;
+
+
+earth.addEventListener(
+    "wheel",
+    e => {
+
+        e.preventDefault();
+
+        scale -= e.deltaY * .001;
+
+        scale =
+            Math.max(
+                .6,
+                Math.min(1.6, scale)
+            );
+
+        earth.style.scale = scale;
+
+    },
+    { passive:false }
+);
+
+
+/* =====================================================
+   SUWAK
+===================================================== */
+
+slider.addEventListener(
+    "input",
+    update
+);
+
+
+/* =====================================================
+   START
+===================================================== */
+
+update();
+
+</script>
+
+</body>
+</html>
