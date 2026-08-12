@@ -3,228 +3,370 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Ziemia przez miliony lat</title>
 
 <style>
-    * {
-        box-sizing: border-box;
+*{
+    box-sizing:border-box;
+}
+
+html,body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#000;
+    font-family:Arial,Helvetica,sans-serif;
+    color:white;
+}
+
+canvas{
+    position:fixed;
+    inset:0;
+    display:block;
+}
+
+#ui{
+    position:fixed;
+    inset:0;
+    z-index:10;
+    pointer-events:none;
+}
+
+/* ===============================
+   GÓRNE PRZYCISKI
+================================ */
+
+#modePanel{
+    position:absolute;
+    top:20px;
+    left:50%;
+    transform:translateX(-50%);
+
+    display:flex;
+    gap:8px;
+
+    padding:9px;
+
+    background:rgba(5,15,23,.85);
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:17px;
+
+    backdrop-filter:blur(12px);
+
+    pointer-events:auto;
+}
+
+button{
+    border:0;
+    border-radius:11px;
+
+    padding:11px 18px;
+
+    background:#1c3040;
+    color:white;
+
+    font-weight:bold;
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+button:hover{
+    background:#294c65;
+    transform:translateY(-1px);
+}
+
+button.active{
+    background:#168be2;
+}
+
+/* ===============================
+   PANEL INFORMACJI
+================================ */
+
+#info{
+    position:absolute;
+
+    left:22px;
+    top:105px;
+
+    width:330px;
+
+    background:rgba(4,13,20,.84);
+
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:20px;
+
+    padding:20px;
+
+    backdrop-filter:blur(12px);
+
+    pointer-events:auto;
+}
+
+#info h1{
+    margin:0 0 10px 0;
+    font-size:26px;
+}
+
+#year{
+    color:#55b8ff;
+    font-size:29px;
+    font-weight:bold;
+
+    margin-bottom:17px;
+}
+
+.label{
+    margin-top:12px;
+
+    color:#849fb3;
+
+    font-size:11px;
+    text-transform:uppercase;
+}
+
+.value{
+    margin-top:3px;
+    font-weight:bold;
+    font-size:17px;
+}
+
+#description{
+    margin-top:16px;
+
+    line-height:1.45;
+    color:#d7e4eb;
+}
+
+/* ===============================
+   PODPOWIEDŹ
+================================ */
+
+#hint{
+    position:absolute;
+
+    top:105px;
+    right:20px;
+
+    padding:11px 14px;
+
+    background:rgba(3,12,18,.78);
+    border-radius:13px;
+
+    font-size:12px;
+    color:#cbd9e2;
+}
+
+/* ===============================
+   DOLNY PANEL
+================================ */
+
+#timelinePanel{
+    position:absolute;
+
+    bottom:18px;
+    left:50%;
+    transform:translateX(-50%);
+
+    width:min(1080px,94vw);
+
+    padding:16px 20px;
+
+    background:rgba(4,13,20,.88);
+
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:20px;
+
+    backdrop-filter:blur(14px);
+
+    pointer-events:auto;
+}
+
+#timeline{
+    width:100%;
+    cursor:pointer;
+}
+
+#yearsLabels{
+    display:flex;
+    justify-content:space-between;
+
+    margin-top:5px;
+
+    font-size:11px;
+    color:#8ca5b6;
+}
+
+#quick{
+    margin-top:11px;
+
+    display:flex;
+    gap:7px;
+
+    overflow-x:auto;
+    overflow-y:hidden;
+
+    padding-bottom:3px;
+}
+
+#quick button{
+    flex:0 0 auto;
+    padding:7px 10px;
+    font-size:12px;
+}
+
+/* ===============================
+   NAZWA WIDOKU ŻYCIA
+================================ */
+
+#sceneTitle{
+    position:absolute;
+
+    top:95px;
+    left:50%;
+    transform:translateX(-50%);
+
+    font-size:22px;
+    font-weight:bold;
+
+    text-shadow:0 3px 8px black;
+
+    display:none;
+}
+
+/* ===============================
+   RESPONSYWNOŚĆ
+================================ */
+
+@media(max-width:750px){
+
+    #info{
+        left:8px;
+        top:82px;
+        width:230px;
+        padding:13px;
     }
 
-    body {
-        margin: 0;
-        overflow: hidden;
-        font-family: Arial, Helvetica, sans-serif;
-        background: #000;
-        color: white;
+    #info h1{
+        font-size:18px;
     }
 
-    canvas {
-        display: block;
+    #year{
+        font-size:20px;
     }
 
-    #ui {
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-        z-index: 10;
+    .value{
+        font-size:13px;
     }
 
-    #topPanel {
-        position: absolute;
-        top: 18px;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        gap: 10px;
-        pointer-events: auto;
-        background: rgba(5, 12, 18, 0.78);
-        backdrop-filter: blur(12px);
-        padding: 9px;
-        border-radius: 16px;
-        border: 1px solid rgba(255,255,255,0.14);
+    #description{
+        font-size:12px;
     }
 
-    button {
-        border: 0;
-        border-radius: 11px;
-        padding: 11px 18px;
-        background: #1c2c39;
-        color: white;
-        font-weight: bold;
-        cursor: pointer;
-        transition: 0.2s;
+    #hint{
+        display:none;
     }
 
-    button:hover {
-        background: #2f4d62;
-    }
-
-    button.active {
-        background: #2685d9;
-    }
-
-    #infoPanel {
-        position: absolute;
-        top: 90px;
-        left: 20px;
-        width: 310px;
-        background: rgba(5, 12, 18, 0.76);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(255,255,255,0.14);
-        border-radius: 18px;
-        padding: 18px;
-        pointer-events: auto;
-    }
-
-    #infoPanel h1 {
-        margin: 0 0 10px;
-        font-size: 24px;
-    }
-
-    #timeText {
-        font-size: 27px;
-        font-weight: bold;
-        color: #60b7ff;
-        margin-bottom: 14px;
-    }
-
-    .label {
-        font-size: 11px;
-        color: #8ca5b8;
-        text-transform: uppercase;
-        margin-top: 12px;
-    }
-
-    .value {
-        font-weight: bold;
-        margin-top: 3px;
-    }
-
-    #description {
-        margin-top: 14px;
-        color: #d8e3e9;
-        line-height: 1.4;
-    }
-
-    #bottomPanel {
-        position: absolute;
-        left: 50%;
-        bottom: 18px;
-        transform: translateX(-50%);
-        width: min(1000px, 94vw);
-        pointer-events: auto;
-        background: rgba(5, 12, 18, 0.82);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(255,255,255,0.14);
-        border-radius: 18px;
-        padding: 14px 18px;
-    }
-
-    #timeline {
-        width: 100%;
-        cursor: pointer;
-    }
-
-    .timelineLabels {
-        display: flex;
-        justify-content: space-between;
-        font-size: 11px;
-        color: #90a6b4;
-        margin-top: 5px;
-    }
-
-    #quickButtons {
-        display: flex;
-        gap: 7px;
-        overflow-x: auto;
-        margin-top: 10px;
-        padding-bottom: 2px;
-    }
-
-    #quickButtons button {
-        flex: 0 0 auto;
-        padding: 7px 10px;
-        font-size: 12px;
-    }
-
-    #hint {
-        position: absolute;
-        right: 20px;
-        top: 90px;
-        background: rgba(5,12,18,0.68);
-        padding: 10px 13px;
-        border-radius: 12px;
-        font-size: 12px;
-        color: #c8d6df;
-    }
-
-    @media (max-width: 700px) {
-        #infoPanel {
-            width: 235px;
-            top: 78px;
-            left: 8px;
-            font-size: 12px;
-        }
-
-        #infoPanel h1 {
-            font-size: 18px;
-        }
-
-        #timeText {
-            font-size: 19px;
-        }
-
-        #hint {
-            display: none;
-        }
-    }
+}
 </style>
+
+
+<!-- WAŻNE: IMPORT MAPA -->
+<script type="importmap">
+{
+    "imports":{
+        "three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+        "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+    }
+}
+</script>
+
 </head>
 
 <body>
 
 <div id="ui">
 
-    <div id="topPanel">
-        <button id="earthMode" class="active">🌍 Ziemia</button>
-        <button id="lifeMode">🦖 Życie</button>
+    <div id="modePanel">
+        <button id="earthButton" class="active">
+            🌍 Ziemia
+        </button>
+
+        <button id="lifeButton">
+            🦕 Życie
+        </button>
     </div>
 
-    <div id="infoPanel">
+
+    <div id="info">
+
         <h1>Historia Ziemi</h1>
 
-        <div id="timeText">150 mln lat temu</div>
+        <div id="year">
+            150 mln lat temu
+        </div>
 
-        <div class="label">Okres</div>
-        <div class="value" id="periodText">Jura</div>
 
-        <div class="label">Środowisko</div>
-        <div class="value" id="environmentText">Ciepłe lasy i morza</div>
+        <div class="label">
+            Okres
+        </div>
 
-        <div class="label">Organizmy</div>
-        <div class="value" id="lifeText">Dinozaury, pterozaury, pierwsze ptaki</div>
+        <div class="value" id="period">
+            Jura
+        </div>
+
+
+        <div class="label">
+            Środowisko
+        </div>
+
+        <div class="value" id="environment">
+            Ciepłe lasy i morza
+        </div>
+
+
+        <div class="label">
+            Organizmy
+        </div>
+
+        <div class="value" id="organismsText">
+            Dinozaury
+        </div>
+
 
         <div id="description">
-            Dinozaury dominują na lądzie, a klimat jest znacznie cieplejszy niż obecnie.
+            Dinozaury dominują na lądzie.
         </div>
+
     </div>
+
+
+    <div id="sceneTitle">
+        🌿 Świat jury
+    </div>
+
 
     <div id="hint">
-        LPM: obracanie<br>
-        Kółko: zoom
+        🖱️ LPM — obracanie<br>
+        🔍 Kółko — zoom
     </div>
 
-    <div id="bottomPanel">
+
+    <div id="timelinePanel">
+
         <input
-            id="timeline"
             type="range"
+            id="timeline"
             min="0"
             max="4540"
-            value="4390"
             step="1"
+            value="4390"
         >
 
-        <div class="timelineLabels">
+        <div id="yearsLabels">
             <span>4540 mln</span>
             <span>4000</span>
             <span>3000</span>
@@ -234,1854 +376,2784 @@
             <span>Dziś</span>
         </div>
 
-        <div id="quickButtons">
-            <button onclick="setMYA(4540)">🌋 Początek Ziemi</button>
-            <button onclick="setMYA(3500)">🦠 Pierwsze życie</button>
-            <button onclick="setMYA(520)">🦐 Kambr</button>
-            <button onclick="setMYA(375)">🐟 Dewon</button>
-            <button onclick="setMYA(310)">🌿 Karbon</button>
-            <button onclick="setMYA(230)">🦖 Trias</button>
-            <button onclick="setMYA(150)">🦕 Jura</button>
-            <button onclick="setMYA(80)">🦖 Kreda</button>
-            <button onclick="setMYA(2)">🦣 Epoka lodowcowa</button>
-            <button onclick="setMYA(0)">🌍 Dzisiaj</button>
+
+        <div id="quick">
+
+            <button onclick="setMYA(4540)">
+                🌋 Początek Ziemi
+            </button>
+
+            <button onclick="setMYA(3500)">
+                🦠 Pierwsze życie
+            </button>
+
+            <button onclick="setMYA(520)">
+                🦐 Kambr
+            </button>
+
+            <button onclick="setMYA(375)">
+                🐟 Dewon
+            </button>
+
+            <button onclick="setMYA(310)">
+                🌿 Karbon
+            </button>
+
+            <button onclick="setMYA(230)">
+                🦎 Trias
+            </button>
+
+            <button onclick="setMYA(150)">
+                🦕 Jura
+            </button>
+
+            <button onclick="setMYA(80)">
+                🦖 Kreda
+            </button>
+
+            <button onclick="setMYA(2)">
+                🦣 Epoka lodowcowa
+            </button>
+
+            <button onclick="setMYA(0)">
+                🌍 Dzisiaj
+            </button>
+
         </div>
+
     </div>
 
 </div>
 
+
 <script type="module">
 
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js";
-import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/controls/OrbitControls.js";
+import * as THREE from "three";
 
-/* =========================================================
-   PODSTAWOWE
-========================================================= */
+import {
+    OrbitControls
+}
+from "three/addons/controls/OrbitControls.js";
+
+
+/* ============================================================
+   RENDERER
+============================================================ */
+
+const renderer = new THREE.WebGLRenderer({
+    antialias:true
+});
+
+renderer.setPixelRatio(
+    Math.min(window.devicePixelRatio,2)
+);
+
+renderer.setSize(
+    window.innerWidth,
+    window.innerHeight
+);
+
+renderer.shadowMap.enabled = true;
+
+renderer.shadowMap.type =
+    THREE.PCFSoftShadowMap;
+
+renderer.outputColorSpace =
+    THREE.SRGBColorSpace;
+
+document.body.prepend(
+    renderer.domElement
+);
+
+
+/* ============================================================
+   SCENA
+============================================================ */
 
 const scene = new THREE.Scene();
 
-scene.background = new THREE.Color(0x020710);
+scene.background =
+    new THREE.Color(0x020710);
 
-const camera = new THREE.PerspectiveCamera(
-    55,
-    window.innerWidth / window.innerHeight,
-    0.1,
-    3000
+
+/* ============================================================
+   KAMERA
+============================================================ */
+
+const camera =
+    new THREE.PerspectiveCamera(
+        55,
+        window.innerWidth /
+        window.innerHeight,
+        0.1,
+        2000
+    );
+
+camera.position.set(
+    0,
+    2,
+    10
 );
 
-camera.position.set(0, 4, 11);
 
-const renderer = new THREE.WebGLRenderer({
-    antialias: true
-});
+/* ============================================================
+   CONTROLS
+============================================================ */
 
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.shadowMap.enabled = true;
-
-document.body.prepend(renderer.domElement);
-
-const controls = new OrbitControls(camera, renderer.domElement);
+const controls =
+    new OrbitControls(
+        camera,
+        renderer.domElement
+    );
 
 controls.enableDamping = true;
-controls.dampingFactor = 0.06;
 
-controls.minDistance = 4;
+controls.dampingFactor = .05;
+
+controls.minDistance = 4.5;
+
 controls.maxDistance = 30;
 
-controls.target.set(0, 0, 0);
+controls.target.set(
+    0,
+    0,
+    0
+);
 
 
-/* =========================================================
-   ŚWIATŁO
-========================================================= */
+/* ============================================================
+   ŚWIATŁA
+============================================================ */
 
-const ambient = new THREE.AmbientLight(0xffffff, 1.2);
+const ambient =
+    new THREE.AmbientLight(
+        0xffffff,
+        1.15
+    );
+
 scene.add(ambient);
 
-const sunLight = new THREE.DirectionalLight(0xfff0d4, 3.2);
 
-sunLight.position.set(-8, 12, 8);
+const sunLight =
+    new THREE.DirectionalLight(
+        0xfff0d0,
+        3.6
+    );
+
+sunLight.position.set(
+    -10,
+    14,
+    8
+);
 
 sunLight.castShadow = true;
 
-sunLight.shadow.mapSize.set(2048, 2048);
+sunLight.shadow.mapSize.width = 2048;
+sunLight.shadow.mapSize.height = 2048;
 
 scene.add(sunLight);
 
 
-/* =========================================================
+/* ============================================================
    GWIAZDY
-========================================================= */
+============================================================ */
 
-const starGeometry = new THREE.BufferGeometry();
-
-const starCount = 2500;
+const starGeometry =
+    new THREE.BufferGeometry();
 
 const starPositions = [];
 
-for (let i = 0; i < starCount; i++) {
+for(let i=0;i<4000;i++){
 
-    const r = THREE.MathUtils.randFloat(150, 500);
+    const radius =
+        THREE.MathUtils.randFloat(
+            90,
+            500
+        );
 
-    const theta = Math.random() * Math.PI * 2;
+    const theta =
+        Math.random() *
+        Math.PI * 2;
 
-    const phi = Math.acos(
-        THREE.MathUtils.randFloatSpread(2)
-    );
+    const phi =
+        Math.acos(
+            THREE.MathUtils.randFloatSpread(2)
+        );
 
     starPositions.push(
-        r * Math.sin(phi) * Math.cos(theta),
-        r * Math.sin(phi) * Math.sin(theta),
-        r * Math.cos(phi)
+
+        radius *
+        Math.sin(phi) *
+        Math.cos(theta),
+
+        radius *
+        Math.cos(phi),
+
+        radius *
+        Math.sin(phi) *
+        Math.sin(theta)
+
     );
 }
 
 starGeometry.setAttribute(
     "position",
-    new THREE.Float32BufferAttribute(starPositions, 3)
+    new THREE.Float32BufferAttribute(
+        starPositions,
+        3
+    )
 );
 
-const starMaterial = new THREE.PointsMaterial({
-    color: 0xffffff,
-    size: 0.7,
-    sizeAttenuation: true
-});
+const starMaterial =
+    new THREE.PointsMaterial({
+        color:0xffffff,
+        size:.45
+    });
 
-const stars = new THREE.Points(
-    starGeometry,
-    starMaterial
-);
+const stars =
+    new THREE.Points(
+        starGeometry,
+        starMaterial
+    );
 
 scene.add(stars);
 
 
-/* =========================================================
+/* ============================================================
    GRUPY
-========================================================= */
+============================================================ */
 
-const earthGroup = new THREE.Group();
+const earthGroup =
+    new THREE.Group();
 
-const lifeGroup = new THREE.Group();
+const lifeGroup =
+    new THREE.Group();
 
-scene.add(earthGroup);
-scene.add(lifeGroup);
-
-
-/* =========================================================
-   ZIEMIA 3D
-========================================================= */
-
-const earthGeometry = new THREE.SphereGeometry(
-    3,
-    96,
-    96
+scene.add(
+    earthGroup
 );
 
-const earthMaterial = new THREE.MeshStandardMaterial({
-    color: 0x1674a6,
-    roughness: 0.75,
-    metalness: 0
-});
-
-const earth = new THREE.Mesh(
-    earthGeometry,
-    earthMaterial
+scene.add(
+    lifeGroup
 );
-
-earth.castShadow = true;
-earth.receiveShadow = true;
-
-earthGroup.add(earth);
-
-
-/* ATMOSFERA */
-
-const atmosphere = new THREE.Mesh(
-    new THREE.SphereGeometry(3.08, 64, 64),
-    new THREE.MeshBasicMaterial({
-        color: 0x6bc4ff,
-        transparent: true,
-        opacity: 0.09,
-        side: THREE.BackSide
-    })
-);
-
-earthGroup.add(atmosphere);
-
-
-/* =========================================================
-   KONTYNENTY 3D
-========================================================= */
-
-const continentGroup = new THREE.Group();
-
-earthGroup.add(continentGroup);
-
-const continentMaterial = new THREE.MeshStandardMaterial({
-    color: 0x557a35,
-    roughness: 1
-});
-
-function pointOnSphere(lat, lon, radius = 3.035) {
-
-    const phi =
-        THREE.MathUtils.degToRad(90 - lat);
-
-    const theta =
-        THREE.MathUtils.degToRad(lon + 180);
-
-    return new THREE.Vector3(
-        -radius * Math.sin(phi) * Math.cos(theta),
-        radius * Math.cos(phi),
-        radius * Math.sin(phi) * Math.sin(theta)
-    );
-}
-
-function createLandPatch(lat, lon, sx, sy, rot = 0) {
-
-    const geo = new THREE.CircleGeometry(1, 12);
-
-    geo.scale(sx, sy, 1);
-
-    const mesh = new THREE.Mesh(
-        geo,
-        continentMaterial
-    );
-
-    const p = pointOnSphere(lat, lon);
-
-    mesh.position.copy(p);
-
-    mesh.lookAt(0, 0, 0);
-
-    mesh.rotateZ(rot);
-
-    continentGroup.add(mesh);
-
-    return mesh;
-}
-
-
-/* WSPÓŁCZESNY UKŁAD - STYLIZOWANE, ALE ROZPOZNAWALNE */
-
-const landPatches = [
-
-    createLandPatch(
-        47, -105,
-        0.72, 0.5,
-        0.25
-    ),
-
-    createLandPatch(
-        23, -100,
-        0.27, 0.52,
-        -0.25
-    ),
-
-    createLandPatch(
-        -15, -60,
-        0.38, 0.76,
-        0.08
-    ),
-
-    createLandPatch(
-        52, 18,
-        0.52, 0.3,
-        0.12
-    ),
-
-    createLandPatch(
-        13, 21,
-        0.45, 0.74,
-        -0.05
-    ),
-
-    createLandPatch(
-        45, 80,
-        1.05, 0.52,
-        -0.08
-    ),
-
-    createLandPatch(
-        20, 78,
-        0.36, 0.42,
-        0.2
-    ),
-
-    createLandPatch(
-        -25, 135,
-        0.48, 0.3,
-        -0.15
-    ),
-
-    createLandPatch(
-        72, -40,
-        0.42, 0.35,
-        0.12
-    )
-
-];
-
-
-/* =========================================================
-   CHMURY
-========================================================= */
-
-const cloudMaterial = new THREE.MeshStandardMaterial({
-    color: 0xffffff,
-    transparent: true,
-    opacity: 0.28,
-    roughness: 1
-});
-
-const cloudGroup = new THREE.Group();
-
-earthGroup.add(cloudGroup);
-
-for (let i = 0; i < 28; i++) {
-
-    const cloud = new THREE.Mesh(
-        new THREE.SphereGeometry(
-            THREE.MathUtils.randFloat(0.08, 0.2),
-            8,
-            8
-        ),
-        cloudMaterial
-    );
-
-    const lat =
-        THREE.MathUtils.randFloat(-70, 70);
-
-    const lon =
-        THREE.MathUtils.randFloat(-180, 180);
-
-    cloud.position.copy(
-        pointOnSphere(lat, lon, 3.1)
-    );
-
-    cloud.scale.set(
-        THREE.MathUtils.randFloat(2, 4),
-        0.5,
-        THREE.MathUtils.randFloat(0.5, 1.2)
-    );
-
-    cloudGroup.add(cloud);
-}
-
-
-/* =========================================================
-   TRYB ŻYCIA
-========================================================= */
 
 lifeGroup.visible = false;
 
 
-/* TEREN */
+/* ============================================================
+   ZIEMIA
+============================================================ */
+
+const textureLoader =
+    new THREE.TextureLoader();
+
+
+const earthTexture =
+    textureLoader.load(
+        "https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg"
+    );
+
+earthTexture.colorSpace =
+    THREE.SRGBColorSpace;
+
+
+const earthNormal =
+    textureLoader.load(
+        "https://threejs.org/examples/textures/planets/earth_normal_2048.jpg"
+    );
+
+
+const earthSpecular =
+    textureLoader.load(
+        "https://threejs.org/examples/textures/planets/earth_specular_2048.jpg"
+    );
+
+
+const earthMaterial =
+    new THREE.MeshPhongMaterial({
+
+        map:earthTexture,
+
+        normalMap:earthNormal,
+
+        specularMap:earthSpecular,
+
+        specular:
+            new THREE.Color(
+                0x333333
+            ),
+
+        shininess:8
+
+    });
+
+
+const earth =
+    new THREE.Mesh(
+
+        new THREE.SphereGeometry(
+            3,
+            96,
+            96
+        ),
+
+        earthMaterial
+
+    );
+
+earth.rotation.z =
+    THREE.MathUtils.degToRad(
+        23.4
+    );
+
+earthGroup.add(
+    earth
+);
+
+
+/* ============================================================
+   ATMOSFERA
+============================================================ */
+
+const atmosphere =
+    new THREE.Mesh(
+
+        new THREE.SphereGeometry(
+            3.08,
+            64,
+            64
+        ),
+
+        new THREE.MeshBasicMaterial({
+
+            color:0x58baff,
+
+            transparent:true,
+
+            opacity:.12,
+
+            side:
+                THREE.BackSide
+
+        })
+
+    );
+
+earthGroup.add(
+    atmosphere
+);
+
+
+/* ============================================================
+   CHMURY
+============================================================ */
+
+const cloudTexture =
+    textureLoader.load(
+        "https://threejs.org/examples/textures/planets/earth_clouds_1024.png"
+    );
+
+cloudTexture.colorSpace =
+    THREE.SRGBColorSpace;
+
+
+const clouds =
+    new THREE.Mesh(
+
+        new THREE.SphereGeometry(
+            3.035,
+            64,
+            64
+        ),
+
+        new THREE.MeshPhongMaterial({
+
+            map:cloudTexture,
+
+            transparent:true,
+
+            opacity:.32,
+
+            depthWrite:false
+
+        })
+
+    );
+
+earthGroup.add(
+    clouds
+);
+
+
+/* ============================================================
+   EFEKT BLASKU ATMOSFERY
+============================================================ */
+
+const glow =
+    new THREE.Mesh(
+
+        new THREE.SphereGeometry(
+            3.17,
+            64,
+            64
+        ),
+
+        new THREE.MeshBasicMaterial({
+
+            color:0x278cff,
+
+            transparent:true,
+
+            opacity:.035,
+
+            side:
+                THREE.BackSide
+
+        })
+
+    );
+
+earthGroup.add(glow);
+
+
+/* ============================================================
+   SCENA ŻYCIA
+============================================================ */
+
+const lifeSky =
+    new THREE.Color(
+        0x9ed7ed
+    );
+
+
+/* ============================================================
+   PODŁOŻE
+============================================================ */
 
 const groundGeometry =
     new THREE.PlaneGeometry(
-        60,
-        60,
-        100,
-        100
+        80,
+        80,
+        120,
+        120
     );
 
-const pos =
+const groundPositions =
     groundGeometry.attributes.position;
 
-for (let i = 0; i < pos.count; i++) {
+for(
+    let i=0;
+    i<groundPositions.count;
+    i++
+){
 
-    const x = pos.getX(i);
-    const y = pos.getY(i);
+    const x =
+        groundPositions.getX(i);
 
-    const z =
-        Math.sin(x * 0.3) * 0.5 +
-        Math.cos(y * 0.27) * 0.35 +
-        Math.sin((x + y) * 0.14) * 0.6;
+    const y =
+        groundPositions.getY(i);
 
-    pos.setZ(i, z);
+    let height =
+        Math.sin(x*.18)*.35 +
+        Math.cos(y*.23)*.28;
+
+    height +=
+        Math.sin(
+            (x+y)*.08
+        )*.65;
+
+    height +=
+        Math.sin(
+            x*.06
+        )*.8;
+
+    groundPositions.setZ(
+        i,
+        height
+    );
+
 }
 
 groundGeometry.computeVertexNormals();
 
+
 const groundMaterial =
     new THREE.MeshStandardMaterial({
-        color: 0x82944c,
-        roughness: 1
+
+        color:0x8c9e54,
+
+        roughness:1
+
     });
+
 
 const ground =
     new THREE.Mesh(
+
         groundGeometry,
+
         groundMaterial
+
     );
 
 ground.rotation.x =
-    -Math.PI / 2;
+    -Math.PI/2;
 
-ground.position.y = -1.5;
+ground.position.y =
+    -2;
 
 ground.receiveShadow = true;
 
-lifeGroup.add(ground);
-
-
-/* RZEKA */
-
-const river = new THREE.Mesh(
-    new THREE.PlaneGeometry(
-        6,
-        50
-    ),
-    new THREE.MeshStandardMaterial({
-        color: 0x38aee0,
-        roughness: 0.25,
-        metalness: 0.08
-    })
+lifeGroup.add(
+    ground
 );
 
-river.rotation.x =
-    -Math.PI / 2;
 
-river.rotation.z =
-    0.12;
+/* ============================================================
+   RZEKA
+============================================================ */
 
-river.position.set(
-    3,
-    -1.15,
-    -5
-);
-
-lifeGroup.add(river);
-
-
-/* SŁOŃCE */
-
-const lifeSun =
-    new THREE.Mesh(
-        new THREE.SphereGeometry(
-            1.2,
-            32,
-            32
-        ),
-        new THREE.MeshBasicMaterial({
-            color: 0xffef9a
-        })
-    );
-
-lifeSun.position.set(
-    -15,
-    16,
-    -35
-);
-
-lifeGroup.add(lifeSun);
-
-
-/* =========================================================
-   DRZEWA
-========================================================= */
-
-const vegetationGroup =
+const riverGroup =
     new THREE.Group();
 
-lifeGroup.add(vegetationGroup);
+lifeGroup.add(
+    riverGroup
+);
+
+
+function createRiverPiece(
+    x,
+    z,
+    width,
+    length,
+    angle
+){
+
+    const mesh =
+        new THREE.Mesh(
+
+            new THREE.PlaneGeometry(
+                width,
+                length
+            ),
+
+            new THREE.MeshStandardMaterial({
+
+                color:0x43bfe8,
+
+                roughness:.2,
+
+                metalness:.05,
+
+                transparent:true,
+
+                opacity:.9
+
+            })
+
+        );
+
+    mesh.rotation.x =
+        -Math.PI/2;
+
+    mesh.rotation.z =
+        angle;
+
+    mesh.position.set(
+        x,
+        -1.55,
+        z
+    );
+
+    riverGroup.add(
+        mesh
+    );
+
+}
+
+
+createRiverPiece(
+    3,
+    -4,
+    4,
+    18,
+    .12
+);
+
+createRiverPiece(
+    1,
+    -17,
+    5,
+    15,
+    -.18
+);
+
+createRiverPiece(
+    5,
+    8,
+    3,
+    14,
+    -.1
+);
+
+
+/* ============================================================
+   GÓRY
+============================================================ */
+
+const mountainsGroup =
+    new THREE.Group();
+
+lifeGroup.add(
+    mountainsGroup
+);
+
+
+function mountain(
+    x,
+    z,
+    height,
+    radius
+){
+
+    const m =
+        new THREE.Mesh(
+
+            new THREE.ConeGeometry(
+                radius,
+                height,
+                6
+            ),
+
+            new THREE.MeshStandardMaterial({
+
+                color:0x8d765e,
+
+                roughness:1
+
+            })
+
+        );
+
+    m.position.set(
+        x,
+        -2 + height/2,
+        z
+    );
+
+    m.castShadow = true;
+    m.receiveShadow = true;
+
+    mountainsGroup.add(
+        m
+    );
+
+}
+
+
+for(let i=0;i<13;i++){
+
+    mountain(
+
+        THREE.MathUtils.randFloat(
+            -22,
+            22
+        ),
+
+        THREE.MathUtils.randFloat(
+            -32,
+            -22
+        ),
+
+        THREE.MathUtils.randFloat(
+            4,
+            10
+        ),
+
+        THREE.MathUtils.randFloat(
+            2,
+            5
+        )
+
+    );
+
+}
+
+
+/* ============================================================
+   ROŚLINNOŚĆ
+============================================================ */
+
+const vegetation =
+    new THREE.Group();
+
+lifeGroup.add(
+    vegetation
+);
+
+
+const trunkMaterial =
+    new THREE.MeshStandardMaterial({
+        color:0x634226
+    });
+
+
+const leafMaterial =
+    new THREE.MeshStandardMaterial({
+        color:0x5a7c38
+    });
+
 
 function createTree(
     x,
     z,
-    scale = 1
-) {
+    scale=1
+){
 
-    const group =
+    const tree =
         new THREE.Group();
+
 
     const trunk =
         new THREE.Mesh(
+
             new THREE.CylinderGeometry(
-                0.14 * scale,
-                0.22 * scale,
-                2.8 * scale,
-                8
+                .16*scale,
+                .25*scale,
+                2.8*scale,
+                7
             ),
-            new THREE.MeshStandardMaterial({
-                color: 0x5c3822
-            })
+
+            trunkMaterial
+
         );
+
+    trunk.position.y =
+        1.4*scale;
 
     trunk.castShadow = true;
 
-    trunk.position.y =
-        1.4 * scale;
+    tree.add(
+        trunk
+    );
 
-    group.add(trunk);
 
-
-    for (let i = 0; i < 4; i++) {
+    for(let i=0;i<4;i++){
 
         const crown =
             new THREE.Mesh(
+
                 new THREE.IcosahedronGeometry(
                     THREE.MathUtils.randFloat(
-                        0.75,
-                        1.2
-                    ) * scale,
+                        .8,
+                        1.25
+                    )*scale,
                     1
                 ),
-                new THREE.MeshStandardMaterial({
-                    color: 0x517b35
-                })
+
+                leafMaterial
+
             );
 
         crown.position.set(
-            THREE.MathUtils.randFloat(
-                -0.5,
-                0.5
-            ) * scale,
 
             THREE.MathUtils.randFloat(
-                2.7,
-                3.8
-            ) * scale,
+                -.55,
+                .55
+            )*scale,
 
             THREE.MathUtils.randFloat(
-                -0.5,
-                0.5
-            ) * scale
+                2.6,
+                3.6
+            )*scale,
+
+            THREE.MathUtils.randFloat(
+                -.45,
+                .45
+            )*scale
+
         );
 
         crown.castShadow = true;
 
-        group.add(crown);
+        tree.add(
+            crown
+        );
+
     }
 
-    group.position.set(
+
+    tree.position.set(
         x,
-        -1.25,
+        -1.8,
         z
     );
 
-    group.rotation.y =
-        Math.random() * Math.PI * 2;
+    tree.rotation.y =
+        Math.random()*
+        Math.PI*2;
 
-    vegetationGroup.add(group);
+    vegetation.add(
+        tree
+    );
 
-    return group;
 }
 
-for (let i = 0; i < 45; i++) {
+
+for(let i=0;i<70;i++){
 
     let x =
-        THREE.MathUtils.randFloat(-22, 22);
+        THREE.MathUtils.randFloat(
+            -28,
+            28
+        );
 
     let z =
-        THREE.MathUtils.randFloat(-24, 15);
+        THREE.MathUtils.randFloat(
+            -32,
+            15
+        );
 
-    if (
-        Math.abs(x - 3) < 4
-    ) {
-        x += 6;
+
+    if(
+        Math.abs(x-3)<4
+    ){
+
+        x +=
+            x > 3 ?
+            5 :
+            -5;
+
     }
 
+
     createTree(
+
         x,
         z,
+
         THREE.MathUtils.randFloat(
-            0.7,
-            1.6
+            .5,
+            1.55
         )
+
     );
+
 }
 
 
-/* =========================================================
+/* ============================================================
+   PAPROCIE
+============================================================ */
+
+const fernGroup =
+    new THREE.Group();
+
+lifeGroup.add(
+    fernGroup
+);
+
+
+function createFern(
+    x,
+    z,
+    scale=1
+){
+
+    const fern =
+        new THREE.Group();
+
+
+    for(let i=0;i<7;i++){
+
+        const leaf =
+            new THREE.Mesh(
+
+                new THREE.BoxGeometry(
+                    .11*scale,
+                    .06*scale,
+                    1.5*scale
+                ),
+
+                new THREE.MeshStandardMaterial({
+                    color:0x476d28
+                })
+
+            );
+
+        leaf.position.y =
+            .6*scale;
+
+        leaf.rotation.y =
+            i/7 *
+            Math.PI*2;
+
+        leaf.rotation.x =
+            -.45;
+
+        leaf.position.x =
+            Math.sin(
+                leaf.rotation.y
+            )*.4*scale;
+
+        leaf.position.z =
+            Math.cos(
+                leaf.rotation.y
+            )*.4*scale;
+
+        fern.add(
+            leaf
+        );
+
+    }
+
+    fern.position.set(
+        x,
+        -1.45,
+        z
+    );
+
+    fernGroup.add(
+        fern
+    );
+
+}
+
+
+for(let i=0;i<90;i++){
+
+    createFern(
+
+        THREE.MathUtils.randFloat(
+            -23,
+            23
+        ),
+
+        THREE.MathUtils.randFloat(
+            -20,
+            12
+        ),
+
+        THREE.MathUtils.randFloat(
+            .5,
+            1.25
+        )
+
+    );
+
+}
+
+
+/* ============================================================
    SKAŁY
-========================================================= */
+============================================================ */
+
+const rocks =
+    new THREE.Group();
+
+lifeGroup.add(
+    rocks
+);
+
 
 const rockMaterial =
     new THREE.MeshStandardMaterial({
-        color: 0x806f59,
-        roughness: 1
+        color:0x81725f,
+        roughness:1
     });
 
-for (let i = 0; i < 35; i++) {
 
-    const rock =
+for(let i=0;i<35;i++){
+
+    const r =
         new THREE.Mesh(
+
             new THREE.DodecahedronGeometry(
                 THREE.MathUtils.randFloat(
-                    0.25,
-                    1.3
+                    .3,
+                    1.4
                 ),
                 0
             ),
+
             rockMaterial
+
         );
 
-    rock.position.set(
+    r.position.set(
+
         THREE.MathUtils.randFloat(
-            -24,
-            24
+            -25,
+            25
         ),
-        -0.8,
+
         THREE.MathUtils.randFloat(
-            -30,
-            12
+            -1.8,
+            -1
+        ),
+
+        THREE.MathUtils.randFloat(
+            -28,
+            15
         )
+
     );
 
-    rock.scale.y =
+    r.scale.y =
         THREE.MathUtils.randFloat(
-            0.4,
-            1.4
+            .4,
+            1
         );
 
-    rock.rotation.set(
+    r.rotation.set(
+
         Math.random(),
+
         Math.random(),
+
         Math.random()
+
     );
 
-    rock.castShadow = true;
+    r.castShadow = true;
 
-    lifeGroup.add(rock);
+    rocks.add(
+        r
+    );
+
 }
 
 
-/* =========================================================
-   ZWIERZĘTA 3D
-========================================================= */
+/* ============================================================
+   ZWIERZĘTA
+============================================================ */
 
-const animalGroup =
+const animals =
     new THREE.Group();
 
-lifeGroup.add(animalGroup);
+lifeGroup.add(
+    animals
+);
 
-function material(color) {
+
+function makeMaterial(
+    color
+){
 
     return new THREE.MeshStandardMaterial({
-        color,
-        roughness: 0.9
+        color:color,
+        roughness:.9
     });
+
 }
 
 
-/* DINOZAUR */
+/* ============================================================
+   SAUROPOD
+============================================================ */
 
-function createDinosaur(
+function createSauropod(
     x,
     z,
-    scale = 1,
-    color = 0x667b3c
-) {
+    scale=1,
+    color=0x6d7e45
+){
 
-    const g =
+    const dinosaur =
         new THREE.Group();
 
     const mat =
-        material(color);
+        makeMaterial(
+            color
+        );
+
 
     const body =
         new THREE.Mesh(
+
             new THREE.SphereGeometry(
-                1.4 * scale,
-                18,
-                14
+                1.3,
+                20,
+                16
             ),
+
             mat
+
         );
 
     body.scale.set(
-        1.5,
-        0.75,
-        0.75
+        1.8,
+        .85,
+        .8
     );
 
     body.castShadow = true;
 
-    g.add(body);
+    dinosaur.add(
+        body
+    );
 
 
     const neck =
         new THREE.Mesh(
+
             new THREE.CylinderGeometry(
-                0.24 * scale,
-                0.42 * scale,
-                2.4 * scale,
+                .22,
+                .42,
+                3.7,
                 10
             ),
+
             mat
+
         );
 
     neck.rotation.z =
-        -0.55;
+        -.55;
 
     neck.position.set(
-        1.3 * scale,
-        1.0 * scale,
+        1.65,
+        1.25,
         0
     );
 
     neck.castShadow = true;
 
-    g.add(neck);
+    dinosaur.add(
+        neck
+    );
 
 
     const head =
         new THREE.Mesh(
+
             new THREE.SphereGeometry(
-                0.42 * scale,
+                .38,
                 14,
                 12
             ),
+
             mat
+
         );
 
     head.scale.set(
-        1.2,
-        0.8,
-        0.8
+        1.25,
+        .75,
+        .8
     );
 
     head.position.set(
-        2.1 * scale,
-        2 * scale,
+        2.7,
+        2.55,
         0
     );
 
     head.castShadow = true;
 
-    g.add(head);
+    dinosaur.add(
+        head
+    );
 
 
     const tail =
         new THREE.Mesh(
+
             new THREE.ConeGeometry(
-                0.45 * scale,
-                3.5 * scale,
+                .45,
+                4.8,
                 10
             ),
+
             mat
+
         );
 
     tail.rotation.z =
-        Math.PI / 2;
+        Math.PI/2;
 
     tail.position.set(
-        -2.3 * scale,
-        0,
+        -3,
+        .05,
         0
     );
 
     tail.castShadow = true;
 
-    g.add(tail);
+    dinosaur.add(
+        tail
+    );
 
 
-    const legGeo =
-        new THREE.CylinderGeometry(
-            0.18 * scale,
-            0.23 * scale,
-            1.7 * scale,
-            8
-        );
+    const legPositions = [
 
-    [
-        [-0.7, -0.9, 0.6],
-        [-0.7, -0.9, -0.6],
-        [0.7, -0.9, 0.6],
-        [0.7, -0.9, -0.6]
-    ].forEach(p => {
+        [-.9,-1,.6],
+        [-.9,-1,-.6],
+        [.9,-1,.6],
+        [.9,-1,-.6]
+
+    ];
+
+
+    for(
+        const p
+        of legPositions
+    ){
 
         const leg =
             new THREE.Mesh(
-                legGeo,
+
+                new THREE.CylinderGeometry(
+                    .18,
+                    .24,
+                    1.9,
+                    8
+                ),
+
                 mat
+
             );
 
         leg.position.set(
-            p[0] * scale,
-            p[1] * scale,
-            p[2] * scale
+            p[0],
+            p[1],
+            p[2]
         );
 
         leg.castShadow = true;
 
-        g.add(leg);
-    });
+        dinosaur.add(
+            leg
+        );
+
+    }
 
 
-    g.position.set(
+    dinosaur.scale.setScalar(
+        scale
+    );
+
+    dinosaur.position.set(
         x,
-        0.2,
+        -.25,
         z
     );
 
-    g.rotation.y =
-        Math.random() * Math.PI * 2;
+    dinosaur.rotation.y =
+        Math.random()*
+        Math.PI*2;
 
-    animalGroup.add(g);
+    dinosaur.userData.type =
+        "walker";
 
-    return g;
+    dinosaur.userData.speed =
+        THREE.MathUtils.randFloat(
+            .15,
+            .35
+        );
+
+    dinosaur.userData.direction =
+        Math.random()*
+        Math.PI*2;
+
+    animals.add(
+        dinosaur
+    );
+
+    return dinosaur;
+
 }
 
 
-/* TEROPOD */
+/* ============================================================
+   TEROPOD
+============================================================ */
 
 function createTheropod(
     x,
     z,
-    scale = 1
-) {
+    scale=1,
+    color=0x76553a
+){
 
-    const g =
+    const dinosaur =
         new THREE.Group();
 
     const mat =
-        material(0x6d5436);
+        makeMaterial(
+            color
+        );
+
 
     const body =
         new THREE.Mesh(
+
             new THREE.SphereGeometry(
                 1,
-                16,
-                12
+                18,
+                14
             ),
+
             mat
+
         );
 
     body.scale.set(
-        1.45,
-        0.75,
-        0.72
+        1.55,
+        .75,
+        .7
     );
 
-    g.add(body);
+    dinosaur.add(
+        body
+    );
+
+
+    const neck =
+        new THREE.Mesh(
+
+            new THREE.CylinderGeometry(
+                .25,
+                .4,
+                1.3,
+                9
+            ),
+
+            mat
+
+        );
+
+    neck.rotation.z =
+        -.8;
+
+    neck.position.set(
+        1.1,
+        .65,
+        0
+    );
+
+    dinosaur.add(
+        neck
+    );
 
 
     const head =
         new THREE.Mesh(
+
             new THREE.BoxGeometry(
-                1.1 * scale,
-                0.7 * scale,
-                0.7 * scale
+                1.1,
+                .7,
+                .7
             ),
+
             mat
+
         );
 
     head.position.set(
-        1.6 * scale,
-        0.55 * scale,
+        1.75,
+        1.05,
         0
     );
 
-    g.add(head);
+    dinosaur.add(
+        head
+    );
+
+
+    const jaw =
+        new THREE.Mesh(
+
+            new THREE.BoxGeometry(
+                1,
+                .22,
+                .65
+            ),
+
+            makeMaterial(
+                0x65432e
+            )
+
+        );
+
+    jaw.position.set(
+        1.82,
+        .73,
+        0
+    );
+
+    dinosaur.add(
+        jaw
+    );
 
 
     const tail =
         new THREE.Mesh(
+
             new THREE.ConeGeometry(
-                0.5 * scale,
-                3.3 * scale,
+                .43,
+                4,
                 8
             ),
+
             mat
+
         );
 
     tail.rotation.z =
-        Math.PI / 2;
+        Math.PI/2;
 
     tail.position.set(
-        -2.0 * scale,
+        -2.4,
         0,
         0
     );
 
-    g.add(tail);
+    dinosaur.add(
+        tail
+    );
 
 
-    for (let side of [-1, 1]) {
+    for(
+        const side
+        of [-1,1]
+    ){
 
         const leg =
             new THREE.Mesh(
+
                 new THREE.CylinderGeometry(
-                    0.16 * scale,
-                    0.19 * scale,
-                    1.6 * scale,
+                    .15,
+                    .2,
+                    2,
                     8
                 ),
+
                 mat
+
             );
 
         leg.position.set(
-            0.2 * scale,
-            -1 * scale,
-            0.5 * side * scale
+            .1,
+            -1.1,
+            side*.48
         );
 
-        g.add(leg);
+        dinosaur.add(
+            leg
+        );
+
     }
 
-    g.position.set(
+
+    dinosaur.position.set(
         x,
-        0.6,
+        .2,
         z
     );
 
-    g.scale.setScalar(scale);
+    dinosaur.scale.setScalar(
+        scale
+    );
 
-    animalGroup.add(g);
+    dinosaur.rotation.y =
+        Math.random()*
+        Math.PI*2;
 
-    return g;
+    dinosaur.userData.type =
+        "walker";
+
+    dinosaur.userData.speed =
+        THREE.MathUtils.randFloat(
+            .2,
+            .45
+        );
+
+    dinosaur.userData.direction =
+        Math.random()*
+        Math.PI*2;
+
+    animals.add(
+        dinosaur
+    );
+
+    return dinosaur;
+
 }
 
 
-/* MAMUT */
-
-function createMammoth(
-    x,
-    z,
-    scale = 1
-) {
-
-    const g =
-        new THREE.Group();
-
-    const fur =
-        material(0x573a29);
-
-    const ivory =
-        material(0xe8dfb8);
-
-    const body =
-        new THREE.Mesh(
-            new THREE.SphereGeometry(
-                1.3,
-                16,
-                12
-            ),
-            fur
-        );
-
-    body.scale.set(
-        1.3,
-        1,
-        0.8
-    );
-
-    g.add(body);
-
-
-    const head =
-        new THREE.Mesh(
-            new THREE.SphereGeometry(
-                0.85,
-                14,
-                12
-            ),
-            fur
-        );
-
-    head.position.set(
-        1.25,
-        0.15,
-        0
-    );
-
-    g.add(head);
-
-
-    const trunk =
-        new THREE.Mesh(
-            new THREE.CylinderGeometry(
-                0.13,
-                0.22,
-                2.1,
-                9
-            ),
-            fur
-        );
-
-    trunk.position.set(
-        1.85,
-        -0.85,
-        0
-    );
-
-    trunk.rotation.z =
-        0.1;
-
-    g.add(trunk);
-
-
-    for (let side of [-1, 1]) {
-
-        const tusk =
-            new THREE.Mesh(
-                new THREE.TorusGeometry(
-                    0.75,
-                    0.07,
-                    8,
-                    24,
-                    Math.PI * 1.1
-                ),
-                ivory
-            );
-
-        tusk.rotation.y =
-            Math.PI / 2;
-
-        tusk.position.set(
-            1.9,
-            -0.4,
-            0.55 * side
-        );
-
-        g.add(tusk);
-    }
-
-
-    for (let xLeg of [-0.7, 0.7]) {
-
-        for (let zLeg of [-0.5, 0.5]) {
-
-            const leg =
-                new THREE.Mesh(
-                    new THREE.CylinderGeometry(
-                        0.18,
-                        0.22,
-                        1.7,
-                        8
-                    ),
-                    fur
-                );
-
-            leg.position.set(
-                xLeg,
-                -1.3,
-                zLeg
-            );
-
-            g.add(leg);
-        }
-    }
-
-    g.position.set(
-        x,
-        0.7,
-        z
-    );
-
-    g.scale.setScalar(scale);
-
-    animalGroup.add(g);
-
-    return g;
-}
-
-
-/* RYBA */
+/* ============================================================
+   RYBA
+============================================================ */
 
 function createFish(
     x,
     y,
     z,
-    scale = 1
-) {
+    scale=1,
+    color=0x607b86
+){
 
-    const g =
+    const fish =
         new THREE.Group();
 
     const mat =
-        material(0x607d86);
+        makeMaterial(
+            color
+        );
+
 
     const body =
         new THREE.Mesh(
+
             new THREE.SphereGeometry(
-                0.7,
+                .7,
                 14,
                 10
             ),
+
             mat
+
         );
 
     body.scale.set(
         1.6,
-        0.75,
-        0.5
+        .7,
+        .45
     );
 
-    g.add(body);
+    fish.add(
+        body
+    );
 
 
     const tail =
         new THREE.Mesh(
+
             new THREE.ConeGeometry(
-                0.55,
-                1.3,
+                .55,
+                1.2,
                 4
             ),
+
             mat
+
         );
 
     tail.rotation.z =
-        -Math.PI / 2;
+        -Math.PI/2;
 
     tail.position.x =
-        -1.3;
+        -1.25;
 
-    g.add(tail);
+    fish.add(
+        tail
+    );
 
 
-    g.position.set(
+    fish.position.set(
         x,
         y,
         z
     );
 
-    g.scale.setScalar(scale);
+    fish.scale.setScalar(
+        scale
+    );
 
-    animalGroup.add(g);
+    fish.userData.type =
+        "fish";
 
-    return g;
+    fish.userData.speed =
+        THREE.MathUtils.randFloat(
+            .3,
+            .8
+        );
+
+    animals.add(
+        fish
+    );
+
+    return fish;
+
 }
 
 
-/* =========================================================
-   DANE EPOK
-========================================================= */
+/* ============================================================
+   MAMUT
+============================================================ */
+
+function createMammoth(
+    x,
+    z,
+    scale=1
+){
+
+    const mammoth =
+        new THREE.Group();
+
+    const fur =
+        makeMaterial(
+            0x51392b
+        );
+
+    const tuskMaterial =
+        makeMaterial(
+            0xeee2bf
+        );
+
+
+    const body =
+        new THREE.Mesh(
+
+            new THREE.SphereGeometry(
+                1.35,
+                18,
+                14
+            ),
+
+            fur
+
+        );
+
+    body.scale.set(
+        1.3,
+        1,
+        .85
+    );
+
+    mammoth.add(
+        body
+    );
+
+
+    const head =
+        new THREE.Mesh(
+
+            new THREE.SphereGeometry(
+                .85,
+                16,
+                12
+            ),
+
+            fur
+
+        );
+
+    head.position.set(
+        1.25,
+        .05,
+        0
+    );
+
+    mammoth.add(
+        head
+    );
+
+
+    const trunk =
+        new THREE.Mesh(
+
+            new THREE.CylinderGeometry(
+                .12,
+                .22,
+                2.2,
+                8
+            ),
+
+            fur
+
+        );
+
+    trunk.position.set(
+        1.8,
+        -1,
+        0
+    );
+
+    mammoth.add(
+        trunk
+    );
+
+
+    for(
+        const side
+        of [-1,1]
+    ){
+
+        const tusk =
+            new THREE.Mesh(
+
+                new THREE.TorusGeometry(
+                    .7,
+                    .06,
+                    8,
+                    24,
+                    Math.PI
+                ),
+
+                tuskMaterial
+
+            );
+
+        tusk.rotation.y =
+            Math.PI/2;
+
+        tusk.position.set(
+            1.85,
+            -.4,
+            side*.5
+        );
+
+        mammoth.add(
+            tusk
+        );
+
+    }
+
+
+    for(
+        const xx
+        of [-.7,.7]
+    ){
+
+        for(
+            const zz
+            of [-.5,.5]
+        ){
+
+            const leg =
+                new THREE.Mesh(
+
+                    new THREE.CylinderGeometry(
+                        .18,
+                        .22,
+                        1.7,
+                        8
+                    ),
+
+                    fur
+
+                );
+
+            leg.position.set(
+                xx,
+                -1.35,
+                zz
+            );
+
+            mammoth.add(
+                leg
+            );
+
+        }
+
+    }
+
+
+    mammoth.position.set(
+        x,
+        .3,
+        z
+    );
+
+    mammoth.scale.setScalar(
+        scale
+    );
+
+    mammoth.userData.type =
+        "walker";
+
+    mammoth.userData.speed =
+        THREE.MathUtils.randFloat(
+            .08,
+            .2
+        );
+
+    mammoth.userData.direction =
+        Math.random()*
+        Math.PI*2;
+
+    animals.add(
+        mammoth
+    );
+
+}
+
+
+/* ============================================================
+   CZŁOWIEK
+============================================================ */
+
+function createHuman(
+    x,
+    z,
+    scale=1
+){
+
+    const human =
+        new THREE.Group();
+
+
+    const skin =
+        makeMaterial(
+            0x9a6949
+        );
+
+    const clothes =
+        makeMaterial(
+            0x5e4635
+        );
+
+
+    const body =
+        new THREE.Mesh(
+
+            new THREE.CylinderGeometry(
+                .22,
+                .28,
+                1,
+                8
+            ),
+
+            clothes
+
+        );
+
+    body.position.y =
+        .7;
+
+    human.add(
+        body
+    );
+
+
+    const head =
+        new THREE.Mesh(
+
+            new THREE.SphereGeometry(
+                .2,
+                12,
+                10
+            ),
+
+            skin
+
+        );
+
+    head.position.y =
+        1.38;
+
+    human.add(
+        head
+    );
+
+
+    for(
+        const side
+        of [-1,1]
+    ){
+
+        const leg =
+            new THREE.Mesh(
+
+                new THREE.CylinderGeometry(
+                    .07,
+                    .07,
+                    .75,
+                    7
+                ),
+
+                skin
+
+            );
+
+        leg.position.set(
+            side*.11,
+            -.05,
+            0
+        );
+
+        human.add(
+            leg
+        );
+
+    }
+
+
+    human.position.set(
+        x,
+        -1,
+        z
+    );
+
+    human.scale.setScalar(
+        scale
+    );
+
+    animals.add(
+        human
+    );
+
+}
+
+
+/* ============================================================
+   OKRESY
+============================================================ */
 
 const periods = [
 
 {
-    min: 4400,
-    name: "Hadeik",
-    environment: "Gorąca, wulkaniczna Ziemia",
-    life: "Brak potwierdzonego życia",
+    min:4400,
+    name:"Hadeik",
+    environment:"Gorąca i wulkaniczna Ziemia",
+    organisms:"Brak potwierdzonego życia",
     description:
-        "Młoda Ziemia jest bardzo gorąca. Występują intensywne erupcje i częste uderzenia planetoid.",
-    world: "lava"
+        "Młoda Ziemia jest bardzo gorąca. Powierzchnia stopniowo się ochładza, a planeta jest bombardowana przez planetoidy.",
+    world:"lava"
 },
 
 {
-    min: 3500,
-    name: "Archaik",
-    environment: "Pierwsze oceany i małe kontynenty",
-    life: "Proste mikroorganizmy",
+    min:3500,
+    name:"Archaik",
+    environment:"Oceany i młode kontynenty",
+    organisms:"Bakterie i archeony",
     description:
-        "W oceanach istnieją już proste organizmy jednokomórkowe.",
-    world: "ocean"
+        "W oceanach istnieją bardzo proste organizmy jednokomórkowe.",
+    world:"microbes"
 },
 
 {
-    min: 541,
-    name: "Proterozoik",
-    environment: "Rozległe oceany",
-    life: "Organizmy wielokomórkowe",
+    min:541,
+    name:"Proterozoik",
+    environment:"Rozległe oceany",
+    organisms:"Eukarionty i organizmy wielokomórkowe",
     description:
-        "Życie staje się coraz bardziej złożone.",
-    world: "ocean"
+        "Atmosfera zawiera coraz więcej tlenu, a życie staje się bardziej złożone.",
+    world:"ocean"
 },
 
 {
-    min: 485,
-    name: "Kambr",
-    environment: "Ciepłe płytkie morza",
-    life: "Trylobity i bezkręgowce morskie",
+    min:485,
+    name:"Kambr",
+    environment:"Ciepłe i płytkie morza",
+    organisms:"Trylobity, anomalokarisy i inne bezkręgowce",
     description:
-        "W oceanach pojawia się ogromna różnorodność zwierząt.",
-    world: "oceanAnimals"
+        "Podczas eksplozji kambryjskiej pojawia się wiele nowych grup zwierząt.",
+    world:"cambrian"
 },
 
 {
-    min: 359,
-    name: "Dewon",
-    environment: "Morza, rzeki i pierwsze lasy",
-    life: "Ryby i pierwsze czworonogi",
+    min:419,
+    name:"Ordowik i sylur",
+    environment:"Morza oraz pierwsza roślinność lądowa",
+    organisms:"Ryby, stawonogi i pierwsze rośliny",
     description:
-        "Dewon jest nazywany wiekiem ryb.",
-    world: "devon"
+        "Życie jest nadal skupione głównie w oceanach, ale pierwsze organizmy kolonizują ląd.",
+    world:"fish"
 },
 
 {
-    min: 299,
-    name: "Karbon",
-    environment: "Wilgotne, rozległe lasy",
-    life: "Płazy i wielkie stawonogi",
+    min:359,
+    name:"Dewon",
+    environment:"Morza, rzeki i pierwsze lasy",
+    organisms:"Ryby, Dunkleosteus i pierwsze czworonogi",
     description:
-        "Ogromne bagienne lasy pokrywają znaczną część lądów.",
-    world: "forest"
+        "Dewon jest nazywany wiekiem ryb. Pierwsze kręgowce zaczynają wychodzić na ląd.",
+    world:"devon"
 },
 
 {
-    min: 252,
-    name: "Perm",
-    environment: "Pangea, klimat suchy",
-    life: "Synapsydy i gady",
+    min:299,
+    name:"Karbon",
+    environment:"Wilgotne lasy bagienne",
+    organisms:"Płazy i wielkie stawonogi",
     description:
-        "Większość lądów tworzy superkontynent Pangeę.",
-    world: "dry"
+        "Rozległe lasy pokrywają tropikalne obszary Ziemi. W atmosferze znajduje się dużo tlenu.",
+    world:"carboniferous"
 },
 
 {
-    min: 201,
-    name: "Trias",
-    environment: "Ciepłe, suche obszary Pangei",
-    life: "Pierwsze dinozaury i pierwsze ssaki",
+    min:252,
+    name:"Perm",
+    environment:"Pangea i rozległe suche obszary",
+    organisms:"Synapsydy i gady",
     description:
-        "Pojawiają się pierwsze dinozaury.",
-    world: "dinosaur"
+        "Większość lądów tworzy jeden ogromny superkontynent — Pangeę.",
+    world:"permian"
 },
 
 {
-    min: 145,
-    name: "Jura",
-    environment: "Ciepłe lasy, rzeki i morza",
-    life: "Dinozaury, pterozaury i pierwsze ptaki",
+    min:201,
+    name:"Trias",
+    environment:"Ciepła i sucha Pangea",
+    organisms:"Pierwsze dinozaury i pierwsze ssaki",
     description:
-        "Wielkie zauropody żyją w rozległych lasach.",
-    world: "jurassic"
+        "Pierwsze dinozaury pojawiają się i zaczynają rozprzestrzeniać po Pangei.",
+    world:"triassic"
 },
 
 {
-    min: 66,
-    name: "Kreda",
-    environment: "Ciepłe kontynenty i płytkie morza",
-    life: "Dinozaury i rośliny kwiatowe",
+    min:145,
+    name:"Jura",
+    environment:"Ciepłe lasy i morza",
+    organisms:"Dinozaury, pterozaury i pierwsze ptaki",
     description:
-        "Dinozaury pozostają dominującymi dużymi zwierzętami lądowymi.",
-    world: "cretaceous"
+        "Wielkie zauropody przemierzają rozległe lasy, a drapieżne teropody polują na inne zwierzęta.",
+    world:"jurassic"
 },
 
 {
-    min: 2.58,
-    name: "Kenozoik",
-    environment: "Lasy i trawiaste równiny",
-    life: "Ssaki i ptaki",
+    min:66,
+    name:"Kreda",
+    environment:"Ciepłe kontynenty i płytkie morza",
+    organisms:"Dinozaury, ptaki i rośliny kwiatowe",
     description:
-        "Ssaki rozwijają wiele nowych form.",
-    world: "mammals"
+        "Dinozaury nadal dominują na lądzie. Pojawia się coraz więcej roślin kwiatowych.",
+    world:"cretaceous"
 },
 
 {
-    min: 0.0117,
-    name: "Plejstocen",
-    environment: "Tundra i lodowce",
-    life: "Mamuty, bizony i ludzie",
+    min:23,
+    name:"Paleogen",
+    environment:"Lasy i cieplejszy klimat",
+    organisms:"Ssaki i ptaki",
     description:
-        "Duże obszary półkuli północnej pokrywają lodowce.",
-    world: "ice"
+        "Po wymieraniu dinozaurów ssaki szybko zajmują wiele nowych nisz.",
+    world:"mammals"
 },
 
 {
-    min: 0,
-    name: "Holocen",
-    environment: "Współczesna Ziemia",
-    life: "Współczesne organizmy",
+    min:2.58,
+    name:"Neogen",
+    environment:"Lasy i trawiaste równiny",
+    organisms:"Ssaki podobne do współczesnych",
     description:
-        "Obecna epoka geologiczna.",
-    world: "modern"
+        "Rozległe trawiaste równiny stają się coraz powszechniejsze.",
+    world:"mammals"
+},
+
+{
+    min:.0117,
+    name:"Plejstocen",
+    environment:"Tundra, stepy i lodowce",
+    organisms:"Mamuty, wielkie ssaki i ludzie",
+    description:
+        "Ogromne lodowce pokrywają część półkuli północnej.",
+    world:"ice"
+},
+
+{
+    min:0,
+    name:"Holocen",
+    environment:"Współczesna Ziemia",
+    organisms:"Współczesne zwierzęta, rośliny i ludzie",
+    description:
+        "To epoka geologiczna, w której obecnie żyjemy.",
+    world:"modern"
 }
 
 ];
 
 
-/* =========================================================
-   ELEMENTY UI
-========================================================= */
+/* ============================================================
+   UI
+============================================================ */
 
-const slider =
-    document.getElementById("timeline");
+const timeline =
+    document.getElementById(
+        "timeline"
+    );
 
-const timeText =
-    document.getElementById("timeText");
+const yearElement =
+    document.getElementById(
+        "year"
+    );
 
-const periodText =
-    document.getElementById("periodText");
+const periodElement =
+    document.getElementById(
+        "period"
+    );
 
-const environmentText =
-    document.getElementById("environmentText");
+const environmentElement =
+    document.getElementById(
+        "environment"
+    );
 
-const lifeText =
-    document.getElementById("lifeText");
+const organismsElement =
+    document.getElementById(
+        "organismsText"
+    );
 
-const description =
-    document.getElementById("description");
+const descriptionElement =
+    document.getElementById(
+        "description"
+    );
 
-const earthMode =
-    document.getElementById("earthMode");
+const earthButton =
+    document.getElementById(
+        "earthButton"
+    );
 
-const lifeMode =
-    document.getElementById("lifeMode");
+const lifeButton =
+    document.getElementById(
+        "lifeButton"
+    );
+
+const sceneTitle =
+    document.getElementById(
+        "sceneTitle"
+    );
 
 
-/* =========================================================
+/* ============================================================
    CZAS
-========================================================= */
+============================================================ */
 
-function getMYA() {
+function getMYA(){
 
-    return 4540 -
-        Number(slider.value);
+    return (
+        4540 -
+        Number(
+            timeline.value
+        )
+    );
+
 }
 
-window.setMYA = function(mya) {
 
-    slider.value =
+window.setMYA =
+function(mya){
+
+    timeline.value =
         4540 - mya;
 
-    updateTime();
-}
+    update();
 
-function findPeriod(mya) {
+};
 
-    for (
-        let i = 0;
-        i < periods.length;
-        i++
-    ) {
 
-        if (
-            mya >= periods[i].min
-        ) {
-            return periods[i];
+function findPeriod(
+    mya
+){
+
+    for(
+        const p
+        of periods
+    ){
+
+        if(
+            mya >= p.min
+        ){
+
+            return p;
+
         }
+
     }
 
     return periods[
-        periods.length - 1
+        periods.length-1
     ];
+
 }
 
 
-/* =========================================================
-   UKŁAD KONTYNENTÓW
-========================================================= */
+/* ============================================================
+   USUWANIE ZWIERZĄT
+============================================================ */
 
-function setContinents(mya) {
+function clearAnimals(){
 
-    continentGroup.clear();
+    while(
+        animals.children.length
+    ){
 
-    if (mya > 1000) {
-
-        createLandPatch(
-            20, 0,
-            0.8, 0.6,
-            0
-        );
-
-        createLandPatch(
-            -25, 100,
-            0.6, 0.5,
-            0.4
-        );
-
-        createLandPatch(
-            45, -120,
-            0.4, 0.35,
-            -0.2
+        animals.remove(
+            animals.children[0]
         );
 
     }
 
-    else if (mya > 180) {
-
-        /* PANGEA */
-
-        createLandPatch(
-            15, 15,
-            1.4, 1.7,
-            -0.1
-        );
-
-        createLandPatch(
-            50, -10,
-            0.85, 0.55,
-            0.1
-        );
-
-        createLandPatch(
-            -30, 20,
-            0.8, 0.6,
-            -0.3
-        );
-
-    }
-
-    else if (mya > 80) {
-
-        createLandPatch(
-            40, -80,
-            0.75, 0.55,
-            0.2
-        );
-
-        createLandPatch(
-            -10, -40,
-            0.45, 0.7,
-            0
-        );
-
-        createLandPatch(
-            35, 55,
-            0.95, 0.55,
-            -0.1
-        );
-
-        createLandPatch(
-            -25, 115,
-            0.5, 0.35,
-            -0.15
-        );
-
-    }
-
-    else {
-
-        const modern = [
-
-            [47,-105,.72,.5,.25],
-            [23,-100,.27,.52,-.25],
-            [-15,-60,.38,.76,.08],
-            [52,18,.52,.3,.12],
-            [13,21,.45,.74,-.05],
-            [45,80,1.05,.52,-.08],
-            [20,78,.36,.42,.2],
-            [-25,135,.48,.3,-.15],
-            [72,-40,.42,.35,.12]
-
-        ];
-
-        modern.forEach(v => {
-
-            createLandPatch(
-                v[0],
-                v[1],
-                v[2],
-                v[3],
-                v[4]
-            );
-
-        });
-    }
 }
 
 
-/* =========================================================
-   SCENA ŻYCIA
-========================================================= */
+/* ============================================================
+   WYGLĄD SCENY ŻYCIA
+============================================================ */
 
-function clearAnimals() {
-
-    animalGroup.clear();
-}
-
-function updateLifeWorld(world) {
+function setupLifeWorld(
+    period
+){
 
     clearAnimals();
 
-    vegetationGroup.visible = true;
 
-    river.visible = true;
+    vegetation.visible = true;
+    fernGroup.visible = true;
+    riverGroup.visible = true;
+    mountainsGroup.visible = true;
 
     groundMaterial.color.set(
-        0x82944c
+        0x8c9e54
+    );
+
+    leafMaterial.color.set(
+        0x5a7c38
     );
 
     scene.background.set(
-        0x9cc9de
+        lifeSky
     );
 
 
-    if (world === "lava") {
+    if(
+        period.world==="lava"
+    ){
 
-        vegetationGroup.visible = false;
-        river.visible = false;
+        vegetation.visible=false;
+        fernGroup.visible=false;
+        riverGroup.visible=false;
 
         groundMaterial.color.set(
-            0x4b1c0f
+            0x4a1c10
         );
 
         scene.background.set(
-            0x6d260f
+            0x7b321d
         );
 
         return;
+
     }
 
 
-    if (
-        world === "ocean" ||
-        world === "oceanAnimals"
-    ) {
+    if(
+        period.world==="microbes"
+        ||
+        period.world==="ocean"
+    ){
 
-        vegetationGroup.visible = false;
+        vegetation.visible=false;
+        fernGroup.visible=false;
 
         groundMaterial.color.set(
-            0x6c7055
+            0x736951
         );
 
         scene.background.set(
-            0x176f91
+            0x267d98
         );
-
-        river.scale.set(
-            4,
-            1,
-            1
-        );
-
-        if (
-            world === "oceanAnimals"
-        ) {
-
-            for (
-                let i = 0;
-                i < 15;
-                i++
-            ) {
-
-                createFish(
-                    THREE.MathUtils.randFloat(
-                        -12,
-                        12
-                    ),
-                    THREE.MathUtils.randFloat(
-                        -0.5,
-                        4
-                    ),
-                    THREE.MathUtils.randFloat(
-                        -20,
-                        4
-                    ),
-                    THREE.MathUtils.randFloat(
-                        0.6,
-                        1.6
-                    )
-                );
-            }
-        }
 
         return;
+
     }
 
 
-    river.scale.set(1,1,1);
+    if(
+        period.world==="cambrian"
+    ){
+
+        vegetation.visible=false;
+        fernGroup.visible=false;
+
+        groundMaterial.color.set(
+            0x756b50
+        );
+
+        scene.background.set(
+            0x1e799c
+        );
 
 
-    if (
-        world === "devon"
-    ) {
-
-        for (
-            let i = 0;
-            i < 12;
+        for(
+            let i=0;
+            i<20;
             i++
-        ) {
+        ){
 
             createFish(
-                THREE.MathUtils.randFloat(
-                    0,
-                    7
-                ),
-                THREE.MathUtils.randFloat(
-                    -0.7,
-                    0.7
-                ),
+
                 THREE.MathUtils.randFloat(
                     -15,
-                    4
+                    15
                 ),
-                0.6
+
+                THREE.MathUtils.randFloat(
+                    -1,
+                    3
+                ),
+
+                THREE.MathUtils.randFloat(
+                    -22,
+                    8
+                ),
+
+                THREE.MathUtils.randFloat(
+                    .4,
+                    1
+                ),
+
+                0x7a847b
+
             );
+
         }
+
+        return;
+
     }
 
 
-    if (
-        world === "forest"
-    ) {
+    if(
+        period.world==="fish"
+        ||
+        period.world==="devon"
+    ){
 
-        groundMaterial.color.set(
-            0x385d27
+        leafMaterial.color.set(
+            0x50773a
         );
+
+
+        for(
+            let i=0;
+            i<18;
+            i++
+        ){
+
+            createFish(
+
+                THREE.MathUtils.randFloat(
+                    -5,
+                    7
+                ),
+
+                THREE.MathUtils.randFloat(
+                    -1,
+                    .8
+                ),
+
+                THREE.MathUtils.randFloat(
+                    -18,
+                    8
+                ),
+
+                THREE.MathUtils.randFloat(
+                    .4,
+                    1.1
+                )
+
+            );
+
+        }
+
     }
 
 
-    if (
-        world === "dry"
-    ) {
+    if(
+        period.world==="carboniferous"
+    ){
 
         groundMaterial.color.set(
-            0xb47a43
+            0x3c612d
         );
 
-        vegetationGroup.visible = false;
+        leafMaterial.color.set(
+            0x416d30
+        );
+
+    }
+
+
+    if(
+        period.world==="permian"
+    ){
+
+        vegetation.visible=false;
+        fernGroup.visible=false;
+
+        groundMaterial.color.set(
+            0xb17c4d
+        );
 
         scene.background.set(
-            0xd6a769
+            0xd7b075
         );
+
     }
 
 
-    if (
-        world === "dinosaur" ||
-        world === "jurassic" ||
-        world === "cretaceous"
-    ) {
+    if(
+        period.world==="triassic"
+    ){
 
-        createDinosaur(
-            -6,
-            -5,
-            1.2
+        groundMaterial.color.set(
+            0xa87845
         );
 
-        createDinosaur(
-            5,
-            -8,
-            0.9
+        fernGroup.visible=true;
+
+        createTheropod(
+            -5,
+            -5,
+            .65,
+            0x696548
         );
 
         createTheropod(
-            1,
-            0,
-            1
+            5,
+            -11,
+            .55,
+            0x765f3f
         );
 
         createTheropod(
             8,
-            -13,
-            0.75
+            0,
+            .45,
+            0x586744
         );
+
     }
 
 
-    if (
-        world === "jurassic"
-    ) {
-
-        createDinosaur(
-            -11,
-            -12,
-            1.6,
-            0x536d3f
-        );
-    }
-
-
-    if (
-        world === "cretaceous"
-    ) {
-
-        createTheropod(
-            -5,
-            -12,
-            1.45
-        );
-    }
-
-
-    if (
-        world === "mammals"
-    ) {
-
-        createMammoth(
-            -4,
-            -7,
-            0.9
-        );
-
-        createMammoth(
-            5,
-            -11,
-            0.7
-        );
-    }
-
-
-    if (
-        world === "ice"
-    ) {
+    if(
+        period.world==="jurassic"
+    ){
 
         groundMaterial.color.set(
-            0xe5edf0
+            0x769047
+        );
+
+        createSauropod(
+            -8,
+            -8,
+            1.4
+        );
+
+        createSauropod(
+            5,
+            -15,
+            1
+        );
+
+        createSauropod(
+            12,
+            -7,
+            .7
+        );
+
+        createTheropod(
+            1,
+            -2,
+            .9
+        );
+
+        createTheropod(
+            -12,
+            -16,
+            .75
+        );
+
+    }
+
+
+    if(
+        period.world==="cretaceous"
+    ){
+
+        groundMaterial.color.set(
+            0x73944b
+        );
+
+        createTheropod(
+            -4,
+            -7,
+            1.35,
+            0x65533c
+        );
+
+        createTheropod(
+            7,
+            -15,
+            .8,
+            0x576746
+        );
+
+        createSauropod(
+            10,
+            -5,
+            .9,
+            0x657948
+        );
+
+    }
+
+
+    if(
+        period.world==="mammals"
+    ){
+
+        groundMaterial.color.set(
+            0x72924f
+        );
+
+        createMammoth(
+            -6,
+            -9,
+            .7
+        );
+
+        createMammoth(
+            8,
+            -14,
+            .55
+        );
+
+    }
+
+
+    if(
+        period.world==="ice"
+    ){
+
+        vegetation.visible=false;
+        fernGroup.visible=false;
+
+        groundMaterial.color.set(
+            0xe4edf0
         );
 
         scene.background.set(
-            0xb8d9e5
+            0xbadbe7
         );
 
-        vegetationGroup.visible = false;
 
         createMammoth(
+            -5,
+            -7,
+            1.15
+        );
+
+        createMammoth(
+            6,
+            -12,
+            .9
+        );
+
+        createMammoth(
+            11,
+            -3,
+            .7
+        );
+
+        createHuman(
+            1,
+            -3,
+            1
+        );
+
+        createHuman(
+            2,
             -4,
-            -7,
-            1.1
+            .9
         );
 
-        createMammoth(
-            5,
-            -13,
-            0.8
-        );
-
-        createMammoth(
-            10,
-            -7,
-            0.6
-        );
     }
 
 
-    if (
-        world === "modern"
-    ) {
+    if(
+        period.world==="modern"
+    ){
 
         groundMaterial.color.set(
-            0x5c8b45
+            0x69934c
         );
+
+        createHuman(
+            0,
+            -4,
+            1
+        );
+
+        createHuman(
+            2,
+            -5,
+            .95
+        );
+
     }
+
 }
 
 
-/* =========================================================
+/* ============================================================
    ZIEMIA W RÓŻNYCH EPOKACH
-========================================================= */
+============================================================ */
 
-function updateEarthWorld(
-    mya,
+function updateEarth(
     period
-) {
+){
 
-    setContinents(mya);
+    earthMaterial.map =
+        earthTexture;
 
-    if (
-        period.world === "lava"
-    ) {
+    earthMaterial.color.set(
+        0xffffff
+    );
+
+    clouds.visible = true;
+
+    atmosphere.material.color.set(
+        0x58baff
+    );
+
+
+    if(
+        period.world==="lava"
+    ){
+
+        earthMaterial.map = null;
 
         earthMaterial.color.set(
-            0xbb3a13
+            0xa63716
         );
 
-        continentMaterial.color.set(
-            0x2d160d
-        );
+        clouds.visible=false;
 
         atmosphere.material.color.set(
-            0xff7d39
+            0xff7136
         );
 
     }
 
-    else if (
-        period.world === "ice"
-    ) {
+
+    if(
+        period.world==="microbes"
+    ){
 
         earthMaterial.color.set(
-            0x1d789f
+            0x8da994
         );
 
-        continentMaterial.color.set(
-            0xddebed
+        clouds.visible=true;
+
+    }
+
+
+    if(
+        period.world==="ice"
+    ){
+
+        earthMaterial.color.set(
+            0xd7edf4
         );
 
         atmosphere.material.color.set(
-            0x9ddfff
+            0xb8eaff
         );
 
     }
 
-    else {
 
-        earthMaterial.color.set(
-            0x176fa4
-        );
+    earthMaterial.needsUpdate=true;
 
-        continentMaterial.color.set(
-            0x597e3d
-        );
-
-        atmosphere.material.color.set(
-            0x6bc4ff
-        );
-    }
 }
 
 
-/* =========================================================
+/* ============================================================
    AKTUALIZACJA
-========================================================= */
+============================================================ */
 
-function updateTime() {
+function update(){
 
     const mya =
         getMYA();
 
-    const period =
-        findPeriod(mya);
+    const p =
+        findPeriod(
+            mya
+        );
 
 
-    if (mya === 0) {
+    if(
+        mya===0
+    ){
 
-        timeText.textContent =
+        yearElement.textContent =
             "Współczesność";
 
     }
 
-    else {
+    else{
 
-        timeText.textContent =
+        yearElement.textContent =
             Math.round(mya) +
             " mln lat temu";
+
     }
 
 
-    periodText.textContent =
-        period.name;
+    periodElement.textContent =
+        p.name;
 
-    environmentText.textContent =
-        period.environment;
+    environmentElement.textContent =
+        p.environment;
 
-    lifeText.textContent =
-        period.life;
+    organismsElement.textContent =
+        p.organisms;
 
-    description.textContent =
-        period.description;
+    descriptionElement.textContent =
+        p.description;
 
 
-    updateEarthWorld(
-        mya,
-        period
+    sceneTitle.textContent =
+        "🌿 " +
+        p.name;
+
+
+    updateEarth(
+        p
     );
 
-    updateLifeWorld(
-        period.world
+    setupLifeWorld(
+        p
     );
+
 }
 
-slider.addEventListener(
+
+timeline.addEventListener(
     "input",
-    updateTime
+    update
 );
 
 
-/* =========================================================
-   TRYBY
-========================================================= */
+/* ============================================================
+   TRYB ZIEMIA
+============================================================ */
 
-function showEarth() {
+function showEarth(){
 
-    earthGroup.visible = true;
-    lifeGroup.visible = false;
+    earthGroup.visible=true;
+    lifeGroup.visible=false;
 
-    earthMode.classList.add(
+    earthButton.classList.add(
         "active"
     );
 
-    lifeMode.classList.remove(
+    lifeButton.classList.remove(
         "active"
+    );
+
+    sceneTitle.style.display=
+        "none";
+
+
+    scene.background.set(
+        0x020710
     );
 
 
@@ -2097,94 +3169,197 @@ function showEarth() {
         0
     );
 
-    controls.minDistance = 5;
-    controls.maxDistance = 20;
+    controls.minDistance=4.5;
+    controls.maxDistance=22;
+
+    controls.update();
+
 }
 
-function showLife() {
 
-    earthGroup.visible = false;
-    lifeGroup.visible = true;
+/* ============================================================
+   TRYB ŻYCIA
+============================================================ */
 
-    lifeMode.classList.add(
+function showLife(){
+
+    earthGroup.visible=false;
+    lifeGroup.visible=true;
+
+    lifeButton.classList.add(
         "active"
     );
 
-    earthMode.classList.remove(
+    earthButton.classList.remove(
         "active"
+    );
+
+    sceneTitle.style.display=
+        "block";
+
+
+    const p =
+        findPeriod(
+            getMYA()
+        );
+
+    setupLifeWorld(
+        p
     );
 
 
     camera.position.set(
-        11,
+        12,
         8,
         16
     );
 
     controls.target.set(
         0,
-        0,
-        -5
+        -1,
+        -7
     );
 
-    controls.minDistance = 4;
-    controls.maxDistance = 45;
+    controls.minDistance=4;
+    controls.maxDistance=55;
+
+    controls.update();
+
 }
 
-earthMode.addEventListener(
+
+earthButton.addEventListener(
     "click",
     showEarth
 );
 
-lifeMode.addEventListener(
+lifeButton.addEventListener(
     "click",
     showLife
 );
 
 
-/* =========================================================
-   ANIMACJE
-========================================================= */
+/* ============================================================
+   ANIMACJA
+============================================================ */
 
-let clock =
+const clock =
     new THREE.Clock();
 
-function animate() {
+
+function animate(){
 
     requestAnimationFrame(
         animate
     );
 
-    const t =
-        clock.getElapsedTime();
+
+    const delta =
+        Math.min(
+            clock.getDelta(),
+            .05
+        );
 
 
-    if (
+    if(
         earthGroup.visible
-    ) {
+    ){
 
         earth.rotation.y +=
-            0.0007;
+            delta*.025;
 
-        continentGroup.rotation.y =
-            earth.rotation.y;
+        clouds.rotation.y +=
+            delta*.035;
 
-        cloudGroup.rotation.y +=
-            0.0009;
     }
 
 
-    animalGroup.children.forEach(
-        (animal, i) => {
+    if(
+        lifeGroup.visible
+    ){
 
-            animal.position.y +=
-                Math.sin(
-                    t * 2 +
-                    i
-                ) * 0.0006;
+        for(
+            const animal
+            of animals.children
+        ){
+
+            if(
+                animal.userData.type===
+                "walker"
+            ){
+
+                const speed =
+                    animal.userData.speed;
+
+                const direction =
+                    animal.userData.direction;
+
+
+                animal.position.x +=
+                    Math.cos(
+                        direction
+                    ) *
+                    speed *
+                    delta;
+
+                animal.position.z +=
+                    Math.sin(
+                        direction
+                    ) *
+                    speed *
+                    delta;
+
+
+                animal.rotation.y =
+                    -direction;
+
+
+                if(
+                    Math.abs(
+                        animal.position.x
+                    ) > 20
+                    ||
+                    animal.position.z>12
+                    ||
+                    animal.position.z<-26
+                ){
+
+                    animal.userData.direction +=
+                        Math.PI +
+                        THREE.MathUtils.randFloat(
+                            -.7,
+                            .7
+                        );
+
+                }
+
+            }
+
+
+            if(
+                animal.userData.type===
+                "fish"
+            ){
+
+                animal.position.x +=
+                    animal.userData.speed *
+                    delta;
+
+                if(
+                    animal.position.x >
+                    18
+                ){
+
+                    animal.position.x=
+                        -18;
+
+                }
+
+            }
 
         }
-    );
+
+    }
 
 
     controls.update();
@@ -2193,18 +3368,19 @@ function animate() {
         scene,
         camera
     );
+
 }
 
 animate();
 
 
-/* =========================================================
-   RESIZE
-========================================================= */
+/* ============================================================
+   ZMIANA ROZMIARU
+============================================================ */
 
 window.addEventListener(
     "resize",
-    () => {
+    ()=>{
 
         camera.aspect =
             window.innerWidth /
@@ -2216,13 +3392,17 @@ window.addEventListener(
             window.innerWidth,
             window.innerHeight
         );
+
     }
 );
 
 
-/* START */
+/* ============================================================
+   START
+============================================================ */
 
-updateTime();
+update();
+
 showEarth();
 
 </script>
