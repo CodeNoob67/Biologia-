@@ -1,96 +1,79 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Ewolucja 3D — Gra biologiczna</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ewolucja 3D — gra biologiczna</title>
 <style>
-  *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Inter,Arial,sans-serif;background:#07131c;color:#fff}
-  canvas{display:block}
-  #ui{position:fixed;inset:0;pointer-events:none}
-  .top{position:absolute;top:14px;left:14px;right:14px;display:flex;gap:12px;justify-content:space-between;align-items:flex-start}
-  .panel{pointer-events:auto;background:rgba(6,18,28,.84);border:1px solid rgba(255,255,255,.12);box-shadow:0 12px 35px rgba(0,0,0,.35);backdrop-filter:blur(10px);border-radius:16px;padding:13px 15px}
-  #stats{min-width:260px}.title{font-weight:900;font-size:20px;letter-spacing:.4px}.sub{opacity:.75;font-size:12px;margin-top:3px}
-  .stat{display:flex;justify-content:space-between;gap:28px;margin-top:7px;font-size:14px}.value{font-weight:800;color:#a7ffd0}
-  #goal{max-width:390px}.goalTitle{font-weight:900;color:#ffe88e}.bar{height:10px;background:#172b36;border-radius:99px;overflow:hidden;margin-top:8px}.bar>div{height:100%;width:0;background:linear-gradient(90deg,#68f0a2,#f7df65);transition:.25s}
-  #tree{position:absolute;left:14px;top:175px;width:260px;max-height:calc(100vh - 250px);overflow:auto;pointer-events:auto}.node{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);margin:7px 0;padding:9px 10px;border-radius:12px;display:flex;align-items:center;justify-content:space-between;gap:8px}.node.active{outline:2px solid #78f0a8;background:rgba(77,233,140,.13)}.node.locked{opacity:.4}.node small{display:block;opacity:.7;margin-top:2px}.badge{font-size:10px;padding:4px 7px;border-radius:999px;background:#193744;white-space:nowrap}
-  #actions{position:absolute;right:14px;bottom:14px;width:min(390px,calc(100vw - 28px));pointer-events:auto}.bigbtn{border:0;border-radius:14px;padding:13px 15px;font-weight:900;font-size:15px;cursor:pointer;width:100%;background:linear-gradient(135deg,#55dd91,#a4ff75);color:#062418;box-shadow:0 8px 28px rgba(65,230,140,.24)}.bigbtn:disabled{filter:grayscale(1);opacity:.42;cursor:not-allowed}.row{display:flex;gap:8px;margin-top:8px}.row button{flex:1;border:1px solid rgba(255,255,255,.12);background:#102834;color:white;border-radius:11px;padding:9px;cursor:pointer;font-weight:700}
-  #info{position:absolute;left:50%;bottom:15px;transform:translateX(-50%);width:min(460px,calc(100vw - 440px));text-align:center;pointer-events:none}.infoBox{display:inline-block;background:rgba(7,21,31,.78);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:10px 14px;font-size:13px;line-height:1.35}
-  #toast{position:absolute;left:50%;top:20%;transform:translate(-50%,-20px);background:#efffc2;color:#143319;font-weight:900;border-radius:14px;padding:12px 17px;opacity:0;transition:.3s;box-shadow:0 8px 40px rgba(0,0,0,.35)}#toast.show{opacity:1;transform:translate(-50%,0)}
-  #win{display:none;position:absolute;inset:0;pointer-events:auto;background:rgba(0,8,12,.76);align-items:center;justify-content:center}.winCard{width:min(520px,90vw);padding:30px;text-align:center;background:#0d2731;border:1px solid rgba(255,255,255,.14);border-radius:24px;box-shadow:0 20px 70px #000}.winCard h1{font-size:42px;margin:0 0 8px;color:#baff96}.winCard p{line-height:1.5;opacity:.85}.winCard button{padding:12px 22px;border:0;border-radius:12px;font-weight:900;cursor:pointer}
-  #hint{position:absolute;top:120px;left:50%;transform:translateX(-50%);font-size:12px;opacity:.7}
-  @media(max-width:850px){#tree{width:210px}.top{right:8px;left:8px}.panel{padding:10px}.sub{display:none}#info{display:none}#goal{max-width:300px}}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Arial,sans-serif;background:#07141c;color:#fff}canvas{position:fixed;inset:0;width:100%;height:100%;display:block}.ui{position:fixed;inset:0;pointer-events:none}.panel{pointer-events:auto;background:rgba(5,18,27,.9);border:1px solid #ffffff22;border-radius:18px;box-shadow:0 12px 35px #0007;backdrop-filter:blur(8px)}#stats{position:absolute;left:18px;top:18px;width:350px;padding:16px}.title{font-weight:900;font-size:25px}.sub{opacity:.75;font-size:13px;margin:4px 0 9px}.stat{display:flex;justify-content:space-between;margin:8px 0}.value{font-weight:900;color:#94ffc1}#goal{position:absolute;right:18px;top:18px;width:395px;padding:16px}.goalTitle{font-weight:900;font-size:18px;color:#ffe785}.bar{height:12px;background:#17323d;border-radius:99px;overflow:hidden;margin-top:10px}.bar div{height:100%;background:linear-gradient(90deg,#63ef9f,#f1e25e);width:0;transition:.25s}#tree{position:absolute;left:18px;top:194px;width:290px;max-height:calc(100vh - 290px);overflow:auto;padding:12px}.node{padding:11px;border:1px solid #ffffff15;border-radius:13px;margin:8px 0;background:#ffffff08}.node.active{outline:2px solid #71f1aa;background:#35db8c20}.node.locked{opacity:.38}.node small{display:block;opacity:.62;margin-top:3px}.badge{float:right;background:#153543;border-radius:999px;padding:4px 7px;font-size:11px}#actions{position:absolute;right:18px;bottom:18px;width:430px;padding:14px}.big{width:100%;border:0;border-radius:15px;padding:14px;font-size:16px;font-weight:900;background:linear-gradient(135deg,#57e297,#c7ff6d);color:#082319;cursor:pointer}.big:disabled{filter:grayscale(1);opacity:.5}.row{display:flex;gap:9px;margin-top:9px}.row button{flex:1;border:1px solid #ffffff22;background:#12303d;color:white;border-radius:12px;padding:11px;font-weight:800;cursor:pointer}#info{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);width:520px;text-align:center}.info{display:inline-block;padding:11px 16px;border-radius:14px;background:#081923dd;border:1px solid #ffffff1f;line-height:1.4}#hint{position:absolute;top:145px;left:50%;transform:translateX(-50%);font-size:13px;opacity:.7}.modelLabel{position:absolute;left:50%;top:31%;transform:translateX(-50%);font-weight:900;font-size:22px;text-shadow:0 3px 12px #000}.toast{position:absolute;left:50%;top:22%;transform:translate(-50%,-20px);background:#efffbf;color:#153216;font-weight:900;border-radius:12px;padding:12px 16px;opacity:0;transition:.25s}.toast.show{opacity:1;transform:translate(-50%,0)}#win{display:none;position:absolute;inset:0;background:#001018d9;align-items:center;justify-content:center;pointer-events:auto}.winCard{width:min(520px,90vw);padding:30px;text-align:center;background:#0d2a34;border:1px solid #ffffff25;border-radius:24px}.winCard h1{color:#b9ff91;font-size:40px;margin:0 0 10px}.winCard button{border:0;border-radius:12px;padding:12px 18px;font-weight:900;cursor:pointer}@media(max-width:900px){#tree{width:220px}#stats{width:300px}#goal{width:320px}#info{display:none}}
 </style>
 </head>
 <body>
 <canvas id="game"></canvas>
-<div id="ui">
-  <div class="top">
-    <div class="panel" id="stats">
-      <div class="title">🧬 EWOLUCJA 3D</div>
-      <div class="sub">Rozwijaj życie i zdobywaj punkty ewolucji.</div>
-      <div class="stat"><span>Punkty ewolucji</span><span class="value" id="ep">0</span></div>
-      <div class="stat"><span>Produkcja</span><span class="value" id="pps">+1/s</span></div>
-      <div class="stat"><span>Aktualny organizm</span><span class="value" id="currentName">Pierwsza komórka</span></div>
-    </div>
-    <div class="panel" id="goal">
-      <div class="goalTitle">🎯 CEL: od komórki do Homo sapiens</div>
-      <div class="sub" id="goalText">Odblokuj wszystkie etapy ewolucji.</div>
-      <div class="bar"><div id="progress"></div></div>
-    </div>
-  </div>
+<div class="ui">
+  <div class="panel" id="stats"><div class="title">🧬 EWOLUCJA 3D</div><div class="sub">Rozwijaj życie i zdobywaj punkty ewolucji.</div><div class="stat"><span>Punkty ewolucji</span><span class="value" id="ep">0</span></div><div class="stat"><span>Produkcja</span><span class="value" id="pps">+1/s</span></div><div class="stat"><span>Aktualny organizm</span><span class="value" id="current">Pierwsza komórka</span></div></div>
+  <div class="panel" id="goal"><div class="goalTitle">🎯 CEL: od komórki do Homo sapiens</div><div class="sub" id="goalText"></div><div class="bar"><div id="progress"></div></div></div>
   <div class="panel" id="tree"></div>
-  <div id="hint">LPM + przeciąganie: obrót • kółko: zoom • klikaj model: +punkty</div>
-  <div id="info"><div class="infoBox" id="bioInfo"></div></div>
-  <div class="panel" id="actions">
-    <button class="bigbtn" id="evolveBtn">EWOLUUJ</button>
-    <div class="row"><button id="boostBtn">⚡ Mutacja ×2 (20 s)</button><button id="resetBtn">↻ Reset</button></div>
-  </div>
-  <div id="toast"></div>
-  <div id="win"><div class="winCard"><h1>ŻYCIE ZWYCIĘŻYŁO!</h1><p>Przeszedłeś całą uproszczoną ścieżkę ewolucji — od pierwszej komórki do <b>Homo sapiens</b>.</p><button onclick="document.getElementById('win').style.display='none'">Oglądaj świat dalej</button></div></div>
+  <div id="hint">Przeciągaj myszką: obrót • kółko: zoom • kliknij organizm: +EP</div>
+  <div class="modelLabel" id="modelLabel"></div>
+  <div id="info"><div class="info" id="bioInfo"></div></div>
+  <div class="panel" id="actions"><button class="big" id="evolve">EWOLUUJ</button><div class="row"><button id="boost">⚡ Mutacja ×2 (20 s)</button><button id="reset">↻ Reset</button></div></div>
+  <div class="toast" id="toast"></div>
+  <div id="win"><div class="winCard"><h1>ŻYCIE ZWYCIĘŻYŁO!</h1><p>Dotarłeś do <b>Homo sapiens</b>.</p><button onclick="document.getElementById('win').style.display='none'">Oglądaj dalej</button></div></div>
 </div>
 <script>
-const canvas=document.getElementById('game'),ctx=canvas.getContext('2d');
-let W,H,dpr=Math.min(devicePixelRatio||1,2);function resize(){W=innerWidth;H=innerHeight;canvas.width=W*dpr;canvas.height=H*dpr;canvas.style.width=W+'px';canvas.style.height=H+'px';ctx.setTransform(dpr,0,0,dpr,0,0)}addEventListener('resize',resize);resize();
+const canvas=document.getElementById('game');
+const ctx=canvas.getContext('2d');
+let W=innerWidth,H=innerHeight,dpr=Math.min(devicePixelRatio||1,2);
+function resize(){W=innerWidth;H=innerHeight;canvas.width=W*dpr;canvas.height=H*dpr;canvas.style.width=W+'px';canvas.style.height=H+'px';ctx.setTransform(dpr,0,0,dpr,0,0)}
+addEventListener('resize',resize);resize();
+
 const stages=[
-{name:'Pierwsza komórka',latin:'Prokaryota',cost:0,pps:1,scale:1.05,color:'#6ff0ad',info:'Prosta komórka bez jądra. Początek naszej uproszczonej ścieżki życia.',model:'cell'},
-{name:'Komórka eukariotyczna',latin:'Eukaryota',cost:25,pps:3,scale:1.1,color:'#67d7ff',info:'Komórka z jądrem i organellami. Pozwala na większą złożoność.',model:'euk'},
-{name:'Wielokomórkowiec',latin:'Metazoa',cost:90,pps:8,scale:1.0,color:'#d284ff',info:'Wiele współpracujących komórek może tworzyć tkanki i narządy.',model:'blob'},
-{name:'Ryba',latin:'Actinopterygii',cost:260,pps:20,scale:1.0,color:'#64b5ff',info:'Kręgowiec dobrze przystosowany do życia i ruchu w wodzie.',model:'fish'},
-{name:'Tiktaalik',latin:'Tiktaalik roseae',cost:700,pps:55,scale:1.05,color:'#93b978',info:'Forma przejściowa z cechami ryb i pierwszych czworonogów.',model:'tik'},
-{name:'Płaz',latin:'Tetrapoda',cost:1600,pps:125,scale:1.0,color:'#8ad069',info:'Czworonóg zdolny do poruszania się po lądzie, nadal silnie związany z wodą.',model:'amph'},
-{name:'Gad',latin:'Amniota',cost:3600,pps:280,scale:1,color:'#c7b765',info:'Jajo owodniowe ułatwia rozmnażanie z dala od środowiska wodnego.',model:'reptile'},
-{name:'Wczesny ssak',latin:'Mammalia',cost:8500,pps:650,scale:1,color:'#bb987c',info:'Stałocieplność, włosy i karmienie młodych mlekiem.',model:'mammal'},
-{name:'Naczelny',latin:'Primates',cost:19000,pps:1450,scale:1,color:'#d7a277',info:'Chwytne dłonie, widzenie stereoskopowe i rozwinięty mózg.',model:'primate'},
-{name:'Australopitek',latin:'Australopithecus',cost:44000,pps:3400,scale:1,color:'#bd855e',info:'Dwunożny hominin poprzedzający rodzaj Homo.',model:'ape'},
-{name:'Homo erectus',latin:'Homo erectus',cost:100000,pps:8000,scale:1,color:'#c99770',info:'Zaawansowane narzędzia, większy mózg i dalekie migracje.',model:'human'},
-{name:'Homo sapiens',latin:'Homo sapiens',cost:240000,pps:19000,scale:1,color:'#e2aa80',info:'Cel gry: człowiek współczesny, kultura symboliczna i rozwinięta technologia.',model:'human2'}
+{name:'Pierwsza komórka',latin:'Prokaryota',cost:0,pps:1,color:'#62f2ad',info:'Prosta komórka bez jądra komórkowego.',model:'cell'},
+{name:'Komórka eukariotyczna',latin:'Eukaryota',cost:25,pps:3,color:'#5fd4ff',info:'Komórka z jądrem i organellami.',model:'euk'},
+{name:'Wielokomórkowiec',latin:'Metazoa',cost:90,pps:8,color:'#d38cff',info:'Wiele komórek współpracuje w jednym organizmie.',model:'blob'},
+{name:'Ryba',latin:'Actinopterygii',cost:260,pps:20,color:'#55b8ff',info:'Kręgowiec przystosowany do życia w wodzie.',model:'fish'},
+{name:'Tiktaalik',latin:'Tiktaalik roseae',cost:700,pps:55,color:'#8fbd73',info:'Zwierzę z cechami ryb i pierwszych czworonogów.',model:'tik'},
+{name:'Płaz',latin:'Tetrapoda',cost:1600,pps:125,color:'#73d16a',info:'Czworonóg związany zarówno z wodą, jak i lądem.',model:'amph'},
+{name:'Gad',latin:'Amniota',cost:3600,pps:280,color:'#c6b765',info:'Jajo owodniowe pozwala lepiej rozmnażać się na lądzie.',model:'reptile'},
+{name:'Wczesny ssak',latin:'Mammalia',cost:8500,pps:650,color:'#bd9274',info:'Włosy, stałocieplność i mleko dla młodych.',model:'mammal'},
+{name:'Naczelny',latin:'Primates',cost:19000,pps:1450,color:'#d59b70',info:'Chwytne dłonie i bardzo dobry wzrok.',model:'primate'},
+{name:'Australopitek',latin:'Australopithecus',cost:44000,pps:3400,color:'#bf835d',info:'Dwunożny hominin poprzedzający rodzaj Homo.',model:'ape'},
+{name:'Homo erectus',latin:'Homo erectus',cost:100000,pps:8000,color:'#d09b74',info:'Zaawansowane narzędzia i dalekie migracje.',model:'human'},
+{name:'Homo sapiens',latin:'Homo sapiens',cost:240000,pps:19000,color:'#e8ad83',info:'Człowiek współczesny — końcowy cel tej wersji gry.',model:'human2'}
 ];
-let state=JSON.parse(localStorage.getItem('evo3d_save')||'null')||{ep:0,stage:0,boostUntil:0};
-let angleX=-.18,angleY=.5,zoom=1,drag=false,lastX=0,lastY=0,time=0,particles=[];
-function save(){localStorage.setItem('evo3d_save',JSON.stringify(state))}setInterval(save,3000);
-function boost(){return Date.now()<state.boostUntil?2:1}
-function pps(){return stages[state.stage].pps*boost()}
-function fmt(n){if(n<1000)return Math.floor(n).toString();if(n<1e6)return (n/1e3).toFixed(1)+'k';return (n/1e6).toFixed(2)+'M'}
-function toast(s){let t=document.getElementById('toast');t.textContent=s;t.classList.add('show');clearTimeout(t._to);t._to=setTimeout(()=>t.classList.remove('show'),1500)}
-function updateUI(){let s=stages[state.stage],next=stages[state.stage+1];document.getElementById('ep').textContent=fmt(state.ep);document.getElementById('pps').textContent='+'+fmt(pps())+'/s';document.getElementById('currentName').textContent=s.name;document.getElementById('bioInfo').innerHTML='<b>'+s.name+'</b> <i>('+s.latin+')</i><br>'+s.info;document.getElementById('progress').style.width=(state.stage/(stages.length-1)*100)+'%';document.getElementById('goalText').textContent=(state.stage+1)+' / '+stages.length+' etapów';let b=document.getElementById('evolveBtn');if(next){b.textContent='EWOLUUJ → '+next.name+'  ('+fmt(next.cost)+' EP)';b.disabled=state.ep<next.cost}else{b.textContent='MAKSYMALNY ETAP';b.disabled=true}renderTree()}
-function renderTree(){let tree=document.getElementById('tree');tree.innerHTML='<b>Drzewo ewolucji</b>';stages.forEach((s,i)=>{let n=document.createElement('div');n.className='node '+(i===state.stage?'active ':'')+(i>state.stage?'locked':'');n.innerHTML='<div><b>'+(i<=state.stage?'✓ ':'🔒 ')+s.name+'</b><small>'+s.latin+'</small></div><span class="badge">+'+fmt(s.pps)+'/s</span>';if(i<=state.stage)n.onclick=()=>{state.stage=i;updateUI();toast('Wybrano: '+s.name)};tree.appendChild(n)})}
-document.getElementById('evolveBtn').onclick=()=>{let n=stages[state.stage+1];if(!n||state.ep<n.cost)return;state.ep-=n.cost;state.stage++;burst();updateUI();toast('Nowy etap: '+stages[state.stage].name);if(state.stage===stages.length-1)document.getElementById('win').style.display='flex'};
-document.getElementById('boostBtn').onclick=()=>{if(Date.now()<state.boostUntil){toast('Mutacja już działa');return}state.boostUntil=Date.now()+20000;toast('Mutacja ×2 przez 20 s!')};
-document.getElementById('resetBtn').onclick=()=>{state={ep:0,stage:0,boostUntil:0};save();updateUI();toast('Gra zresetowana')};
-canvas.onmousedown=e=>{drag=true;lastX=e.clientX;lastY=e.clientY};onmouseup=()=>drag=false;onmousemove=e=>{if(drag){angleY+=(e.clientX-lastX)*.008;angleX+=(e.clientY-lastY)*.006;angleX=Math.max(-1.1,Math.min(.8,angleX));lastX=e.clientX;lastY=e.clientY}};canvas.onwheel=e=>{zoom*=e.deltaY>0?.9:1.1;zoom=Math.max(.55,Math.min(1.8,zoom))};canvas.onclick=e=>{if(Math.hypot(e.clientX-W/2,e.clientY-H/2)<130*zoom){state.ep+=Math.max(1,Math.round(stages[state.stage].pps*.25))*boost();clickSpark(e.clientX,e.clientY);updateUI()}};
-function P(x,y,z){let cy=Math.cos(angleY),sy=Math.sin(angleY),cx=Math.cos(angleX),sx=Math.sin(angleX);let x1=x*cy-z*sy,z1=x*sy+z*cy,y1=y*cx-z1*sx,z2=y*sx+z1*cx;let f=440/(440+z2);return{x:W/2+x1*f*zoom,y:H/2+y1*f*zoom,z:z2,s:f*zoom}}
-function poly(points,fill,stroke='#0003',lw=1){let ps=points.map(p=>P(...p));ctx.beginPath();ps.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();ctx.fillStyle=fill;ctx.fill();ctx.strokeStyle=stroke;ctx.lineWidth=lw;ctx.stroke()}
-function sphere(x,y,z,r,c){let p=P(x,y,z);let g=ctx.createRadialGradient(p.x-r*p.s*.35,p.y-r*p.s*.35,r*p.s*.1,p.x,p.y,r*p.s);g.addColorStop(0,'#fff');g.addColorStop(.16,c);g.addColorStop(1,'#061015');ctx.beginPath();ctx.arc(p.x,p.y,r*p.s,0,Math.PI*2);ctx.fillStyle=g;ctx.fill()}
-function line(a,b,w,c){a=P(...a);b=P(...b);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=c;ctx.lineWidth=w*((a.s+b.s)/2);ctx.lineCap='round';ctx.stroke()}
-function limb(a,b,c,r,col){line(a,b,r*2,col);sphere(...a,r,col);sphere(...b,r*.9,col);sphere(...c,r*.75,col);line(b,c,r*1.6,col)}
-function drawModel(s){ctx.save();let col=s.color;if(s.model==='cell'||s.model==='euk'){sphere(0,0,0,72,col);sphere(12,-6,-20,s.model==='euk'?28:18,s.model==='euk'?'#854cff':'#d4ff4d');for(let i=0;i<8;i++){let a=i/8*Math.PI*2+time*.2;sphere(Math.cos(a)*45,Math.sin(a)*35,Math.sin(a*1.7)*25,7,i%2?'#ffda60':'#ff7f91')}for(let i=0;i<7;i++){let a=i*.9;let pts=[];for(let j=0;j<7;j++)pts.push([65+j*12,Math.sin(a+j*.8)*7,Math.cos(a+j*.8)*8]);for(let j=0;j<pts.length-1;j++)line(pts[j],pts[j+1],2.3,col)}}
-else if(s.model==='blob'){for(let i=0;i<12;i++){let a=i/12*Math.PI*2;sphere(Math.cos(a)*55,Math.sin(a)*42,Math.sin(a*3)*18,25,col)}sphere(0,0,0,55,col)}
-else if(['fish','tik','amph','reptile'].includes(s.model)){sphere(-5,0,0,50,col);sphere(46,-4,0,31,col);poly([[-50,0,0],[-105,-46,0],[-100,43,0]],col);sphere(61,-13,-23,5,'#fff');sphere(63,-13,-27,2,'#111');if(s.model!=='fish'){let ys=s.model==='tik'?35:42;limb([-10,22,20],[-38,ys,28],[-60,ys+18,24],7,col);limb([20,22,-18],[45,ys,-28],[65,ys+14,-24],7,col);limb([-10,-22,20],[-38,-ys,28],[-60,-ys-18,24],7,col);limb([20,-22,-18],[45,-ys,-28],[65,-ys-14,-24],7,col)}else{poly([[5,0,10],[-20,-52,5],[35,-25,5]],'#84dcff');poly([[0,0,-8],[-30,48,-5],[35,23,-5]],'#84dcff')}}
-else if(['mammal','primate','ape','human','human2'].includes(s.model)){let human=['primate','ape','human','human2'].includes(s.model);sphere(0,-35,0,human?34:39,col);sphere(0,28,0,human?42:54,col);if(human){let upright=['ape','human','human2'].includes(s.model);let hipY=65;limb([-25,15,0],[-46,55,5],[-42,91,7],8,col);limb([25,15,0],[46,55,-5],[42,91,-7],8,col);if(upright){limb([-16,hipY,0],[-18,113,4],[-19,158,8],10,col);limb([16,hipY,0],[18,113,-4],[19,158,-8],10,col)}else{limb([-17,60,0],[-35,94,8],[-50,118,15],10,col);limb([17,60,0],[35,94,-8],[50,118,-15],10,col)}sphere(-11,-43,-28,4,'#fff');sphere(11,-43,-28,4,'#fff')}else{sphere(-35,-10,0,26,col);sphere(40,0,0,30,col);for(let x of [-28,25])for(let z of [-18,18])limb([x,24,z],[x+4,60,z],[x+3,92,z],8,col);poly([[65,-10,0],[105,-27,0],[100,4,0]],col)}}ctx.restore()}
-function drawGround(){let g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#071722');g.addColorStop(1,'#092719');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);for(let i=0;i<80;i++){let a=i*2.399,r=70+((i*47)%520),p=P(Math.cos(a)*r,145,Math.sin(a)*r);ctx.fillStyle=i%5?'rgba(80,150,100,.12)':'rgba(120,220,160,.14)';ctx.beginPath();ctx.arc(p.x,p.y,2.5*p.s,0,6.3);ctx.fill()}let c=P(0,150,0);let gr=ctx.createRadialGradient(c.x,c.y,0,c.x,c.y,260*zoom);gr.addColorStop(0,'rgba(85,230,145,.23)');gr.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=gr;ctx.beginPath();ctx.ellipse(c.x,c.y,330*zoom,100*zoom,0,0,6.3);ctx.fill()}
-function burst(){for(let i=0;i<45;i++)particles.push({x:W/2,y:H/2,vx:(Math.random()-.5)*8,vy:(Math.random()-.5)*8,life:1})}function clickSpark(x,y){for(let i=0;i<10;i++)particles.push({x,y,vx:(Math.random()-.5)*5,vy:(Math.random()-.5)*5,life:.7})}function drawParticles(){particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.04;p.life-=.02;ctx.globalAlpha=Math.max(0,p.life);ctx.fillStyle='#dfff83';ctx.beginPath();ctx.arc(p.x,p.y,3,0,7);ctx.fill()});ctx.globalAlpha=1;particles=particles.filter(p=>p.life>0)}
-let last=performance.now();function loop(now){let dt=Math.min(.05,(now-last)/1000);last=now;time+=dt;state.ep+=pps()*dt;drawGround();drawModel(stages[state.stage]);drawParticles();if(Math.floor(time*4)%2===0)updateUI();requestAnimationFrame(loop)}updateUI();requestAnimationFrame(loop);
+
+let state;
+try{state=JSON.parse(localStorage.getItem('evo3d_v2'))||{ep:0,stage:0,maxStage:0,boostUntil:0}}catch(e){state={ep:0,stage:0,maxStage:0,boostUntil:0}}
+if(!Number.isFinite(state.ep))state.ep=0;if(!Number.isInteger(state.stage)||state.stage<0||state.stage>=stages.length)state.stage=0;if(!Number.isInteger(state.maxStage))state.maxStage=state.stage;
+let rotY=.4,rotX=-.15,zoom=1,time=0,drag=false,lastX=0,lastY=0,particles=[];
+function save(){localStorage.setItem('evo3d_v2',JSON.stringify(state))}setInterval(save,3000);
+function boostMult(){return Date.now()<state.boostUntil?2:1}function rate(){return stages[state.maxStage].pps*boostMult()}function fmt(n){if(n<1000)return Math.floor(n)+'';if(n<1e6)return(n/1000).toFixed(1)+'k';return(n/1e6).toFixed(2)+'M'}
+function showToast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('show');clearTimeout(el._x);el._x=setTimeout(()=>el.classList.remove('show'),1400)}
+function ui(){const s=stages[state.stage],next=stages[state.maxStage+1];document.getElementById('ep').textContent=fmt(state.ep);document.getElementById('pps').textContent='+'+fmt(rate())+'/s';document.getElementById('current').textContent=s.name;document.getElementById('modelLabel').textContent=s.name;document.getElementById('bioInfo').innerHTML='<b>'+s.name+'</b> <i>('+s.latin+')</i><br>'+s.info;document.getElementById('goalText').textContent=(state.maxStage+1)+' / '+stages.length+' etapów';document.getElementById('progress').style.width=(state.maxStage/(stages.length-1)*100)+'%';const b=document.getElementById('evolve');if(next){b.textContent='EWOLUUJ → '+next.name+' ('+fmt(next.cost)+' EP)';b.disabled=state.ep<next.cost}else{b.textContent='MAKSYMALNY ETAP';b.disabled=true}tree()}
+function tree(){const t=document.getElementById('tree');t.innerHTML='<b style="font-size:19px">Drzewo ewolucji</b>';stages.forEach((s,i)=>{const n=document.createElement('div');n.className='node '+(i===state.stage?'active ':'')+(i>state.maxStage?'locked':'');n.innerHTML='<span class="badge">+'+fmt(s.pps)+'/s</span><b>'+(i<=state.maxStage?'✓ ':'🔒 ')+s.name+'</b><small>'+s.latin+'</small>';if(i<=state.maxStage)n.onclick=()=>{state.stage=i;ui()};t.appendChild(n)})}
+
+document.getElementById('evolve').onclick=()=>{const n=stages[state.maxStage+1];if(!n||state.ep<n.cost)return;state.ep-=n.cost;state.maxStage++;state.stage=state.maxStage;burst(W/2,H/2,45);ui();showToast('Odblokowano: '+n.name);if(state.maxStage===stages.length-1)document.getElementById('win').style.display='flex'};
+document.getElementById('boost').onclick=()=>{if(Date.now()<state.boostUntil)return showToast('Mutacja już działa');state.boostUntil=Date.now()+20000;showToast('Produkcja ×2 przez 20 sekund!')};
+document.getElementById('reset').onclick=()=>{state={ep:0,stage:0,maxStage:0,boostUntil:0};save();ui();showToast('Gra zresetowana')};
+canvas.addEventListener('mousedown',e=>{drag=true;lastX=e.clientX;lastY=e.clientY});addEventListener('mouseup',()=>drag=false);addEventListener('mousemove',e=>{if(!drag)return;rotY+=(e.clientX-lastX)*.009;rotX+=(e.clientY-lastY)*.006;rotX=Math.max(-.8,Math.min(.7,rotX));lastX=e.clientX;lastY=e.clientY});canvas.addEventListener('wheel',e=>{e.preventDefault();zoom*=e.deltaY>0?.9:1.1;zoom=Math.max(.65,Math.min(1.8,zoom))},{passive:false});canvas.addEventListener('click',e=>{if(Math.hypot(e.clientX-W/2,e.clientY-H/2)<190*zoom){state.ep+=Math.max(1,Math.round(rate()*.22));burst(e.clientX,e.clientY,10);ui()}});
+
+function bg(){const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#071822');g.addColorStop(.58,'#08201f');g.addColorStop(1,'#0a2f21');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);for(let i=0;i<70;i++){const x=(i*137.7+time*8)%W,y=H*.58+(i*83)%Math.max(1,H*.42);ctx.fillStyle='rgba(93,220,151,.12)';ctx.beginPath();ctx.arc(x,y,2+(i%4),0,Math.PI*2);ctx.fill()}const grd=ctx.createRadialGradient(W/2,H/2+100,10,W/2,H/2+100,360*zoom);grd.addColorStop(0,'rgba(70,244,155,.16)');grd.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=grd;ctx.fillRect(W/2-400,H/2-250,800,600)}
+function T(x,y,z){let cy=Math.cos(rotY),sy=Math.sin(rotY),cx=Math.cos(rotX),sx=Math.sin(rotX);let xx=x*cy-z*sy,zz=x*sy+z*cy,yy=y*cx-zz*sx,z2=y*sx+zz*cx;let p=1/(1+z2/700);return{x:W/2+xx*p*zoom,y:H/2+yy*p*zoom,s:p*zoom,z:z2}}
+function circle3(x,y,z,r,color){const p=T(x,y,z),rr=Math.max(2,r*p.s);const g=ctx.createRadialGradient(p.x-rr*.35,p.y-rr*.35,rr*.08,p.x,p.y,rr);g.addColorStop(0,'#ffffff');g.addColorStop(.12,color);g.addColorStop(.75,color);g.addColorStop(1,'#04110f');ctx.fillStyle=g;ctx.beginPath();ctx.arc(p.x,p.y,rr,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#ffffff22';ctx.lineWidth=1;ctx.stroke()}
+function seg(a,b,w,color){const A=T(...a),B=T(...b);ctx.strokeStyle=color;ctx.lineWidth=w*(A.s+B.s)/2;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(A.x,A.y);ctx.lineTo(B.x,B.y);ctx.stroke()}
+function poly3(arr,color){const pts=arr.map(v=>T(...v));ctx.fillStyle=color;ctx.strokeStyle='#ffffff22';ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();ctx.fill();ctx.stroke()}
+function eye(x,y,z){circle3(x,y,z,7,'#f5ffff');circle3(x,y,z-3,3,'#10151a')}
+function leg(x,y,z,side,color,up=true){const k=side;seg([x,y,z],[x+35*k,y+40,z],13,color);seg([x+35*k,y+40,z],[x+47*k,y+82,z+4],11,color);circle3(x+47*k,y+82,z+4,10,color)}
+function organism(){const s=stages[state.stage],c=s.color;ctx.save();
+if(s.model==='cell'||s.model==='euk'){circle3(0,0,0,105,c);circle3(18,-10,-35,s.model==='euk'?42:28,s.model==='euk'?'#905cff':'#dfff54');for(let i=0;i<9;i++){let a=i*Math.PI*2/9+time*.12;circle3(Math.cos(a)*65,Math.sin(a)*52,Math.sin(a*2)*28,10,i%2?'#ff8da2':'#ffd95f')}for(let i=0;i<6;i++){let a=i*Math.PI*2/6;let p1=[Math.cos(a)*92,Math.sin(a)*70,5],p2=[Math.cos(a)*135,Math.sin(a)*92,12],p3=[Math.cos(a+.22)*170,Math.sin(a+.22)*110,20];seg(p1,p2,4,c);seg(p2,p3,3,c)}}
+else if(s.model==='blob'){for(let i=0;i<17;i++){let a=i*.72;circle3(Math.cos(a)*78,Math.sin(a*1.13)*60,Math.sin(a*2.1)*45,32,c)}circle3(0,0,0,73,c)}
+else if(['fish','tik','amph','reptile'].includes(s.model)){circle3(-15,0,0,72,c);circle3(58,-5,-4,47,c);poly3([[-76,0,0],[-145,-62,0],[-135,64,0]],c);eye(80,-22,-40);if(s.model==='fish'){poly3([[-5,0,8],[-38,-78,10],[45,-30,10]],'#73d8ff');poly3([[-5,0,-8],[-38,78,-10],[45,30,-10]],'#73d8ff')}else{leg(-20,20,24,-1,c);leg(28,20,-24,1,c);leg(-20,-20,24,-1,c);leg(28,-20,-24,1,c)}}
+else if(s.model==='mammal'){circle3(-25,5,0,66,c);circle3(68,-18,0,44,c);poly3([[98,-30,0],[142,-14,0],[105,4,0]],c);eye(77,-34,-37);for(const x of [-50,15]){seg([x,45,25],[x,95,25],18,c);circle3(x,102,25,13,c);seg([x,45,-25],[x,95,-25],18,c);circle3(x,102,-25,13,c)}}
+else{const upright=['ape','human','human2'].includes(s.model);circle3(0,-92,0,47,c);circle3(0,-15,0,57,c);eye(-16,-103,-39);eye(16,-103,-39);seg([-38,-25,0],[-70,25,0],17,c);seg([-70,25,0],[-62,76,0],15,c);seg([38,-25,0],[70,25,0],17,c);seg([70,25,0],[62,76,0],15,c);if(upright){seg([-20,34,0],[-22,100,0],21,c);seg([-22,100,0],[-24,165,0],18,c);seg([20,34,0],[22,100,0],21,c);seg([22,100,0],[24,165,0],18,c)}else{seg([-20,34,0],[-52,88,0],21,c);seg([-52,88,0],[-74,128,0],18,c);seg([20,34,0],[52,88,0],21,c);seg([52,88,0],[74,128,0],18,c)}}
+ctx.restore()}
+function burst(x,y,n){for(let i=0;i<n;i++)particles.push({x,y,vx:(Math.random()-.5)*9,vy:(Math.random()-.5)*9,life:1})}function drawParticles(){for(const p of particles){p.x+=p.vx;p.y+=p.vy;p.vy+=.06;p.life-=.023;ctx.globalAlpha=Math.max(0,p.life);ctx.fillStyle='#e4ff83';ctx.beginPath();ctx.arc(p.x,p.y,3,0,7);ctx.fill()}ctx.globalAlpha=1;particles=particles.filter(p=>p.life>0)}
+let last=performance.now();function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;time+=dt;state.ep+=rate()*dt;bg();organism();drawParticles();if((now|0)%250<17)ui();requestAnimationFrame(frame)}ui();requestAnimationFrame(frame);
 </script>
 </body>
 </html>
