@@ -2,12 +2,11 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
-<title>Ewolucja 3D</title>
+<title>Ewolucja</title>
 
 <style>
-
 *{
     box-sizing:border-box;
     margin:0;
@@ -22,22 +21,17 @@ html,body{
 }
 
 body{
+    background:
+        radial-gradient(circle at center,#12342d 0%,#071915 45%,#020706 100%);
     font-family:Arial,Helvetica,sans-serif;
     color:white;
-
-    background:
-        radial-gradient(circle at center,#12352e 0%,#071b17 45%,#020807 100%);
 }
-
-
-/* =====================================================
-   HUD
-===================================================== */
 
 #hud{
     position:fixed;
+    z-index:5000;
 
-    top:15px;
+    top:16px;
     left:50%;
 
     transform:translateX(-50%);
@@ -47,45 +41,34 @@ body{
 
     padding:13px 20px;
 
-    background:rgba(7,14,12,.95);
-
-    border:1px solid #4c625b;
-
+    border:1px solid #4e625c;
     border-radius:16px;
 
-    z-index:10000;
+    background:rgba(7,13,11,.95);
 }
 
 #entropy{
-    font-size:28px;
+    font-size:27px;
     font-weight:bold;
 }
 
-#production{
-    color:#4ce4bb;
-    font-size:17px;
+#perSecond{
+    color:#49e7bc;
     margin-top:3px;
 }
 
-#help{
-    color:#83938d;
+#hint{
+    color:#81918b;
     font-size:12px;
     margin-top:5px;
 }
-
-
-/* =====================================================
-   VIEWPORT
-===================================================== */
 
 #viewport{
     position:absolute;
     inset:0;
 
     overflow:hidden;
-
     cursor:grab;
-
     touch-action:none;
 }
 
@@ -93,21 +76,14 @@ body{
     cursor:grabbing;
 }
 
-
-/* =====================================================
-   WORLD
-===================================================== */
-
 #world{
     position:absolute;
 
-    width:1800px;
-    height:3500px;
+    width:2600px;
+    height:6400px;
 
     left:0;
     top:0;
-
-    transform-origin:0 0;
 }
 
 #world::before{
@@ -119,76 +95,54 @@ body{
     pointer-events:none;
 
     background:
-        radial-gradient(circle,rgba(75,238,191,.13) 1px,transparent 2px);
+        radial-gradient(circle,rgba(66,233,184,.13) 1px,transparent 2px);
 
     background-size:145px 145px;
 }
 
-
-/* =====================================================
-   LINES
-===================================================== */
-
 #lines{
     position:absolute;
 
-    width:1800px;
-    height:3500px;
+    width:2600px;
+    height:6400px;
 
-    inset:0;
-
-    pointer-events:none;
+    left:0;
+    top:0;
 
     z-index:1;
+
+    pointer-events:none;
 }
 
-.mainLine,
-.branchLine,
-.upgradeLine{
-    fill:none;
-}
-
-.mainLine{
-    stroke:#415b54;
-    stroke-width:7;
-    opacity:.5;
-}
-
-.mainLine.active{
-    stroke:#2ae2b7;
-    opacity:1;
-
-    filter:drop-shadow(0 0 6px #2ae2b7);
-}
-
-.branchLine{
-    stroke:#49645c;
+.connection{
+    stroke:#455e57;
     stroke-width:6;
-    opacity:.55;
+    opacity:.45;
 }
 
-.branchLine.active{
-    stroke:#38ddb6;
+.connection.active{
+    stroke:#30dcb5;
     opacity:1;
+
+    filter:drop-shadow(0 0 5px #30dcb5);
 }
 
 .upgradeLine{
-    stroke:#52675f;
+    stroke:#52665f;
     stroke-width:3;
-    opacity:.5;
+    opacity:.45;
 }
 
 .upgradeLine.active{
-    stroke:#3ad3b1;
+    stroke:#35cdaa;
     opacity:.95;
 }
 
-
-/* =====================================================
+/* =========================
    GENERATOR
-===================================================== */
+========================= */
 
-.generator{
+.node{
     position:absolute;
 
     width:140px;
@@ -199,91 +153,76 @@ body{
     border-radius:50%;
 
     background:
-        radial-gradient(circle at 38% 28%,#263c35,#101916 60%,#050908);
+        radial-gradient(circle at 38% 28%,#284038,#111a17 60%,#050807);
 
-    border:4px solid #41675e;
-
-    z-index:20;
+    border:4px solid #42665e;
 
     cursor:pointer;
+
+    z-index:20;
 
     transition:.15s;
 }
 
-.generator.available,
-.generator.owned{
-    border-color:#28e1b8;
+.node.available,
+.node.owned{
+    border-color:#25e2b8;
 
     box-shadow:
-        0 0 10px rgba(40,225,184,.75),
-        0 0 27px rgba(40,225,184,.22);
+        0 0 9px rgba(37,226,184,.8),
+        0 0 28px rgba(37,226,184,.2);
 }
 
-.generator.locked{
-    opacity:.25;
-    cursor:default;
+.node.locked{
+    opacity:.23;
 }
 
-.generator:not(.locked):hover{
+.node:not(.locked):hover{
     transform:
         translate(-50%,-50%)
-        scale(1.07);
+        scale(1.06);
 }
 
-
-/* =====================================================
-   MODEL
-===================================================== */
-
-.modelCanvas{
+.model{
     position:absolute;
 
-    width:122px;
-    height:122px;
+    left:8px;
+    top:8px;
 
-    left:5px;
-    top:5px;
+    width:116px;
+    height:116px;
 
     border-radius:50%;
 
     pointer-events:none;
 }
 
-
-/* =====================================================
-   LEVEL
-===================================================== */
-
 .level{
     position:absolute;
 
-    right:-13px;
-    top:-13px;
+    right:-12px;
+    top:-12px;
 
-    min-width:42px;
-    height:42px;
+    min-width:40px;
+    height:40px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
 
     padding:0 7px;
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    border-radius:22px;
 
-    border-radius:24px;
+    background:#0d1210;
 
-    background:#0c1210;
+    border:2px solid #263630;
 
-    border:2px solid #273b34;
-
+    font-size:14px;
     font-weight:bold;
 }
 
-
-/* =====================================================
-   NAME
-===================================================== */
-
-.generatorName{
+.nodeName{
     position:absolute;
 
     left:50%;
@@ -291,64 +230,59 @@ body{
 
     transform:translateX(-50%);
 
-    width:310px;
+    width:300px;
 
     text-align:center;
-
     white-space:nowrap;
 
-    font-size:21px;
+    font-size:19px;
     font-weight:bold;
 
-    text-shadow:0 2px 5px #000;
+    text-shadow:0 2px 5px black;
 }
 
-.generatorCost{
+.nodeCost{
     position:absolute;
 
+    top:175px;
     left:50%;
-    top:177px;
 
     transform:translateX(-50%);
 
+    color:#49ddb7;
+
     white-space:nowrap;
 
-    color:#49dfb7;
-
-    font-size:14px;
+    font-size:13px;
 }
 
-
-/* =====================================================
-   UPGRADES
-===================================================== */
+/* =========================
+   UPGRADE
+========================= */
 
 .upgrade{
     position:absolute;
 
-    width:225px;
-    height:84px;
+    width:220px;
+    height:82px;
 
     transform:translate(-50%,-50%);
 
     display:grid;
-
-    grid-template-columns:58px 1fr;
-
-    align-items:center;
+    grid-template-columns:57px 1fr;
 
     padding:7px;
+    align-items:center;
 
     background:
-        linear-gradient(145deg,#222b28,#101613);
+        linear-gradient(145deg,#222b27,#101613);
 
-    border:2px solid #52625d;
-
+    border:2px solid #52625c;
     border-radius:7px;
 
-    z-index:15;
-
     cursor:pointer;
+
+    z-index:15;
 
     transition:.15s;
 }
@@ -356,7 +290,7 @@ body{
 .upgrade:hover{
     transform:
         translate(-50%,-50%)
-        scale(1.045);
+        scale(1.04);
 }
 
 .upgrade.locked{
@@ -364,72 +298,70 @@ body{
 }
 
 .upgrade.bought{
-    border-color:#34d7b1;
+    border-color:#34d3ad;
 
     background:
-        linear-gradient(145deg,#174139,#0d2923);
+        linear-gradient(145deg,#174038,#0e2822);
 }
 
 .upgradeIcon{
-    width:52px;
-    height:52px;
-
-    background:#0b100f;
-
-    border:2px solid #495b55;
+    width:50px;
+    height:50px;
 
     display:flex;
-    justify-content:center;
     align-items:center;
+    justify-content:center;
+
+    background:#0b100e;
+
+    border:2px solid #485a54;
+
+    font-size:25px;
 }
 
-.upgradeIcon svg{
-    width:45px;
-    height:45px;
-}
-
-.upgradeInfo{
-    padding-left:8px;
+.upgradeText{
+    padding-left:7px;
 }
 
 .upgradeName{
-    font-size:13px;
     font-weight:bold;
+    font-size:13px;
 }
 
 .upgradeEffect{
-    color:#8ed875;
-    font-size:11px;
     margin-top:4px;
+
+    color:#8ed476;
+    font-size:11px;
 }
 
 .upgradeCost{
-    color:#47d9b5;
+    color:#46d7b3;
     font-size:11px;
+
     margin-top:2px;
 }
 
-
-/* =====================================================
+/* =========================
    CLICK
-===================================================== */
+========================= */
 
 .clickText{
     position:fixed;
 
+    z-index:9999;
+
     pointer-events:none;
 
-    color:#4ef2c5;
+    color:#4ceec2;
 
     font-size:21px;
     font-weight:bold;
 
-    z-index:20000;
-
-    animation:clickAnim .8s forwards;
+    animation:float .75s forwards;
 }
 
-@keyframes clickAnim{
+@keyframes float{
     from{
         opacity:1;
         transform:translate(-50%,-50%);
@@ -437,14 +369,9 @@ body{
 
     to{
         opacity:0;
-        transform:translate(-50%,-100px) scale(1.3);
+        transform:translate(-50%,-100px) scale(1.25);
     }
 }
-
-
-/* =====================================================
-   HOME
-===================================================== */
 
 #home{
     position:fixed;
@@ -452,411 +379,725 @@ body{
     right:20px;
     bottom:20px;
 
-    width:52px;
-    height:52px;
+    width:54px;
+    height:54px;
 
     border-radius:50%;
 
-    border:1px solid #50655e;
+    border:1px solid #52655f;
 
-    background:#0d1714;
+    background:#0e1714;
 
-    color:#4ae9bd;
+    color:#47e4b9;
 
     font-size:22px;
 
     cursor:pointer;
 
-    z-index:10000;
+    z-index:5000;
 }
-
 </style>
 </head>
 
 <body>
 
-
 <div id="hud">
-
-    <div id="entropy">
-        0 entropii
+    <div id="entropy">0 entropii</div>
+    <div id="perSecond">+0 / s</div>
+    <div id="hint">
+        Kliknij tło = entropia • przeciągnij = poruszanie po drzewku
     </div>
-
-    <div id="production">
-        +0 / s
-    </div>
-
-    <div id="help">
-        Przeciągnij tło = ruch • kliknij tło = +1 entropii
-    </div>
-
 </div>
-
 
 <button id="home">⌂</button>
 
-
 <div id="viewport">
-
-<div id="world">
-
-<svg id="lines"></svg>
-
+    <div id="world">
+        <svg id="lines"></svg>
+    </div>
 </div>
-
-</div>
-
 
 <script>
 
 /* =====================================================
-   ELEMENTS
+   KONFIGURACJA
 ===================================================== */
 
-const viewport =
-    document.getElementById("viewport");
+const CENTER = 1300;
 
-const world =
-    document.getElementById("world");
 
-const svg =
-    document.getElementById("lines");
+/*
+    Każdy generator:
 
+    id
+    name
+    parent
+    x
+    y
+    cost
+    production
+    type
+
+    upgrades = kwadraty odchodzące od generatora
+*/
+
+const nodes = [
 
 /* =====================================================
-   DATA
-
-   GŁÓWNA LINIA:
-   amino -> DNA -> prokaryote -> eukaryote ->
-   sponge -> jellyfish -> flatworm -> fish ->
-   tetrapod -> mammal -> primate -> human
-
-   BRANCH:
-   tetrapod -> reptile
-   tetrapod -> amphibian
+   CHEMIA ŻYCIA
 ===================================================== */
 
-const generators = [
-
 {
-    id:"amino",
-    name:"Aminokwas",
-
-    x:800,
-    y:3200,
-
-    cost:10,
-    production:.2,
-
-    color:"#557ec6",
-    fallback:"AA",
-
-    parent:null,
-
-    upgrades:[
-        ["Więcej aminokwasów",.5,80],
-        ["Łączenie aminokwasów",.5,120]
-    ]
+id:"amino",
+name:"Aminokwas",
+parent:null,
+x:CENTER,
+y:6100,
+cost:10,
+production:.2,
+type:"molecule",
+upgrades:[
+    ["Synteza aminokwasów",.5,60],
+    ["Łączenie aminokwasów",.5,90]
+]
 },
 
 {
-    id:"dna",
-    name:"DNA",
-
-    x:800,
-    y:2940,
-
-    cost:60,
-    production:1,
-
-    color:"#2eb7ea",
-    fallback:"DNA",
-
-    parent:"amino",
-
-    upgrades:[
-        ["Replikacja DNA",.5,350],
-        ["Naprawa DNA",.5,450]
-    ]
+id:"protein",
+name:"Białko",
+parent:"amino",
+x:CENTER,
+y:5880,
+cost:50,
+production:.8,
+type:"protein",
+upgrades:[
+    ["Fałdowanie białek",.5,250],
+    ["Enzymy",.5,320]
+]
 },
 
 {
-    id:"prokaryote",
-    name:"Komórka prokariotyczna",
-
-    x:800,
-    y:2680,
-
-    cost:300,
-    production:5,
-
-    color:"#579269",
-    fallback:"PRO",
-
-    parent:"dna",
-
-    upgrades:[
-        ["Błona komórkowa",.5,1600],
-        ["Rybosomy",.5,1900]
-    ]
+id:"rna",
+name:"RNA",
+parent:"protein",
+x:CENTER,
+y:5660,
+cost:180,
+production:2,
+type:"rna",
+upgrades:[
+    ["Replikacja RNA",.5,900],
+    ["Stabilność RNA",.5,1100]
+]
 },
 
 {
-    id:"eukaryote",
-    name:"Komórka eukariotyczna",
+id:"dna",
+name:"DNA",
+parent:"rna",
+x:CENTER,
+y:5440,
+cost:700,
+production:6,
+type:"dna",
+upgrades:[
+    ["Replikacja DNA",.5,3500],
+    ["Naprawa DNA",.5,4200]
+]
+},
 
-    x:800,
-    y:2420,
+/* =====================================================
+   KOMÓRKI
+===================================================== */
 
-    cost:1600,
-    production:18,
-
-    color:"#447b8b",
-    fallback:"EUK",
-
-    parent:"prokaryote",
-
-    upgrades:[
-        ["Jądro komórkowe",.5,8000],
-        ["Mitochondria",.5,10000]
-    ]
+{
+id:"prokaryote",
+name:"Komórka prokariotyczna",
+parent:"dna",
+x:CENTER,
+y:5220,
+cost:3000,
+production:20,
+type:"bacteria",
+upgrades:[
+    ["Błona komórkowa",.5,15000],
+    ["Rybosomy",.5,18000]
+]
 },
 
 {
-    id:"sponge",
-    name:"Gąbka",
-
-    x:800,
-    y:2160,
-
-    cost:8000,
-    production:65,
-
-    color:"#d8923f",
-    fallback:"G",
-
-    parent:"eukaryote",
-
-    upgrades:[
-        ["Choanocyty",.5,40000],
-        ["Przepływ wody",.5,50000]
-    ]
+id:"bacteria",
+name:"Bakterie",
+parent:"prokaryote",
+x:CENTER+390,
+y:5080,
+cost:8000,
+production:35,
+type:"bacteria",
+upgrades:[
+    ["Metabolizm",.5,40000],
+    ["Wić",.5,47000]
+]
 },
 
 {
-    id:"jellyfish",
-    name:"Meduza",
-
-    x:800,
-    y:1900,
-
-    cost:40000,
-    production:220,
-
-    color:"#887ed6",
-    fallback:"M",
-
-    parent:"sponge",
-
-    upgrades:[
-        ["Parzydełka",.5,210000],
-        ["Sieć nerwowa",.5,250000]
-    ]
+id:"eukaryote",
+name:"Komórka eukariotyczna",
+parent:"prokaryote",
+x:CENTER,
+y:4980,
+cost:15000,
+production:70,
+type:"cell",
+upgrades:[
+    ["Jądro komórkowe",.5,75000],
+    ["Mitochondria",.5,90000]
+]
 },
 
 {
-    id:"flatworm",
-    name:"Płaziniec",
+id:"multicellular",
+name:"Wielokomórkowiec",
+parent:"eukaryote",
+x:CENTER,
+y:4760,
+cost:70000,
+production:250,
+type:"cells",
+upgrades:[
+    ["Specjalizacja komórek",.5,350000],
+    ["Komunikacja komórkowa",.5,420000]
+]
+},
 
-    x:800,
-    y:1640,
+/* =====================================================
+   PIERWSZE ZWIERZĘTA
+===================================================== */
 
-    cost:210000,
-    production:750,
-
-    color:"#b76057",
-    fallback:"P",
-
-    parent:"jellyfish",
-
-    upgrades:[
-        ["Symetria dwuboczna",.5,1100000],
-        ["Cefalizacja",.5,1300000]
-    ]
+{
+id:"sponge",
+name:"Gąbka",
+parent:"multicellular",
+x:CENTER,
+y:4540,
+cost:300000,
+production:900,
+type:"sponge",
+upgrades:[
+    ["Choanocyty",.5,1500000],
+    ["Przepływ wody",.5,1800000]
+]
 },
 
 {
-    id:"fish",
-    name:"Ryba",
-
-    x:800,
-    y:1380,
-
-    cost:1100000,
-    production:2700,
-
-    color:"#478da4",
-    fallback:"R",
-
-    parent:"flatworm",
-
-    upgrades:[
-        ["Wydajniejsze skrzela",.5,5500000],
-        ["Lepsze płetwy",.5,6500000]
-    ]
+id:"cnidarian",
+name:"Parzydełkowce",
+parent:"sponge",
+x:CENTER,
+y:4320,
+cost:1200000,
+production:3000,
+type:"jelly",
+upgrades:[
+    ["Parzydełka",.5,6000000],
+    ["Sieć nerwowa",.5,7000000]
+]
 },
 
 {
-    id:"tetrapod",
-    name:"Czworonóg",
-
-    x:800,
-    y:1120,
-
-    cost:5500000,
-    production:9500,
-
-    color:"#638b48",
-    fallback:"4",
-
-    parent:"fish",
-
-    upgrades:[
-        ["Silniejsze kończyny",.5,28000000],
-        ["Lepsze płuca",.5,33000000]
-    ]
-},
-
-/* ==========================================
-   NOWA GAŁĄŹ — GADY
-========================================== */
-
-{
-    id:"reptile",
-    name:"Gady",
-
-    x:1190,
-    y:1080,
-
-    cost:15000000,
-    production:18000,
-
-    color:"#627844",
-    fallback:"GAD",
-
-    parent:"tetrapod",
-
-    branch:true,
-
-    upgrades:[
-        ["Łuski ochronne",.5,70000000],
-        ["Jajo owodniowe",.5,85000000]
-    ]
-},
-
-/* ==========================================
-   NOWA GAŁĄŹ — PŁAZY
-========================================== */
-
-{
-    id:"amphibian",
-    name:"Płazy",
-
-    x:1120,
-    y:1320,
-
-    cost:10000000,
-    production:14000,
-
-    color:"#579664",
-    fallback:"PŁ",
-
-    parent:"tetrapod",
-
-    branch:true,
-
-    upgrades:[
-        ["Wilgotna skóra",.5,50000000],
-        ["Metamorfoza",.5,65000000]
-    ]
+id:"jellyfish",
+name:"Meduza",
+parent:"cnidarian",
+x:CENTER+400,
+y:4210,
+cost:3500000,
+production:5500,
+type:"jelly",
+upgrades:[
+    ["Dzwon",.5,17000000],
+    ["Czułki",.5,21000000]
+]
 },
 
 {
-    id:"mammal",
-    name:"Ssak",
-
-    x:800,
-    y:860,
-
-    cost:28000000,
-    production:34000,
-
-    color:"#79624f",
-    fallback:"S",
-
-    parent:"tetrapod",
-
-    upgrades:[
-        ["Stałocieplność",.5,140000000],
-        ["Opieka nad młodymi",.5,165000000]
-    ]
+id:"flatworm",
+name:"Płaziniec",
+parent:"cnidarian",
+x:CENTER,
+y:4100,
+cost:6000000,
+production:9000,
+type:"worm",
+upgrades:[
+    ["Symetria dwuboczna",.5,30000000],
+    ["Cefalizacja",.5,36000000]
+]
 },
 
 {
-    id:"primate",
-    name:"Naczelne",
+id:"bilateria",
+name:"Dwuboczne",
+parent:"flatworm",
+x:CENTER,
+y:3880,
+cost:25000000,
+production:30000,
+type:"worm",
+upgrades:[
+    ["Narządy",.5,120000000],
+    ["Mięśnie",.5,150000000]
+]
+},
 
-    x:800,
-    y:600,
+/* =====================================================
+   STRUNOWCE
+===================================================== */
 
-    cost:140000000,
-    production:120000,
-
-    color:"#755443",
-    fallback:"N",
-
-    parent:"mammal",
-
-    upgrades:[
-        ["Chwytne dłonie",.5,700000000],
-        ["Większy mózg",.5,820000000]
-    ]
+{
+id:"chordate",
+name:"Strunowiec",
+parent:"bilateria",
+x:CENTER,
+y:3660,
+cost:100000000,
+production:100000,
+type:"fish",
+upgrades:[
+    ["Struna grzbietowa",.5,500000000],
+    ["Cewka nerwowa",.5,600000000]
+]
 },
 
 {
-    id:"human",
-    name:"Człowiek",
+id:"vertebrate",
+name:"Kręgowiec",
+parent:"chordate",
+x:CENTER,
+y:3440,
+cost:400000000,
+production:330000,
+type:"fish",
+upgrades:[
+    ["Kręgosłup",.5,2000000000],
+    ["Czaszka",.5,2500000000]
+]
+},
 
-    x:800,
-    y:340,
+/* =====================================================
+   RYBY
+===================================================== */
 
-    cost:700000000,
-    production:430000,
+{
+id:"fish",
+name:"Ryba",
+parent:"vertebrate",
+x:CENTER,
+y:3220,
+cost:1500000000,
+production:1100000,
+type:"fish",
+upgrades:[
+    ["Skrzela",.5,7000000000],
+    ["Płetwy",.5,8500000000]
+]
+},
 
-    color:"#c98e6c",
-    fallback:"H",
+{
+id:"cartilage",
+name:"Ryby chrzęstnoszkieletowe",
+parent:"fish",
+x:CENTER-430,
+y:3100,
+cost:5000000000,
+production:2300000,
+type:"shark",
+upgrades:[
+    ["Zęby wymienne",.5,25000000000],
+    ["Elektrorecepcja",.5,30000000000]
+]
+},
 
-    parent:"primate",
+{
+id:"bonyfish",
+name:"Ryby kostnoszkieletowe",
+parent:"fish",
+x:CENTER,
+y:3000,
+cost:7000000000,
+production:3000000,
+type:"fish",
+upgrades:[
+    ["Szkielet kostny",.5,35000000000],
+    ["Pęcherz pławny",.5,42000000000]
+]
+},
 
-    upgrades:[
-        ["Mowa",.5,3500000000],
-        ["Myślenie abstrakcyjne",.5,4200000000]
-    ]
+{
+id:"lobe",
+name:"Ryby mięśniopłetwe",
+parent:"bonyfish",
+x:CENTER,
+y:2780,
+cost:25000000000,
+production:9000000,
+type:"fish",
+upgrades:[
+    ["Mięsiste płetwy",.5,120000000000],
+    ["Silniejsze kości",.5,150000000000]
+]
+},
+
+{
+id:"tetrapod",
+name:"Czworonóg",
+parent:"lobe",
+x:CENTER,
+y:2560,
+cost:100000000000,
+production:30000000,
+type:"tetrapod",
+upgrades:[
+    ["Kończyny",.5,500000000000],
+    ["Płuca",.5,620000000000]
+]
+},
+
+/* =====================================================
+   PŁAZY
+===================================================== */
+
+{
+id:"amphibian",
+name:"Płazy",
+parent:"tetrapod",
+x:CENTER+420,
+y:2730,
+cost:180000000000,
+production:43000000,
+type:"frog",
+upgrades:[
+    ["Wilgotna skóra",.5,900000000000],
+    ["Metamorfoza",.5,1100000000000]
+]
+},
+
+{
+id:"frog",
+name:"Żaby",
+parent:"amphibian",
+x:CENTER+780,
+y:2870,
+cost:500000000000,
+production:70000000,
+type:"frog",
+upgrades:[
+    ["Długie nogi",.5,2500000000000],
+    ["Język łowny",.5,3000000000000]
+]
+},
+
+/* =====================================================
+   OWODNIOWCE
+===================================================== */
+
+{
+id:"amniote",
+name:"Owodniowce",
+parent:"tetrapod",
+x:CENTER,
+y:2340,
+cost:400000000000,
+production:100000000,
+type:"reptile",
+upgrades:[
+    ["Jajo owodniowe",.5,2000000000000],
+    ["Sucha skóra",.5,2400000000000]
+]
+},
+
+/* =====================================================
+   GADY
+===================================================== */
+
+{
+id:"reptile",
+name:"Gady",
+parent:"amniote",
+x:CENTER+420,
+y:2200,
+cost:1200000000000,
+production:220000000,
+type:"reptile",
+upgrades:[
+    ["Łuski",.5,6000000000000],
+    ["Lepsze płuca",.5,7200000000000]
+]
+},
+
+{
+id:"lizard",
+name:"Jaszczurki",
+parent:"reptile",
+x:CENTER+780,
+y:2320,
+cost:4000000000000,
+production:420000000,
+type:"lizard",
+upgrades:[
+    ["Autotomia ogona",.5,20000000000000],
+    ["Lepszy wzrok",.5,24000000000000]
+]
+},
+
+{
+id:"snake",
+name:"Węże",
+parent:"reptile",
+x:CENTER+800,
+y:2070,
+cost:4500000000000,
+production:480000000,
+type:"snake",
+upgrades:[
+    ["Brak kończyn",.5,22000000000000],
+    ["Elastyczne szczęki",.5,27000000000000]
+]
+},
+
+{
+id:"archosaur",
+name:"Archozaury",
+parent:"reptile",
+x:CENTER+410,
+y:1950,
+cost:6000000000000,
+production:650000000,
+type:"reptile",
+upgrades:[
+    ["Postawa pionowa",.5,30000000000000],
+    ["Wydajne płuca",.5,36000000000000]
+]
+},
+
+{
+id:"croc",
+name:"Krokodyle",
+parent:"archosaur",
+x:CENTER+760,
+y:1840,
+cost:15000000000000,
+production:1000000000,
+type:"croc",
+upgrades:[
+    ["Silne szczęki",.5,75000000000000],
+    ["Pancerna skóra",.5,90000000000000]
+]
+},
+
+{
+id:"bird",
+name:"Ptaki",
+parent:"archosaur",
+x:CENTER+410,
+y:1720,
+cost:20000000000000,
+production:1500000000,
+type:"bird",
+upgrades:[
+    ["Pióra",.5,100000000000000],
+    ["Lot",.5,120000000000000]
+]
+},
+
+/* =====================================================
+   SYNAPSYDY -> SSAKI
+===================================================== */
+
+{
+id:"synapsid",
+name:"Synapsydy",
+parent:"amniote",
+x:CENTER,
+y:2120,
+cost:1500000000000,
+production:300000000,
+type:"mammal",
+upgrades:[
+    ["Zróżnicowane zęby",.5,7500000000000],
+    ["Szybszy metabolizm",.5,9000000000000]
+]
+},
+
+{
+id:"mammal",
+name:"Ssaki",
+parent:"synapsid",
+x:CENTER,
+y:1900,
+cost:7000000000000,
+production:900000000,
+type:"mammal",
+upgrades:[
+    ["Sierść",.5,35000000000000],
+    ["Stałocieplność",.5,42000000000000]
+]
+},
+
+{
+id:"placental",
+name:"Ssaki łożyskowe",
+parent:"mammal",
+x:CENTER,
+y:1680,
+cost:30000000000000,
+production:2800000000,
+type:"mammal",
+upgrades:[
+    ["Łożysko",.5,150000000000000],
+    ["Dłuższa ciąża",.5,180000000000000]
+]
+},
+
+{
+id:"rodent",
+name:"Gryzonie",
+parent:"placental",
+x:CENTER-430,
+y:1540,
+cost:60000000000000,
+production:4000000000,
+type:"rodent",
+upgrades:[
+    ["Siekacze",.5,300000000000000],
+    ["Szybkie rozmnażanie",.5,370000000000000]
+]
+},
+
+{
+id:"carnivore",
+name:"Drapieżne",
+parent:"placental",
+x:CENTER+430,
+y:1540,
+cost:70000000000000,
+production:4500000000,
+type:"mammal",
+upgrades:[
+    ["Kły",.5,350000000000000],
+    ["Lepszy węch",.5,420000000000000]
+]
+},
+
+/* =====================================================
+   NACZELNE
+===================================================== */
+
+{
+id:"primate",
+name:"Naczelne",
+parent:"placental",
+x:CENTER,
+y:1460,
+cost:120000000000000,
+production:7000000000,
+type:"primate",
+upgrades:[
+    ["Chwytne dłonie",.5,600000000000000],
+    ["Widzenie stereoskopowe",.5,720000000000000]
+]
+},
+
+{
+id:"monkey",
+name:"Małpy",
+parent:"primate",
+x:CENTER,
+y:1240,
+cost:500000000000000,
+production:22000000000,
+type:"primate",
+upgrades:[
+    ["Życie społeczne",.5,2500000000000000],
+    ["Większy mózg",.5,3000000000000000]
+]
+},
+
+{
+id:"ape",
+name:"Małpy człekokształtne",
+parent:"monkey",
+x:CENTER,
+y:1020,
+cost:2000000000000000,
+production:75000000000,
+type:"ape",
+upgrades:[
+    ["Brak ogona",.5,10000000000000000],
+    ["Używanie narzędzi",.5,12500000000000000]
+]
+},
+
+{
+id:"hominin",
+name:"Homininy",
+parent:"ape",
+x:CENTER,
+y:800,
+cost:8000000000000000,
+production:250000000000,
+type:"human",
+upgrades:[
+    ["Dwunożność",.5,40000000000000000],
+    ["Precyzyjny chwyt",.5,50000000000000000]
+]
+},
+
+{
+id:"human",
+name:"Człowiek",
+parent:"hominin",
+x:CENTER,
+y:580,
+cost:30000000000000000,
+production:900000000000,
+type:"human",
+upgrades:[
+    ["Mowa",.5,150000000000000000],
+    ["Myślenie abstrakcyjne",.5,180000000000000000]
+]
+},
+
+{
+id:"civilization",
+name:"Cywilizacja",
+parent:"human",
+x:CENTER,
+y:360,
+cost:120000000000000000,
+production:3000000000000,
+type:"human",
+upgrades:[
+    ["Rolnictwo",.5,600000000000000000],
+    ["Pismo",.5,750000000000000000]
+]
 }
 
 ];
 
 
-let entropy = 0;
+/* =====================================================
+   GAME STATE
+===================================================== */
 
+let entropy = 0;
 let clickPower = 1;
 
+nodes.forEach(node=>{
 
-generators.forEach(g=>{
+    node.level = 0;
 
-    g.level = 0;
-
-    g.upgrades = g.upgrades.map(u=>({
+    node.upgrades = node.upgrades.map(u=>({
 
         name:u[0],
         bonus:u[1],
@@ -868,158 +1109,175 @@ generators.forEach(g=>{
 });
 
 
-/* =====================================================
-   FIND
-===================================================== */
+const viewport =
+    document.getElementById("viewport");
 
-function byId(id){
+const world =
+    document.getElementById("world");
 
-    return generators.find(
-        g => g.id === id
+const svg =
+    document.getElementById("lines");
+
+
+function getNode(id){
+
+    return nodes.find(
+        node=>node.id===id
     );
 
 }
 
 
 /* =====================================================
-   FALLBACK ICON
-
-   Ta ikona pojawia się ZAWSZE,
-   nawet bez Three.js.
+   DRAW MODEL
 ===================================================== */
 
-function drawIcon(canvas,g){
+function drawModel(canvas,node){
 
     const ctx =
         canvas.getContext("2d");
 
-
-    const w =
+    const W =
         canvas.width;
 
-    const h =
+    const H =
         canvas.height;
+
+    const cx =
+        W/2;
+
+    const cy =
+        H/2;
 
 
     ctx.clearRect(
         0,
         0,
-        w,
-        h
+        W,
+        H
     );
 
 
-    const cx =
-        w/2;
-
-    const cy =
-        h/2;
+    ctx.save();
 
 
-    /* shadow */
-
-    ctx.shadowBlur = 20;
-
-    ctx.shadowColor =
-        g.color;
+    ctx.translate(
+        cx,
+        cy
+    );
 
 
-    const gradient =
-
+    const g =
         ctx.createRadialGradient(
-
-            cx-25,
-            cy-30,
-            8,
-
-            cx,
-            cy,
-            85
-
+            -25,
+            -30,
+            5,
+            0,
+            0,
+            90
         );
 
 
-    gradient.addColorStop(
+    const colors = {
+
+        molecule:"#568bd7",
+        protein:"#796dd5",
+        rna:"#bc5ccc",
+        dna:"#25aee7",
+        bacteria:"#599366",
+        cell:"#507c92",
+        cells:"#617fad",
+        sponge:"#d58d38",
+        jelly:"#8c7fd5",
+        worm:"#b76459",
+        fish:"#4d91a9",
+        shark:"#557889",
+        tetrapod:"#678c4b",
+        frog:"#56a069",
+        reptile:"#70824e",
+        lizard:"#71904d",
+        snake:"#8a8a46",
+        croc:"#687546",
+        bird:"#a78c5b",
+        mammal:"#7e6551",
+        rodent:"#887364",
+        primate:"#755342",
+        ape:"#624638",
+        human:"#c58967"
+    };
+
+
+    const color =
+        colors[node.type] ||
+        "#4da587";
+
+
+    g.addColorStop(
         0,
         "#ffffff"
     );
 
-
-    gradient.addColorStop(
-        .18,
-        g.color
+    g.addColorStop(
+        .15,
+        color
     );
 
-
-    gradient.addColorStop(
+    g.addColorStop(
         1,
-        "#101c19"
+        "#14251f"
     );
 
 
     ctx.fillStyle =
-        gradient;
+        g;
+
+    ctx.strokeStyle =
+        color;
+
+    ctx.lineCap =
+        "round";
 
 
-    /* DIFFERENT SHAPES */
+    /* =================================================
+       DNA/RNA
+    ================================================= */
 
-    if(g.id === "dna"){
+    if(
+        node.type==="dna" ||
+        node.type==="rna"
+    ){
 
-        ctx.shadowBlur = 12;
-
-        ctx.lineWidth = 12;
-
-        for(
-            let i = 0;
-            i < 2;
-            i++
-        ){
+        for(let helix=0;helix<2;helix++){
 
             ctx.beginPath();
 
-
             ctx.strokeStyle =
-                i === 0
-                ? "#37c6ff"
-                : "#c963d9";
+                helix===0
+                ? "#39c8ff"
+                : "#d36ada";
+
+            ctx.lineWidth=11;
 
 
-            for(
-                let y = 25;
-                y <= 215;
-                y += 3
-            ){
-
-                const t =
-                    (y-25)/190;
-
+            for(let y=-85;y<=85;y+=3){
 
                 const x =
-
-                    cx +
-
                     Math.sin(
-                        t*Math.PI*4 +
-                        i*Math.PI
-                    ) *
-
-                    45;
+                        (y+85)/25+
+                        helix*Math.PI
+                    )*42;
 
 
-                if(y === 25){
+                if(y===-85){
 
                     ctx.moveTo(
-                        x,
-                        y
+                        x,y
                     );
 
-                }
-
-                else{
+                }else{
 
                     ctx.lineTo(
-                        x,
-                        y
+                        x,y
                     );
 
                 }
@@ -1031,24 +1289,25 @@ function drawIcon(canvas,g){
 
         }
 
-
-        return;
-
     }
 
 
-    if(
-        g.id === "prokaryote"
+    /* =================================================
+       KOMÓRKI
+    ================================================= */
+
+    else if(
+        node.type==="bacteria"
     ){
 
         ctx.beginPath();
 
         ctx.ellipse(
-            cx,
-            cy,
-            78,
-            48,
-            -.15,
+            0,
+            0,
+            72,
+            43,
+            -.2,
             0,
             Math.PI*2
         );
@@ -1056,50 +1315,40 @@ function drawIcon(canvas,g){
         ctx.fill();
 
 
-        ctx.shadowBlur=0;
-
-
-        for(let i=0;i<13;i++){
+        for(let i=0;i<15;i++){
 
             ctx.beginPath();
 
-            ctx.fillStyle="#d6e7a7";
+            ctx.fillStyle="#dce49b";
+
+            const a=i*2.3;
 
             ctx.arc(
-
-                cx-45+
-                Math.random()*90,
-
-                cy-27+
-                Math.random()*54,
-
-                5,
-
+                Math.sin(a)*48,
+                Math.cos(a*1.4)*25,
+                4,
                 0,
                 Math.PI*2
-
             );
 
             ctx.fill();
 
         }
 
-
-        return;
-
     }
 
 
-    if(
-        g.id === "eukaryote"
+    else if(
+        node.type==="cell" ||
+        node.type==="cells"
     ){
 
         ctx.beginPath();
 
         ctx.arc(
-            cx,
-            cy,
-            72,
+            0,
+            0,
+            68,
             0,
             Math.PI*2
         );
@@ -1107,16 +1356,14 @@ function drawIcon(canvas,g){
         ctx.fill();
 
 
-        ctx.shadowBlur=5;
-
-        ctx.fillStyle="#9e67af";
+        ctx.fillStyle="#9c6dac";
 
         ctx.beginPath();
 
         ctx.arc(
-            cx-12,
-            cy-7,
-            29,
+            -15,
+            -8,
+            25,
             0,
             Math.PI*2
         );
@@ -1124,20 +1371,168 @@ function drawIcon(canvas,g){
         ctx.fill();
 
 
-        return;
+        if(node.type==="cells"){
+
+            for(let i=0;i<6;i++){
+
+                ctx.beginPath();
+
+                ctx.arc(
+                    Math.cos(i)*45,
+                    Math.sin(i)*45,
+                    18,
+                    0,
+                    Math.PI*2
+                );
+
+                ctx.fill();
+
+            }
+
+        }
 
     }
 
 
-    if(g.id === "fish"){
+    /* =================================================
+       GĄBKA
+    ================================================= */
+
+    else if(node.type==="sponge"){
+
+        for(let i=-2;i<=2;i++){
+
+            ctx.fillStyle=color;
+
+            ctx.fillRect(
+                i*23-12,
+                -20-Math.abs(i)*5,
+                25,
+                90-Math.abs(i)*10
+            );
+
+            ctx.beginPath();
+
+            ctx.arc(
+                i*23,
+                -20-Math.abs(i)*5,
+                12,
+                0,
+                Math.PI*2
+            );
+
+            ctx.fill();
+
+        }
+
+    }
+
+
+    /* =================================================
+       MEDUZA
+    ================================================= */
+
+    else if(node.type==="jelly"){
+
+        ctx.beginPath();
+
+        ctx.arc(
+            0,
+            -15,
+            62,
+            Math.PI,
+            Math.PI*2
+        );
+
+        ctx.lineTo(
+            62,
+            0
+        );
+
+        ctx.lineTo(
+            -62,
+            0
+        );
+
+        ctx.fill();
+
+
+        ctx.strokeStyle=color;
+        ctx.lineWidth=7;
+
+
+        for(let i=-3;i<=3;i++){
+
+            ctx.beginPath();
+
+            ctx.moveTo(
+                i*17,
+                0
+            );
+
+            ctx.bezierCurveTo(
+                i*17+10,
+                30,
+                i*17-12,
+                60,
+                i*17,
+                85
+            );
+
+            ctx.stroke();
+
+        }
+
+    }
+
+
+    /* =================================================
+       ROBAL
+    ================================================= */
+
+    else if(node.type==="worm"){
 
         ctx.beginPath();
 
         ctx.ellipse(
-            cx+5,
-            cy,
-            70,
-            39,
+            0,
+            0,
+            82,
+            32,
+            0,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+
+        ctx.fillStyle="#111";
+
+        ctx.beginPath();
+        ctx.arc(48,-8,5,0,Math.PI*2);
+        ctx.arc(61,-7,5,0,Math.PI*2);
+        ctx.fill();
+
+    }
+
+
+    /* =================================================
+       RYBA
+    ================================================= */
+
+    else if(
+        node.type==="fish" ||
+        node.type==="shark"
+    ){
+
+        ctx.beginPath();
+
+        ctx.ellipse(
+            10,
+            0,
+            68,
+            36,
             0,
             0,
             Math.PI*2
@@ -1148,60 +1543,182 @@ function drawIcon(canvas,g){
 
         ctx.beginPath();
 
-        ctx.moveTo(
-            cx-65,
-            cy
-        );
-
-        ctx.lineTo(
-            cx-110,
-            cy-40
-        );
-
-        ctx.lineTo(
-            cx-110,
-            cy+40
-        );
-
+        ctx.moveTo(-50,0);
+        ctx.lineTo(-95,-43);
+        ctx.lineTo(-95,43);
         ctx.closePath();
 
         ctx.fill();
 
 
-        ctx.fillStyle="#080808";
+        ctx.fillStyle="#111";
 
         ctx.beginPath();
-
-        ctx.arc(
-            cx+50,
-            cy-12,
-            7,
-            0,
-            Math.PI*2
-        );
-
+        ctx.arc(55,-10,5,0,Math.PI*2);
         ctx.fill();
-
-
-        return;
 
     }
 
 
-    if(
-        g.id === "tetrapod" ||
-        g.id === "reptile" ||
-        g.id === "amphibian" ||
-        g.id === "mammal"
-    ){
+    /* =================================================
+       WĄŻ
+    ================================================= */
+
+    else if(node.type==="snake"){
+
+        ctx.strokeStyle=color;
+        ctx.lineWidth=30;
+
+        ctx.beginPath();
+
+        ctx.moveTo(-85,30);
+
+        ctx.bezierCurveTo(
+            -50,-60,
+            10,65,
+            70,-15
+        );
+
+        ctx.stroke();
+
+
+        ctx.beginPath();
+
+        ctx.arc(
+            72,
+            -17,
+            23,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+    }
+
+
+    /* =================================================
+       PTAK
+    ================================================= */
+
+    else if(node.type==="bird"){
 
         ctx.beginPath();
 
         ctx.ellipse(
-            cx-5,
-            cy,
-            62,
-            38,
+            0,
+            10,
+            48,
+            58,
+            -.3,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+
+        ctx.beginPath();
+
+        ctx.arc(
+            40,
+            -35,
+            25,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+
+        ctx.fillStyle="#e5b64e";
+
+        ctx.beginPath();
+
+        ctx.moveTo(63,-38);
+        ctx.lineTo(95,-27);
+        ctx.lineTo(65,-22);
+        ctx.closePath();
+
+        ctx.fill();
+
+    }
+
+
+    /* =================================================
+       CZŁOWIEK / NACZELNY
+    ================================================= */
+
+    else if(
+        node.type==="human" ||
+        node.type==="primate" ||
+        node.type==="ape"
+    ){
+
+        ctx.beginPath();
+
+        ctx.arc(
+            0,
+            -55,
+            30,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+
+        ctx.beginPath();
+
+        ctx.ellipse(
+            0,
+            18,
+            31,
+            58,
+            0,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+
+        ctx.strokeStyle=color;
+        ctx.lineWidth=15;
+
+
+        ctx.beginPath();
+
+        ctx.moveTo(-23,-2);
+        ctx.lineTo(-63,40);
+
+        ctx.moveTo(23,-2);
+        ctx.lineTo(63,40);
+
+        ctx.moveTo(-14,65);
+        ctx.lineTo(-30,98);
+
+        ctx.moveTo(14,65);
+        ctx.lineTo(30,98);
+
+        ctx.stroke();
+
+    }
+
+
+    /* =================================================
+       CZTERONOŻNE
+    ================================================= */
+
+    else{
+
+        ctx.beginPath();
+
+        ctx.ellipse(
+            -8,
+            5,
+            60,
+            35,
             0,
             0,
             Math.PI*2
@@ -1213,9 +1730,9 @@ function drawIcon(canvas,g){
         ctx.beginPath();
 
         ctx.arc(
-            cx+62,
-            cy-16,
-            28,
+            53,
+            -13,
+            27,
             0,
             Math.PI*2
         );
@@ -1223,340 +1740,180 @@ function drawIcon(canvas,g){
         ctx.fill();
 
 
+        ctx.strokeStyle=color;
         ctx.lineWidth=14;
 
-        ctx.lineCap="round";
-
-        ctx.strokeStyle=g.color;
-
 
         ctx.beginPath();
 
-        ctx.moveTo(cx-35,cy+25);
-        ctx.lineTo(cx-52,cy+63);
+        ctx.moveTo(-35,30);
+        ctx.lineTo(-48,68);
 
-        ctx.moveTo(cx+15,cy+30);
-        ctx.lineTo(cx+29,cy+66);
+        ctx.moveTo(15,32);
+        ctx.lineTo(28,70);
 
         ctx.stroke();
 
 
-        ctx.fillStyle="#050505";
+        ctx.fillStyle="#111";
 
         ctx.beginPath();
 
         ctx.arc(
-            cx+72,
-            cy-22,
-            5,
+            62,
+            -20,
+            4,
             0,
             Math.PI*2
         );
 
         ctx.fill();
-
-
-        return;
 
     }
 
 
-    if(
-        g.id === "primate" ||
-        g.id === "human"
-    ){
-
-        ctx.beginPath();
-
-        ctx.arc(
-            cx,
-            cy-48,
-            32,
-            0,
-            Math.PI*2
-        );
-
-        ctx.fill();
-
-
-        ctx.beginPath();
-
-        ctx.ellipse(
-            cx,
-            cy+20,
-            35,
-            60,
-            0,
-            0,
-            Math.PI*2
-        );
-
-        ctx.fill();
-
-
-        ctx.lineWidth=16;
-
-        ctx.strokeStyle=g.color;
-
-        ctx.lineCap="round";
-
-
-        ctx.beginPath();
-
-        ctx.moveTo(cx-25,cy);
-        ctx.lineTo(cx-63,cy+45);
-
-        ctx.moveTo(cx+25,cy);
-        ctx.lineTo(cx+63,cy+45);
-
-        ctx.moveTo(cx-18,cy+64);
-        ctx.lineTo(cx-30,cy+100);
-
-        ctx.moveTo(cx+18,cy+64);
-        ctx.lineTo(cx+30,cy+100);
-
-        ctx.stroke();
-
-
-        return;
-
-    }
-
-
-    /* default organic icon */
-
-    ctx.beginPath();
-
-    ctx.ellipse(
-        cx,
-        cy,
-        65,
-        55,
-        0,
-        0,
-        Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    ctx.shadowBlur=0;
-
-    ctx.fillStyle="white";
-
-    ctx.font="bold 30px Arial";
-
-    ctx.textAlign="center";
-    ctx.textBaseline="middle";
-
-    ctx.fillText(
-        g.fallback,
-        cx,
-        cy
-    );
+    ctx.restore();
 
 }
 
 
 /* =====================================================
-   UPGRADE ICON
+   TWORZENIE NODE
 ===================================================== */
 
-const upgradeSVG = `
+nodes.forEach((node,index)=>{
 
-<svg viewBox="0 0 100 100">
+    const element =
+        document.createElement("div");
 
-<circle
-cx="50"
-cy="50"
-r="31"
-fill="#246b59"
-stroke="#6ae2c3"
-stroke-width="5"
-/>
 
-<path
-d="M50 27 V73 M27 50 H73"
-stroke="#e9fff9"
-stroke-width="9"
-stroke-linecap="round"
-/>
+    element.className =
+        "node";
 
-</svg>
 
-`;
+    element.id =
+        "node-"+node.id;
+
+
+    element.style.left =
+        node.x+"px";
+
+
+    element.style.top =
+        node.y+"px";
+
+
+    const canvas =
+        document.createElement("canvas");
+
+
+    canvas.className =
+        "model";
+
+
+    canvas.width=240;
+    canvas.height=240;
+
+
+    element.appendChild(canvas);
+
+
+    drawModel(
+        canvas,
+        node
+    );
+
+
+    const level =
+        document.createElement("div");
+
+    level.className =
+        "level";
+
+    level.textContent =
+        "x0";
+
+
+    element.appendChild(level);
+
+
+    const name =
+        document.createElement("div");
+
+    name.className =
+        "nodeName";
+
+    name.textContent =
+        node.name;
+
+
+    element.appendChild(name);
+
+
+    const cost =
+        document.createElement("div");
+
+    cost.className =
+        "nodeCost";
+
+
+    element.appendChild(cost);
+
+
+    element.addEventListener(
+        "pointerdown",
+        event=>{
+            event.stopPropagation();
+        }
+    );
+
+
+    element.addEventListener(
+        "click",
+        event=>{
+
+            event.stopPropagation();
+
+            buyNode(index);
+
+        }
+    );
+
+
+    world.appendChild(element);
+
+
+    createUpgrade(
+        node,
+        index,
+        0,
+        node.x-300
+    );
+
+
+    createUpgrade(
+        node,
+        index,
+        1,
+        node.x+300
+    );
+
+});
 
 
 /* =====================================================
-   CREATE GENERATORS
-===================================================== */
-
-generators.forEach(
-    (g,index)=>{
-
-        const generator =
-            document.createElement("div");
-
-
-        generator.className =
-            "generator";
-
-
-        generator.id =
-            "generator-" + g.id;
-
-
-        generator.style.left =
-            g.x + "px";
-
-
-        generator.style.top =
-            g.y + "px";
-
-
-        const canvas =
-            document.createElement("canvas");
-
-
-        canvas.className =
-            "modelCanvas";
-
-
-        canvas.width =
-            240;
-
-
-        canvas.height =
-            240;
-
-
-        generator.appendChild(
-            canvas
-        );
-
-
-        drawIcon(
-            canvas,
-            g
-        );
-
-
-        const level =
-            document.createElement("div");
-
-
-        level.className =
-            "level";
-
-
-        level.textContent =
-            "x0";
-
-
-        generator.appendChild(
-            level
-        );
-
-
-        const name =
-            document.createElement("div");
-
-
-        name.className =
-            "generatorName";
-
-
-        name.textContent =
-            g.name;
-
-
-        generator.appendChild(
-            name
-        );
-
-
-        const cost =
-            document.createElement("div");
-
-
-        cost.className =
-            "generatorCost";
-
-
-        generator.appendChild(
-            cost
-        );
-
-
-        generator.addEventListener(
-            "pointerdown",
-            e=>e.stopPropagation()
-        );
-
-
-        generator.addEventListener(
-            "click",
-            e=>{
-
-                e.stopPropagation();
-
-                buyGenerator(index);
-
-            }
-        );
-
-
-        world.appendChild(
-            generator
-        );
-
-
-        /* Branch generators have smaller upgrade offsets */
-
-        let leftX =
-            g.branch
-            ? g.x - 260
-            : 500;
-
-
-        let rightX =
-            g.branch
-            ? g.x + 270
-            : 1100;
-
-
-        createUpgrade(
-            g,
-            index,
-            0,
-            leftX
-        );
-
-
-        createUpgrade(
-            g,
-            index,
-            1,
-            rightX
-        );
-
-    }
-);
-
-
-/* =====================================================
-   CREATE UPGRADE
+   UPGRADE
 ===================================================== */
 
 function createUpgrade(
-    g,
-    generatorIndex,
+    node,
+    nodeIndex,
     upgradeIndex,
     x
 ){
 
-    const data =
-        g.upgrades[upgradeIndex];
+    const upgrade =
+        node.upgrades[upgradeIndex];
 
 
     const element =
@@ -1568,41 +1925,38 @@ function createUpgrade(
 
 
     element.id =
-        `upgrade-${g.id}-${upgradeIndex}`;
+        `upgrade-${node.id}-${upgradeIndex}`;
 
 
     element.style.left =
-        x + "px";
+        x+"px";
 
 
     element.style.top =
-        g.y + "px";
+        node.y+"px";
 
 
-    element.innerHTML = `
+    element.innerHTML=`
 
         <div class="upgradeIcon">
-
-            ${upgradeSVG}
-
+            ✦
         </div>
 
-        <div class="upgradeInfo">
+        <div class="upgradeText">
 
             <div class="upgradeName">
-                ${data.name}
+                ${upgrade.name}
             </div>
 
             <div class="upgradeEffect">
-                +${data.bonus*100}% produkcji
+                +${upgrade.bonus*100}% produkcji
             </div>
 
             <div class="upgradeCost">
-                ${format(data.cost)} entropii
+                ${format(upgrade.cost)} entropii
             </div>
 
         </div>
-
     `;
 
 
@@ -1619,7 +1973,7 @@ function createUpgrade(
             e.stopPropagation();
 
             buyUpgrade(
-                generatorIndex,
+                nodeIndex,
                 upgradeIndex
             );
 
@@ -1627,9 +1981,7 @@ function createUpgrade(
     );
 
 
-    world.appendChild(
-        element
-    );
+    world.appendChild(element);
 
 }
 
@@ -1643,185 +1995,78 @@ function drawLines(){
     svg.innerHTML="";
 
 
-    generators.forEach(
-        (g,index)=>{
+    nodes.forEach(
+        (node,index)=>{
 
-            if(!g.parent){
-                return;
+            if(node.parent){
+
+                const parent =
+                    getNode(node.parent);
+
+
+                createLine(
+                    parent.x,
+                    parent.y,
+                    node.x,
+                    node.y,
+                    "connection",
+                    "connection-"+node.id
+                );
+
             }
 
 
-            const parent =
-                byId(
-                    g.parent
-                );
-
-
-            const line =
-                document.createElementNS(
-
-                    "http://www.w3.org/2000/svg",
-
-                    "line"
-
-                );
-
-
-            line.setAttribute(
-                "x1",
-                parent.x
+            createLine(
+                node.x,
+                node.y,
+                node.x-300,
+                node.y,
+                "upgradeLine",
+                `upgradeLine-${index}-0`
             );
 
 
-            line.setAttribute(
-                "y1",
-                parent.y
-            );
-
-
-            line.setAttribute(
-                "x2",
-                g.x
-            );
-
-
-            line.setAttribute(
-                "y2",
-                g.y
-            );
-
-
-            line.id =
-                "connection-" +
-                g.id;
-
-
-            line.classList.add(
-
-                g.branch
-                ? "branchLine"
-                : "mainLine"
-
-            );
-
-
-            svg.appendChild(line);
-
-
-            /* upgrade lines */
-
-            let leftX =
-                g.branch
-                ? g.x - 260
-                : 500;
-
-
-            let rightX =
-                g.branch
-                ? g.x + 270
-                : 1100;
-
-
-            createUpgradeLine(
-                g,
-                index,
-                0,
-                leftX
-            );
-
-
-            createUpgradeLine(
-                g,
-                index,
-                1,
-                rightX
+            createLine(
+                node.x,
+                node.y,
+                node.x+300,
+                node.y,
+                "upgradeLine",
+                `upgradeLine-${index}-1`
             );
 
         }
     );
 
-
-    /* Amino upgrade lines */
-
-    const amino =
-        generators[0];
-
-
-    createUpgradeLine(
-        amino,
-        0,
-        0,
-        500
-    );
-
-
-    createUpgradeLine(
-        amino,
-        0,
-        1,
-        1100
-    );
-
 }
 
 
-/* =====================================================
-   UPGRADE LINE
-===================================================== */
-
-function createUpgradeLine(
-    g,
-    index,
-    upgradeIndex,
-    x
+function createLine(
+    x1,y1,x2,y2,className,id
 ){
 
     const line =
         document.createElementNS(
-
             "http://www.w3.org/2000/svg",
-
             "line"
-
         );
 
 
-    line.setAttribute(
-        "x1",
-        g.x
-    );
-
-
-    line.setAttribute(
-        "y1",
-        g.y
-    );
-
-
-    line.setAttribute(
-        "x2",
-        x
-    );
-
-
-    line.setAttribute(
-        "y2",
-        g.y
-    );
+    line.setAttribute("x1",x1);
+    line.setAttribute("y1",y1);
+    line.setAttribute("x2",x2);
+    line.setAttribute("y2",y2);
 
 
     line.classList.add(
-        "upgradeLine"
+        className
     );
 
 
-    line.id =
-        `upgradeLine-${index}-${upgradeIndex}`;
+    line.id=id;
 
 
-    svg.appendChild(
-        line
-    );
+    svg.appendChild(line);
 
 }
 
@@ -1830,15 +2075,15 @@ function createUpgradeLine(
    COST
 ===================================================== */
 
-function generatorCost(g){
+function nodeCost(node){
 
     return Math.floor(
 
-        g.cost *
+        node.cost *
 
         Math.pow(
-            1.17,
-            g.level
+            1.16,
+            node.level
         )
 
     );
@@ -1847,20 +2092,19 @@ function generatorCost(g){
 
 
 /* =====================================================
-   MULTIPLIER
+   PRODUCTION MULTIPLIER
 ===================================================== */
 
-function multiplier(g){
+function multiplier(node){
 
-    let m = 1;
+    let m=1;
 
 
-    g.upgrades.forEach(u=>{
+    node.upgrades.forEach(u=>{
 
         if(u.bought){
 
-            m +=
-                u.bonus;
+            m+=u.bonus;
 
         }
 
@@ -1876,49 +2120,47 @@ function multiplier(g){
    PRODUCTION
 ===================================================== */
 
-function production(){
+function totalProduction(){
 
-    let total = 0;
+    let result=0;
 
 
-    generators.forEach(g=>{
+    nodes.forEach(node=>{
 
-        total +=
+        result +=
 
-            g.production *
+            node.production *
 
-            g.level *
+            node.level *
 
-            multiplier(g);
+            multiplier(node);
 
     });
 
 
-    return total;
+    return result;
 
 }
 
 
 /* =====================================================
-   BUY GENERATOR
+   BUY NODE
 ===================================================== */
 
-function buyGenerator(index){
+function buyNode(index){
 
-    const g =
-        generators[index];
+    const node =
+        nodes[index];
 
 
-    if(g.parent){
+    if(node.parent){
 
         const parent =
-            byId(
-                g.parent
-            );
+            getNode(node.parent);
 
 
         if(
-            parent.level === 0
+            parent.level===0
         ){
 
             return;
@@ -1928,25 +2170,23 @@ function buyGenerator(index){
     }
 
 
-    const price =
-        generatorCost(g);
+    const cost =
+        nodeCost(node);
 
 
-    if(
-        entropy < price
-    ){
+    if(entropy<cost){
 
         return;
 
     }
 
 
-    entropy -= price;
+    entropy-=cost;
 
-    g.level++;
+    node.level++;
 
 
-    updateUI();
+    update();
 
 }
 
@@ -1956,25 +2196,21 @@ function buyGenerator(index){
 ===================================================== */
 
 function buyUpgrade(
-    generatorIndex,
+    nodeIndex,
     upgradeIndex
 ){
 
-    const g =
-        generators[
-            generatorIndex
-        ];
+    const node =
+        nodes[nodeIndex];
 
 
-    const u =
-        g.upgrades[
-            upgradeIndex
-        ];
+    const upgrade =
+        node.upgrades[upgradeIndex];
 
 
     if(
-        g.level === 0 ||
-        u.bought
+        node.level===0 ||
+        upgrade.bought
     ){
 
         return;
@@ -1983,7 +2219,8 @@ function buyUpgrade(
 
 
     if(
-        entropy < u.cost
+        entropy<
+        upgrade.cost
     ){
 
         return;
@@ -1992,14 +2229,13 @@ function buyUpgrade(
 
 
     entropy -=
-        u.cost;
+        upgrade.cost;
 
 
-    u.bought =
-        true;
+    upgrade.bought=true;
 
 
-    updateUI();
+    update();
 
 }
 
@@ -2010,7 +2246,7 @@ function buyUpgrade(
 
 function format(n){
 
-    if(n < 1e3){
+    if(n<1e3){
 
         return Math.floor(n)
         .toString();
@@ -2018,42 +2254,33 @@ function format(n){
     }
 
 
-    if(n < 1e6){
-
-        return (
-            n/1e3
-        ).toFixed(1) +
-        " tys.";
-
-    }
-
-
-    if(n < 1e9){
-
-        return (
-            n/1e6
-        ).toFixed(2) +
-        " mln";
-
-    }
+    const units=[
+        ["tys.",1e3],
+        ["mln",1e6],
+        ["mld",1e9],
+        ["bln",1e12],
+        ["bld",1e15],
+        ["tryl.",1e18],
+        ["kwad.",1e24]
+    ];
 
 
-    if(n < 1e12){
+    for(
+        let i=units.length-1;
+        i>=0;
+        i--
+    ){
 
-        return (
-            n/1e9
-        ).toFixed(2) +
-        " mld";
+        if(n>=units[i][1]){
 
-    }
+            return (
+                n/
+                units[i][1]
+            ).toFixed(2)+
+            " "+
+            units[i][0];
 
-
-    if(n < 1e15){
-
-        return (
-            n/1e12
-        ).toFixed(2) +
-        " bln";
+        }
 
     }
 
@@ -2067,57 +2294,49 @@ function format(n){
    UPDATE
 ===================================================== */
 
-function updateUI(){
+function update(){
 
     document
     .getElementById("entropy")
-    .textContent =
+    .textContent=
 
-        format(entropy) +
+        format(entropy)+
         " entropii";
 
 
     document
-    .getElementById("production")
-    .textContent =
+    .getElementById("perSecond")
+    .textContent=
 
-        "+" +
-        format(
-            production()
-        ) +
+        "+"+
+        format(totalProduction())+
         " / s";
 
 
-    generators.forEach(
-        (g,index)=>{
+    nodes.forEach(
+        (node,index)=>{
 
             const element =
-
                 document
                 .getElementById(
-                    "generator-" +
-                    g.id
+                    "node-"+node.id
                 );
 
 
-            let unlocked =
-                true;
+            let unlocked=true;
 
 
-            if(g.parent){
+            if(node.parent){
 
                 unlocked =
-
-                    byId(
-                        g.parent
-                    ).level > 0;
+                    getNode(
+                        node.parent
+                    ).level>0;
 
             }
 
 
-            element
-            .classList
-            .remove(
+            element.classList.remove(
                 "locked",
                 "available",
                 "owned"
@@ -2126,21 +2345,17 @@ function updateUI(){
 
             if(!unlocked){
 
-                element
-                .classList
-                .add(
+                element.classList.add(
                     "locked"
                 );
 
             }
 
             else if(
-                g.level === 0
+                node.level===0
             ){
 
-                element
-                .classList
-                .add(
+                element.classList.add(
                     "available"
                 );
 
@@ -2148,9 +2363,7 @@ function updateUI(){
 
             else{
 
-                element
-                .classList
-                .add(
+                element.classList.add(
                     "owned"
                 );
 
@@ -2158,86 +2371,66 @@ function updateUI(){
 
 
             element
-            .querySelector(
-                ".level"
-            )
-            .textContent =
+            .querySelector(".level")
+            .textContent=
 
-                "x" +
-                g.level;
+                "x"+
+                node.level;
 
 
             element
-            .querySelector(
-                ".generatorCost"
-            )
-            .textContent =
+            .querySelector(".nodeCost")
+            .textContent=
 
                 format(
-                    generatorCost(g)
-                ) +
-
+                    nodeCost(node)
+                )+
                 " entropii";
 
 
-            /* CONNECTION */
+            if(node.parent){
 
-            if(g.parent){
-
-                const line =
-
+                const connection =
                     document
                     .getElementById(
-                        "connection-" +
-                        g.id
+                        "connection-"+node.id
                     );
 
 
-                line
+                connection
                 .classList
                 .toggle(
 
                     "active",
 
-                    byId(
-                        g.parent
-                    ).level > 0
+                    getNode(
+                        node.parent
+                    ).level>0
 
                 );
 
             }
 
 
-            /* UPGRADES */
+            node.upgrades.forEach(
+                (u,i)=>{
 
-            g.upgrades.forEach(
-                (u,uIndex)=>{
-
-                    const upgrade =
-
+                    const el =
                         document
                         .getElementById(
-
-                            `upgrade-${g.id}-${uIndex}`
-
+                            `upgrade-${node.id}-${i}`
                         );
 
 
-                    upgrade
-                    .classList
-                    .remove(
+                    el.classList.remove(
                         "locked",
                         "bought"
                     );
 
 
-                    if(
-                        g.level === 0
-                    ){
+                    if(node.level===0){
 
-                        upgrade
-                        .classList
-                        .add(
+                        el.classList.add(
                             "locked"
                         );
 
@@ -2246,47 +2439,30 @@ function updateUI(){
 
                     if(u.bought){
 
-                        upgrade
-                        .classList
-                        .add(
+                        el.classList.add(
                             "bought"
                         );
 
 
-                        upgrade
+                        el
                         .querySelector(
                             ".upgradeEffect"
                         )
-                        .textContent =
-
+                        .textContent=
                             "AKTYWNE";
 
                     }
 
 
-                    const line =
-
-                        document
-                        .getElementById(
-
-                            `upgradeLine-${index}-${uIndex}`
-
-                        );
-
-
-                    if(line){
-
-                        line
-                        .classList
-                        .toggle(
-
-                            "active",
-
-                            g.level > 0
-
-                        );
-
-                    }
+                    document
+                    .getElementById(
+                        `upgradeLine-${index}-${i}`
+                    )
+                    .classList
+                    .toggle(
+                        "active",
+                        node.level>0
+                    );
 
                 }
             );
@@ -2301,36 +2477,33 @@ function updateUI(){
    DRAG MAP
 ===================================================== */
 
-let worldX = 0;
-let worldY = 0;
+let worldX=0;
+let worldY=0;
 
-let dragging = false;
-let moved = false;
+let dragging=false;
+let moved=false;
 
-let startPointerX = 0;
-let startPointerY = 0;
+let startX=0;
+let startY=0;
 
-let startWorldX = 0;
-let startWorldY = 0;
+let startingWorldX=0;
+let startingWorldY=0;
 
 
 function renderWorld(){
 
     world.style.transform =
-
         `translate(${worldX}px,${worldY}px)`;
 
 }
 
-
-/* DOWN */
 
 viewport.addEventListener(
     "pointerdown",
     e=>{
 
         if(
-            e.target.closest(".generator") ||
+            e.target.closest(".node") ||
             e.target.closest(".upgrade")
         ){
 
@@ -2339,36 +2512,24 @@ viewport.addEventListener(
         }
 
 
-        dragging = true;
-
-        moved = false;
-
-
-        startPointerX =
-            e.clientX;
+        dragging=true;
+        moved=false;
 
 
-        startPointerY =
-            e.clientY;
+        startX=e.clientX;
+        startY=e.clientY;
 
 
-        startWorldX =
-            worldX;
+        startingWorldX=worldX;
+        startingWorldY=worldY;
 
 
-        startWorldY =
-            worldY;
-
-
-        viewport
-        .classList
-        .add(
+        viewport.classList.add(
             "dragging"
         );
 
 
-        viewport
-        .setPointerCapture(
+        viewport.setPointerCapture(
             e.pointerId
         );
 
@@ -2376,31 +2537,22 @@ viewport.addEventListener(
 );
 
 
-/* MOVE */
-
 viewport.addEventListener(
     "pointermove",
     e=>{
 
-        if(
-            !dragging
-        ){
+        if(!dragging){
 
             return;
 
         }
 
 
-        const dx =
+        const dx=
+            e.clientX-startX;
 
-            e.clientX -
-            startPointerX;
-
-
-        const dy =
-
-            e.clientY -
-            startPointerY;
+        const dy=
+            e.clientY-startY;
 
 
         if(
@@ -2408,18 +2560,18 @@ viewport.addEventListener(
             Math.abs(dy)>5
         ){
 
-            moved = true;
+            moved=true;
 
         }
 
 
-        worldX =
-            startWorldX +
+        worldX=
+            startingWorldX+
             dx;
 
 
-        worldY =
-            startWorldY +
+        worldY=
+            startingWorldY+
             dy;
 
 
@@ -2429,47 +2581,38 @@ viewport.addEventListener(
 );
 
 
-/* UP */
-
 viewport.addEventListener(
     "pointerup",
     e=>{
 
-        if(
-            !dragging
-        ){
+        if(!dragging){
 
             return;
 
         }
 
 
-        dragging =
-            false;
+        dragging=false;
 
 
-        viewport
-        .classList
-        .remove(
+        viewport.classList.remove(
             "dragging"
         );
 
 
-        if(
-            !moved
-        ){
+        if(!moved){
 
-            entropy +=
+            entropy+=
                 clickPower;
 
 
-            clickEffect(
+            createClick(
                 e.clientX,
                 e.clientY
             );
 
 
-            updateUI();
+            update();
 
         }
 
@@ -2478,73 +2621,63 @@ viewport.addEventListener(
 
 
 /* =====================================================
-   CLICK TEXT
+   CLICK EFFECT
 ===================================================== */
 
-function clickEffect(x,y){
+function createClick(x,y){
 
-    const element =
-
-        document
-        .createElement(
+    const el =
+        document.createElement(
             "div"
         );
 
 
-    element.className =
+    el.className=
         "clickText";
 
 
-    element.textContent =
-        "+" +
+    el.textContent=
+        "+"+
         clickPower;
 
 
-    element.style.left =
-        x + "px";
+    el.style.left=
+        x+"px";
+
+    el.style.top=
+        y+"px";
 
 
-    element.style.top =
-        y + "px";
-
-
-    document.body
-    .appendChild(
-        element
+    document.body.appendChild(
+        el
     );
 
 
     setTimeout(
-        ()=>element.remove(),
-        800
+        ()=>el.remove(),
+        750
     );
 
 }
 
 
 /* =====================================================
-   HOME / START POSITION
+   CENTER
 ===================================================== */
 
-function centerOnAmino(){
+function centerStart(){
 
     const amino =
-        byId(
-            "amino"
-        );
+        getNode("amino");
 
 
-    worldX =
-
-        window.innerWidth/2 -
-
+    worldX=
+        window.innerWidth/2-
         amino.x;
 
 
-    worldY =
-
-        window.innerHeight/2 -
-
+    worldY=
+        window.innerHeight*.55-
         amino.y;
 
 
@@ -2561,24 +2694,24 @@ document
 
         e.stopPropagation();
 
-        centerOnAmino();
+        centerStart();
 
     }
 );
 
 
 /* =====================================================
-   PRODUCTION LOOP
+   PASSIVE PRODUCTION
 ===================================================== */
 
 setInterval(
     ()=>{
 
-        entropy +=
-            production()/10;
+        entropy+=
+            totalProduction()/10;
 
 
-        updateUI();
+        update();
 
     },
     100
@@ -2591,9 +2724,9 @@ setInterval(
 
 drawLines();
 
-updateUI();
+update();
 
-centerOnAmino();
+centerStart();
 
 </script>
 
