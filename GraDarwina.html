@@ -2,11 +2,12 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Ewolucja 3D</title>
 
 <style>
+
 *{
     box-sizing:border-box;
     margin:0;
@@ -14,7 +15,8 @@
     user-select:none;
 }
 
-html,body{
+html,
+body{
     width:100%;
     height:100%;
     overflow:hidden;
@@ -22,65 +24,86 @@ html,body{
 
 body{
     font-family:Arial,Helvetica,sans-serif;
-    color:white;
+    color:#fff;
 
     background:
-        radial-gradient(circle at 50% 50%,#18362f,#0b1b18 45%,#030908 100%);
+        radial-gradient(
+            circle at center,
+            #12332c 0%,
+            #071915 45%,
+            #020807 100%
+        );
 }
 
-/* =====================================================
+
+/* =========================================================
    HUD
-===================================================== */
+========================================================= */
 
 #hud{
+
     position:fixed;
-    top:14px;
+
+    top:16px;
     left:50%;
+
     transform:translateX(-50%);
 
-    width:390px;
-    max-width:90%;
+    width:430px;
+    max-width:92%;
 
-    padding:11px 18px;
+    padding:13px 20px;
 
-    background:rgba(8,14,13,.94);
-    border:1px solid #52645e;
-    border-radius:15px;
+    background:rgba(7,13,12,.95);
 
-    z-index:500;
+    border:1px solid #4e625c;
 
-    box-shadow:0 6px 25px rgba(0,0,0,.65);
+    border-radius:16px;
 
-    pointer-events:auto;
+    z-index:10000;
+
+    box-shadow:
+        0 8px 30px rgba(0,0,0,.55);
+
 }
 
 #entropy{
-    font-size:25px;
-    font-weight:bold;
+
+    font-size:28px;
+
+    font-weight:700;
+
 }
 
-#perSecond{
-    color:#55e5ba;
+#production{
+
     margin-top:3px;
+
+    color:#49e7bf;
+
+    font-size:17px;
+
 }
 
-#help{
-    color:#82918c;
-    font-size:11px;
-    margin-top:5px;
+#instructions{
+
+    margin-top:6px;
+
+    color:#84938e;
+
+    font-size:12px;
+
 }
 
 
-/* =====================================================
+/* =========================================================
    VIEWPORT
-
-   Nie scrollujemy.
-
-   Przesuwamy cały świat transformacją translate().
-===================================================== */
+========================================================= */
 
 #viewport{
+
     position:absolute;
+
     inset:0;
 
     overflow:hidden;
@@ -88,371 +111,580 @@ body{
     cursor:grab;
 
     touch-action:none;
+
 }
 
 #viewport.dragging{
+
     cursor:grabbing;
+
 }
 
 
-/* =====================================================
+/* =========================================================
    CAŁY ŚWIAT
-===================================================== */
+========================================================= */
 
 #world{
-    position:absolute;
 
-    width:1400px;
-    height:3300px;
+    position:absolute;
 
     left:0;
     top:0;
 
+    width:1600px;
+    height:3450px;
+
     transform-origin:0 0;
+
 }
 
 
-/* =====================================================
-   SVG Z LINIAMI
-===================================================== */
+/* =========================================================
+   TŁO ŚWIATA
+========================================================= */
 
-#connections{
+#world::before{
+
+    content:"";
+
     position:absolute;
+
     inset:0;
 
-    width:1400px;
-    height:3300px;
+    pointer-events:none;
+
+    background:
+
+        radial-gradient(
+            circle at 30% 15%,
+            rgba(69,255,195,.08),
+            transparent 22%
+        ),
+
+        radial-gradient(
+            circle at 70% 55%,
+            rgba(55,173,145,.08),
+            transparent 27%
+        ),
+
+        radial-gradient(
+            circle,
+            rgba(116,255,213,.13) 1px,
+            transparent 2px
+        );
+
+    background-size:
+        auto,
+        auto,
+        130px 130px;
+
+}
+
+
+/* =========================================================
+   LINIE
+========================================================= */
+
+#lines{
+
+    position:absolute;
+
+    width:1600px;
+    height:3450px;
+
+    left:0;
+    top:0;
 
     pointer-events:none;
 
     z-index:1;
+
 }
 
-.mainLine{
-    stroke:#50645e;
-    stroke-width:6;
-    opacity:.55;
+.main-line{
+
+    stroke:#405a53;
+
+    stroke-width:7;
+
+    opacity:.5;
+
 }
 
-.mainLine.active{
-    stroke:#36e4bd;
+.main-line.active{
+
+    stroke:#28dfb6;
 
     opacity:1;
 
     filter:
-        drop-shadow(0 0 4px #36e4bd);
+        drop-shadow(0 0 6px #28dfb6);
+
 }
 
-.upgradeLine{
-    stroke:#536760;
+.upgrade-line{
+
+    stroke:#536860;
+
     stroke-width:3;
-    opacity:.6;
+
+    opacity:.55;
+
 }
 
-.upgradeLine.active{
-    stroke:#37d7b4;
-    opacity:1;
+.upgrade-line.active{
+
+    stroke:#33cfac;
+
+    opacity:.95;
+
 }
 
 
-/* =====================================================
+/* =========================================================
    GENERATOR
-===================================================== */
+========================================================= */
 
 .generator{
+
     position:absolute;
 
-    left:700px;
+    left:800px;
 
-    width:136px;
-    height:136px;
+    width:142px;
+    height:142px;
 
-    transform:translate(-50%,-50%);
+    transform:
+        translate(-50%,-50%);
 
     border-radius:50%;
 
     background:
-        radial-gradient(circle at 40% 30%,#273833,#0c1210 68%,#030504);
 
-    border:4px solid #41695f;
+        radial-gradient(
+            circle at 38% 30%,
+            #263a34,
+            #101916 58%,
+            #050908 100%
+        );
+
+    border:4px solid #42675e;
 
     z-index:20;
 
     cursor:pointer;
 
-    box-shadow:
-        inset 0 0 18px rgba(255,255,255,.04);
-
     transition:
-        border-color .2s,
-        box-shadow .2s,
+        transform .16s,
         opacity .2s,
-        transform .15s;
+        box-shadow .2s,
+        border-color .2s;
+
 }
 
 .generator.available,
 .generator.owned{
-    border-color:#25e4bb;
+
+    border-color:#28e0b8;
 
     box-shadow:
-        0 0 10px rgba(37,228,187,.8),
-        0 0 30px rgba(37,228,187,.23),
-        inset 0 0 20px rgba(37,228,187,.06);
+
+        0 0 9px rgba(40,224,184,.8),
+
+        0 0 28px rgba(40,224,184,.25),
+
+        inset 0 0 20px rgba(40,224,184,.08);
+
 }
 
 .generator.locked{
-    opacity:.25;
+
+    opacity:.28;
+
+    cursor:default;
+
 }
 
 .generator:not(.locked):hover{
+
     transform:
         translate(-50%,-50%)
         scale(1.07);
+
 }
 
 
-/* =====================================================
-   PRAWDZIWY CANVAS 3D
-===================================================== */
+/* =========================================================
+   CANVAS MODELU
+========================================================= */
 
-.modelCanvas{
+.model-canvas{
+
     position:absolute;
 
-    width:116px;
-    height:116px;
+    left:7px;
+    top:7px;
 
-    left:6px;
-    top:6px;
+    width:120px;
+    height:120px;
 
     border-radius:50%;
 
     pointer-events:none;
+
 }
 
 
-/* =====================================================
+/* =========================================================
    LEVEL
-===================================================== */
+========================================================= */
 
 .level{
+
     position:absolute;
 
-    right:-11px;
-    top:-11px;
+    right:-13px;
+    top:-13px;
 
-    min-width:40px;
-    height:40px;
+    min-width:42px;
+    height:42px;
 
-    padding:0 6px;
+    padding:0 7px;
 
-    border-radius:22px;
+    border-radius:23px;
 
     display:flex;
-    justify-content:center;
+
     align-items:center;
+    justify-content:center;
 
-    background:#101513;
+    background:#0d1210;
 
-    border:2px solid #26332f;
+    border:2px solid #263830;
 
+    font-size:14px;
     font-weight:bold;
 
-    z-index:40;
+    z-index:30;
+
 }
 
 
-/* =====================================================
+/* =========================================================
    NAZWA
-===================================================== */
+========================================================= */
 
-.generatorName{
+.generator-name{
+
     position:absolute;
 
     left:50%;
-    top:142px;
+    top:148px;
 
     transform:translateX(-50%);
 
-    width:300px;
+    width:310px;
 
     text-align:center;
 
-    font-size:20px;
+    white-space:nowrap;
+
+    font-size:21px;
+
     font-weight:bold;
 
     text-shadow:
-        0 2px 4px black,
-        0 0 5px black;
+        0 2px 5px #000,
+        0 0 5px #000;
 
     pointer-events:none;
+
 }
 
-.generatorCost{
+.generator-cost{
+
     position:absolute;
 
     left:50%;
-    top:169px;
+    top:178px;
 
     transform:translateX(-50%);
 
     white-space:nowrap;
 
-    color:#4ee6c0;
+    color:#43e0ba;
 
     font-size:14px;
 
+    text-shadow:
+        0 2px 3px #000;
+
     pointer-events:none;
+
 }
 
 
-/* =====================================================
-   ULEPSZENIA
-===================================================== */
+/* =========================================================
+   UPGRADE
+========================================================= */
 
 .upgrade{
+
     position:absolute;
 
-    width:210px;
-    height:82px;
+    width:230px;
+    height:86px;
 
-    transform:translate(-50%,-50%);
+    transform:
+        translate(-50%,-50%);
 
     display:grid;
 
-    grid-template-columns:58px 1fr;
+    grid-template-columns:
+        62px 1fr;
 
     align-items:center;
 
-    background:
-        linear-gradient(145deg,#222a27,#111715);
+    padding:8px;
 
-    border:2px solid #56655f;
     border-radius:7px;
 
-    padding:8px;
+    border:2px solid #52645e;
+
+    background:
+
+        linear-gradient(
+            145deg,
+            #222c28,
+            #101613
+        );
+
+    box-shadow:
+        0 5px 12px rgba(0,0,0,.55);
 
     z-index:15;
 
     cursor:pointer;
 
-    box-shadow:
-        0 5px 10px rgba(0,0,0,.55);
+    transition:
+        transform .15s,
+        opacity .2s,
+        border-color .2s;
 
-    transition:.15s;
 }
 
 .upgrade:hover{
+
     transform:
         translate(-50%,-50%)
-        scale(1.05);
+        scale(1.045);
+
 }
 
 .upgrade.locked{
+
     opacity:.22;
+
+    cursor:default;
+
 }
 
 .upgrade.bought{
-    border-color:#42ddb8;
+
+    border-color:#31d5ae;
 
     background:
-        linear-gradient(145deg,#174139,#102a25);
+
+        linear-gradient(
+            145deg,
+            #174239,
+            #0c2822
+        );
+
 }
 
-.upgradeIcon{
-    width:52px;
-    height:52px;
 
-    border:2px solid #4e625b;
+/* =========================================================
+   KWADRATOWA IKONA
+========================================================= */
+
+.upgrade-icon{
+
+    width:55px;
+    height:55px;
 
     display:flex;
-    justify-content:center;
+
     align-items:center;
+    justify-content:center;
 
-    background:#0b100f;
+    background:#0a100e;
+
+    border:2px solid #485b55;
+
+    overflow:hidden;
+
 }
 
-.upgradeIcon svg{
-    width:43px;
-    height:43px;
+.upgrade-icon svg{
+
+    width:48px;
+    height:48px;
+
 }
 
-.upgradeText{
+
+/* =========================================================
+   UPGRADE TEXT
+========================================================= */
+
+.upgrade-info{
+
     padding-left:8px;
+
 }
 
-.upgradeName{
-    font-size:13px;
-    font-weight:bold;
+.upgrade-name{
+
+    font-size:14px;
+
+    font-weight:700;
+
 }
 
-.upgradeEffect{
-    color:#92df74;
-    font-size:11px;
+.upgrade-effect{
+
     margin-top:4px;
+
+    font-size:12px;
+
+    color:#8bd773;
+
 }
 
-.upgradeCost{
-    color:#45dcb8;
-    font-size:11px;
+.upgrade-cost{
+
     margin-top:2px;
+
+    font-size:11px;
+
+    color:#48d8b5;
+
 }
 
 
-/* =====================================================
-   +ENTROPIA
-===================================================== */
+/* =========================================================
+   +1
+========================================================= */
 
-.clickText{
+.click-number{
+
     position:fixed;
 
     pointer-events:none;
 
-    color:#53efca;
+    z-index:20000;
+
+    color:#4bf1c5;
+
+    font-size:22px;
 
     font-weight:bold;
-    font-size:21px;
 
-    z-index:1000;
+    text-shadow:
+        0 2px 4px #000;
 
-    animation:clickFloat .8s forwards;
+    animation:
+        clickAnimation .75s forwards;
 
-    text-shadow:0 2px 3px #000;
 }
 
-@keyframes clickFloat{
+@keyframes clickAnimation{
+
     from{
+
         opacity:1;
-        transform:translate(-50%,-50%);
+
+        transform:
+            translate(-50%,-50%)
+            scale(1);
+
     }
 
     to{
+
         opacity:0;
-        transform:translate(-50%,-100px) scale(1.25);
+
+        transform:
+            translate(-50%,-100px)
+            scale(1.3);
+
     }
+
 }
 
 
-/* =====================================================
-   INFORMACJA PRZY ŁADOWANIU THREE
-===================================================== */
+/* =========================================================
+   INFO 3D
+========================================================= */
 
-#threeStatus{
+#three-info{
+
     position:fixed;
 
-    bottom:15px;
     left:15px;
+    bottom:15px;
 
-    background:rgba(0,0,0,.7);
+    z-index:10000;
 
-    padding:8px 12px;
+    padding:8px 11px;
 
     border-radius:8px;
 
-    font-size:12px;
+    background:rgba(0,0,0,.65);
 
-    color:#aaa;
+    color:#8a9994;
 
-    z-index:500;
+    font-size:11px;
+
+}
+
+
+/* =========================================================
+   DEBUG BUTTON
+========================================================= */
+
+#home-button{
+
+    position:fixed;
+
+    right:20px;
+    bottom:20px;
+
+    width:52px;
+    height:52px;
+
+    border-radius:50%;
+
+    border:1px solid #54655f;
+
+    background:#101815;
+
+    color:#4be9c0;
+
+    font-size:23px;
+
+    cursor:pointer;
+
+    z-index:10000;
+
+}
+
+#home-button:hover{
+
+    background:#19342d;
+
 }
 
 </style>
@@ -467,58 +699,61 @@ body{
         0 entropii
     </div>
 
-    <div id="perSecond">
+    <div id="production">
         +0 / s
     </div>
 
-    <div id="help">
-        Przeciągnij tło = poruszanie • kliknij tło = entropia
+    <div id="instructions">
+        Przeciągnij tło = poruszanie • kliknij tło = +1 entropii
     </div>
 
 </div>
 
 
-<div id="threeStatus">
+<div id="three-info">
     Ładowanie modeli 3D...
 </div>
+
+
+<button id="home-button">
+    ⌂
+</button>
 
 
 <div id="viewport">
 
     <div id="world">
 
-        <svg id="connections"></svg>
+        <svg id="lines"></svg>
 
     </div>
 
 </div>
 
 
-<script type="module">
+<script>
 
 /* =========================================================
-   THREE.JS
+   NAJWAŻNIEJSZE:
+
+   TEN SKRYPT NIE CZEKA NA THREE.JS.
+
+   NAJPIERW TWORZY CAŁĄ GRĘ.
 ========================================================= */
 
-let THREE;
 
-try{
+/* =========================================================
+   ELEMENTY
+========================================================= */
 
-    THREE = await import(
-        "https://cdn.jsdelivr.net/npm/three@0.180.0/+esm"
-    );
+const viewport =
+    document.getElementById("viewport");
 
-    document.getElementById("threeStatus").remove();
+const world =
+    document.getElementById("world");
 
-}
-catch(error){
-
-    document.getElementById("threeStatus").textContent =
-        "Nie udało się załadować Three.js.";
-
-    throw error;
-
-}
+const linesSVG =
+    document.getElementById("lines");
 
 
 /* =========================================================
@@ -527,414 +762,784 @@ catch(error){
 
 const generators = [
 
-{
-    id:"amino",
-    name:"Aminokwas",
-    y:3000,
+    {
 
-    cost:10,
-    production:.2,
+        id:"amino",
 
-    model:"amino",
+        name:"Aminokwas",
 
-    upgrades:[
-        ["Więcej aminokwasów",.5,80],
-        ["Łączenie aminokwasów",.5,120]
-    ]
-},
+        model:"amino",
 
-{
-    id:"dna",
-    name:"DNA",
-    y:2750,
+        y:3100,
 
-    cost:60,
-    production:1,
+        baseCost:10,
 
-    model:"dna",
+        production:0.2,
 
-    upgrades:[
-        ["Replikacja DNA",.5,350],
-        ["Naprawa DNA",.5,450]
-    ]
-},
+        upgrades:[
 
-{
-    id:"prokaryote",
-    name:"Komórka prokariotyczna",
-    y:2500,
+            {
+                name:"Więcej aminokwasów",
+                bonus:0.5,
+                cost:80
+            },
 
-    cost:300,
-    production:5,
+            {
+                name:"Łączenie aminokwasów",
+                bonus:0.5,
+                cost:120
+            }
 
-    model:"prokaryote",
+        ]
 
-    upgrades:[
-        ["Błona komórkowa",.5,1500],
-        ["Rybosomy",.5,1800]
-    ]
-},
+    },
 
-{
-    id:"eukaryote",
-    name:"Komórka eukariotyczna",
-    y:2250,
 
-    cost:1500,
-    production:18,
+    {
 
-    model:"eukaryote",
+        id:"dna",
 
-    upgrades:[
-        ["Jądro komórkowe",.5,8000],
-        ["Mitochondria",.5,9500]
-    ]
-},
+        name:"DNA",
 
-{
-    id:"sponge",
-    name:"Gąbka",
-    y:2000,
+        model:"dna",
 
-    cost:8000,
-    production:60,
+        y:2840,
 
-    model:"sponge",
+        baseCost:60,
 
-    upgrades:[
-        ["Choanocyty",.5,40000],
-        ["Lepszy przepływ wody",.5,50000]
-    ]
-},
+        production:1,
 
-{
-    id:"jellyfish",
-    name:"Meduza",
-    y:1750,
+        upgrades:[
 
-    cost:40000,
-    production:200,
+            {
+                name:"Replikacja DNA",
+                bonus:0.5,
+                cost:350
+            },
 
-    model:"jellyfish",
+            {
+                name:"Naprawa DNA",
+                bonus:0.5,
+                cost:450
+            }
 
-    upgrades:[
-        ["Parzydełka",.5,200000],
-        ["Sieć nerwowa",.5,250000]
-    ]
-},
+        ]
 
-{
-    id:"flatworm",
-    name:"Płaziniec",
-    y:1500,
+    },
 
-    cost:200000,
-    production:700,
 
-    model:"flatworm",
+    {
 
-    upgrades:[
-        ["Symetria dwuboczna",.5,1000000],
-        ["Cefalizacja",.5,1250000]
-    ]
-},
+        id:"prokaryote",
 
-{
-    id:"fish",
-    name:"Ryba",
-    y:1250,
+        name:"Komórka prokariotyczna",
 
-    cost:1000000,
-    production:2400,
+        model:"prokaryote",
 
-    model:"fish",
+        y:2580,
 
-    upgrades:[
-        ["Wydajniejsze skrzela",.5,5000000],
-        ["Lepsze płetwy",.5,6000000]
-    ]
-},
+        baseCost:300,
 
-{
-    id:"tetrapod",
-    name:"Czworonóg",
-    y:1000,
+        production:5,
 
-    cost:5000000,
-    production:8500,
+        upgrades:[
 
-    model:"tetrapod",
+            {
+                name:"Błona komórkowa",
+                bonus:0.5,
+                cost:1600
+            },
 
-    upgrades:[
-        ["Silniejsze kończyny",.5,25000000],
-        ["Lepsze płuca",.5,30000000]
-    ]
-},
+            {
+                name:"Rybosomy",
+                bonus:0.5,
+                cost:1900
+            }
 
-{
-    id:"mammal",
-    name:"Ssak",
-    y:750,
+        ]
 
-    cost:25000000,
-    production:30000,
+    },
 
-    model:"mammal",
 
-    upgrades:[
-        ["Stałocieplność",.5,125000000],
-        ["Opieka nad młodymi",.5,150000000]
-    ]
-},
+    {
 
-{
-    id:"primate",
-    name:"Naczelne",
-    y:500,
+        id:"eukaryote",
 
-    cost:125000000,
-    production:110000,
+        name:"Komórka eukariotyczna",
 
-    model:"primate",
+        model:"eukaryote",
 
-    upgrades:[
-        ["Chwytne dłonie",.5,600000000],
-        ["Większy mózg",.5,750000000]
-    ]
-},
+        y:2320,
 
-{
-    id:"human",
-    name:"Człowiek",
-    y:250,
+        baseCost:1600,
 
-    cost:650000000,
-    production:400000,
+        production:18,
 
-    model:"human",
+        upgrades:[
 
-    upgrades:[
-        ["Mowa",.5,3000000000],
-        ["Myślenie abstrakcyjne",.5,4000000000]
-    ]
-}
+            {
+                name:"Jądro komórkowe",
+                bonus:0.5,
+                cost:8000
+            },
+
+            {
+                name:"Mitochondria",
+                bonus:0.5,
+                cost:10000
+            }
+
+        ]
+
+    },
+
+
+    {
+
+        id:"sponge",
+
+        name:"Gąbka",
+
+        model:"sponge",
+
+        y:2060,
+
+        baseCost:8000,
+
+        production:65,
+
+        upgrades:[
+
+            {
+                name:"Choanocyty",
+                bonus:0.5,
+                cost:40000
+            },
+
+            {
+                name:"Przepływ wody",
+                bonus:0.5,
+                cost:50000
+            }
+
+        ]
+
+    },
+
+
+    {
+
+        id:"jellyfish",
+
+        name:"Meduza",
+
+        model:"jellyfish",
+
+        y:1800,
+
+        baseCost:40000,
+
+        production:220,
+
+        upgrades:[
+
+            {
+                name:"Parzydełka",
+                bonus:0.5,
+                cost:210000
+            },
+
+            {
+                name:"Sieć nerwowa",
+                bonus:0.5,
+                cost:250000
+            }
+
+        ]
+
+    },
+
+
+    {
+
+        id:"flatworm",
+
+        name:"Płaziniec",
+
+        model:"flatworm",
+
+        y:1540,
+
+        baseCost:210000,
+
+        production:750,
+
+        upgrades:[
+
+            {
+                name:"Symetria dwuboczna",
+                bonus:0.5,
+                cost:1100000
+            },
+
+            {
+                name:"Cefalizacja",
+                bonus:0.5,
+                cost:1300000
+            }
+
+        ]
+
+    },
+
+
+    {
+
+        id:"fish",
+
+        name:"Ryba",
+
+        model:"fish",
+
+        y:1280,
+
+        baseCost:1100000,
+
+        production:2700,
+
+        upgrades:[
+
+            {
+                name:"Wydajniejsze skrzela",
+                bonus:0.5,
+                cost:5500000
+            },
+
+            {
+                name:"Lepsze płetwy",
+                bonus:0.5,
+                cost:6500000
+            }
+
+        ]
+
+    },
+
+
+    {
+
+        id:"tetrapod",
+
+        name:"Czworonóg",
+
+        model:"tetrapod",
+
+        y:1020,
+
+        baseCost:5500000,
+
+        production:9500,
+
+        upgrades:[
+
+            {
+                name:"Silniejsze kończyny",
+                bonus:0.5,
+                cost:28000000
+            },
+
+            {
+                name:"Lepsze płuca",
+                bonus:0.5,
+                cost:33000000
+            }
+
+        ]
+
+    },
+
+
+    {
+
+        id:"mammal",
+
+        name:"Ssak",
+
+        model:"mammal",
+
+        y:760,
+
+        baseCost:28000000,
+
+        production:34000,
+
+        upgrades:[
+
+            {
+                name:"Stałocieplność",
+                bonus:0.5,
+                cost:140000000
+            },
+
+            {
+                name:"Opieka nad młodymi",
+                bonus:0.5,
+                cost:165000000
+            }
+
+        ]
+
+    },
+
+
+    {
+
+        id:"primate",
+
+        name:"Naczelne",
+
+        model:"primate",
+
+        y:500,
+
+        baseCost:140000000,
+
+        production:120000,
+
+        upgrades:[
+
+            {
+                name:"Chwytne dłonie",
+                bonus:0.5,
+                cost:700000000
+            },
+
+            {
+                name:"Większy mózg",
+                bonus:0.5,
+                cost:820000000
+            }
+
+        ]
+
+    },
+
+
+    {
+
+        id:"human",
+
+        name:"Człowiek",
+
+        model:"human",
+
+        y:240,
+
+        baseCost:700000000,
+
+        production:430000,
+
+        upgrades:[
+
+            {
+                name:"Mowa",
+                bonus:0.5,
+                cost:3500000000
+            },
+
+            {
+                name:"Myślenie abstrakcyjne",
+                bonus:0.5,
+                cost:4200000000
+            }
+
+        ]
+
+    }
 
 ];
 
 
-generators.forEach(g=>{
+/* =========================================================
+   STAN
+========================================================= */
 
-    g.level=0;
+let entropy = 0;
 
-    g.upgrades=g.upgrades.map(u=>({
+let clickPower = 1;
 
-        name:u[0],
-        bonus:u[1],
-        cost:u[2],
-        bought:false
 
-    }));
+generators.forEach(g => {
+
+    g.level = 0;
+
+    g.upgrades.forEach(u => {
+
+        u.bought = false;
+
+    });
 
 });
 
 
-let entropy=0;
+/* =========================================================
+   IKONY ULEPSZEŃ
 
-const WORLD_WIDTH=1400;
+   Są SVG, bo to tylko małe kwadraty.
+========================================================= */
 
-const world=
-    document.getElementById("world");
+function upgradeIcon(type){
 
-const viewport=
-    document.getElementById("viewport");
+    if(type === "dna"){
 
-const connections=
-    document.getElementById("connections");
+        return `
+
+        <svg viewBox="0 0 100 100">
+
+            <path
+                d="M30 10 C75 25 75 75 30 90"
+                fill="none"
+                stroke="#34bbef"
+                stroke-width="8"
+            />
+
+            <path
+                d="M70 10 C25 25 25 75 70 90"
+                fill="none"
+                stroke="#be68dd"
+                stroke-width="8"
+            />
+
+            <g stroke="#ddd" stroke-width="3">
+
+                <line x1="38" y1="22" x2="62" y2="22"/>
+                <line x1="31" y1="40" x2="69" y2="40"/>
+                <line x1="31" y1="60" x2="69" y2="60"/>
+                <line x1="38" y1="78" x2="62" y2="78"/>
+
+            </g>
+
+        </svg>
+
+        `;
+
+    }
+
+
+    if(type === "cell"){
+
+        return `
+
+        <svg viewBox="0 0 100 100">
+
+            <circle
+                cx="50"
+                cy="50"
+                r="34"
+                fill="#37695c"
+                stroke="#6fe4c8"
+                stroke-width="5"
+            />
+
+            <circle
+                cx="43"
+                cy="45"
+                r="13"
+                fill="#82628f"
+            />
+
+            <circle
+                cx="67"
+                cy="61"
+                r="7"
+                fill="#c9795c"
+            />
+
+        </svg>
+
+        `;
+
+    }
+
+
+    return `
+
+    <svg viewBox="0 0 100 100">
+
+        <circle
+            cx="50"
+            cy="50"
+            r="31"
+            fill="#246b59"
+            stroke="#69e2c3"
+            stroke-width="5"
+        />
+
+        <path
+            d="M50 27 V73 M27 50 H73"
+            stroke="#e7fff9"
+            stroke-width="9"
+            stroke-linecap="round"
+        />
+
+    </svg>
+
+    `;
+
+}
 
 
 /* =========================================================
-   PROSTA IKONA UPGRADE
+   TWORZENIE GRAFIKÓW
+
+   WAŻNE:
+   Tutaj NIE UŻYWAMY THREE.
 ========================================================= */
 
-const upgradeSVG=`
-
-<svg viewBox="0 0 100 100">
-
-<circle
-cx="50"
-cy="50"
-r="30"
-fill="#266e5d"
-stroke="#79e4c9"
-stroke-width="5"
-/>
-
-<path
-d="M50 28 V72 M28 50 H72"
-stroke="#dcfff7"
-stroke-width="9"
-stroke-linecap="round"
-/>
-
-</svg>
-
-`;
+const modelCanvases = [];
 
 
-/* =========================================================
-   GENEROWANIE HTML
-========================================================= */
+generators.forEach((g,index) => {
 
-generators.forEach((g,index)=>{
+    /* GENERATOR */
 
-    const generator=
+    const generator =
         document.createElement("div");
 
-    generator.className="generator";
 
-    generator.id="generator-"+g.id;
-
-    generator.style.top=
-        g.y+"px";
+    generator.className =
+        "generator";
 
 
-    const canvas=
+    generator.id =
+        "generator-" + g.id;
+
+
+    generator.style.top =
+        g.y + "px";
+
+
+    /* CANVAS */
+
+    const canvas =
         document.createElement("canvas");
 
-    canvas.className=
-        "modelCanvas";
 
-    canvas.width=230;
-    canvas.height=230;
+    canvas.className =
+        "model-canvas";
+
+
+    canvas.width = 240;
+    canvas.height = 240;
+
 
     generator.appendChild(canvas);
 
 
-    const level=
+    modelCanvases.push({
+
+        canvas:canvas,
+
+        model:g.model,
+
+        generator:g
+
+    });
+
+
+    /* NA RAZIE FALLBACK 2D */
+
+    drawFallbackModel(
+        canvas,
+        g.model
+    );
+
+
+    /* LEVEL */
+
+    const level =
         document.createElement("div");
 
-    level.className="level";
 
-    level.textContent="x0";
+    level.className =
+        "level";
+
+
+    level.textContent =
+        "x0";
+
 
     generator.appendChild(level);
 
 
-    const name=
+    /* NAZWA */
+
+    const name =
         document.createElement("div");
 
-    name.className=
-        "generatorName";
 
-    name.textContent=
+    name.className =
+        "generator-name";
+
+
+    name.textContent =
         g.name;
+
 
     generator.appendChild(name);
 
 
-    const cost=
+    /* CENA */
+
+    const cost =
         document.createElement("div");
 
-    cost.className=
-        "generatorCost";
+
+    cost.className =
+        "generator-cost";
+
 
     generator.appendChild(cost);
 
 
+    /* KLIK */
+
     generator.addEventListener(
+
         "pointerdown",
-        e=>e.stopPropagation()
+
+        event => {
+
+            event.stopPropagation();
+
+        }
+
     );
 
 
     generator.addEventListener(
-        "click",
-        e=>{
 
-            e.stopPropagation();
+        "click",
+
+        event => {
+
+            event.stopPropagation();
 
             buyGenerator(index);
 
         }
+
     );
 
 
     world.appendChild(generator);
 
 
+    /* UPGRADE LEWY */
+
     createUpgrade(
         g,
         index,
         0,
-        430
+        500
     );
 
+
+    /* UPGRADE PRAWY */
 
     createUpgrade(
         g,
         index,
         1,
-        970
-    );
-
-
-    create3DModel(
-        canvas,
-        g.model
+        1100
     );
 
 });
 
 
 /* =========================================================
-   UPGRADE
+   TWORZENIE UPGRADE
 ========================================================= */
 
 function createUpgrade(
-    generator,
-    gIndex,
-    uIndex,
+    g,
+    generatorIndex,
+    upgradeIndex,
     x
 ){
 
-    const upgrade=
-        generator.upgrades[uIndex];
+    const u =
+        g.upgrades[upgradeIndex];
 
 
-    const element=
+    const element =
         document.createElement("div");
 
 
-    element.className="upgrade";
-
-    element.id=
-        `upgrade-${generator.id}-${uIndex}`;
-
-    element.style.left=
-        x+"px";
-
-    element.style.top=
-        generator.y+"px";
+    element.className =
+        "upgrade";
 
 
-    element.innerHTML=`
+    element.id =
+        `upgrade-${g.id}-${upgradeIndex}`;
 
-        <div class="upgradeIcon">
-            ${upgradeSVG}
+
+    element.style.left =
+        x + "px";
+
+
+    element.style.top =
+        g.y + "px";
+
+
+    let iconType = "normal";
+
+
+    if(
+        g.id === "dna"
+    ){
+
+        iconType = "dna";
+
+    }
+
+
+    if(
+        g.id === "prokaryote" ||
+        g.id === "eukaryote"
+    ){
+
+        iconType = "cell";
+
+    }
+
+
+    element.innerHTML = `
+
+        <div class="upgrade-icon">
+
+            ${upgradeIcon(iconType)}
+
         </div>
 
-        <div class="upgradeText">
+        <div class="upgrade-info">
 
-            <div class="upgradeName">
-                ${upgrade.name}
+            <div class="upgrade-name">
+
+                ${u.name}
+
             </div>
 
-            <div class="upgradeEffect">
-                +${upgrade.bonus*100}% produkcji
+            <div class="upgrade-effect">
+
+                +${Math.round(u.bonus * 100)}% produkcji
+
             </div>
 
-            <div class="upgradeCost">
-                ${format(upgrade.cost)} entropii
+            <div class="upgrade-cost">
+
+                ${format(u.cost)} entropii
+
             </div>
 
         </div>
@@ -943,23 +1548,33 @@ function createUpgrade(
 
 
     element.addEventListener(
+
         "pointerdown",
-        e=>e.stopPropagation()
+
+        event => {
+
+            event.stopPropagation();
+
+        }
+
     );
 
 
     element.addEventListener(
-        "click",
-        e=>{
 
-            e.stopPropagation();
+        "click",
+
+        event => {
+
+            event.stopPropagation();
 
             buyUpgrade(
-                gIndex,
-                uIndex
+                generatorIndex,
+                upgradeIndex
             );
 
         }
+
     );
 
 
@@ -969,1103 +1584,286 @@ function createUpgrade(
 
 
 /* =========================================================
-   MODELE THREE.JS
+   FALLBACK MODELI
+
+   Dzięki temu nawet bez THREE
+   graf NIE JEST PUSTY.
 ========================================================= */
 
-const animations=[];
+function drawFallbackModel(canvas,type){
+
+    const ctx =
+        canvas.getContext("2d");
 
 
-/* ---------------------------------------------------------
-   MATERIAŁ
---------------------------------------------------------- */
-
-function material(
-    color,
-    roughness=.55,
-    metalness=.05
-){
-
-    return new THREE.MeshStandardMaterial({
-
-        color,
-        roughness,
-        metalness
-
-    });
-
-}
-
-
-/* ---------------------------------------------------------
-   KULA
---------------------------------------------------------- */
-
-function sphere(
-    radius,
-    color
-){
-
-    const mesh=
-        new THREE.Mesh(
-
-            new THREE.SphereGeometry(
-                radius,
-                20,
-                16
-            ),
-
-            material(color)
-
-        );
-
-
-    return mesh;
-
-}
-
-
-/* ---------------------------------------------------------
-   MODEL
---------------------------------------------------------- */
-
-function create3DModel(
-    canvas,
-    type
-){
-
-    const renderer=
-        new THREE.WebGLRenderer({
-
-            canvas,
-            alpha:true,
-            antialias:true
-
-        });
-
-
-    renderer.setSize(
-        230,
-        230,
-        false
-    );
-
-
-    renderer.setPixelRatio(
-        Math.min(
-            devicePixelRatio,
-            2
-        )
-    );
-
-
-    const scene=
-        new THREE.Scene();
-
-
-    const camera=
-        new THREE.PerspectiveCamera(
-            35,
-            1,
-            .1,
-            100
-        );
-
-
-    camera.position.set(
+    ctx.clearRect(
         0,
         0,
-        7
+        canvas.width,
+        canvas.height
     );
 
 
-    /* ŚWIATŁO */
+    const cx =
+        canvas.width / 2;
 
-    scene.add(
-        new THREE.AmbientLight(
-            0xffffff,
-            1.6
-        )
-    );
+    const cy =
+        canvas.height / 2;
 
 
-    const keyLight=
-        new THREE.DirectionalLight(
-            0xffffff,
-            3
+    const gradient =
+        ctx.createRadialGradient(
+
+            cx - 25,
+            cy - 30,
+            5,
+
+            cx,
+            cy,
+            80
+
         );
 
-    keyLight.position.set(
-        4,
-        6,
-        5
+
+    gradient.addColorStop(
+        0,
+        "#70e6c5"
     );
 
-    scene.add(keyLight);
+    gradient.addColorStop(
+        0.55,
+        "#397968"
+    );
 
-
-    const rim=
-        new THREE.DirectionalLight(
-            0x46e8c2,
-            2
-        );
-
-    rim.position.set(
-        -5,
+    gradient.addColorStop(
         1,
-        -3
-    );
-
-    scene.add(rim);
-
-
-    const group=
-        new THREE.Group();
-
-
-    scene.add(group);
-
-
-    /* =====================================================
-       AMINOKWAS
-    ===================================================== */
-
-    if(type==="amino"){
-
-        const atoms=[
-
-            [-.8,0,0,.38,0xe74c4c],
-            [0,0,0,.42,0x668ed2],
-            [.85,.25,0,.32,0xffffff],
-            [0,.9,.1,.30,0xffffff],
-            [-.9,-.75,.2,.32,0xe74c4c]
-
-        ];
-
-
-        atoms.forEach(a=>{
-
-            const atom=
-                sphere(
-                    a[3],
-                    a[4]
-                );
-
-            atom.position.set(
-                a[0],
-                a[1],
-                a[2]
-            );
-
-            group.add(atom);
-
-        });
-
-
-        addBond(
-            group,
-            [-.8,0,0],
-            [0,0,0]
-        );
-
-        addBond(
-            group,
-            [0,0,0],
-            [.85,.25,0]
-        );
-
-        addBond(
-            group,
-            [0,0,0],
-            [0,.9,.1]
-        );
-
-        addBond(
-            group,
-            [-.8,0,0],
-            [-.9,-.75,.2]
-        );
-
-    }
-
-
-    /* =====================================================
-       DNA – PRAWDZIWA SPIRALA
-    ===================================================== */
-
-    else if(type==="dna"){
-
-        const blue=
-            material(0x29b8ef);
-
-        const purple=
-            material(0xb967db);
-
-
-        for(let i=0;i<18;i++){
-
-            const y=
-                (i-8.5)*.18;
-
-            const angle=
-                i*.65;
-
-
-            const x1=
-                Math.sin(angle)*.6;
-
-            const z1=
-                Math.cos(angle)*.6;
-
-
-            const x2=
-                -x1;
-
-            const z2=
-                -z1;
-
-
-            const a=
-                sphere(.12,0x29b8ef);
-
-            a.position.set(
-                x1,y,z1
-            );
-
-
-            const b=
-                sphere(.12,0xb967db);
-
-            b.position.set(
-                x2,y,z2
-            );
-
-
-            group.add(a,b);
-
-
-            if(i%2===0){
-
-                addBond(
-                    group,
-                    [x1,y,z1],
-                    [x2,y,z2],
-                    .04
-                );
-
-            }
-
-        }
-
-    }
-
-
-    /* =====================================================
-       PROKARIOT
-    ===================================================== */
-
-    else if(type==="prokaryote"){
-
-        const cell=
-            new THREE.Mesh(
-
-                new THREE.SphereGeometry(
-                    1,
-                    28,
-                    20
-                ),
-
-                material(0x57946b)
-
-            );
-
-
-        cell.scale.set(
-            1.45,
-            .72,
-            .72
-        );
-
-
-        group.add(cell);
-
-
-        for(let i=0;i<10;i++){
-
-            const dot=
-                sphere(
-                    .07,
-                    0xd4e99c
-                );
-
-            dot.position.set(
-                Math.random()*1.6-.8,
-                Math.random()*.65-.325,
-                .68
-            );
-
-            group.add(dot);
-
-        }
-
-
-        group.rotation.z=.18;
-
-    }
-
-
-    /* =====================================================
-       EUKARIOT
-    ===================================================== */
-
-    else if(type==="eukaryote"){
-
-        const cell=
-            sphere(
-                1.25,
-                0x47778b
-            );
-
-
-        group.add(cell);
-
-
-        const nucleus=
-            sphere(
-                .48,
-                0x9162a0
-            );
-
-        nucleus.position.set(
-            -.2,
-            .1,
-            .85
-        );
-
-        group.add(nucleus);
-
-
-        for(let i=0;i<4;i++){
-
-            const mito=
-                sphere(
-                    .18,
-                    0xd47d5c
-                );
-
-            mito.scale.set(
-                1.6,
-                .65,
-                .65
-            );
-
-
-            mito.position.set(
-                Math.cos(i*1.6)*.65,
-                Math.sin(i*1.8)*.65,
-                .75
-            );
-
-
-            group.add(mito);
-
-        }
-
-    }
-
-
-    /* =====================================================
-       GĄBKA
-    ===================================================== */
-
-    else if(type==="sponge"){
-
-        for(let i=0;i<5;i++){
-
-            const radius=
-                .35+
-                Math.random()*.16;
-
-
-            const height=
-                1+
-                Math.random()*1.2;
-
-
-            const tube=
-                new THREE.Mesh(
-
-                    new THREE.CylinderGeometry(
-                        radius*.75,
-                        radius,
-                        height,
-                        14,
-                        1,
-                        true
-                    ),
-
-                    material(
-                        0xd58b37,
-                        .8
-                    )
-
-                );
-
-
-            tube.position.set(
-
-                (i-2)*.38,
-
-                height/2-.7,
-
-                (i%2)*.22-.1
-
-            );
-
-
-            group.add(tube);
-
-        }
-
-    }
-
-
-    /* =====================================================
-       MEDUZA
-    ===================================================== */
-
-    else if(type==="jellyfish"){
-
-        const head=
-            new THREE.Mesh(
-
-                new THREE.SphereGeometry(
-                    1.05,
-                    28,
-                    18,
-                    0,
-                    Math.PI*2,
-                    0,
-                    Math.PI/2
-                ),
-
-                new THREE.MeshStandardMaterial({
-
-                    color:0x8fa1e6,
-
-                    transparent:true,
-
-                    opacity:.82,
-
-                    roughness:.25
-
-                })
-
-            );
-
-
-        head.rotation.x=
-            Math.PI;
-
-
-        group.add(head);
-
-
-        for(let i=0;i<7;i++){
-
-            const tentacle=
-                new THREE.Mesh(
-
-                    new THREE.CylinderGeometry(
-                        .035,
-                        .06,
-                        1.5,
-                        8
-                    ),
-
-                    material(
-                        0xa47bd2
-                    )
-
-                );
-
-
-            tentacle.position.set(
-                (i-3)*.2,
-                -.8,
-                Math.sin(i)*.2
-            );
-
-
-            tentacle.rotation.z=
-                Math.sin(i)*.15;
-
-
-            group.add(tentacle);
-
-        }
-
-    }
-
-
-    /* =====================================================
-       PŁAZINIEC
-    ===================================================== */
-
-    else if(type==="flatworm"){
-
-        const worm=
-            new THREE.Mesh(
-
-                new THREE.SphereGeometry(
-                    1,
-                    30,
-                    18
-                ),
-
-                material(
-                    0xb85f56,
-                    .8
-                )
-
-            );
-
-
-        worm.scale.set(
-            1.5,
-            .42,
-            .18
-        );
-
-
-        group.add(worm);
-
-
-        const eye1=
-            sphere(
-                .07,
-                0x111111
-            );
-
-        eye1.position.set(
-            -.75,
-            .12,
-            .2
-        );
-
-
-        const eye2=
-            eye1.clone();
-
-        eye2.position.x=
-            -.55;
-
-
-        group.add(
-            eye1,
-            eye2
-        );
-
-    }
-
-
-    /* =====================================================
-       RYBA
-    ===================================================== */
-
-    else if(type==="fish"){
-
-        makeAnimalBody(
-            group,
-            0x428ca5,
-            "fish"
-        );
-
-    }
-
-
-    /* =====================================================
-       CZWORONÓG
-    ===================================================== */
-
-    else if(type==="tetrapod"){
-
-        makeAnimalBody(
-            group,
-            0x668d49,
-            "tetrapod"
-        );
-
-    }
-
-
-    /* =====================================================
-       SSAK
-    ===================================================== */
-
-    else if(type==="mammal"){
-
-        makeAnimalBody(
-            group,
-            0x756252,
-            "mammal"
-        );
-
-    }
-
-
-    /* =====================================================
-       NACZELNE
-    ===================================================== */
-
-    else if(type==="primate"){
-
-        makePrimate(
-            group,
-            false
-        );
-
-    }
-
-
-    /* =====================================================
-       CZŁOWIEK
-    ===================================================== */
-
-    else if(type==="human"){
-
-        makePrimate(
-            group,
-            true
-        );
-
-    }
-
-
-    /* SKALA */
-
-    group.scale.setScalar(
-        .85
+        "#143129"
     );
 
 
-    /* KAŻDY MODEL MA SWOJĄ FAZĘ */
-
-    animations.push({
-
-        renderer,
-        scene,
-        camera,
-        group,
-
-        offset:
-            Math.random()*
-            Math.PI*2
-
-    });
-
-}
+    ctx.fillStyle =
+        gradient;
 
 
-/* =========================================================
-   ŁĄCZENIE ATOMÓW
-========================================================= */
+    /* DEFAULT */
 
-function addBond(
-    group,
-    start,
-    end,
-    radius=.065
-){
+    ctx.beginPath();
 
-    const startVec=
-        new THREE.Vector3(
-            ...start
-        );
+    ctx.ellipse(
+        cx,
+        cy,
+        65,
+        45,
+        0,
+        0,
+        Math.PI * 2
+    );
 
-    const endVec=
-        new THREE.Vector3(
-            ...end
-        );
+    ctx.fill();
 
 
-    const direction=
-        new THREE.Vector3()
-        .subVectors(
-            endVec,
-            startVec
-        );
+    ctx.fillStyle =
+        "#e8fff9";
 
 
-    const length=
-        direction.length();
+    ctx.font =
+        "bold 24px Arial";
 
 
-    const cylinder=
-        new THREE.Mesh(
-
-            new THREE.CylinderGeometry(
-                radius,
-                radius,
-                length,
-                10
-            ),
-
-            material(
-                0xc8cecd,
-                .4,
-                .15
-            )
-
-        );
+    ctx.textAlign =
+        "center";
 
 
-    cylinder.position
-        .copy(startVec)
-        .add(endVec)
-        .multiplyScalar(.5);
+    ctx.textBaseline =
+        "middle";
 
 
-    cylinder.quaternion
-        .setFromUnitVectors(
+    const shortNames = {
 
-            new THREE.Vector3(
-                0,1,0
-            ),
+        amino:"AA",
 
-            direction
-                .clone()
-                .normalize()
+        dna:"DNA",
 
-        );
+        prokaryote:"PRO",
+
+        eukaryote:"EUK",
+
+        sponge:"G",
+
+        jellyfish:"M",
+
+        flatworm:"P",
+
+        fish:"R",
+
+        tetrapod:"4",
+
+        mammal:"S",
+
+        primate:"N",
+
+        human:"H"
+
+    };
 
 
-    group.add(
-        cylinder
+    ctx.fillText(
+
+        shortNames[type] || "?",
+
+        cx,
+        cy
+
     );
 
 }
 
 
 /* =========================================================
-   ZWIERZĘTA 3D
+   LINIE
 ========================================================= */
 
-function makeAnimalBody(
-    group,
-    color,
-    type
-){
+function drawLines(){
 
-    const body=
-        sphere(
-            1,
-            color
-        );
+    linesSVG.innerHTML = "";
 
 
-    body.scale.set(
-        1.35,
-        .63,
-        .55
-    );
-
-
-    group.add(body);
-
-
-    const head=
-        sphere(
-            .48,
-            color
-        );
-
-
-    head.position.set(
-        1.15,
-        .22,
-        0
-    );
-
-
-    group.add(head);
-
-
-    const eye=
-        sphere(
-            .07,
-            0x050505
-        );
-
-
-    eye.position.set(
-        1.48,
-        .34,
-        .35
-    );
-
-
-    group.add(eye);
-
-
-    if(type==="fish"){
-
-        const tail=
-            new THREE.Mesh(
-
-                new THREE.ConeGeometry(
-                    .55,
-                    .9,
-                    3
-                ),
-
-                material(color)
-
-            );
-
-
-        tail.rotation.z=
-            Math.PI/2;
-
-
-        tail.position.x=
-            -1.45;
-
-
-        group.add(tail);
-
-    }
-
-    else{
-
-        const legPositions=[
-            [-.65,-.55,.35],
-            [.55,-.55,.35],
-            [-.65,-.55,-.35],
-            [.55,-.55,-.35]
-        ];
-
-
-        legPositions.forEach(pos=>{
-
-            const leg=
-                new THREE.Mesh(
-
-                    new THREE.CylinderGeometry(
-                        .10,
-                        .13,
-                        .9,
-                        10
-                    ),
-
-                    material(color)
-
-                );
-
-
-            leg.position.set(
-                ...pos
-            );
-
-
-            group.add(leg);
-
-        });
-
-    }
-
-}
-
-
-/* =========================================================
-   NACZELNY / CZŁOWIEK
-========================================================= */
-
-function makePrimate(
-    group,
-    human
-){
-
-    const skin=
-        human
-        ? 0xc8936f
-        : 0x70503d;
-
-
-    const torso=
-        sphere(
-            .7,
-            human
-                ? 0x426b91
-                : 0x5c4436
-        );
-
-
-    torso.scale.set(
-        .7,
-        1.25,
-        .55
-    );
-
-
-    group.add(torso);
-
-
-    const head=
-        sphere(
-            .48,
-            skin
-        );
-
-
-    head.position.y=
-        1.25;
-
-
-    group.add(head);
-
-
-    const limbMat=
-        material(
-            human
-                ? 0xb98363
-                : 0x604638
-        );
-
-
-    function limb(
-        x,
-        y,
-        z,
-        h,
-        rot
+    for(
+        let i = 0;
+        i < generators.length - 1;
+        i++
     ){
 
-        const m=
-            new THREE.Mesh(
-
-                new THREE.CylinderGeometry(
-                    .11,
-                    .14,
-                    h,
-                    10
-                ),
-
-                limbMat
-
-            );
+        const current =
+            generators[i];
 
 
-        m.position.set(
-            x,y,z
+        const next =
+            generators[i + 1];
+
+
+        createSVGLine(
+
+            800,
+            current.y,
+
+            800,
+            next.y,
+
+            "main-line",
+
+            "main-line-" + i
+
         );
-
-
-        m.rotation.z=
-            rot;
-
-
-        group.add(m);
 
     }
 
 
-    limb(
-        -.62,
-        .2,
-        0,
-        1.35,
-        human ? .18 : .6
-    );
+    generators.forEach(
+        (g,index) => {
 
+            createSVGLine(
 
-    limb(
-        .62,
-        .2,
-        0,
-        1.35,
-        human ? -.18 : -.6
-    );
+                800,
+                g.y,
 
+                500,
+                g.y,
 
-    limb(
-        -.3,
-        -1,
-        0,
-        1.45,
-        human ? .05 : .25
-    );
+                "upgrade-line",
 
+                `upgrade-line-${index}-0`
 
-    limb(
-        .3,
-        -1,
-        0,
-        1.45,
-        human ? -.05 : -.25
-    );
-
-}
-
-
-/* =========================================================
-   JEDNA PĘTLA ANIMACJI DLA WSZYSTKICH MODELI
-
-   1 obrót = 5 sekund.
-========================================================= */
-
-function animate(time){
-
-    const seconds=
-        time/1000;
-
-
-    animations.forEach(a=>{
-
-        a.group.rotation.y=
-
-            a.offset +
-
-            seconds *
-            (
-                Math.PI*2/5
             );
 
 
-        a.group.rotation.x=
-            Math.sin(
-                seconds*.45
-            )*.08;
+            createSVGLine(
 
+                800,
+                g.y,
 
-        a.renderer.render(
-            a.scene,
-            a.camera
-        );
+                1100,
+                g.y,
 
-    });
+                "upgrade-line",
 
+                `upgrade-line-${index}-1`
 
-    requestAnimationFrame(
-        animate
+            );
+
+        }
     );
 
 }
 
 
-requestAnimationFrame(
-    animate
-);
+function createSVGLine(
+    x1,
+    y1,
+    x2,
+    y2,
+    className,
+    id
+){
+
+    const line =
+        document.createElementNS(
+
+            "http://www.w3.org/2000/svg",
+
+            "line"
+
+        );
+
+
+    line.setAttribute(
+        "x1",
+        x1
+    );
+
+
+    line.setAttribute(
+        "y1",
+        y1
+    );
+
+
+    line.setAttribute(
+        "x2",
+        x2
+    );
+
+
+    line.setAttribute(
+        "y2",
+        y2
+    );
+
+
+    line.setAttribute(
+        "class",
+        className
+    );
+
+
+    line.id =
+        id;
+
+
+    linesSVG.appendChild(line);
+
+}
 
 
 /* =========================================================
-   KOSZT GENERATORA
+   KOSZT
 ========================================================= */
 
 function generatorCost(g){
 
     return Math.floor(
 
-        g.cost *
+        g.baseCost *
 
         Math.pow(
             1.17,
@@ -2078,26 +1876,27 @@ function generatorCost(g){
 
 
 /* =========================================================
-   MNOŻNIK
+   BONUS
 ========================================================= */
 
-function multiplier(g){
+function generatorMultiplier(g){
 
-    let value=1;
+    let multiplier = 1;
 
 
-    g.upgrades.forEach(u=>{
+    g.upgrades.forEach(u => {
 
         if(u.bought){
 
-            value+=u.bonus;
+            multiplier +=
+                u.bonus;
 
         }
 
     });
 
 
-    return value;
+    return multiplier;
 
 }
 
@@ -2106,57 +1905,67 @@ function multiplier(g){
    PRODUKCJA
 ========================================================= */
 
-function totalProduction(){
+function getProduction(){
 
-    let total=0;
+    let production = 0;
 
 
-    generators.forEach(g=>{
+    generators.forEach(g => {
 
-        total+=
+        production +=
 
             g.production *
 
             g.level *
 
-            multiplier(g);
+            generatorMultiplier(g);
 
     });
 
 
-    return total;
+    return production;
 
 }
 
 
 /* =========================================================
-   KUPOWANIE GENERATORA
+   KUP GENERATOR
 ========================================================= */
 
 function buyGenerator(index){
 
-    const g=
+    const g =
         generators[index];
 
 
-    if(
-        index>0 &&
-        generators[index-1].level===0
-    ){
+    const unlocked =
+
+        index === 0 ||
+
+        generators[index - 1]
+        .level > 0;
+
+
+    if(!unlocked){
+
         return;
+
     }
 
 
-    const price=
+    const cost =
         generatorCost(g);
 
 
-    if(entropy<price){
+    if(entropy < cost){
+
         return;
+
     }
 
 
-    entropy-=price;
+    entropy -= cost;
+
 
     g.level++;
 
@@ -2167,7 +1976,7 @@ function buyGenerator(index){
 
 
 /* =========================================================
-   KUPOWANIE UPGRADE
+   KUP UPGRADE
 ========================================================= */
 
 function buyUpgrade(
@@ -2175,28 +1984,41 @@ function buyUpgrade(
     upgradeIndex
 ){
 
-    const g=
+    const g =
         generators[generatorIndex];
 
-    const u=
+
+    const u =
         g.upgrades[upgradeIndex];
 
 
-    if(g.level===0)
+    if(g.level === 0){
+
         return;
 
+    }
 
-    if(u.bought)
+
+    if(u.bought){
+
         return;
 
+    }
 
-    if(entropy<u.cost)
+
+    if(entropy < u.cost){
+
         return;
 
+    }
 
-    entropy-=u.cost;
 
-    u.bought=true;
+    entropy -=
+        u.cost;
+
+
+    u.bought =
+        true;
 
 
     updateUI();
@@ -2205,193 +2027,102 @@ function buyUpgrade(
 
 
 /* =========================================================
-   FORMAT
+   FORMATOWANIE LICZB
 ========================================================= */
 
-function format(n){
+function format(number){
 
-    if(n<1e3)
-        return Math.floor(n).toString();
+    if(number < 1000){
 
-
-    if(n<1e6)
-        return (n/1e3).toFixed(1)+" tys.";
-
-
-    if(n<1e9)
-        return (n/1e6).toFixed(2)+" mln";
-
-
-    if(n<1e12)
-        return (n/1e9).toFixed(2)+" mld";
-
-
-    if(n<1e15)
-        return (n/1e12).toFixed(2)+" bln";
-
-
-    return n.toExponential(2);
-
-}
-
-
-/* =========================================================
-   LINIE
-========================================================= */
-
-function drawLines(){
-
-    connections.innerHTML="";
-
-
-    for(
-        let i=0;
-        i<generators.length-1;
-        i++
-    ){
-
-        const a=
-            generators[i];
-
-        const b=
-            generators[i+1];
-
-
-        createLine(
-            700,
-            a.y,
-            700,
-            b.y,
-            "mainLine",
-            "main-"+i
-        );
+        return Math.floor(
+            number
+        ).toString();
 
     }
 
 
-    generators.forEach(
-        (g,index)=>{
+    if(number < 1e6){
 
-            createLine(
-                700,
-                g.y,
-                430,
-                g.y,
-                "upgradeLine",
-                `upgradeLine-${index}-0`
-            );
+        return (
+            number / 1000
+        ).toFixed(1) + " tys.";
+
+    }
 
 
-            createLine(
-                700,
-                g.y,
-                970,
-                g.y,
-                "upgradeLine",
-                `upgradeLine-${index}-1`
-            );
+    if(number < 1e9){
 
-        }
-    );
+        return (
+            number / 1e6
+        ).toFixed(2) + " mln";
 
-}
+    }
 
 
-function createLine(
-    x1,
-    y1,
-    x2,
-    y2,
-    className,
-    id
-){
+    if(number < 1e12){
 
-    const line=
-        document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "line"
-        );
+        return (
+            number / 1e9
+        ).toFixed(2) + " mld";
+
+    }
 
 
-    line.setAttribute(
-        "x1",
-        x1
-    );
+    if(number < 1e15){
 
-    line.setAttribute(
-        "y1",
-        y1
-    );
+        return (
+            number / 1e12
+        ).toFixed(2) + " bln";
 
-    line.setAttribute(
-        "x2",
-        x2
-    );
-
-    line.setAttribute(
-        "y2",
-        y2
-    );
+    }
 
 
-    line.classList.add(
-        className
-    );
-
-
-    line.id=id;
-
-
-    connections.appendChild(
-        line
-    );
+    return number.toExponential(2);
 
 }
 
 
 /* =========================================================
-   UPDATE UI
+   UPDATE
 ========================================================= */
 
 function updateUI(){
 
     document.getElementById(
         "entropy"
-    ).textContent=
+    ).textContent =
 
-        format(entropy)+
+        format(entropy) +
         " entropii";
 
 
     document.getElementById(
-        "perSecond"
-    ).textContent=
+        "production"
+    ).textContent =
 
-        "+"+
-        format(
-            totalProduction()
-        )+
+        "+" +
+        format(getProduction()) +
         " / s";
 
 
     generators.forEach(
-        (g,index)=>{
+        (g,index) => {
 
-            const element=
+            const generator =
                 document.getElementById(
-                    "generator-"+g.id
+                    "generator-" + g.id
                 );
 
 
-            const unlocked=
+            const unlocked =
 
-                index===0 ||
+                index === 0 ||
 
-                generators[index-1]
-                .level>0;
+                generators[index - 1]
+                .level > 0;
 
 
-            element.classList.remove(
+            generator.classList.remove(
                 "locked",
                 "available",
                 "owned"
@@ -2400,15 +2131,15 @@ function updateUI(){
 
             if(!unlocked){
 
-                element.classList.add(
+                generator.classList.add(
                     "locked"
                 );
 
             }
 
-            else if(g.level===0){
+            else if(g.level === 0){
 
-                element.classList.add(
+                generator.classList.add(
                     "available"
                 );
 
@@ -2416,46 +2147,51 @@ function updateUI(){
 
             else{
 
-                element.classList.add(
+                generator.classList.add(
                     "owned"
                 );
 
             }
 
 
-            element.querySelector(
-                ".level"
-            ).textContent=
+            generator
+            .querySelector(".level")
+            .textContent =
 
-                "x"+g.level;
+                "x" + g.level;
 
 
-            element.querySelector(
-                ".generatorCost"
-            ).textContent=
+            generator
+            .querySelector(".generator-cost")
+            .textContent =
 
                 format(
                     generatorCost(g)
-                )+
+                ) +
+
                 " entropii";
 
 
-            /* GŁÓWNA LINIA */
+            /* MAIN LINE */
 
             if(
-                index<
-                generators.length-1
+                index <
+                generators.length - 1
             ){
 
-                const line=
+                const line =
+
                     document.getElementById(
-                        "main-"+index
+                        "main-line-" + index
                     );
 
 
                 line.classList.toggle(
+
                     "active",
-                    g.level>0
+
+                    g.level > 0
+
                 );
 
             }
@@ -2464,51 +2200,69 @@ function updateUI(){
             /* UPGRADES */
 
             g.upgrades.forEach(
-                (u,uIndex)=>{
+                (u,uIndex) => {
 
-                    const el=
+                    const upgrade =
+
                         document.getElementById(
+
                             `upgrade-${g.id}-${uIndex}`
+
                         );
 
 
-                    el.classList.remove(
+                    upgrade.classList.remove(
                         "locked",
                         "bought"
                     );
 
 
-                    if(g.level===0){
+                    if(
+                        g.level === 0
+                    ){
 
-                        el.classList.add(
+                        upgrade.classList.add(
                             "locked"
                         );
 
                     }
 
 
-                    if(u.bought){
+                    if(
+                        u.bought
+                    ){
 
-                        el.classList.add(
+                        upgrade.classList.add(
                             "bought"
                         );
 
 
-                        el.querySelector(
-                            ".upgradeEffect"
-                        ).textContent=
+                        upgrade
+                        .querySelector(
+                            ".upgrade-effect"
+                        )
+                        .textContent =
+
                             "AKTYWNE";
 
                     }
 
 
-                    document
-                    .getElementById(
-                        `upgradeLine-${index}-${uIndex}`
-                    )
-                    .classList.toggle(
+                    const line =
+
+                        document.getElementById(
+
+                            `upgrade-line-${index}-${uIndex}`
+
+                        );
+
+
+                    line.classList.toggle(
+
                         "active",
-                        g.level>0
+
+                        g.level > 0
+
                     );
 
                 }
@@ -2521,67 +2275,76 @@ function updateUI(){
 
 
 /* =========================================================
-   PRZESUWANIE MAPY MYSZKĄ
-
-   To zastępuje scroll.
+   MAPA — PRZECIĄGANIE
 ========================================================= */
 
-let worldX=0;
-let worldY=0;
+let worldX = 0;
 
-let dragging=false;
-
-let startPointerX=0;
-let startPointerY=0;
-
-let startWorldX=0;
-let startWorldY=0;
-
-let moved=false;
+let worldY = 0;
 
 
-function applyWorldPosition(){
+let dragging = false;
 
-    world.style.transform=
-        `translate(${worldX}px,${worldY}px)`;
+let dragMoved = false;
+
+
+let pointerStartX = 0;
+
+let pointerStartY = 0;
+
+
+let worldStartX = 0;
+
+let worldStartY = 0;
+
+
+function updateWorldPosition(){
+
+    world.style.transform =
+
+        `translate(${worldX}px, ${worldY}px)`;
 
 }
 
 
-/* POINTER DOWN */
+/* =========================================================
+   MOUSE DOWN
+========================================================= */
 
 viewport.addEventListener(
-    "pointerdown",
-    e=>{
 
-        /*
-           Nie zaczynamy przesuwania,
-           kiedy kliknięto element gry.
-        */
+    "pointerdown",
+
+    event => {
 
         if(
-            e.target.closest(".generator") ||
-            e.target.closest(".upgrade")
+            event.target.closest(".generator") ||
+            event.target.closest(".upgrade")
         ){
+
             return;
+
         }
 
 
-        dragging=true;
-        moved=false;
+        dragging = true;
+
+        dragMoved = false;
 
 
-        startPointerX=
-            e.clientX;
-
-        startPointerY=
-            e.clientY;
+        pointerStartX =
+            event.clientX;
 
 
-        startWorldX=
+        pointerStartY =
+            event.clientY;
+
+
+        worldStartX =
             worldX;
 
-        startWorldY=
+
+        worldStartY =
             worldY;
 
 
@@ -2591,68 +2354,90 @@ viewport.addEventListener(
 
 
         viewport.setPointerCapture(
-            e.pointerId
+            event.pointerId
         );
 
     }
+
 );
 
 
-/* POINTER MOVE */
+/* =========================================================
+   MOUSE MOVE
+========================================================= */
 
 viewport.addEventListener(
+
     "pointermove",
-    e=>{
 
-        if(!dragging)
+    event => {
+
+        if(!dragging){
+
             return;
-
-
-        const dx=
-            e.clientX-
-            startPointerX;
-
-        const dy=
-            e.clientY-
-            startPointerY;
-
-
-        if(
-            Math.abs(dx)>5 ||
-            Math.abs(dy)>5
-        ){
-
-            moved=true;
 
         }
 
 
-        worldX=
-            startWorldX+
+        const dx =
+
+            event.clientX -
+            pointerStartX;
+
+
+        const dy =
+
+            event.clientY -
+            pointerStartY;
+
+
+        if(
+            Math.abs(dx) > 5 ||
+            Math.abs(dy) > 5
+        ){
+
+            dragMoved = true;
+
+        }
+
+
+        worldX =
+
+            worldStartX +
             dx;
 
-        worldY=
-            startWorldY+
+
+        worldY =
+
+            worldStartY +
             dy;
 
 
-        applyWorldPosition();
+        updateWorldPosition();
 
     }
+
 );
 
 
-/* POINTER UP */
+/* =========================================================
+   MOUSE UP
+========================================================= */
 
 viewport.addEventListener(
-    "pointerup",
-    e=>{
 
-        if(!dragging)
+    "pointerup",
+
+    event => {
+
+        if(!dragging){
+
             return;
 
+        }
 
-        dragging=false;
+
+        dragging = false;
 
 
         viewport.classList.remove(
@@ -2660,20 +2445,18 @@ viewport.addEventListener(
         );
 
 
-        /*
-           Jeżeli prawie się nie ruszyło,
-           traktujemy to jako kliknięcie
-           po entropię.
-        */
+        if(!dragMoved){
 
-        if(!moved){
-
-            entropy++;
+            entropy +=
+                clickPower;
 
 
-            createClickText(
-                e.clientX,
-                e.clientY
+            createClickNumber(
+
+                event.clientX,
+
+                event.clientY
+
             );
 
 
@@ -2682,6 +2465,7 @@ viewport.addEventListener(
         }
 
     }
+
 );
 
 
@@ -2689,95 +2473,130 @@ viewport.addEventListener(
    +1
 ========================================================= */
 
-function createClickText(x,y){
+function createClickNumber(x,y){
 
-    const text=
+    const element =
+
         document.createElement(
             "div"
         );
 
 
-    text.className=
-        "clickText";
+    element.className =
+        "click-number";
 
 
-    text.textContent=
-        "+1";
+    element.textContent =
+        "+" + clickPower;
 
 
-    text.style.left=
-        x+"px";
+    element.style.left =
+        x + "px";
 
-    text.style.top=
-        y+"px";
+
+    element.style.top =
+        y + "px";
 
 
     document.body.appendChild(
-        text
+        element
     );
 
 
     setTimeout(
-        ()=>text.remove(),
-        800
+
+        () => {
+
+            element.remove();
+
+        },
+
+        750
+
     );
 
 }
-
-
-/* =========================================================
-   AUTOMATYCZNA PRODUKCJA
-========================================================= */
-
-setInterval(
-    ()=>{
-
-        entropy+=
-            totalProduction()/10;
-
-
-        updateUI();
-
-    },
-    100
-);
 
 
 /* =========================================================
    POZYCJA STARTOWA
 
-   Aminokwas na środku ekranu.
+   AMINOKWAS IDEALNIE NA ŚRODKU.
 ========================================================= */
 
 function centerOnAmino(){
 
-    worldX=
-
-        window.innerWidth/2 -
-
-        700;
+    const amino =
+        generators[0];
 
 
-    worldY=
+    worldX =
 
-        window.innerHeight*.65 -
+        window.innerWidth / 2 -
 
-        generators[0].y;
+        800;
 
 
-    applyWorldPosition();
+    worldY =
+
+        window.innerHeight / 2 -
+
+        amino.y;
+
+
+    updateWorldPosition();
 
 }
 
 
-window.addEventListener(
-    "resize",
-    centerOnAmino
+/* =========================================================
+   HOME
+========================================================= */
+
+document
+.getElementById("home-button")
+.addEventListener(
+
+    "click",
+
+    event => {
+
+        event.stopPropagation();
+
+        centerOnAmino();
+
+    }
+
 );
 
 
 /* =========================================================
-   START
+   PRODUKCJA
+========================================================= */
+
+setInterval(
+
+    () => {
+
+        entropy +=
+
+            getProduction() /
+            10;
+
+
+        updateUI();
+
+    },
+
+    100
+
+);
+
+
+/* =========================================================
+   TERAZ URUCHAMIAMY CAŁY GRAF.
+
+   THREE JESZCZE NIE ISTNIEJE.
 ========================================================= */
 
 drawLines();
@@ -2785,6 +2604,1903 @@ drawLines();
 updateUI();
 
 centerOnAmino();
+
+
+/* =========================================================
+   RESIZE
+========================================================= */
+
+window.addEventListener(
+
+    "resize",
+
+    () => {
+
+        centerOnAmino();
+
+    }
+
+);
+
+
+/* =========================================================
+   THREE.JS
+
+   ŁADUJEMY DOPIERO TERAZ.
+
+   Jeśli się zepsuje,
+   graf już istnieje.
+========================================================= */
+
+let THREE = null;
+
+let threeAnimations = [];
+
+
+import(
+    "https://cdn.jsdelivr.net/npm/three@0.180.0/+esm"
+)
+
+.then(module => {
+
+    THREE = module;
+
+
+    document
+    .getElementById("three-info")
+    .textContent =
+
+        "Modele 3D aktywne";
+
+
+    /* Tworzymy modele pojedynczo */
+
+    let delay = 0;
+
+
+    modelCanvases.forEach(item => {
+
+        setTimeout(
+
+            () => {
+
+                try{
+
+                    create3DModel(
+
+                        item.canvas,
+
+                        item.model
+
+                    );
+
+                }
+
+                catch(error){
+
+                    console.error(
+
+                        "Błąd modelu",
+
+                        item.model,
+
+                        error
+
+                    );
+
+                }
+
+            },
+
+            delay
+
+        );
+
+
+        delay += 70;
+
+    });
+
+
+    requestAnimationFrame(
+        animateThree
+    );
+
+
+    setTimeout(
+
+        () => {
+
+            const info =
+
+                document.getElementById(
+                    "three-info"
+                );
+
+
+            if(info){
+
+                info.remove();
+
+            }
+
+        },
+
+        2500
+
+    );
+
+})
+
+.catch(error => {
+
+    console.error(
+        "Three.js error:",
+        error
+    );
+
+
+    document
+    .getElementById("three-info")
+    .textContent =
+
+        "3D niedostępne — używam modeli zastępczych.";
+
+});
+
+
+/* =========================================================
+   MATERIAŁ
+========================================================= */
+
+function makeMaterial(
+    color,
+    roughness = 0.55,
+    metalness = 0.05
+){
+
+    return new THREE.MeshStandardMaterial({
+
+        color:color,
+
+        roughness:roughness,
+
+        metalness:metalness
+
+    });
+
+}
+
+
+/* =========================================================
+   KULA
+========================================================= */
+
+function makeSphere(
+    radius,
+    color,
+    segments = 20
+){
+
+    return new THREE.Mesh(
+
+        new THREE.SphereGeometry(
+
+            radius,
+
+            segments,
+
+            Math.max(
+                12,
+                segments - 4
+            )
+
+        ),
+
+        makeMaterial(color)
+
+    );
+
+}
+
+
+/* =========================================================
+   BOND
+========================================================= */
+
+function addBond(
+    group,
+    start,
+    end,
+    radius = 0.055,
+    color = 0xd0d5d3
+){
+
+    const startVector =
+
+        new THREE.Vector3(
+            start[0],
+            start[1],
+            start[2]
+        );
+
+
+    const endVector =
+
+        new THREE.Vector3(
+            end[0],
+            end[1],
+            end[2]
+        );
+
+
+    const direction =
+
+        new THREE.Vector3()
+        .subVectors(
+
+            endVector,
+
+            startVector
+
+        );
+
+
+    const length =
+        direction.length();
+
+
+    const mesh =
+
+        new THREE.Mesh(
+
+            new THREE.CylinderGeometry(
+
+                radius,
+
+                radius,
+
+                length,
+
+                10
+
+            ),
+
+            makeMaterial(
+                color,
+                0.35,
+                0.12
+            )
+
+        );
+
+
+    mesh.position
+
+        .copy(startVector)
+
+        .add(endVector)
+
+        .multiplyScalar(0.5);
+
+
+    mesh.quaternion.setFromUnitVectors(
+
+        new THREE.Vector3(
+            0,
+            1,
+            0
+        ),
+
+        direction
+        .clone()
+        .normalize()
+
+    );
+
+
+    group.add(mesh);
+
+}
+
+
+/* =========================================================
+   CREATE 3D MODEL
+========================================================= */
+
+function create3DModel(
+    canvas,
+    type
+){
+
+    if(!THREE){
+
+        return;
+
+    }
+
+
+    /* Czyścimy fallback */
+
+    const context =
+        canvas.getContext("2d");
+
+
+    if(context){
+
+        context.clearRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+    }
+
+
+    const renderer =
+
+        new THREE.WebGLRenderer({
+
+            canvas:canvas,
+
+            alpha:true,
+
+            antialias:true,
+
+            powerPreference:"high-performance"
+
+        });
+
+
+    renderer.setSize(
+        240,
+        240,
+        false
+    );
+
+
+    renderer.setPixelRatio(
+
+        Math.min(
+            window.devicePixelRatio || 1,
+            1.5
+        )
+
+    );
+
+
+    renderer.setClearColor(
+        0x000000,
+        0
+    );
+
+
+    const scene =
+        new THREE.Scene();
+
+
+    const camera =
+
+        new THREE.PerspectiveCamera(
+
+            34,
+
+            1,
+
+            0.1,
+
+            100
+
+        );
+
+
+    camera.position.set(
+        0,
+        0,
+        6
+    );
+
+
+    /* LIGHT */
+
+    const ambient =
+
+        new THREE.AmbientLight(
+
+            0xffffff,
+
+            1.7
+
+        );
+
+
+    scene.add(ambient);
+
+
+    const keyLight =
+
+        new THREE.DirectionalLight(
+
+            0xffffff,
+
+            3.5
+
+        );
+
+
+    keyLight.position.set(
+        4,
+        5,
+        5
+    );
+
+
+    scene.add(keyLight);
+
+
+    const blueLight =
+
+        new THREE.DirectionalLight(
+
+            0x4df0c5,
+
+            2
+
+        );
+
+
+    blueLight.position.set(
+        -4,
+        1,
+        -3
+    );
+
+
+    scene.add(blueLight);
+
+
+    const group =
+        new THREE.Group();
+
+
+    scene.add(group);
+
+
+    /* =====================================================
+       AMINOKWAS
+    ===================================================== */
+
+    if(type === "amino"){
+
+        const atoms = [
+
+            {
+                p:[0,0,0],
+                r:.36,
+                c:0x4d78c6
+            },
+
+            {
+                p:[-.82,.1,.15],
+                r:.32,
+                c:0xd74949
+            },
+
+            {
+                p:[.82,.15,-.1],
+                r:.29,
+                c:0xeaeaea
+            },
+
+            {
+                p:[0,.83,.2],
+                r:.27,
+                c:0xffffff
+            },
+
+            {
+                p:[-.95,-.67,-.18],
+                r:.29,
+                c:0xd74949
+            },
+
+            {
+                p:[.45,-.72,.35],
+                r:.24,
+                c:0xf1f1f1
+            }
+
+        ];
+
+
+        atoms.forEach(atom => {
+
+            const mesh =
+
+                makeSphere(
+                    atom.r,
+                    atom.c,
+                    24
+                );
+
+
+            mesh.position.set(
+                atom.p[0],
+                atom.p[1],
+                atom.p[2]
+            );
+
+
+            group.add(mesh);
+
+        });
+
+
+        addBond(
+            group,
+            [0,0,0],
+            [-.82,.1,.15]
+        );
+
+
+        addBond(
+            group,
+            [0,0,0],
+            [.82,.15,-.1]
+        );
+
+
+        addBond(
+            group,
+            [0,0,0],
+            [0,.83,.2]
+        );
+
+
+        addBond(
+            group,
+            [-.82,.1,.15],
+            [-.95,-.67,-.18]
+        );
+
+
+        addBond(
+            group,
+            [0,0,0],
+            [.45,-.72,.35]
+        );
+
+
+        group.scale.setScalar(
+            1.3
+        );
+
+    }
+
+
+    /* =====================================================
+       DNA
+    ===================================================== */
+
+    else if(type === "dna"){
+
+        const count = 24;
+
+
+        let previousA = null;
+
+        let previousB = null;
+
+
+        for(
+            let i = 0;
+            i < count;
+            i++
+        ){
+
+            const y =
+                (i - count/2) * .11;
+
+
+            const angle =
+                i * .52;
+
+
+            const radius =
+                .63;
+
+
+            const aPosition = [
+
+                Math.sin(angle) * radius,
+
+                y,
+
+                Math.cos(angle) * radius
+
+            ];
+
+
+            const bPosition = [
+
+                -Math.sin(angle) * radius,
+
+                y,
+
+                -Math.cos(angle) * radius
+
+            ];
+
+
+            const a =
+
+                makeSphere(
+                    .095,
+                    0x2ab9ef,
+                    16
+                );
+
+
+            a.position.set(
+                ...aPosition
+            );
+
+
+            const b =
+
+                makeSphere(
+                    .095,
+                    0xc65bd0,
+                    16
+                );
+
+
+            b.position.set(
+                ...bPosition
+            );
+
+
+            group.add(
+                a,
+                b
+            );
+
+
+            if(
+                i % 2 === 0
+            ){
+
+                addBond(
+
+                    group,
+
+                    aPosition,
+
+                    bPosition,
+
+                    .025,
+
+                    0xdce3e2
+
+                );
+
+            }
+
+
+            if(previousA){
+
+                addBond(
+
+                    group,
+
+                    previousA,
+
+                    aPosition,
+
+                    .04,
+
+                    0x29a9df
+
+                );
+
+
+                addBond(
+
+                    group,
+
+                    previousB,
+
+                    bPosition,
+
+                    .04,
+
+                    0xb24cc3
+
+                );
+
+            }
+
+
+            previousA =
+                aPosition;
+
+
+            previousB =
+                bPosition;
+
+        }
+
+
+        group.rotation.z =
+            .12;
+
+
+        group.scale.setScalar(
+            1.15
+        );
+
+    }
+
+
+    /* =====================================================
+       PROKARIOT
+    ===================================================== */
+
+    else if(type === "prokaryote"){
+
+        const cell =
+
+            makeSphere(
+                1,
+                0x4f8d62,
+                32
+            );
+
+
+        cell.scale.set(
+            1.45,
+            .7,
+            .72
+        );
+
+
+        group.add(cell);
+
+
+        /* DNA */
+
+        const dnaCurve =
+            new THREE.CatmullRomCurve3([
+
+                new THREE.Vector3(-.55,.1,.72),
+
+                new THREE.Vector3(-.2,.38,.79),
+
+                new THREE.Vector3(.25,.23,.81),
+
+                new THREE.Vector3(.48,-.1,.76),
+
+                new THREE.Vector3(.05,-.31,.78),
+
+                new THREE.Vector3(-.4,-.18,.76)
+
+            ]);
+
+
+        const dnaTube =
+
+            new THREE.Mesh(
+
+                new THREE.TubeGeometry(
+
+                    dnaCurve,
+
+                    40,
+
+                    .035,
+
+                    8,
+
+                    false
+
+                ),
+
+                makeMaterial(
+                    0xd3e487
+                )
+
+            );
+
+
+        group.add(dnaTube);
+
+
+        /* rybosomy */
+
+        for(
+            let i = 0;
+            i < 12;
+            i++
+        ){
+
+            const dot =
+
+                makeSphere(
+                    .055,
+                    0xe1e8a8,
+                    10
+                );
+
+
+            const angle =
+                i * 2.1;
+
+
+            dot.position.set(
+
+                Math.sin(angle) *
+                (.3 + (i%3)*.18),
+
+                Math.cos(angle*1.4) *
+                .35,
+
+                .7 +
+                (i%2)*.04
+
+            );
+
+
+            group.add(dot);
+
+        }
+
+
+        /* wić */
+
+        const flagellaCurve =
+
+            new THREE.CatmullRomCurve3([
+
+                new THREE.Vector3(1.25,0,0),
+
+                new THREE.Vector3(1.8,.35,0),
+
+                new THREE.Vector3(2.15,-.25,.15),
+
+                new THREE.Vector3(2.55,.25,-.1)
+
+            ]);
+
+
+        const flagella =
+
+            new THREE.Mesh(
+
+                new THREE.TubeGeometry(
+
+                    flagellaCurve,
+
+                    30,
+
+                    .035,
+
+                    8,
+
+                    false
+
+                ),
+
+                makeMaterial(
+                    0x5bcda2
+                )
+
+            );
+
+
+        group.add(flagella);
+
+
+        group.scale.setScalar(
+            .9
+        );
+
+    }
+
+
+    /* =====================================================
+       EUKARIOT
+    ===================================================== */
+
+    else if(type === "eukaryote"){
+
+        const cell =
+
+            makeSphere(
+                1.25,
+                0x376c7e,
+                32
+            );
+
+
+        group.add(cell);
+
+
+        const nucleus =
+
+            makeSphere(
+                .52,
+                0x8759a0,
+                24
+            );
+
+
+        nucleus.position.set(
+            -.22,
+            .12,
+            .86
+        );
+
+
+        group.add(nucleus);
+
+
+        for(
+            let i = 0;
+            i < 5;
+            i++
+        ){
+
+            const mito =
+
+                makeSphere(
+                    .18,
+                    0xc76850,
+                    16
+                );
+
+
+            mito.scale.set(
+                1.7,
+                .7,
+                .65
+            );
+
+
+            const angle =
+                i * 1.35;
+
+
+            mito.position.set(
+
+                Math.cos(angle) *
+                .7,
+
+                Math.sin(angle) *
+                .7,
+
+                .75
+
+            );
+
+
+            mito.rotation.z =
+                angle;
+
+
+            group.add(mito);
+
+        }
+
+
+        group.scale.setScalar(
+            .9
+        );
+
+    }
+
+
+    /* =====================================================
+       GĄBKA
+    ===================================================== */
+
+    else if(type === "sponge"){
+
+        const heights = [
+            1.7,
+            1.25,
+            2,
+            1.4,
+            1.65
+        ];
+
+
+        heights.forEach(
+            (height,index) => {
+
+                const tube =
+
+                    new THREE.Mesh(
+
+                        new THREE.CylinderGeometry(
+
+                            .26,
+
+                            .38,
+
+                            height,
+
+                            16,
+
+                            1,
+
+                            true
+
+                        ),
+
+                        makeMaterial(
+                            0xd18a36,
+                            .8
+                        )
+
+                    );
+
+
+                tube.position.set(
+
+                    (index - 2) * .34,
+
+                    height/2 - .7,
+
+                    (index%2) * .3 - .15
+
+                );
+
+
+                tube.rotation.z =
+
+                    (index - 2) *
+                    .04;
+
+
+                group.add(tube);
+
+            }
+        );
+
+
+        group.scale.setScalar(
+            1.05
+        );
+
+    }
+
+
+    /* =====================================================
+       MEDUZA
+    ===================================================== */
+
+    else if(type === "jellyfish"){
+
+        const dome =
+
+            new THREE.Mesh(
+
+                new THREE.SphereGeometry(
+
+                    1,
+
+                    32,
+
+                    20,
+
+                    0,
+
+                    Math.PI*2,
+
+                    0,
+
+                    Math.PI/2
+
+                ),
+
+                new THREE.MeshStandardMaterial({
+
+                    color:0x8195dd,
+
+                    transparent:true,
+
+                    opacity:.8,
+
+                    roughness:.2
+
+                })
+
+            );
+
+
+        dome.rotation.x =
+            Math.PI;
+
+
+        group.add(dome);
+
+
+        for(
+            let i = 0;
+            i < 8;
+            i++
+        ){
+
+            const x =
+                (i - 3.5) * .17;
+
+
+            const curve =
+
+                new THREE.CatmullRomCurve3([
+
+                    new THREE.Vector3(x,-.1,0),
+
+                    new THREE.Vector3(
+                        x+.1*Math.sin(i),
+                        -.6,
+                        .1*Math.cos(i)
+                    ),
+
+                    new THREE.Vector3(
+                        x-.1*Math.cos(i),
+                        -1.2,
+                        -.1*Math.sin(i)
+                    ),
+
+                    new THREE.Vector3(
+                        x+.15*Math.sin(i*2),
+                        -1.75,
+                        .1
+                    )
+
+                ]);
+
+
+            const tentacle =
+
+                new THREE.Mesh(
+
+                    new THREE.TubeGeometry(
+
+                        curve,
+
+                        24,
+
+                        .025,
+
+                        6,
+
+                        false
+
+                    ),
+
+                    makeMaterial(
+                        0xa283d5,
+                        .5
+                    )
+
+                );
+
+
+            group.add(tentacle);
+
+        }
+
+
+        group.position.y =
+            .45;
+
+
+        group.scale.setScalar(
+            1.05
+        );
+
+    }
+
+
+    /* =====================================================
+       PŁAZINIEC
+    ===================================================== */
+
+    else if(type === "flatworm"){
+
+        const body =
+
+            makeSphere(
+                1,
+                0xb85d58,
+                30
+            );
+
+
+        body.scale.set(
+            1.55,
+            .38,
+            .25
+        );
+
+
+        group.add(body);
+
+
+        const head =
+
+            makeSphere(
+                .55,
+                0xc86b62,
+                24
+            );
+
+
+        head.scale.set(
+            .75,
+            .55,
+            .45
+        );
+
+
+        head.position.x =
+            1.1;
+
+
+        group.add(head);
+
+
+        const eye1 =
+            makeSphere(
+                .07,
+                0x080808,
+                10
+            );
+
+
+        eye1.position.set(
+            1.35,
+            .14,
+            .38
+        );
+
+
+        const eye2 =
+            eye1.clone();
+
+
+        eye2.position.set(
+            1.18,
+            .14,
+            .43
+        );
+
+
+        group.add(
+            eye1,
+            eye2
+        );
+
+
+        group.scale.setScalar(
+            1
+        );
+
+    }
+
+
+    /* =====================================================
+       RYBA
+    ===================================================== */
+
+    else if(type === "fish"){
+
+        createAnimal(
+            group,
+            "fish"
+        );
+
+    }
+
+
+    /* =====================================================
+       CZWORONÓG
+    ===================================================== */
+
+    else if(type === "tetrapod"){
+
+        createAnimal(
+            group,
+            "tetrapod"
+        );
+
+    }
+
+
+    /* =====================================================
+       SSAK
+    ===================================================== */
+
+    else if(type === "mammal"){
+
+        createAnimal(
+            group,
+            "mammal"
+        );
+
+    }
+
+
+    /* =====================================================
+       NACZELNE
+    ===================================================== */
+
+    else if(type === "primate"){
+
+        createPrimate(
+            group,
+            false
+        );
+
+    }
+
+
+    /* =====================================================
+       CZŁOWIEK
+    ===================================================== */
+
+    else if(type === "human"){
+
+        createPrimate(
+            group,
+            true
+        );
+
+    }
+
+
+    threeAnimations.push({
+
+        renderer:renderer,
+
+        scene:scene,
+
+        camera:camera,
+
+        group:group,
+
+        offset:
+            Math.random() *
+            Math.PI * 2
+
+    });
+
+}
+
+
+/* =========================================================
+   FISH / TETRAPOD / MAMMAL
+========================================================= */
+
+function createAnimal(
+    group,
+    type
+){
+
+    let color =
+        0x478da4;
+
+
+    if(type === "tetrapod"){
+
+        color =
+            0x638b48;
+
+    }
+
+
+    if(type === "mammal"){
+
+        color =
+            0x79624f;
+
+    }
+
+
+    const body =
+
+        makeSphere(
+            1,
+            color,
+            28
+        );
+
+
+    body.scale.set(
+        1.35,
+        .62,
+        .58
+    );
+
+
+    group.add(body);
+
+
+    const head =
+
+        makeSphere(
+            .48,
+            color,
+            24
+        );
+
+
+    head.position.set(
+        1.16,
+        .2,
+        0
+    );
+
+
+    group.add(head);
+
+
+    const eye =
+
+        makeSphere(
+            .07,
+            0x050505,
+            10
+        );
+
+
+    eye.position.set(
+        1.48,
+        .33,
+        .34
+    );
+
+
+    group.add(eye);
+
+
+    if(type === "fish"){
+
+        const tail =
+
+            new THREE.Mesh(
+
+                new THREE.ConeGeometry(
+
+                    .63,
+
+                    .95,
+
+                    3
+
+                ),
+
+                makeMaterial(
+                    color
+                )
+
+            );
+
+
+        tail.rotation.z =
+            -Math.PI / 2;
+
+
+        tail.position.x =
+            -1.45;
+
+
+        group.add(tail);
+
+
+        const topFin =
+
+            new THREE.Mesh(
+
+                new THREE.ConeGeometry(
+
+                    .35,
+
+                    .7,
+
+                    3
+
+                ),
+
+                makeMaterial(
+                    0x36768b
+                )
+
+            );
+
+
+        topFin.position.set(
+            0,
+            .75,
+            0
+        );
+
+
+        group.add(topFin);
+
+    }
+
+
+    else{
+
+        const positions = [
+
+            [-.65,-.55,.38],
+            [.55,-.55,.38],
+            [-.65,-.55,-.38],
+            [.55,-.55,-.38]
+
+        ];
+
+
+        positions.forEach(
+            position => {
+
+                const leg =
+
+                    new THREE.Mesh(
+
+                        new THREE.CylinderGeometry(
+
+                            .1,
+
+                            .13,
+
+                            .85,
+
+                            10
+
+                        ),
+
+                        makeMaterial(
+                            color
+                        )
+
+                    );
+
+
+                leg.position.set(
+                    ...position
+                );
+
+
+                group.add(leg);
+
+            }
+        );
+
+
+        const tailCurve =
+
+            new THREE.CatmullRomCurve3([
+
+                new THREE.Vector3(-1.2,0,0),
+
+                new THREE.Vector3(-1.65,.1,.1),
+
+                new THREE.Vector3(-1.9,.35,.15)
+
+            ]);
+
+
+        const tail =
+
+            new THREE.Mesh(
+
+                new THREE.TubeGeometry(
+
+                    tailCurve,
+
+                    18,
+
+                    .07,
+
+                    8,
+
+                    false
+
+                ),
+
+                makeMaterial(
+                    color
+                )
+
+            );
+
+
+        group.add(tail);
+
+    }
+
+
+    group.scale.setScalar(
+        .82
+    );
+
+}
+
+
+/* =========================================================
+   NACZELNY / CZŁOWIEK
+========================================================= */
+
+function createPrimate(
+    group,
+    human
+){
+
+    const skinColor =
+
+        human
+        ? 0xc58e6c
+        : 0x755644;
+
+
+    const torsoColor =
+
+        human
+        ? 0x416b8f
+        : 0x5a4234;
+
+
+    const torso =
+
+        makeSphere(
+            .72,
+            torsoColor,
+            28
+        );
+
+
+    torso.scale.set(
+        .72,
+        1.15,
+        .55
+    );
+
+
+    group.add(torso);
+
+
+    const head =
+
+        makeSphere(
+            .46,
+            skinColor,
+            28
+        );
+
+
+    head.position.y =
+        1.12;
+
+
+    group.add(head);
+
+
+    const eye1 =
+
+        makeSphere(
+            .055,
+            0x090909,
+            10
+        );
+
+
+    eye1.position.set(
+        -.15,
+        1.18,
+        .43
+    );
+
+
+    const eye2 =
+        eye1.clone();
+
+
+    eye2.position.x =
+        .15;
+
+
+    group.add(
+        eye1,
+        eye2
+    );
+
+
+    const limbMaterial =
+
+        makeMaterial(
+            human
+            ? 0xb87f61
+            : 0x644838
+        );
+
+
+    function limb(
+        x,
+        y,
+        rotation,
+        length
+    ){
+
+        const mesh =
+
+            new THREE.Mesh(
+
+                new THREE.CylinderGeometry(
+
+                    .105,
+
+                    .135,
+
+                    length,
+
+                    10
+
+                ),
+
+                limbMaterial
+
+            );
+
+
+        mesh.position.set(
+            x,
+            y,
+            0
+        );
+
+
+        mesh.rotation.z =
+            rotation;
+
+
+        group.add(mesh);
+
+    }
+
+
+    limb(
+        -.68,
+        .1,
+        human ? .12 : .48,
+        1.35
+    );
+
+
+    limb(
+        .68,
+        .1,
+        human ? -.12 : -.48,
+        1.35
+    );
+
+
+    limb(
+        -.28,
+        -1.02,
+        human ? .04 : .18,
+        1.5
+    );
+
+
+    limb(
+        .28,
+        -1.02,
+        human ? -.04 : -.18,
+        1.5
+    );
+
+
+    if(human){
+
+        /* włosy */
+
+        const hair =
+
+            makeSphere(
+                .43,
+                0x36251f,
+                24
+            );
+
+
+        hair.scale.set(
+            1,
+            .55,
+            1
+        );
+
+
+        hair.position.set(
+            0,
+            1.35,
+            -.08
+        );
+
+
+        group.add(hair);
+
+    }
+
+
+    group.scale.setScalar(
+        .8
+    );
+
+}
+
+
+/* =========================================================
+   ANIMACJA
+
+   360° / 5 sekund
+========================================================= */
+
+function animateThree(time){
+
+    if(!THREE){
+
+        return;
+
+    }
+
+
+    const seconds =
+        time / 1000;
+
+
+    threeAnimations.forEach(
+        item => {
+
+            item.group.rotation.y =
+
+                item.offset +
+
+                seconds *
+                (
+                    Math.PI * 2 / 5
+                );
+
+
+            item.group.rotation.x =
+
+                Math.sin(
+                    seconds * .45
+                ) * .07;
+
+
+            item.renderer.render(
+
+                item.scene,
+
+                item.camera
+
+            );
+
+        }
+    );
+
+
+    requestAnimationFrame(
+        animateThree
+    );
+
+}
 
 </script>
 
