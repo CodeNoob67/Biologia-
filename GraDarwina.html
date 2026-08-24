@@ -1,0 +1,2217 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Ewolucja</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    user-select:none;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:
+        radial-gradient(circle at 50% 50%,#18342e 0%,#0c1e1b 35%,#06100f 75%,#030807 100%);
+    color:white;
+    overflow:hidden;
+}
+
+
+/* =========================
+   GÓRNY PANEL
+========================= */
+
+#hud{
+
+    position:fixed;
+
+    top:15px;
+    left:50%;
+
+    transform:translateX(-50%);
+
+    width:390px;
+
+    background:rgba(10,15,15,.94);
+
+    border:1px solid #56605c;
+
+    border-radius:15px;
+
+    padding:10px 20px;
+
+    z-index:1000;
+
+    box-shadow:
+        0 5px 20px #000,
+        inset 0 0 15px rgba(255,255,255,.03);
+
+}
+
+#entropy{
+
+    font-size:27px;
+    font-weight:bold;
+
+    color:white;
+
+}
+
+#production{
+
+    font-size:15px;
+
+    color:#83eaa7;
+
+    margin-top:3px;
+
+}
+
+#hint{
+
+    font-size:11px;
+
+    color:#8e9b96;
+
+    margin-top:5px;
+
+}
+
+
+/* =========================
+   SCROLL
+========================= */
+
+#viewport{
+
+    position:absolute;
+
+    inset:0;
+
+    overflow-y:auto;
+    overflow-x:hidden;
+
+}
+
+#tree{
+
+    position:relative;
+
+    width:1100px;
+
+    max-width:100%;
+
+    height:3000px;
+
+    margin:auto;
+
+}
+
+
+/* =========================
+   SVG LINIE
+========================= */
+
+#connections{
+
+    position:absolute;
+
+    width:100%;
+    height:100%;
+
+    inset:0;
+
+    z-index:1;
+
+    pointer-events:none;
+
+}
+
+.mainLine{
+
+    stroke:#53766c;
+
+    stroke-width:5;
+
+    opacity:.6;
+
+}
+
+.mainLine.active{
+
+    stroke:#39e2bd;
+
+    filter:drop-shadow(0 0 6px #39e2bd);
+
+    opacity:1;
+
+}
+
+.upgradeLine{
+
+    stroke:#53685f;
+
+    stroke-width:3;
+
+    opacity:.55;
+
+}
+
+.upgradeLine.active{
+
+    stroke:#4fdcbf;
+
+    opacity:1;
+
+    filter:drop-shadow(0 0 4px #31d8b8);
+
+}
+
+
+/* =========================
+   GENERATOR
+========================= */
+
+.generator{
+
+    position:absolute;
+
+    width:112px;
+    height:112px;
+
+    transform:translate(-50%,-50%);
+
+    border-radius:50%;
+
+    background:
+        radial-gradient(circle,#18201e 0%,#0d1211 70%);
+
+    border:4px solid #3b675c;
+
+    cursor:pointer;
+
+    z-index:10;
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    transition:.15s;
+
+}
+
+.generator.available{
+
+    border-color:#19e2bc;
+
+    box-shadow:
+        0 0 8px #17af94,
+        0 0 22px rgba(20,230,190,.3),
+        inset 0 0 15px rgba(20,230,190,.1);
+
+}
+
+.generator.owned{
+
+    border-color:#17e6c0;
+
+    box-shadow:
+        0 0 12px rgba(23,230,192,.5);
+
+}
+
+.generator.locked{
+
+    opacity:.3;
+
+    cursor:default;
+
+}
+
+.generator:not(.locked):hover{
+
+    transform:
+        translate(-50%,-50%)
+        scale(1.08);
+
+}
+
+.generator:active{
+
+    transform:
+        translate(-50%,-50%)
+        scale(.96);
+
+}
+
+
+/* =========================
+   IKONY SVG
+========================= */
+
+.icon{
+
+    width:72px;
+    height:72px;
+
+}
+
+.icon svg{
+
+    width:100%;
+    height:100%;
+
+    filter:
+        drop-shadow(0 3px 3px #000);
+
+}
+
+
+/* =========================
+   OPIS GENERATORA
+========================= */
+
+.generatorName{
+
+    position:absolute;
+
+    top:117px;
+    left:50%;
+
+    transform:translateX(-50%);
+
+    width:240px;
+
+    text-align:center;
+
+    font-size:19px;
+
+    font-weight:700;
+
+    text-shadow:
+        0 2px 3px #000,
+        0 0 5px #000;
+
+}
+
+.generatorPrice{
+
+    position:absolute;
+
+    top:143px;
+    left:50%;
+
+    transform:translateX(-50%);
+
+    color:#4be8c2;
+
+    font-size:14px;
+
+    white-space:nowrap;
+
+}
+
+.level{
+
+    position:absolute;
+
+    right:-15px;
+    top:-15px;
+
+    min-width:38px;
+
+    height:38px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    border-radius:50%;
+
+    background:#111;
+
+    border:2px solid #222;
+
+    font-weight:bold;
+
+}
+
+
+/* =========================
+   UPGRADE
+========================= */
+
+.upgrade{
+
+    position:absolute;
+
+    width:170px;
+    min-height:76px;
+
+    transform:translate(-50%,-50%);
+
+    background:
+        linear-gradient(145deg,#202724,#151918);
+
+    border:2px solid #59655f;
+
+    border-radius:6px;
+
+    cursor:pointer;
+
+    z-index:10;
+
+    display:grid;
+
+    grid-template-columns:58px 1fr;
+
+    align-items:center;
+
+    padding:7px;
+
+    transition:.15s;
+
+    box-shadow:
+        0 4px 8px rgba(0,0,0,.6);
+
+}
+
+.upgrade:hover{
+
+    transform:
+        translate(-50%,-50%)
+        scale(1.05);
+
+}
+
+.upgrade.locked{
+
+    opacity:.25;
+
+    cursor:default;
+
+}
+
+.upgrade.bought{
+
+    border-color:#35d9af;
+
+    background:
+        linear-gradient(145deg,#174138,#112b26);
+
+}
+
+.upgradeIcon{
+
+    width:50px;
+    height:50px;
+
+    border:2px solid #4a5e57;
+
+    background:#101514;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+}
+
+.upgradeIcon svg{
+
+    width:42px;
+    height:42px;
+
+}
+
+.upgradeText{
+
+    padding-left:8px;
+
+}
+
+.upgradeTitle{
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    margin-bottom:3px;
+
+}
+
+.upgradeEffect{
+
+    font-size:11px;
+
+    color:#93e176;
+
+}
+
+.upgradeCost{
+
+    font-size:11px;
+
+    color:#4ce1bd;
+
+    margin-top:2px;
+
+}
+
+
+/* =========================
+   KLIK ENTROPII
+========================= */
+
+.clickNumber{
+
+    position:fixed;
+
+    z-index:3000;
+
+    pointer-events:none;
+
+    color:#52efcc;
+
+    font-size:21px;
+
+    font-weight:bold;
+
+    text-shadow:0 2px 3px black;
+
+    animation:float .75s forwards;
+
+}
+
+@keyframes float{
+
+    from{
+
+        opacity:1;
+
+        transform:
+            translate(-50%,-50%)
+            scale(1);
+
+    }
+
+    to{
+
+        opacity:0;
+
+        transform:
+            translate(-50%,-100px)
+            scale(1.25);
+
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+
+<div id="hud">
+
+    <div id="entropy">
+        0 entropii
+    </div>
+
+    <div id="production">
+        +0 / s
+    </div>
+
+    <div id="hint">
+        Kliknięcie pustego miejsca = +1 entropii
+    </div>
+
+</div>
+
+
+<div id="viewport">
+
+<div id="tree">
+
+<svg id="connections"></svg>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   PROSTE IKONY SVG
+===================================================== */
+
+const icons = {
+
+
+amino:`
+
+<svg viewBox="0 0 100 100">
+
+<g stroke="#ddd" stroke-width="5">
+
+<line x1="30" y1="55" x2="50" y2="40"/>
+<line x1="50" y1="40" x2="70" y2="55"/>
+<line x1="50" y1="40" x2="50" y2="20"/>
+
+</g>
+
+<circle cx="30" cy="55" r="11" fill="#e84c4c"/>
+<circle cx="50" cy="40" r="12" fill="#8899c9"/>
+<circle cx="70" cy="55" r="11" fill="#eee"/>
+<circle cx="50" cy="20" r="9" fill="#eee"/>
+
+</svg>
+`,
+
+
+protein:`
+
+<svg viewBox="0 0 100 100">
+
+<path
+d="M15 60
+C20 20 50 20 48 45
+C45 70 75 82 82 55
+C88 30 68 18 58 35
+C48 52 72 65 75 48"
+fill="none"
+stroke="#737cff"
+stroke-width="9"
+stroke-linecap="round"/>
+
+<circle cx="24" cy="38" r="6" fill="#a8afff"/>
+<circle cx="59" cy="74" r="6" fill="#a8afff"/>
+
+</svg>
+`,
+
+
+rna:`
+
+<svg viewBox="0 0 100 100">
+
+<path
+d="M30 15
+C70 30 30 45 70 60
+C30 75 50 85 65 90"
+fill="none"
+stroke="#d778db"
+stroke-width="8"
+stroke-linecap="round"/>
+
+<g stroke="#eee" stroke-width="3">
+
+<line x1="37" y1="25" x2="60" y2="31"/>
+<line x1="39" y1="44" x2="62" y2="50"/>
+<line x1="41" y1="64" x2="62" y2="70"/>
+
+</g>
+
+</svg>
+`,
+
+
+dna:`
+
+<svg viewBox="0 0 100 100">
+
+<path
+d="M30 10
+C75 28 75 72 30 90"
+fill="none"
+stroke="#31b9f4"
+stroke-width="7"/>
+
+<path
+d="M70 10
+C25 28 25 72 70 90"
+fill="none"
+stroke="#6ee5ff"
+stroke-width="7"/>
+
+<g stroke="#ccc" stroke-width="3">
+
+<line x1="38" y1="22" x2="62" y2="22"/>
+<line x1="31" y1="38" x2="69" y2="38"/>
+<line x1="31" y1="58" x2="69" y2="58"/>
+<line x1="38" y1="77" x2="62" y2="77"/>
+
+</g>
+
+</svg>
+`,
+
+
+prokaryote:`
+
+<svg viewBox="0 0 100 100">
+
+<ellipse
+cx="47"
+cy="50"
+rx="33"
+ry="22"
+fill="#4b8068"
+stroke="#84d3a9"
+stroke-width="4"/>
+
+<path
+d="M22 44 Q45 25 74 45"
+fill="none"
+stroke="#a5d28a"
+stroke-width="3"/>
+
+<circle cx="39" cy="48" r="4" fill="#d2e4b7"/>
+<circle cx="52" cy="58" r="3" fill="#d2e4b7"/>
+<circle cx="62" cy="42" r="3" fill="#d2e4b7"/>
+
+<path
+d="M80 50 C100 45 94 70 88 78"
+fill="none"
+stroke="#5ec994"
+stroke-width="4"/>
+
+</svg>
+`,
+
+
+eukaryote:`
+
+<svg viewBox="0 0 100 100">
+
+<circle
+cx="50"
+cy="50"
+r="38"
+fill="#364b5e"
+stroke="#6dcee5"
+stroke-width="4"/>
+
+<circle
+cx="47"
+cy="48"
+r="16"
+fill="#835f94"
+stroke="#c390d4"
+stroke-width="4"/>
+
+<ellipse
+cx="70"
+cy="65"
+rx="11"
+ry="6"
+fill="#ce8063"/>
+
+<ellipse
+cx="27"
+cy="65"
+rx="10"
+ry="5"
+fill="#ce8063"/>
+
+</svg>
+`,
+
+
+multi:`
+
+<svg viewBox="0 0 100 100">
+
+<g fill="#4c89b4" stroke="#78caee" stroke-width="3">
+
+<circle cx="50" cy="25" r="13"/>
+<circle cx="30" cy="42" r="13"/>
+<circle cx="70" cy="42" r="13"/>
+<circle cx="38" cy="66" r="13"/>
+<circle cx="62" cy="66" r="13"/>
+
+</g>
+
+</svg>
+`,
+
+
+animal:`
+
+<svg viewBox="0 0 100 100">
+
+<ellipse cx="50" cy="55" rx="30" ry="22"
+fill="#c35d69"/>
+
+<circle cx="72" cy="43" r="13"
+fill="#cf7180"/>
+
+<circle cx="76" cy="40" r="3" fill="#111"/>
+
+<path d="M22 60 Q10 48 18 35"
+fill="none"
+stroke="#d5747f"
+stroke-width="6"/>
+
+<path d="M40 75 L35 90 M60 75 L65 90"
+stroke="#d5747f"
+stroke-width="6"/>
+
+</svg>
+`,
+
+
+chordate:`
+
+<svg viewBox="0 0 100 100">
+
+<path
+d="M10 55
+Q35 32 65 40
+Q78 43 90 50
+Q75 58 65 62
+Q35 72 10 55"
+fill="#897454"
+stroke="#c2a77a"
+stroke-width="4"/>
+
+<circle cx="72" cy="48" r="3" fill="#111"/>
+
+<path
+d="M18 55 L75 54"
+stroke="#ead9b1"
+stroke-width="3"/>
+
+</svg>
+`,
+
+
+fish:`
+
+<svg viewBox="0 0 100 100">
+
+<ellipse
+cx="48"
+cy="50"
+rx="30"
+ry="18"
+fill="#47859d"
+stroke="#82d1df"
+stroke-width="4"/>
+
+<polygon
+points="18,50 5,35 5,65"
+fill="#4a899f"/>
+
+<polygon
+points="46,32 58,18 64,36"
+fill="#397788"/>
+
+<circle cx="67" cy="45" r="4" fill="#111"/>
+
+<path
+d="M25 52 Q45 60 65 51"
+fill="none"
+stroke="#b9e0e5"
+stroke-width="2"/>
+
+</svg>
+`,
+
+
+tetrapod:`
+
+<svg viewBox="0 0 100 100">
+
+<ellipse
+cx="48"
+cy="52"
+rx="30"
+ry="18"
+fill="#769a43"/>
+
+<circle
+cx="72"
+cy="42"
+r="13"
+fill="#7fab48"/>
+
+<circle cx="76" cy="39" r="3" fill="#111"/>
+
+<path
+d="M30 66 L20 83
+M42 66 L36 86
+M60 66 L67 84
+M70 61 L82 77"
+stroke="#a5bc63"
+stroke-width="7"
+stroke-linecap="round"/>
+
+<path
+d="M20 49 Q6 43 10 27"
+fill="none"
+stroke="#769a43"
+stroke-width="7"/>
+
+</svg>
+`,
+
+
+reptile:`
+
+<svg viewBox="0 0 100 100">
+
+<ellipse
+cx="45"
+cy="52"
+rx="30"
+ry="15"
+fill="#597d3e"/>
+
+<circle
+cx="72"
+cy="47"
+r="11"
+fill="#70954d"/>
+
+<circle cx="76" cy="44" r="2.8" fill="#101010"/>
+
+<path
+d="M20 54 Q5 62 6 76"
+fill="none"
+stroke="#597d3e"
+stroke-width="7"/>
+
+<path
+d="M33 63 L25 77
+M55 63 L62 78"
+stroke="#6c944a"
+stroke-width="6"/>
+
+</svg>
+`,
+
+
+synapsid:`
+
+<svg viewBox="0 0 100 100">
+
+<ellipse
+cx="45"
+cy="55"
+rx="30"
+ry="19"
+fill="#735e4b"/>
+
+<circle
+cx="72"
+cy="47"
+r="13"
+fill="#826c55"/>
+
+<polygon
+points="67,35 71,20 77,38"
+fill="#5d4c3e"/>
+
+<circle cx="77" cy="44" r="3" fill="#111"/>
+
+<path
+d="M20 63 L15 80
+M35 68 L32 85
+M58 68 L62 85
+M70 62 L80 77"
+stroke="#826c55"
+stroke-width="6"/>
+
+</svg>
+`,
+
+
+mammal:`
+
+<svg viewBox="0 0 100 100">
+
+<ellipse
+cx="45"
+cy="56"
+rx="29"
+ry="20"
+fill="#756b62"/>
+
+<circle
+cx="70"
+cy="46"
+r="14"
+fill="#82776d"/>
+
+<polygon
+points="63,35 63,20 71,35"
+fill="#6d625a"/>
+
+<polygon
+points="72,34 80,21 80,39"
+fill="#6d625a"/>
+
+<circle cx="74" cy="44" r="3" fill="#111"/>
+
+<path
+d="M20 52 Q5 44 13 30"
+fill="none"
+stroke="#756b62"
+stroke-width="5"/>
+
+<path
+d="M31 70 L29 88
+M58 70 L60 88"
+stroke="#82776d"
+stroke-width="7"/>
+
+</svg>
+`
+
+};
+
+
+/* =====================================================
+   ULEPSZENIA
+===================================================== */
+
+const upgradeIcon = {
+
+replication:`
+
+<svg viewBox="0 0 100 100">
+
+<path d="M25 20 C75 35 75 65 25 80"
+fill="none"
+stroke="#da6fd7"
+stroke-width="8"/>
+
+<path d="M75 20 C25 35 25 65 75 80"
+fill="none"
+stroke="#8e66d7"
+stroke-width="5"/>
+
+</svg>
+`,
+
+membrane:`
+
+<svg viewBox="0 0 100 100">
+
+<rect x="15" y="30" width="70" height="40"
+rx="8"
+fill="#a9604b"/>
+
+<g fill="#e0ad72">
+
+<circle cx="25" cy="40" r="5"/>
+<circle cx="40" cy="40" r="5"/>
+<circle cx="55" cy="40" r="5"/>
+<circle cx="70" cy="40" r="5"/>
+
+<circle cx="25" cy="60" r="5"/>
+<circle cx="40" cy="60" r="5"/>
+<circle cx="55" cy="60" r="5"/>
+<circle cx="70" cy="60" r="5"/>
+
+</g>
+
+</svg>
+`,
+
+generic:`
+
+<svg viewBox="0 0 100 100">
+
+<circle cx="50" cy="50" r="30"
+fill="#386d60"
+stroke="#69d5bb"
+stroke-width="5"/>
+
+<path
+d="M50 25 V75 M25 50 H75"
+stroke="#d7fff6"
+stroke-width="8"
+stroke-linecap="round"/>
+
+</svg>
+`
+
+};
+
+
+/* =====================================================
+   GENERATORY
+===================================================== */
+
+const generators=[
+
+{
+id:"amino",
+name:"Aminokwas",
+icon:"amino",
+x:50,
+y:2800,
+baseCost:10,
+production:.2,
+
+upgrades:[
+
+{
+name:"Więcej aminokwasów",
+effect:0.5,
+cost:80
+},
+
+{
+name:"Łączenie aminokwasów",
+effect:0.25,
+cost:120
+}
+
+]
+},
+
+{
+id:"protein",
+name:"Białko",
+icon:"protein",
+x:46,
+y:2600,
+baseCost:30,
+production:.5,
+
+upgrades:[
+
+{
+name:"Fałdowanie białek",
+effect:.5,
+cost:200
+},
+
+{
+name:"Enzymy",
+effect:.25,
+cost:250
+}
+
+]
+},
+
+{
+id:"rna",
+name:"RNA",
+icon:"rna",
+x:54,
+y:2400,
+baseCost:100,
+production:1,
+
+upgrades:[
+
+{
+name:"Replikacja RNA",
+effect:.5,
+cost:500,
+special:"replication"
+},
+
+{
+name:"Stabilność RNA",
+effect:.25,
+cost:650
+}
+
+]
+},
+
+{
+id:"dna",
+name:"DNA",
+icon:"dna",
+x:46,
+y:2200,
+baseCost:300,
+production:2,
+
+upgrades:[
+
+{
+name:"Naprawa DNA",
+effect:.5,
+cost:1500
+},
+
+{
+name:"Stabilność DNA",
+effect:.25,
+cost:1800
+}
+
+]
+},
+
+{
+id:"prokaryote",
+name:"Komórka prokariotyczna",
+icon:"prokaryote",
+x:54,
+y:2000,
+baseCost:900,
+production:5,
+
+upgrades:[
+
+{
+name:"Błona komórkowa",
+effect:.5,
+cost:5000,
+special:"membrane"
+},
+
+{
+name:"Ruchliwość",
+effect:.25,
+cost:6000
+}
+
+]
+},
+
+{
+id:"eukaryote",
+name:"Komórka eukariotyczna",
+icon:"eukaryote",
+x:46,
+y:1800,
+baseCost:2800,
+production:14,
+
+upgrades:[
+
+{
+name:"Jądro komórkowe",
+effect:.5,
+cost:14000
+},
+
+{
+name:"Mitochondria",
+effect:.5,
+cost:17000
+}
+
+]
+},
+
+{
+id:"multi",
+name:"Wielokomórkowiec",
+icon:"multi",
+x:54,
+y:1600,
+baseCost:8000,
+production:35,
+
+upgrades:[
+
+{
+name:"Komunikacja komórek",
+effect:.5,
+cost:40000
+},
+
+{
+name:"Specjalizacja komórek",
+effect:.5,
+cost:45000
+}
+
+]
+},
+
+{
+id:"animal",
+name:"Zwierzę",
+icon:"animal",
+x:46,
+y:1400,
+baseCost:25000,
+production:90,
+
+upgrades:[
+
+{
+name:"Tkanki właściwe",
+effect:.5,
+cost:120000
+},
+
+{
+name:"Układ nerwowy",
+effect:.5,
+cost:140000
+}
+
+]
+},
+
+{
+id:"chordate",
+name:"Strunowiec",
+icon:"chordate",
+x:54,
+y:1200,
+baseCost:80000,
+production:230,
+
+upgrades:[
+
+{
+name:"Struna grzbietowa",
+effect:.5,
+cost:400000
+},
+
+{
+name:"Cewka nerwowa",
+effect:.5,
+cost:450000
+}
+
+]
+},
+
+{
+id:"fish",
+name:"Ryba",
+icon:"fish",
+x:46,
+y:1000,
+baseCost:250000,
+production:600,
+
+upgrades:[
+
+{
+name:"Lepsze płetwy",
+effect:.5,
+cost:1200000
+},
+
+{
+name:"Wydajne skrzela",
+effect:.5,
+cost:1400000
+}
+
+]
+},
+
+{
+id:"tetrapod",
+name:"Czworonóg",
+icon:"tetrapod",
+x:54,
+y:800,
+baseCost:750000,
+production:1600,
+
+upgrades:[
+
+{
+name:"Silniejsze kończyny",
+effect:.5,
+cost:3500000
+},
+
+{
+name:"Wydajne płuca",
+effect:.5,
+cost:4200000
+}
+
+]
+},
+
+{
+id:"reptile",
+name:"Gad",
+icon:"reptile",
+x:46,
+y:600,
+baseCost:2200000,
+production:4200,
+
+upgrades:[
+
+{
+name:"Jajo owodniowe",
+effect:.5,
+cost:10000000
+},
+
+{
+name:"Łuski ochronne",
+effect:.5,
+cost:12000000
+}
+
+]
+},
+
+{
+id:"synapsid",
+name:"Synapsyd",
+icon:"synapsid",
+x:54,
+y:400,
+baseCost:6500000,
+production:11000,
+
+upgrades:[
+
+{
+name:"Zróżnicowane zęby",
+effect:.5,
+cost:32000000
+},
+
+{
+name:"Lepszy metabolizm",
+effect:.5,
+cost:38000000
+}
+
+]
+},
+
+{
+id:"mammal",
+name:"Ssak",
+icon:"mammal",
+x:50,
+y:200,
+baseCost:20000000,
+production:30000,
+
+upgrades:[
+
+{
+name:"Stałocieplność",
+effect:.5,
+cost:100000000
+},
+
+{
+name:"Opieka nad młodymi",
+effect:.5,
+cost:120000000
+}
+
+]
+}
+
+];
+
+
+/* =====================================================
+   STARTOWE DANE
+===================================================== */
+
+let entropy=0;
+
+let clickPower=1;
+
+generators.forEach(g=>{
+
+    g.level=0;
+
+    g.upgrades.forEach(u=>{
+        u.bought=false;
+    });
+
+});
+
+
+const tree=document.getElementById("tree");
+
+const svg=document.getElementById("connections");
+
+
+/* =====================================================
+   TWORZENIE ELEMENTÓW
+===================================================== */
+
+generators.forEach((g,index)=>{
+
+    const generator=document.createElement("div");
+
+    generator.className="generator";
+
+    generator.id="generator-"+g.id;
+
+    generator.style.left=g.x+"%";
+    generator.style.top=g.y+"px";
+
+    generator.innerHTML=`
+
+        <div class="level">
+            x0
+        </div>
+
+        <div class="icon">
+
+            ${icons[g.icon]}
+
+        </div>
+
+        <div class="generatorName">
+            ${g.name}
+        </div>
+
+        <div class="generatorPrice"></div>
+
+    `;
+
+    generator.onclick=e=>{
+
+        e.stopPropagation();
+
+        buyGenerator(index);
+
+    };
+
+    tree.appendChild(generator);
+
+
+    /* =========================
+       UPGRADE LEWY
+    ========================= */
+
+    createUpgrade(
+        g,
+        index,
+        0,
+        24
+    );
+
+
+    /* =========================
+       UPGRADE PRAWY
+    ========================= */
+
+    createUpgrade(
+        g,
+        index,
+        1,
+        76
+    );
+
+});
+
+
+function createUpgrade(
+    generator,
+    generatorIndex,
+    upgradeIndex,
+    x
+){
+
+    const data=
+        generator.upgrades[upgradeIndex];
+
+    const element=
+        document.createElement("div");
+
+    element.className="upgrade";
+
+    element.id=
+        "upgrade-"+
+        generator.id+
+        "-"+
+        upgradeIndex;
+
+    element.style.left=x+"%";
+
+    element.style.top=
+        generator.y+"px";
+
+
+    let selectedIcon=
+        data.special
+        ? upgradeIcon[data.special]
+        : upgradeIcon.generic;
+
+
+    element.innerHTML=`
+
+        <div class="upgradeIcon">
+
+            ${selectedIcon}
+
+        </div>
+
+        <div class="upgradeText">
+
+            <div class="upgradeTitle">
+
+                ${data.name}
+
+            </div>
+
+            <div class="upgradeEffect">
+
+                +${Math.round(data.effect*100)}%
+                produkcji
+
+            </div>
+
+            <div class="upgradeCost">
+
+                ${format(data.cost)}
+                entropii
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    element.onclick=e=>{
+
+        e.stopPropagation();
+
+        buyUpgrade(
+            generatorIndex,
+            upgradeIndex
+        );
+
+    };
+
+
+    tree.appendChild(element);
+
+}
+
+
+/* =====================================================
+   KOSZT GENERATORA
+===================================================== */
+
+function costOf(g){
+
+    return Math.floor(
+
+        g.baseCost *
+        Math.pow(
+            1.17,
+            g.level
+        )
+
+    );
+
+}
+
+
+/* =====================================================
+   KUPOWANIE
+===================================================== */
+
+function buyGenerator(index){
+
+    const g=
+        generators[index];
+
+
+    const unlocked=
+        index===0 ||
+        generators[index-1].level>0;
+
+
+    if(!unlocked)
+        return;
+
+
+    const price=
+        costOf(g);
+
+
+    if(entropy<price)
+        return;
+
+
+    entropy-=price;
+
+    g.level++;
+
+    update();
+
+}
+
+
+/* =====================================================
+   KUPOWANIE UPGRADE
+===================================================== */
+
+function buyUpgrade(
+    generatorIndex,
+    upgradeIndex
+){
+
+    const generator=
+        generators[generatorIndex];
+
+    const upgrade=
+        generator.upgrades[upgradeIndex];
+
+
+    if(generator.level===0)
+        return;
+
+
+    if(upgrade.bought)
+        return;
+
+
+    if(entropy<upgrade.cost)
+        return;
+
+
+    entropy-=upgrade.cost;
+
+    upgrade.bought=true;
+
+    update();
+
+}
+
+
+/* =====================================================
+   MNOŻNIK UPGRADE
+===================================================== */
+
+function multiplier(g){
+
+    let multiplier=1;
+
+
+    g.upgrades.forEach(u=>{
+
+        if(u.bought){
+
+            multiplier+=u.effect;
+
+        }
+
+    });
+
+
+    return multiplier;
+
+}
+
+
+/* =====================================================
+   PRODUKCJA
+===================================================== */
+
+function production(){
+
+    let total=0;
+
+
+    generators.forEach(g=>{
+
+        total+=
+
+            g.production *
+
+            g.level *
+
+            multiplier(g);
+
+    });
+
+
+    return total;
+
+}
+
+
+/* =====================================================
+   FORMAT LICZBY
+===================================================== */
+
+function format(n){
+
+    if(n<1000)
+        return Math.floor(n).toString();
+
+
+    if(n<1e6)
+        return (n/1e3).toFixed(1)+" tys.";
+
+
+    if(n<1e9)
+        return (n/1e6).toFixed(2)+" mln";
+
+
+    if(n<1e12)
+        return (n/1e9).toFixed(2)+" mld";
+
+
+    if(n<1e15)
+        return (n/1e12).toFixed(2)+" bln";
+
+
+    return n.toExponential(2);
+
+}
+
+
+/* =====================================================
+   AKTUALIZOWANIE UI
+===================================================== */
+
+function update(){
+
+    document.getElementById("entropy")
+    .textContent=
+        format(entropy)+
+        " entropii";
+
+
+    document.getElementById("production")
+    .textContent=
+        "+"+
+        format(production())+
+        " / s";
+
+
+    generators.forEach((g,index)=>{
+
+
+        const el=
+            document.getElementById(
+                "generator-"+g.id
+            );
+
+
+        const unlocked=
+            index===0 ||
+            generators[index-1].level>0;
+
+
+        el.classList.remove(
+            "locked",
+            "available",
+            "owned"
+        );
+
+
+        if(!unlocked){
+
+            el.classList.add("locked");
+
+        }
+        else if(g.level===0){
+
+            el.classList.add("available");
+
+        }
+        else{
+
+            el.classList.add("owned");
+
+        }
+
+
+        el.querySelector(".level")
+        .textContent=
+            "x"+g.level;
+
+
+        el.querySelector(
+            ".generatorPrice"
+        ).textContent=
+
+            format(costOf(g))+
+            " entropii";
+
+
+        /* =========================
+           UPGRADE
+        ========================= */
+
+        g.upgrades.forEach((u,i)=>{
+
+            const upgrade=
+
+                document.getElementById(
+
+                    "upgrade-"+
+                    g.id+
+                    "-"+
+                    i
+
+                );
+
+
+            upgrade.classList.remove(
+                "locked",
+                "bought"
+            );
+
+
+            if(g.level===0){
+
+                upgrade.classList.add(
+                    "locked"
+                );
+
+            }
+
+            if(u.bought){
+
+                upgrade.classList.add(
+                    "bought"
+                );
+
+
+                upgrade.querySelector(
+                    ".upgradeEffect"
+                ).textContent=
+                    "AKTYWNE";
+
+            }
+
+        });
+
+    });
+
+
+    updateLines();
+
+}
+
+
+/* =====================================================
+   LINIE
+===================================================== */
+
+function drawLines(){
+
+    svg.innerHTML="";
+
+
+    const width=
+        tree.clientWidth;
+
+
+    /* =========================
+       GŁÓWNA ŚCIEŻKA
+    ========================= */
+
+    for(
+        let i=0;
+        i<generators.length-1;
+        i++
+    ){
+
+        const a=
+            generators[i];
+
+        const b=
+            generators[i+1];
+
+
+        const line=
+            document.createElementNS(
+                "http://www.w3.org/2000/svg",
+                "line"
+            );
+
+
+        line.setAttribute(
+            "x1",
+            width*a.x/100
+        );
+
+        line.setAttribute(
+            "y1",
+            a.y
+        );
+
+        line.setAttribute(
+            "x2",
+            width*b.x/100
+        );
+
+        line.setAttribute(
+            "y2",
+            b.y
+        );
+
+
+        line.classList.add(
+            "mainLine"
+        );
+
+        line.id=
+            "mainLine-"+i;
+
+
+        svg.appendChild(line);
+
+    }
+
+
+    /* =========================
+       LINIE DO UPGRADE
+    ========================= */
+
+    generators.forEach((g,index)=>{
+
+        [24,76].forEach(
+            (x,upgradeIndex)=>{
+
+            const line=
+                document.createElementNS(
+                    "http://www.w3.org/2000/svg",
+                    "line"
+                );
+
+
+            line.setAttribute(
+                "x1",
+                width*g.x/100
+            );
+
+            line.setAttribute(
+                "y1",
+                g.y
+            );
+
+            line.setAttribute(
+                "x2",
+                width*x/100
+            );
+
+            line.setAttribute(
+                "y2",
+                g.y
+            );
+
+
+            line.classList.add(
+                "upgradeLine"
+            );
+
+
+            line.id=
+
+                "upgradeLine-"+
+                index+
+                "-"+
+                upgradeIndex;
+
+
+            svg.appendChild(line);
+
+        });
+
+    });
+
+}
+
+
+/* =====================================================
+   AKTYWNE LINIE
+===================================================== */
+
+function updateLines(){
+
+    generators.forEach((g,index)=>{
+
+
+        if(index<
+            generators.length-1
+        ){
+
+            const line=
+                document.getElementById(
+                    "mainLine-"+index
+                );
+
+
+            if(g.level>0)
+                line.classList.add(
+                    "active"
+                );
+            else
+                line.classList.remove(
+                    "active"
+                );
+
+        }
+
+
+        g.upgrades.forEach((u,i)=>{
+
+            const line=
+                document.getElementById(
+
+                    "upgradeLine-"+
+                    index+
+                    "-"+
+                    i
+
+                );
+
+
+            if(g.level>0){
+
+                line.classList.add(
+                    "active"
+                );
+
+            }
+            else{
+
+                line.classList.remove(
+                    "active"
+                );
+
+            }
+
+        });
+
+    });
+
+}
+
+
+/* =====================================================
+   KLIKANIE W TŁO
+===================================================== */
+
+document.addEventListener(
+"click",
+e=>{
+
+    if(
+        e.target.closest(".generator") ||
+        e.target.closest(".upgrade") ||
+        e.target.closest("#hud")
+    ){
+        return;
+    }
+
+
+    entropy+=clickPower;
+
+
+    const text=
+        document.createElement("div");
+
+
+    text.className=
+        "clickNumber";
+
+
+    text.textContent=
+        "+"+clickPower;
+
+
+    text.style.left=
+        e.clientX+"px";
+
+
+    text.style.top=
+        e.clientY+"px";
+
+
+    document.body.appendChild(text);
+
+
+    setTimeout(
+        ()=>text.remove(),
+        750
+    );
+
+
+    update();
+
+});
+
+
+/* =====================================================
+   AUTOMATYCZNA PRODUKCJA
+===================================================== */
+
+setInterval(()=>{
+
+    entropy+=
+        production()/10;
+
+    update();
+
+},100);
+
+
+/* =====================================================
+   START
+===================================================== */
+
+drawLines();
+
+update();
+
+
+window.addEventListener(
+"resize",
+()=>{
+
+    drawLines();
+
+    updateLines();
+
+});
+
+
+window.addEventListener(
+"load",
+()=>{
+
+    const viewport=
+        document.getElementById(
+            "viewport"
+        );
+
+
+    viewport.scrollTop=
+
+        viewport.scrollHeight -
+
+        viewport.clientHeight;
+
+});
+
+</script>
+
+</body>
+</html>
