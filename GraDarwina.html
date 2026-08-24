@@ -15,8 +15,7 @@
     user-select:none;
 }
 
-html,
-body{
+html,body{
     width:100%;
     height:100%;
     overflow:hidden;
@@ -24,27 +23,21 @@ body{
 
 body{
     font-family:Arial,Helvetica,sans-serif;
-    color:#fff;
+    color:white;
 
     background:
-        radial-gradient(
-            circle at center,
-            #12332c 0%,
-            #071915 45%,
-            #020807 100%
-        );
+        radial-gradient(circle at center,#12352e 0%,#071b17 45%,#020807 100%);
 }
 
 
-/* =========================================================
+/* =====================================================
    HUD
-========================================================= */
+===================================================== */
 
 #hud{
-
     position:fixed;
 
-    top:16px;
+    top:15px;
     left:50%;
 
     transform:translateX(-50%);
@@ -54,56 +47,39 @@ body{
 
     padding:13px 20px;
 
-    background:rgba(7,13,12,.95);
+    background:rgba(7,14,12,.95);
 
-    border:1px solid #4e625c;
+    border:1px solid #4c625b;
 
     border-radius:16px;
 
     z-index:10000;
-
-    box-shadow:
-        0 8px 30px rgba(0,0,0,.55);
-
 }
 
 #entropy{
-
     font-size:28px;
-
-    font-weight:700;
-
+    font-weight:bold;
 }
 
 #production{
-
-    margin-top:3px;
-
-    color:#49e7bf;
-
+    color:#4ce4bb;
     font-size:17px;
-
+    margin-top:3px;
 }
 
-#instructions{
-
-    margin-top:6px;
-
-    color:#84938e;
-
+#help{
+    color:#83938d;
     font-size:12px;
-
+    margin-top:5px;
 }
 
 
-/* =========================================================
+/* =====================================================
    VIEWPORT
-========================================================= */
+===================================================== */
 
 #viewport{
-
     position:absolute;
-
     inset:0;
 
     overflow:hidden;
@@ -111,237 +87,174 @@ body{
     cursor:grab;
 
     touch-action:none;
-
 }
 
 #viewport.dragging{
-
     cursor:grabbing;
-
 }
 
 
-/* =========================================================
-   CAŁY ŚWIAT
-========================================================= */
+/* =====================================================
+   WORLD
+===================================================== */
 
 #world{
-
     position:absolute;
+
+    width:1800px;
+    height:3500px;
 
     left:0;
     top:0;
 
-    width:1600px;
-    height:3450px;
-
     transform-origin:0 0;
-
 }
 
-
-/* =========================================================
-   TŁO ŚWIATA
-========================================================= */
-
 #world::before{
-
     content:"";
 
     position:absolute;
-
     inset:0;
 
     pointer-events:none;
 
     background:
+        radial-gradient(circle,rgba(75,238,191,.13) 1px,transparent 2px);
 
-        radial-gradient(
-            circle at 30% 15%,
-            rgba(69,255,195,.08),
-            transparent 22%
-        ),
-
-        radial-gradient(
-            circle at 70% 55%,
-            rgba(55,173,145,.08),
-            transparent 27%
-        ),
-
-        radial-gradient(
-            circle,
-            rgba(116,255,213,.13) 1px,
-            transparent 2px
-        );
-
-    background-size:
-        auto,
-        auto,
-        130px 130px;
-
+    background-size:145px 145px;
 }
 
 
-/* =========================================================
-   LINIE
-========================================================= */
+/* =====================================================
+   LINES
+===================================================== */
 
 #lines{
-
     position:absolute;
 
-    width:1600px;
-    height:3450px;
+    width:1800px;
+    height:3500px;
 
-    left:0;
-    top:0;
+    inset:0;
 
     pointer-events:none;
 
     z-index:1;
-
 }
 
-.main-line{
+.mainLine,
+.branchLine,
+.upgradeLine{
+    fill:none;
+}
 
-    stroke:#405a53;
-
+.mainLine{
+    stroke:#415b54;
     stroke-width:7;
-
     opacity:.5;
-
 }
 
-.main-line.active{
-
-    stroke:#28dfb6;
-
+.mainLine.active{
+    stroke:#2ae2b7;
     opacity:1;
 
-    filter:
-        drop-shadow(0 0 6px #28dfb6);
-
+    filter:drop-shadow(0 0 6px #2ae2b7);
 }
 
-.upgrade-line{
-
-    stroke:#536860;
-
-    stroke-width:3;
-
+.branchLine{
+    stroke:#49645c;
+    stroke-width:6;
     opacity:.55;
-
 }
 
-.upgrade-line.active{
+.branchLine.active{
+    stroke:#38ddb6;
+    opacity:1;
+}
 
-    stroke:#33cfac;
+.upgradeLine{
+    stroke:#52675f;
+    stroke-width:3;
+    opacity:.5;
+}
 
+.upgradeLine.active{
+    stroke:#3ad3b1;
     opacity:.95;
-
 }
 
 
-/* =========================================================
+/* =====================================================
    GENERATOR
-========================================================= */
+===================================================== */
 
 .generator{
-
     position:absolute;
 
-    left:800px;
+    width:140px;
+    height:140px;
 
-    width:142px;
-    height:142px;
-
-    transform:
-        translate(-50%,-50%);
+    transform:translate(-50%,-50%);
 
     border-radius:50%;
 
     background:
+        radial-gradient(circle at 38% 28%,#263c35,#101916 60%,#050908);
 
-        radial-gradient(
-            circle at 38% 30%,
-            #263a34,
-            #101916 58%,
-            #050908 100%
-        );
-
-    border:4px solid #42675e;
+    border:4px solid #41675e;
 
     z-index:20;
 
     cursor:pointer;
 
-    transition:
-        transform .16s,
-        opacity .2s,
-        box-shadow .2s,
-        border-color .2s;
-
+    transition:.15s;
 }
 
 .generator.available,
 .generator.owned{
-
-    border-color:#28e0b8;
+    border-color:#28e1b8;
 
     box-shadow:
-
-        0 0 9px rgba(40,224,184,.8),
-
-        0 0 28px rgba(40,224,184,.25),
-
-        inset 0 0 20px rgba(40,224,184,.08);
-
+        0 0 10px rgba(40,225,184,.75),
+        0 0 27px rgba(40,225,184,.22);
 }
 
 .generator.locked{
-
-    opacity:.28;
-
+    opacity:.25;
     cursor:default;
-
 }
 
 .generator:not(.locked):hover{
-
     transform:
         translate(-50%,-50%)
         scale(1.07);
-
 }
 
 
-/* =========================================================
-   CANVAS MODELU
-========================================================= */
+/* =====================================================
+   MODEL
+===================================================== */
 
-.model-canvas{
-
+.modelCanvas{
     position:absolute;
 
-    left:7px;
-    top:7px;
+    width:122px;
+    height:122px;
 
-    width:120px;
-    height:120px;
+    left:5px;
+    top:5px;
 
     border-radius:50%;
 
     pointer-events:none;
-
 }
 
 
-/* =========================================================
+/* =====================================================
    LEVEL
-========================================================= */
+===================================================== */
 
 .level{
-
     position:absolute;
 
     right:-13px;
@@ -352,35 +265,29 @@ body{
 
     padding:0 7px;
 
-    border-radius:23px;
-
     display:flex;
-
     align-items:center;
     justify-content:center;
 
-    background:#0d1210;
+    border-radius:24px;
 
-    border:2px solid #263830;
+    background:#0c1210;
 
-    font-size:14px;
+    border:2px solid #273b34;
+
     font-weight:bold;
-
-    z-index:30;
-
 }
 
 
-/* =========================================================
-   NAZWA
-========================================================= */
+/* =====================================================
+   NAME
+===================================================== */
 
-.generator-name{
-
+.generatorName{
     position:absolute;
 
     left:50%;
-    top:148px;
+    top:147px;
 
     transform:translateX(-50%);
 
@@ -391,272 +298,155 @@ body{
     white-space:nowrap;
 
     font-size:21px;
-
     font-weight:bold;
 
-    text-shadow:
-        0 2px 5px #000,
-        0 0 5px #000;
-
-    pointer-events:none;
-
+    text-shadow:0 2px 5px #000;
 }
 
-.generator-cost{
-
+.generatorCost{
     position:absolute;
 
     left:50%;
-    top:178px;
+    top:177px;
 
     transform:translateX(-50%);
 
     white-space:nowrap;
 
-    color:#43e0ba;
+    color:#49dfb7;
 
     font-size:14px;
-
-    text-shadow:
-        0 2px 3px #000;
-
-    pointer-events:none;
-
 }
 
 
-/* =========================================================
-   UPGRADE
-========================================================= */
+/* =====================================================
+   UPGRADES
+===================================================== */
 
 .upgrade{
-
     position:absolute;
 
-    width:230px;
-    height:86px;
+    width:225px;
+    height:84px;
 
-    transform:
-        translate(-50%,-50%);
+    transform:translate(-50%,-50%);
 
     display:grid;
 
-    grid-template-columns:
-        62px 1fr;
+    grid-template-columns:58px 1fr;
 
     align-items:center;
 
-    padding:8px;
-
-    border-radius:7px;
-
-    border:2px solid #52645e;
+    padding:7px;
 
     background:
+        linear-gradient(145deg,#222b28,#101613);
 
-        linear-gradient(
-            145deg,
-            #222c28,
-            #101613
-        );
+    border:2px solid #52625d;
 
-    box-shadow:
-        0 5px 12px rgba(0,0,0,.55);
+    border-radius:7px;
 
     z-index:15;
 
     cursor:pointer;
 
-    transition:
-        transform .15s,
-        opacity .2s,
-        border-color .2s;
-
+    transition:.15s;
 }
 
 .upgrade:hover{
-
     transform:
         translate(-50%,-50%)
         scale(1.045);
-
 }
 
 .upgrade.locked{
-
-    opacity:.22;
-
-    cursor:default;
-
+    opacity:.2;
 }
 
 .upgrade.bought{
-
-    border-color:#31d5ae;
+    border-color:#34d7b1;
 
     background:
-
-        linear-gradient(
-            145deg,
-            #174239,
-            #0c2822
-        );
-
+        linear-gradient(145deg,#174139,#0d2923);
 }
 
+.upgradeIcon{
+    width:52px;
+    height:52px;
 
-/* =========================================================
-   KWADRATOWA IKONA
-========================================================= */
+    background:#0b100f;
 
-.upgrade-icon{
-
-    width:55px;
-    height:55px;
+    border:2px solid #495b55;
 
     display:flex;
-
-    align-items:center;
     justify-content:center;
-
-    background:#0a100e;
-
-    border:2px solid #485b55;
-
-    overflow:hidden;
-
+    align-items:center;
 }
 
-.upgrade-icon svg{
-
-    width:48px;
-    height:48px;
-
+.upgradeIcon svg{
+    width:45px;
+    height:45px;
 }
 
-
-/* =========================================================
-   UPGRADE TEXT
-========================================================= */
-
-.upgrade-info{
-
+.upgradeInfo{
     padding-left:8px;
-
 }
 
-.upgrade-name{
-
-    font-size:14px;
-
-    font-weight:700;
-
+.upgradeName{
+    font-size:13px;
+    font-weight:bold;
 }
 
-.upgrade-effect{
-
-    margin-top:4px;
-
-    font-size:12px;
-
-    color:#8bd773;
-
-}
-
-.upgrade-cost{
-
-    margin-top:2px;
-
+.upgradeEffect{
+    color:#8ed875;
     font-size:11px;
+    margin-top:4px;
+}
 
-    color:#48d8b5;
-
+.upgradeCost{
+    color:#47d9b5;
+    font-size:11px;
+    margin-top:2px;
 }
 
 
-/* =========================================================
-   +1
-========================================================= */
+/* =====================================================
+   CLICK
+===================================================== */
 
-.click-number{
-
+.clickText{
     position:fixed;
 
     pointer-events:none;
 
-    z-index:20000;
+    color:#4ef2c5;
 
-    color:#4bf1c5;
-
-    font-size:22px;
-
+    font-size:21px;
     font-weight:bold;
 
-    text-shadow:
-        0 2px 4px #000;
+    z-index:20000;
 
-    animation:
-        clickAnimation .75s forwards;
-
+    animation:clickAnim .8s forwards;
 }
 
-@keyframes clickAnimation{
-
+@keyframes clickAnim{
     from{
-
         opacity:1;
-
-        transform:
-            translate(-50%,-50%)
-            scale(1);
-
+        transform:translate(-50%,-50%);
     }
 
     to{
-
         opacity:0;
-
-        transform:
-            translate(-50%,-100px)
-            scale(1.3);
-
+        transform:translate(-50%,-100px) scale(1.3);
     }
-
 }
 
 
-/* =========================================================
-   INFO 3D
-========================================================= */
+/* =====================================================
+   HOME
+===================================================== */
 
-#three-info{
-
-    position:fixed;
-
-    left:15px;
-    bottom:15px;
-
-    z-index:10000;
-
-    padding:8px 11px;
-
-    border-radius:8px;
-
-    background:rgba(0,0,0,.65);
-
-    color:#8a9994;
-
-    font-size:11px;
-
-}
-
-
-/* =========================================================
-   DEBUG BUTTON
-========================================================= */
-
-#home-button{
-
+#home{
     position:fixed;
 
     right:20px;
@@ -667,24 +457,17 @@ body{
 
     border-radius:50%;
 
-    border:1px solid #54655f;
+    border:1px solid #50655e;
 
-    background:#101815;
+    background:#0d1714;
 
-    color:#4be9c0;
+    color:#4ae9bd;
 
-    font-size:23px;
+    font-size:22px;
 
     cursor:pointer;
 
     z-index:10000;
-
-}
-
-#home-button:hover{
-
-    background:#19342d;
-
 }
 
 </style>
@@ -703,48 +486,32 @@ body{
         +0 / s
     </div>
 
-    <div id="instructions">
-        Przeciągnij tło = poruszanie • kliknij tło = +1 entropii
+    <div id="help">
+        Przeciągnij tło = ruch • kliknij tło = +1 entropii
     </div>
 
 </div>
 
 
-<div id="three-info">
-    Ładowanie modeli 3D...
-</div>
-
-
-<button id="home-button">
-    ⌂
-</button>
+<button id="home">⌂</button>
 
 
 <div id="viewport">
 
-    <div id="world">
+<div id="world">
 
-        <svg id="lines"></svg>
+<svg id="lines"></svg>
 
-    </div>
+</div>
 
 </div>
 
 
 <script>
 
-/* =========================================================
-   NAJWAŻNIEJSZE:
-
-   TEN SKRYPT NIE CZEKA NA THREE.JS.
-
-   NAJPIERW TWORZY CAŁĄ GRĘ.
-========================================================= */
-
-
-/* =========================================================
-   ELEMENTY
-========================================================= */
+/* =====================================================
+   ELEMENTS
+===================================================== */
 
 const viewport =
     document.getElementById("viewport");
@@ -752,714 +519,1034 @@ const viewport =
 const world =
     document.getElementById("world");
 
-const linesSVG =
+const svg =
     document.getElementById("lines");
 
 
-/* =========================================================
-   DANE
-========================================================= */
+/* =====================================================
+   DATA
+
+   GŁÓWNA LINIA:
+   amino -> DNA -> prokaryote -> eukaryote ->
+   sponge -> jellyfish -> flatworm -> fish ->
+   tetrapod -> mammal -> primate -> human
+
+   BRANCH:
+   tetrapod -> reptile
+   tetrapod -> amphibian
+===================================================== */
 
 const generators = [
 
-    {
+{
+    id:"amino",
+    name:"Aminokwas",
 
-        id:"amino",
+    x:800,
+    y:3200,
 
-        name:"Aminokwas",
+    cost:10,
+    production:.2,
 
-        model:"amino",
+    color:"#557ec6",
+    fallback:"AA",
 
-        y:3100,
+    parent:null,
 
-        baseCost:10,
+    upgrades:[
+        ["Więcej aminokwasów",.5,80],
+        ["Łączenie aminokwasów",.5,120]
+    ]
+},
 
-        production:0.2,
+{
+    id:"dna",
+    name:"DNA",
 
-        upgrades:[
+    x:800,
+    y:2940,
 
-            {
-                name:"Więcej aminokwasów",
-                bonus:0.5,
-                cost:80
-            },
+    cost:60,
+    production:1,
 
-            {
-                name:"Łączenie aminokwasów",
-                bonus:0.5,
-                cost:120
-            }
+    color:"#2eb7ea",
+    fallback:"DNA",
 
-        ]
+    parent:"amino",
 
-    },
+    upgrades:[
+        ["Replikacja DNA",.5,350],
+        ["Naprawa DNA",.5,450]
+    ]
+},
 
+{
+    id:"prokaryote",
+    name:"Komórka prokariotyczna",
 
-    {
+    x:800,
+    y:2680,
 
-        id:"dna",
+    cost:300,
+    production:5,
 
-        name:"DNA",
+    color:"#579269",
+    fallback:"PRO",
 
-        model:"dna",
+    parent:"dna",
 
-        y:2840,
+    upgrades:[
+        ["Błona komórkowa",.5,1600],
+        ["Rybosomy",.5,1900]
+    ]
+},
 
-        baseCost:60,
+{
+    id:"eukaryote",
+    name:"Komórka eukariotyczna",
 
-        production:1,
+    x:800,
+    y:2420,
 
-        upgrades:[
+    cost:1600,
+    production:18,
 
-            {
-                name:"Replikacja DNA",
-                bonus:0.5,
-                cost:350
-            },
+    color:"#447b8b",
+    fallback:"EUK",
 
-            {
-                name:"Naprawa DNA",
-                bonus:0.5,
-                cost:450
-            }
+    parent:"prokaryote",
 
-        ]
+    upgrades:[
+        ["Jądro komórkowe",.5,8000],
+        ["Mitochondria",.5,10000]
+    ]
+},
 
-    },
+{
+    id:"sponge",
+    name:"Gąbka",
 
+    x:800,
+    y:2160,
 
-    {
+    cost:8000,
+    production:65,
 
-        id:"prokaryote",
+    color:"#d8923f",
+    fallback:"G",
 
-        name:"Komórka prokariotyczna",
+    parent:"eukaryote",
 
-        model:"prokaryote",
+    upgrades:[
+        ["Choanocyty",.5,40000],
+        ["Przepływ wody",.5,50000]
+    ]
+},
 
-        y:2580,
+{
+    id:"jellyfish",
+    name:"Meduza",
 
-        baseCost:300,
+    x:800,
+    y:1900,
 
-        production:5,
+    cost:40000,
+    production:220,
 
-        upgrades:[
+    color:"#887ed6",
+    fallback:"M",
 
-            {
-                name:"Błona komórkowa",
-                bonus:0.5,
-                cost:1600
-            },
+    parent:"sponge",
 
-            {
-                name:"Rybosomy",
-                bonus:0.5,
-                cost:1900
-            }
+    upgrades:[
+        ["Parzydełka",.5,210000],
+        ["Sieć nerwowa",.5,250000]
+    ]
+},
 
-        ]
+{
+    id:"flatworm",
+    name:"Płaziniec",
 
-    },
+    x:800,
+    y:1640,
 
+    cost:210000,
+    production:750,
 
-    {
+    color:"#b76057",
+    fallback:"P",
 
-        id:"eukaryote",
+    parent:"jellyfish",
 
-        name:"Komórka eukariotyczna",
+    upgrades:[
+        ["Symetria dwuboczna",.5,1100000],
+        ["Cefalizacja",.5,1300000]
+    ]
+},
 
-        model:"eukaryote",
+{
+    id:"fish",
+    name:"Ryba",
 
-        y:2320,
+    x:800,
+    y:1380,
 
-        baseCost:1600,
+    cost:1100000,
+    production:2700,
 
-        production:18,
+    color:"#478da4",
+    fallback:"R",
 
-        upgrades:[
+    parent:"flatworm",
 
-            {
-                name:"Jądro komórkowe",
-                bonus:0.5,
-                cost:8000
-            },
+    upgrades:[
+        ["Wydajniejsze skrzela",.5,5500000],
+        ["Lepsze płetwy",.5,6500000]
+    ]
+},
 
-            {
-                name:"Mitochondria",
-                bonus:0.5,
-                cost:10000
-            }
+{
+    id:"tetrapod",
+    name:"Czworonóg",
 
-        ]
+    x:800,
+    y:1120,
 
-    },
+    cost:5500000,
+    production:9500,
 
+    color:"#638b48",
+    fallback:"4",
 
-    {
+    parent:"fish",
 
-        id:"sponge",
+    upgrades:[
+        ["Silniejsze kończyny",.5,28000000],
+        ["Lepsze płuca",.5,33000000]
+    ]
+},
 
-        name:"Gąbka",
+/* ==========================================
+   NOWA GAŁĄŹ — GADY
+========================================== */
 
-        model:"sponge",
+{
+    id:"reptile",
+    name:"Gady",
 
-        y:2060,
+    x:1190,
+    y:1080,
 
-        baseCost:8000,
+    cost:15000000,
+    production:18000,
 
-        production:65,
+    color:"#627844",
+    fallback:"GAD",
 
-        upgrades:[
+    parent:"tetrapod",
 
-            {
-                name:"Choanocyty",
-                bonus:0.5,
-                cost:40000
-            },
+    branch:true,
 
-            {
-                name:"Przepływ wody",
-                bonus:0.5,
-                cost:50000
-            }
+    upgrades:[
+        ["Łuski ochronne",.5,70000000],
+        ["Jajo owodniowe",.5,85000000]
+    ]
+},
 
-        ]
+/* ==========================================
+   NOWA GAŁĄŹ — PŁAZY
+========================================== */
 
-    },
+{
+    id:"amphibian",
+    name:"Płazy",
 
+    x:1120,
+    y:1320,
 
-    {
+    cost:10000000,
+    production:14000,
 
-        id:"jellyfish",
+    color:"#579664",
+    fallback:"PŁ",
 
-        name:"Meduza",
+    parent:"tetrapod",
 
-        model:"jellyfish",
+    branch:true,
 
-        y:1800,
+    upgrades:[
+        ["Wilgotna skóra",.5,50000000],
+        ["Metamorfoza",.5,65000000]
+    ]
+},
 
-        baseCost:40000,
+{
+    id:"mammal",
+    name:"Ssak",
 
-        production:220,
+    x:800,
+    y:860,
 
-        upgrades:[
+    cost:28000000,
+    production:34000,
 
-            {
-                name:"Parzydełka",
-                bonus:0.5,
-                cost:210000
-            },
+    color:"#79624f",
+    fallback:"S",
 
-            {
-                name:"Sieć nerwowa",
-                bonus:0.5,
-                cost:250000
-            }
+    parent:"tetrapod",
 
-        ]
+    upgrades:[
+        ["Stałocieplność",.5,140000000],
+        ["Opieka nad młodymi",.5,165000000]
+    ]
+},
 
-    },
+{
+    id:"primate",
+    name:"Naczelne",
 
+    x:800,
+    y:600,
 
-    {
+    cost:140000000,
+    production:120000,
 
-        id:"flatworm",
+    color:"#755443",
+    fallback:"N",
 
-        name:"Płaziniec",
+    parent:"mammal",
 
-        model:"flatworm",
+    upgrades:[
+        ["Chwytne dłonie",.5,700000000],
+        ["Większy mózg",.5,820000000]
+    ]
+},
 
-        y:1540,
+{
+    id:"human",
+    name:"Człowiek",
 
-        baseCost:210000,
+    x:800,
+    y:340,
 
-        production:750,
+    cost:700000000,
+    production:430000,
 
-        upgrades:[
+    color:"#c98e6c",
+    fallback:"H",
 
-            {
-                name:"Symetria dwuboczna",
-                bonus:0.5,
-                cost:1100000
-            },
+    parent:"primate",
 
-            {
-                name:"Cefalizacja",
-                bonus:0.5,
-                cost:1300000
-            }
-
-        ]
-
-    },
-
-
-    {
-
-        id:"fish",
-
-        name:"Ryba",
-
-        model:"fish",
-
-        y:1280,
-
-        baseCost:1100000,
-
-        production:2700,
-
-        upgrades:[
-
-            {
-                name:"Wydajniejsze skrzela",
-                bonus:0.5,
-                cost:5500000
-            },
-
-            {
-                name:"Lepsze płetwy",
-                bonus:0.5,
-                cost:6500000
-            }
-
-        ]
-
-    },
-
-
-    {
-
-        id:"tetrapod",
-
-        name:"Czworonóg",
-
-        model:"tetrapod",
-
-        y:1020,
-
-        baseCost:5500000,
-
-        production:9500,
-
-        upgrades:[
-
-            {
-                name:"Silniejsze kończyny",
-                bonus:0.5,
-                cost:28000000
-            },
-
-            {
-                name:"Lepsze płuca",
-                bonus:0.5,
-                cost:33000000
-            }
-
-        ]
-
-    },
-
-
-    {
-
-        id:"mammal",
-
-        name:"Ssak",
-
-        model:"mammal",
-
-        y:760,
-
-        baseCost:28000000,
-
-        production:34000,
-
-        upgrades:[
-
-            {
-                name:"Stałocieplność",
-                bonus:0.5,
-                cost:140000000
-            },
-
-            {
-                name:"Opieka nad młodymi",
-                bonus:0.5,
-                cost:165000000
-            }
-
-        ]
-
-    },
-
-
-    {
-
-        id:"primate",
-
-        name:"Naczelne",
-
-        model:"primate",
-
-        y:500,
-
-        baseCost:140000000,
-
-        production:120000,
-
-        upgrades:[
-
-            {
-                name:"Chwytne dłonie",
-                bonus:0.5,
-                cost:700000000
-            },
-
-            {
-                name:"Większy mózg",
-                bonus:0.5,
-                cost:820000000
-            }
-
-        ]
-
-    },
-
-
-    {
-
-        id:"human",
-
-        name:"Człowiek",
-
-        model:"human",
-
-        y:240,
-
-        baseCost:700000000,
-
-        production:430000,
-
-        upgrades:[
-
-            {
-                name:"Mowa",
-                bonus:0.5,
-                cost:3500000000
-            },
-
-            {
-                name:"Myślenie abstrakcyjne",
-                bonus:0.5,
-                cost:4200000000
-            }
-
-        ]
-
-    }
+    upgrades:[
+        ["Mowa",.5,3500000000],
+        ["Myślenie abstrakcyjne",.5,4200000000]
+    ]
+}
 
 ];
 
-
-/* =========================================================
-   STAN
-========================================================= */
 
 let entropy = 0;
 
 let clickPower = 1;
 
 
-generators.forEach(g => {
+generators.forEach(g=>{
 
     g.level = 0;
 
-    g.upgrades.forEach(u => {
+    g.upgrades = g.upgrades.map(u=>({
 
-        u.bought = false;
+        name:u[0],
+        bonus:u[1],
+        cost:u[2],
+        bought:false
 
-    });
+    }));
 
 });
 
 
-/* =========================================================
-   IKONY ULEPSZEŃ
+/* =====================================================
+   FIND
+===================================================== */
 
-   Są SVG, bo to tylko małe kwadraty.
-========================================================= */
+function byId(id){
 
-function upgradeIcon(type){
-
-    if(type === "dna"){
-
-        return `
-
-        <svg viewBox="0 0 100 100">
-
-            <path
-                d="M30 10 C75 25 75 75 30 90"
-                fill="none"
-                stroke="#34bbef"
-                stroke-width="8"
-            />
-
-            <path
-                d="M70 10 C25 25 25 75 70 90"
-                fill="none"
-                stroke="#be68dd"
-                stroke-width="8"
-            />
-
-            <g stroke="#ddd" stroke-width="3">
-
-                <line x1="38" y1="22" x2="62" y2="22"/>
-                <line x1="31" y1="40" x2="69" y2="40"/>
-                <line x1="31" y1="60" x2="69" y2="60"/>
-                <line x1="38" y1="78" x2="62" y2="78"/>
-
-            </g>
-
-        </svg>
-
-        `;
-
-    }
-
-
-    if(type === "cell"){
-
-        return `
-
-        <svg viewBox="0 0 100 100">
-
-            <circle
-                cx="50"
-                cy="50"
-                r="34"
-                fill="#37695c"
-                stroke="#6fe4c8"
-                stroke-width="5"
-            />
-
-            <circle
-                cx="43"
-                cy="45"
-                r="13"
-                fill="#82628f"
-            />
-
-            <circle
-                cx="67"
-                cy="61"
-                r="7"
-                fill="#c9795c"
-            />
-
-        </svg>
-
-        `;
-
-    }
-
-
-    return `
-
-    <svg viewBox="0 0 100 100">
-
-        <circle
-            cx="50"
-            cy="50"
-            r="31"
-            fill="#246b59"
-            stroke="#69e2c3"
-            stroke-width="5"
-        />
-
-        <path
-            d="M50 27 V73 M27 50 H73"
-            stroke="#e7fff9"
-            stroke-width="9"
-            stroke-linecap="round"
-        />
-
-    </svg>
-
-    `;
+    return generators.find(
+        g => g.id === id
+    );
 
 }
 
 
-/* =========================================================
-   TWORZENIE GRAFIKÓW
+/* =====================================================
+   FALLBACK ICON
 
-   WAŻNE:
-   Tutaj NIE UŻYWAMY THREE.
-========================================================= */
+   Ta ikona pojawia się ZAWSZE,
+   nawet bez Three.js.
+===================================================== */
 
-const modelCanvases = [];
+function drawIcon(canvas,g){
 
+    const ctx =
+        canvas.getContext("2d");
 
-generators.forEach((g,index) => {
 
-    /* GENERATOR */
+    const w =
+        canvas.width;
 
-    const generator =
-        document.createElement("div");
+    const h =
+        canvas.height;
 
 
-    generator.className =
-        "generator";
-
-
-    generator.id =
-        "generator-" + g.id;
-
-
-    generator.style.top =
-        g.y + "px";
-
-
-    /* CANVAS */
-
-    const canvas =
-        document.createElement("canvas");
-
-
-    canvas.className =
-        "model-canvas";
-
-
-    canvas.width = 240;
-    canvas.height = 240;
-
-
-    generator.appendChild(canvas);
-
-
-    modelCanvases.push({
-
-        canvas:canvas,
-
-        model:g.model,
-
-        generator:g
-
-    });
-
-
-    /* NA RAZIE FALLBACK 2D */
-
-    drawFallbackModel(
-        canvas,
-        g.model
-    );
-
-
-    /* LEVEL */
-
-    const level =
-        document.createElement("div");
-
-
-    level.className =
-        "level";
-
-
-    level.textContent =
-        "x0";
-
-
-    generator.appendChild(level);
-
-
-    /* NAZWA */
-
-    const name =
-        document.createElement("div");
-
-
-    name.className =
-        "generator-name";
-
-
-    name.textContent =
-        g.name;
-
-
-    generator.appendChild(name);
-
-
-    /* CENA */
-
-    const cost =
-        document.createElement("div");
-
-
-    cost.className =
-        "generator-cost";
-
-
-    generator.appendChild(cost);
-
-
-    /* KLIK */
-
-    generator.addEventListener(
-
-        "pointerdown",
-
-        event => {
-
-            event.stopPropagation();
-
-        }
-
-    );
-
-
-    generator.addEventListener(
-
-        "click",
-
-        event => {
-
-            event.stopPropagation();
-
-            buyGenerator(index);
-
-        }
-
-    );
-
-
-    world.appendChild(generator);
-
-
-    /* UPGRADE LEWY */
-
-    createUpgrade(
-        g,
-        index,
+    ctx.clearRect(
         0,
-        500
+        0,
+        w,
+        h
     );
 
 
-    /* UPGRADE PRAWY */
+    const cx =
+        w/2;
 
-    createUpgrade(
-        g,
-        index,
+    const cy =
+        h/2;
+
+
+    /* shadow */
+
+    ctx.shadowBlur = 20;
+
+    ctx.shadowColor =
+        g.color;
+
+
+    const gradient =
+
+        ctx.createRadialGradient(
+
+            cx-25,
+            cy-30,
+            8,
+
+            cx,
+            cy,
+            85
+
+        );
+
+
+    gradient.addColorStop(
+        0,
+        "#ffffff"
+    );
+
+
+    gradient.addColorStop(
+        .18,
+        g.color
+    );
+
+
+    gradient.addColorStop(
         1,
-        1100
+        "#101c19"
     );
 
-});
+
+    ctx.fillStyle =
+        gradient;
 
 
-/* =========================================================
-   TWORZENIE UPGRADE
-========================================================= */
+    /* DIFFERENT SHAPES */
+
+    if(g.id === "dna"){
+
+        ctx.shadowBlur = 12;
+
+        ctx.lineWidth = 12;
+
+        for(
+            let i = 0;
+            i < 2;
+            i++
+        ){
+
+            ctx.beginPath();
+
+
+            ctx.strokeStyle =
+                i === 0
+                ? "#37c6ff"
+                : "#c963d9";
+
+
+            for(
+                let y = 25;
+                y <= 215;
+                y += 3
+            ){
+
+                const t =
+                    (y-25)/190;
+
+
+                const x =
+
+                    cx +
+
+                    Math.sin(
+                        t*Math.PI*4 +
+                        i*Math.PI
+                    ) *
+
+                    45;
+
+
+                if(y === 25){
+
+                    ctx.moveTo(
+                        x,
+                        y
+                    );
+
+                }
+
+                else{
+
+                    ctx.lineTo(
+                        x,
+                        y
+                    );
+
+                }
+
+            }
+
+
+            ctx.stroke();
+
+        }
+
+
+        return;
+
+    }
+
+
+    if(
+        g.id === "prokaryote"
+    ){
+
+        ctx.beginPath();
+
+        ctx.ellipse(
+            cx,
+            cy,
+            78,
+            48,
+            -.15,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+
+        ctx.shadowBlur=0;
+
+
+        for(let i=0;i<13;i++){
+
+            ctx.beginPath();
+
+            ctx.fillStyle="#d6e7a7";
+
+            ctx.arc(
+
+                cx-45+
+                Math.random()*90,
+
+                cy-27+
+                Math.random()*54,
+
+                5,
+
+                0,
+                Math.PI*2
+
+            );
+
+            ctx.fill();
+
+        }
+
+
+        return;
+
+    }
+
+
+    if(
+        g.id === "eukaryote"
+    ){
+
+        ctx.beginPath();
+
+        ctx.arc(
+            cx,
+            cy,
+            72,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+
+        ctx.shadowBlur=5;
+
+        ctx.fillStyle="#9e67af";
+
+        ctx.beginPath();
+
+        ctx.arc(
+            cx-12,
+            cy-7,
+            29,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+
+        return;
+
+    }
+
+
+    if(g.id === "fish"){
+
+        ctx.beginPath();
+
+        ctx.ellipse(
+            cx+5,
+            cy,
+            70,
+            39,
+            0,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            cx-65,
+            cy
+        );
+
+        ctx.lineTo(
+            cx-110,
+            cy-40
+        );
+
+        ctx.lineTo(
+            cx-110,
+            cy+40
+        );
+
+        ctx.closePath();
+
+        ctx.fill();
+
+
+        ctx.fillStyle="#080808";
+
+        ctx.beginPath();
+
+        ctx.arc(
+            cx+50,
+            cy-12,
+            7,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+
+        return;
+
+    }
+
+
+    if(
+        g.id === "tetrapod" ||
+        g.id === "reptile" ||
+        g.id === "amphibian" ||
+        g.id === "mammal"
+    ){
+
+        ctx.beginPath();
+
+        ctx.ellipse(
+            cx-5,
+            cy,
+            62,
+            38,
+            0,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+
+        ctx.beginPath();
+
+        ctx.arc(
+            cx+62,
+            cy-16,
+            28,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+
+        ctx.lineWidth=14;
+
+        ctx.lineCap="round";
+
+        ctx.strokeStyle=g.color;
+
+
+        ctx.beginPath();
+
+        ctx.moveTo(cx-35,cy+25);
+        ctx.lineTo(cx-52,cy+63);
+
+        ctx.moveTo(cx+15,cy+30);
+        ctx.lineTo(cx+29,cy+66);
+
+        ctx.stroke();
+
+
+        ctx.fillStyle="#050505";
+
+        ctx.beginPath();
+
+        ctx.arc(
+            cx+72,
+            cy-22,
+            5,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+
+        return;
+
+    }
+
+
+    if(
+        g.id === "primate" ||
+        g.id === "human"
+    ){
+
+        ctx.beginPath();
+
+        ctx.arc(
+            cx,
+            cy-48,
+            32,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+
+        ctx.beginPath();
+
+        ctx.ellipse(
+            cx,
+            cy+20,
+            35,
+            60,
+            0,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+
+        ctx.lineWidth=16;
+
+        ctx.strokeStyle=g.color;
+
+        ctx.lineCap="round";
+
+
+        ctx.beginPath();
+
+        ctx.moveTo(cx-25,cy);
+        ctx.lineTo(cx-63,cy+45);
+
+        ctx.moveTo(cx+25,cy);
+        ctx.lineTo(cx+63,cy+45);
+
+        ctx.moveTo(cx-18,cy+64);
+        ctx.lineTo(cx-30,cy+100);
+
+        ctx.moveTo(cx+18,cy+64);
+        ctx.lineTo(cx+30,cy+100);
+
+        ctx.stroke();
+
+
+        return;
+
+    }
+
+
+    /* default organic icon */
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        cx,
+        cy,
+        65,
+        55,
+        0,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+
+    ctx.shadowBlur=0;
+
+    ctx.fillStyle="white";
+
+    ctx.font="bold 30px Arial";
+
+    ctx.textAlign="center";
+    ctx.textBaseline="middle";
+
+    ctx.fillText(
+        g.fallback,
+        cx,
+        cy
+    );
+
+}
+
+
+/* =====================================================
+   UPGRADE ICON
+===================================================== */
+
+const upgradeSVG = `
+
+<svg viewBox="0 0 100 100">
+
+<circle
+cx="50"
+cy="50"
+r="31"
+fill="#246b59"
+stroke="#6ae2c3"
+stroke-width="5"
+/>
+
+<path
+d="M50 27 V73 M27 50 H73"
+stroke="#e9fff9"
+stroke-width="9"
+stroke-linecap="round"
+/>
+
+</svg>
+
+`;
+
+
+/* =====================================================
+   CREATE GENERATORS
+===================================================== */
+
+generators.forEach(
+    (g,index)=>{
+
+        const generator =
+            document.createElement("div");
+
+
+        generator.className =
+            "generator";
+
+
+        generator.id =
+            "generator-" + g.id;
+
+
+        generator.style.left =
+            g.x + "px";
+
+
+        generator.style.top =
+            g.y + "px";
+
+
+        const canvas =
+            document.createElement("canvas");
+
+
+        canvas.className =
+            "modelCanvas";
+
+
+        canvas.width =
+            240;
+
+
+        canvas.height =
+            240;
+
+
+        generator.appendChild(
+            canvas
+        );
+
+
+        drawIcon(
+            canvas,
+            g
+        );
+
+
+        const level =
+            document.createElement("div");
+
+
+        level.className =
+            "level";
+
+
+        level.textContent =
+            "x0";
+
+
+        generator.appendChild(
+            level
+        );
+
+
+        const name =
+            document.createElement("div");
+
+
+        name.className =
+            "generatorName";
+
+
+        name.textContent =
+            g.name;
+
+
+        generator.appendChild(
+            name
+        );
+
+
+        const cost =
+            document.createElement("div");
+
+
+        cost.className =
+            "generatorCost";
+
+
+        generator.appendChild(
+            cost
+        );
+
+
+        generator.addEventListener(
+            "pointerdown",
+            e=>e.stopPropagation()
+        );
+
+
+        generator.addEventListener(
+            "click",
+            e=>{
+
+                e.stopPropagation();
+
+                buyGenerator(index);
+
+            }
+        );
+
+
+        world.appendChild(
+            generator
+        );
+
+
+        /* Branch generators have smaller upgrade offsets */
+
+        let leftX =
+            g.branch
+            ? g.x - 260
+            : 500;
+
+
+        let rightX =
+            g.branch
+            ? g.x + 270
+            : 1100;
+
+
+        createUpgrade(
+            g,
+            index,
+            0,
+            leftX
+        );
+
+
+        createUpgrade(
+            g,
+            index,
+            1,
+            rightX
+        );
+
+    }
+);
+
+
+/* =====================================================
+   CREATE UPGRADE
+===================================================== */
 
 function createUpgrade(
     g,
@@ -1468,7 +1555,7 @@ function createUpgrade(
     x
 ){
 
-    const u =
+    const data =
         g.upgrades[upgradeIndex];
 
 
@@ -1492,54 +1579,26 @@ function createUpgrade(
         g.y + "px";
 
 
-    let iconType = "normal";
-
-
-    if(
-        g.id === "dna"
-    ){
-
-        iconType = "dna";
-
-    }
-
-
-    if(
-        g.id === "prokaryote" ||
-        g.id === "eukaryote"
-    ){
-
-        iconType = "cell";
-
-    }
-
-
     element.innerHTML = `
 
-        <div class="upgrade-icon">
+        <div class="upgradeIcon">
 
-            ${upgradeIcon(iconType)}
+            ${upgradeSVG}
 
         </div>
 
-        <div class="upgrade-info">
+        <div class="upgradeInfo">
 
-            <div class="upgrade-name">
-
-                ${u.name}
-
+            <div class="upgradeName">
+                ${data.name}
             </div>
 
-            <div class="upgrade-effect">
-
-                +${Math.round(u.bonus * 100)}% produkcji
-
+            <div class="upgradeEffect">
+                +${data.bonus*100}% produkcji
             </div>
 
-            <div class="upgrade-cost">
-
-                ${format(u.cost)} entropii
-
+            <div class="upgradeCost">
+                ${format(data.cost)} entropii
             </div>
 
         </div>
@@ -1548,25 +1607,16 @@ function createUpgrade(
 
 
     element.addEventListener(
-
         "pointerdown",
-
-        event => {
-
-            event.stopPropagation();
-
-        }
-
+        e=>e.stopPropagation()
     );
 
 
     element.addEventListener(
-
         "click",
+        e=>{
 
-        event => {
-
-            event.stopPropagation();
+            e.stopPropagation();
 
             buyUpgrade(
                 generatorIndex,
@@ -1574,236 +1624,156 @@ function createUpgrade(
             );
 
         }
-
     );
 
 
-    world.appendChild(element);
-
-}
-
-
-/* =========================================================
-   FALLBACK MODELI
-
-   Dzięki temu nawet bez THREE
-   graf NIE JEST PUSTY.
-========================================================= */
-
-function drawFallbackModel(canvas,type){
-
-    const ctx =
-        canvas.getContext("2d");
-
-
-    ctx.clearRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
-
-
-    const cx =
-        canvas.width / 2;
-
-    const cy =
-        canvas.height / 2;
-
-
-    const gradient =
-        ctx.createRadialGradient(
-
-            cx - 25,
-            cy - 30,
-            5,
-
-            cx,
-            cy,
-            80
-
-        );
-
-
-    gradient.addColorStop(
-        0,
-        "#70e6c5"
-    );
-
-    gradient.addColorStop(
-        0.55,
-        "#397968"
-    );
-
-    gradient.addColorStop(
-        1,
-        "#143129"
-    );
-
-
-    ctx.fillStyle =
-        gradient;
-
-
-    /* DEFAULT */
-
-    ctx.beginPath();
-
-    ctx.ellipse(
-        cx,
-        cy,
-        65,
-        45,
-        0,
-        0,
-        Math.PI * 2
-    );
-
-    ctx.fill();
-
-
-    ctx.fillStyle =
-        "#e8fff9";
-
-
-    ctx.font =
-        "bold 24px Arial";
-
-
-    ctx.textAlign =
-        "center";
-
-
-    ctx.textBaseline =
-        "middle";
-
-
-    const shortNames = {
-
-        amino:"AA",
-
-        dna:"DNA",
-
-        prokaryote:"PRO",
-
-        eukaryote:"EUK",
-
-        sponge:"G",
-
-        jellyfish:"M",
-
-        flatworm:"P",
-
-        fish:"R",
-
-        tetrapod:"4",
-
-        mammal:"S",
-
-        primate:"N",
-
-        human:"H"
-
-    };
-
-
-    ctx.fillText(
-
-        shortNames[type] || "?",
-
-        cx,
-        cy
-
+    world.appendChild(
+        element
     );
 
 }
 
 
-/* =========================================================
-   LINIE
-========================================================= */
+/* =====================================================
+   LINES
+===================================================== */
 
 function drawLines(){
 
-    linesSVG.innerHTML = "";
-
-
-    for(
-        let i = 0;
-        i < generators.length - 1;
-        i++
-    ){
-
-        const current =
-            generators[i];
-
-
-        const next =
-            generators[i + 1];
-
-
-        createSVGLine(
-
-            800,
-            current.y,
-
-            800,
-            next.y,
-
-            "main-line",
-
-            "main-line-" + i
-
-        );
-
-    }
+    svg.innerHTML="";
 
 
     generators.forEach(
-        (g,index) => {
+        (g,index)=>{
 
-            createSVGLine(
+            if(!g.parent){
+                return;
+            }
 
-                800,
-                g.y,
 
-                500,
-                g.y,
+            const parent =
+                byId(
+                    g.parent
+                );
 
-                "upgrade-line",
 
-                `upgrade-line-${index}-0`
+            const line =
+                document.createElementNS(
+
+                    "http://www.w3.org/2000/svg",
+
+                    "line"
+
+                );
+
+
+            line.setAttribute(
+                "x1",
+                parent.x
+            );
+
+
+            line.setAttribute(
+                "y1",
+                parent.y
+            );
+
+
+            line.setAttribute(
+                "x2",
+                g.x
+            );
+
+
+            line.setAttribute(
+                "y2",
+                g.y
+            );
+
+
+            line.id =
+                "connection-" +
+                g.id;
+
+
+            line.classList.add(
+
+                g.branch
+                ? "branchLine"
+                : "mainLine"
 
             );
 
 
-            createSVGLine(
+            svg.appendChild(line);
 
-                800,
-                g.y,
 
-                1100,
-                g.y,
+            /* upgrade lines */
 
-                "upgrade-line",
+            let leftX =
+                g.branch
+                ? g.x - 260
+                : 500;
 
-                `upgrade-line-${index}-1`
 
+            let rightX =
+                g.branch
+                ? g.x + 270
+                : 1100;
+
+
+            createUpgradeLine(
+                g,
+                index,
+                0,
+                leftX
+            );
+
+
+            createUpgradeLine(
+                g,
+                index,
+                1,
+                rightX
             );
 
         }
     );
 
+
+    /* Amino upgrade lines */
+
+    const amino =
+        generators[0];
+
+
+    createUpgradeLine(
+        amino,
+        0,
+        0,
+        500
+    );
+
+
+    createUpgradeLine(
+        amino,
+        0,
+        1,
+        1100
+    );
+
 }
 
 
-function createSVGLine(
-    x1,
-    y1,
-    x2,
-    y2,
-    className,
-    id
+/* =====================================================
+   UPGRADE LINE
+===================================================== */
+
+function createUpgradeLine(
+    g,
+    index,
+    upgradeIndex,
+    x
 ){
 
     const line =
@@ -1818,52 +1788,53 @@ function createSVGLine(
 
     line.setAttribute(
         "x1",
-        x1
+        g.x
     );
 
 
     line.setAttribute(
         "y1",
-        y1
+        g.y
     );
 
 
     line.setAttribute(
         "x2",
-        x2
+        x
     );
 
 
     line.setAttribute(
         "y2",
-        y2
+        g.y
     );
 
 
-    line.setAttribute(
-        "class",
-        className
+    line.classList.add(
+        "upgradeLine"
     );
 
 
     line.id =
-        id;
+        `upgradeLine-${index}-${upgradeIndex}`;
 
 
-    linesSVG.appendChild(line);
+    svg.appendChild(
+        line
+    );
 
 }
 
 
-/* =========================================================
-   KOSZT
-========================================================= */
+/* =====================================================
+   COST
+===================================================== */
 
 function generatorCost(g){
 
     return Math.floor(
 
-        g.baseCost *
+        g.cost *
 
         Math.pow(
             1.17,
@@ -1875,20 +1846,20 @@ function generatorCost(g){
 }
 
 
-/* =========================================================
-   BONUS
-========================================================= */
+/* =====================================================
+   MULTIPLIER
+===================================================== */
 
-function generatorMultiplier(g){
+function multiplier(g){
 
-    let multiplier = 1;
+    let m = 1;
 
 
-    g.upgrades.forEach(u => {
+    g.upgrades.forEach(u=>{
 
         if(u.bought){
 
-            multiplier +=
+            m +=
                 u.bonus;
 
         }
@@ -1896,41 +1867,41 @@ function generatorMultiplier(g){
     });
 
 
-    return multiplier;
+    return m;
 
 }
 
 
-/* =========================================================
-   PRODUKCJA
-========================================================= */
+/* =====================================================
+   PRODUCTION
+===================================================== */
 
-function getProduction(){
+function production(){
 
-    let production = 0;
+    let total = 0;
 
 
-    generators.forEach(g => {
+    generators.forEach(g=>{
 
-        production +=
+        total +=
 
             g.production *
 
             g.level *
 
-            generatorMultiplier(g);
+            multiplier(g);
 
     });
 
 
-    return production;
+    return total;
 
 }
 
 
-/* =========================================================
-   KUP GENERATOR
-========================================================= */
+/* =====================================================
+   BUY GENERATOR
+===================================================== */
 
 function buyGenerator(index){
 
@@ -1938,34 +1909,39 @@ function buyGenerator(index){
         generators[index];
 
 
-    const unlocked =
+    if(g.parent){
 
-        index === 0 ||
+        const parent =
+            byId(
+                g.parent
+            );
 
-        generators[index - 1]
-        .level > 0;
 
+        if(
+            parent.level === 0
+        ){
 
-    if(!unlocked){
+            return;
 
-        return;
+        }
 
     }
 
 
-    const cost =
+    const price =
         generatorCost(g);
 
 
-    if(entropy < cost){
+    if(
+        entropy < price
+    ){
 
         return;
 
     }
 
 
-    entropy -= cost;
-
+    entropy -= price;
 
     g.level++;
 
@@ -1975,9 +1951,9 @@ function buyGenerator(index){
 }
 
 
-/* =========================================================
-   KUP UPGRADE
-========================================================= */
+/* =====================================================
+   BUY UPGRADE
+===================================================== */
 
 function buyUpgrade(
     generatorIndex,
@@ -1985,28 +1961,30 @@ function buyUpgrade(
 ){
 
     const g =
-        generators[generatorIndex];
+        generators[
+            generatorIndex
+        ];
 
 
     const u =
-        g.upgrades[upgradeIndex];
+        g.upgrades[
+            upgradeIndex
+        ];
 
 
-    if(g.level === 0){
-
-        return;
-
-    }
-
-
-    if(u.bought){
+    if(
+        g.level === 0 ||
+        u.bought
+    ){
 
         return;
 
     }
 
 
-    if(entropy < u.cost){
+    if(
+        entropy < u.cost
+    ){
 
         return;
 
@@ -2026,103 +2004,120 @@ function buyUpgrade(
 }
 
 
-/* =========================================================
-   FORMATOWANIE LICZB
-========================================================= */
+/* =====================================================
+   FORMAT
+===================================================== */
 
-function format(number){
+function format(n){
 
-    if(number < 1000){
+    if(n < 1e3){
 
-        return Math.floor(
-            number
-        ).toString();
+        return Math.floor(n)
+        .toString();
 
     }
 
 
-    if(number < 1e6){
+    if(n < 1e6){
 
         return (
-            number / 1000
-        ).toFixed(1) + " tys.";
+            n/1e3
+        ).toFixed(1) +
+        " tys.";
 
     }
 
 
-    if(number < 1e9){
+    if(n < 1e9){
 
         return (
-            number / 1e6
-        ).toFixed(2) + " mln";
+            n/1e6
+        ).toFixed(2) +
+        " mln";
 
     }
 
 
-    if(number < 1e12){
+    if(n < 1e12){
 
         return (
-            number / 1e9
-        ).toFixed(2) + " mld";
+            n/1e9
+        ).toFixed(2) +
+        " mld";
 
     }
 
 
-    if(number < 1e15){
+    if(n < 1e15){
 
         return (
-            number / 1e12
-        ).toFixed(2) + " bln";
+            n/1e12
+        ).toFixed(2) +
+        " bln";
 
     }
 
 
-    return number.toExponential(2);
+    return n.toExponential(2);
 
 }
 
 
-/* =========================================================
+/* =====================================================
    UPDATE
-========================================================= */
+===================================================== */
 
 function updateUI(){
 
-    document.getElementById(
-        "entropy"
-    ).textContent =
+    document
+    .getElementById("entropy")
+    .textContent =
 
         format(entropy) +
         " entropii";
 
 
-    document.getElementById(
-        "production"
-    ).textContent =
+    document
+    .getElementById("production")
+    .textContent =
 
         "+" +
-        format(getProduction()) +
+        format(
+            production()
+        ) +
         " / s";
 
 
     generators.forEach(
-        (g,index) => {
+        (g,index)=>{
 
-            const generator =
-                document.getElementById(
-                    "generator-" + g.id
+            const element =
+
+                document
+                .getElementById(
+                    "generator-" +
+                    g.id
                 );
 
 
-            const unlocked =
-
-                index === 0 ||
-
-                generators[index - 1]
-                .level > 0;
+            let unlocked =
+                true;
 
 
-            generator.classList.remove(
+            if(g.parent){
+
+                unlocked =
+
+                    byId(
+                        g.parent
+                    ).level > 0;
+
+            }
+
+
+            element
+            .classList
+            .remove(
                 "locked",
                 "available",
                 "owned"
@@ -2131,15 +2126,21 @@ function updateUI(){
 
             if(!unlocked){
 
-                generator.classList.add(
+                element
+                .classList
+                .add(
                     "locked"
                 );
 
             }
 
-            else if(g.level === 0){
+            else if(
+                g.level === 0
+            ){
 
-                generator.classList.add(
+                element
+                .classList
+                .add(
                     "available"
                 );
 
@@ -2147,22 +2148,29 @@ function updateUI(){
 
             else{
 
-                generator.classList.add(
+                element
+                .classList
+                .add(
                     "owned"
                 );
 
             }
 
 
-            generator
-            .querySelector(".level")
+            element
+            .querySelector(
+                ".level"
+            )
             .textContent =
 
-                "x" + g.level;
+                "x" +
+                g.level;
 
 
-            generator
-            .querySelector(".generator-cost")
+            element
+            .querySelector(
+                ".generatorCost"
+            )
             .textContent =
 
                 format(
@@ -2172,25 +2180,28 @@ function updateUI(){
                 " entropii";
 
 
-            /* MAIN LINE */
+            /* CONNECTION */
 
-            if(
-                index <
-                generators.length - 1
-            ){
+            if(g.parent){
 
                 const line =
 
-                    document.getElementById(
-                        "main-line-" + index
+                    document
+                    .getElementById(
+                        "connection-" +
+                        g.id
                     );
 
 
-                line.classList.toggle(
+                line
+                .classList
+                .toggle(
 
                     "active",
 
-                    g.level > 0
+                    byId(
+                        g.parent
+                    ).level > 0
 
                 );
 
@@ -2200,18 +2211,21 @@ function updateUI(){
             /* UPGRADES */
 
             g.upgrades.forEach(
-                (u,uIndex) => {
+                (u,uIndex)=>{
 
                     const upgrade =
 
-                        document.getElementById(
+                        document
+                        .getElementById(
 
                             `upgrade-${g.id}-${uIndex}`
 
                         );
 
 
-                    upgrade.classList.remove(
+                    upgrade
+                    .classList
+                    .remove(
                         "locked",
                         "bought"
                     );
@@ -2221,25 +2235,27 @@ function updateUI(){
                         g.level === 0
                     ){
 
-                        upgrade.classList.add(
+                        upgrade
+                        .classList
+                        .add(
                             "locked"
                         );
 
                     }
 
 
-                    if(
-                        u.bought
-                    ){
+                    if(u.bought){
 
-                        upgrade.classList.add(
+                        upgrade
+                        .classList
+                        .add(
                             "bought"
                         );
 
 
                         upgrade
                         .querySelector(
-                            ".upgrade-effect"
+                            ".upgradeEffect"
                         )
                         .textContent =
 
@@ -2250,20 +2266,27 @@ function updateUI(){
 
                     const line =
 
-                        document.getElementById(
+                        document
+                        .getElementById(
 
-                            `upgrade-line-${index}-${uIndex}`
+                            `upgradeLine-${index}-${uIndex}`
 
                         );
 
 
-                    line.classList.toggle(
+                    if(line){
 
-                        "active",
+                        line
+                        .classList
+                        .toggle(
 
-                        g.level > 0
+                            "active",
 
-                    );
+                            g.level > 0
+
+                        );
+
+                    }
 
                 }
             );
@@ -2274,52 +2297,41 @@ function updateUI(){
 }
 
 
-/* =========================================================
-   MAPA — PRZECIĄGANIE
-========================================================= */
+/* =====================================================
+   DRAG MAP
+===================================================== */
 
 let worldX = 0;
-
 let worldY = 0;
 
-
 let dragging = false;
+let moved = false;
 
-let dragMoved = false;
+let startPointerX = 0;
+let startPointerY = 0;
 
-
-let pointerStartX = 0;
-
-let pointerStartY = 0;
-
-
-let worldStartX = 0;
-
-let worldStartY = 0;
+let startWorldX = 0;
+let startWorldY = 0;
 
 
-function updateWorldPosition(){
+function renderWorld(){
 
     world.style.transform =
 
-        `translate(${worldX}px, ${worldY}px)`;
+        `translate(${worldX}px,${worldY}px)`;
 
 }
 
 
-/* =========================================================
-   MOUSE DOWN
-========================================================= */
+/* DOWN */
 
 viewport.addEventListener(
-
     "pointerdown",
-
-    event => {
+    e=>{
 
         if(
-            event.target.closest(".generator") ||
-            event.target.closest(".upgrade")
+            e.target.closest(".generator") ||
+            e.target.closest(".upgrade")
         ){
 
             return;
@@ -2329,50 +2341,50 @@ viewport.addEventListener(
 
         dragging = true;
 
-        dragMoved = false;
+        moved = false;
 
 
-        pointerStartX =
-            event.clientX;
+        startPointerX =
+            e.clientX;
 
 
-        pointerStartY =
-            event.clientY;
+        startPointerY =
+            e.clientY;
 
 
-        worldStartX =
+        startWorldX =
             worldX;
 
 
-        worldStartY =
+        startWorldY =
             worldY;
 
 
-        viewport.classList.add(
+        viewport
+        .classList
+        .add(
             "dragging"
         );
 
 
-        viewport.setPointerCapture(
-            event.pointerId
+        viewport
+        .setPointerCapture(
+            e.pointerId
         );
 
     }
-
 );
 
 
-/* =========================================================
-   MOUSE MOVE
-========================================================= */
+/* MOVE */
 
 viewport.addEventListener(
-
     "pointermove",
+    e=>{
 
-    event => {
-
-        if(!dragging){
+        if(
+            !dragging
+        ){
 
             return;
 
@@ -2381,82 +2393,79 @@ viewport.addEventListener(
 
         const dx =
 
-            event.clientX -
-            pointerStartX;
+            e.clientX -
+            startPointerX;
 
 
         const dy =
 
-            event.clientY -
-            pointerStartY;
+            e.clientY -
+            startPointerY;
 
 
         if(
-            Math.abs(dx) > 5 ||
-            Math.abs(dy) > 5
+            Math.abs(dx)>5 ||
+            Math.abs(dy)>5
         ){
 
-            dragMoved = true;
+            moved = true;
 
         }
 
 
         worldX =
-
-            worldStartX +
+            startWorldX +
             dx;
 
 
         worldY =
-
-            worldStartY +
+            startWorldY +
             dy;
 
 
-        updateWorldPosition();
+        renderWorld();
 
     }
-
 );
 
 
-/* =========================================================
-   MOUSE UP
-========================================================= */
+/* UP */
 
 viewport.addEventListener(
-
     "pointerup",
+    e=>{
 
-    event => {
-
-        if(!dragging){
+        if(
+            !dragging
+        ){
 
             return;
 
         }
 
 
-        dragging = false;
+        dragging =
+            false;
 
 
-        viewport.classList.remove(
+        viewport
+        .classList
+        .remove(
             "dragging"
         );
 
 
-        if(!dragMoved){
+        if(
+            !moved
+        ){
 
             entropy +=
                 clickPower;
 
 
-            createClickNumber(
-
-                event.clientX,
-
-                event.clientY
-
+            clickEffect(
+                e.clientX,
+                e.clientY
             );
 
 
@@ -2465,29 +2474,30 @@ viewport.addEventListener(
         }
 
     }
-
 );
 
 
-/* =========================================================
-   +1
-========================================================= */
+/* =====================================================
+   CLICK TEXT
+===================================================== */
 
-function createClickNumber(x,y){
+function clickEffect(x,y){
 
     const element =
 
-        document.createElement(
+        document
+        .createElement(
             "div"
         );
 
 
     element.className =
-        "click-number";
+        "clickText";
 
 
     element.textContent =
-        "+" + clickPower;
+        "+" +
+        clickPower;
 
 
     element.style.left =
@@ -2498,2009 +2508,92 @@ function createClickNumber(x,y){
         y + "px";
 
 
-    document.body.appendChild(
+    document.body
+    .appendChild(
         element
     );
 
 
     setTimeout(
-
-        () => {
-
-            element.remove();
-
-        },
-
-        750
-
+        ()=>element.remove(),
+        800
     );
 
 }
 
 
-/* =========================================================
-   POZYCJA STARTOWA
-
-   AMINOKWAS IDEALNIE NA ŚRODKU.
-========================================================= */
+/* =====================================================
+   HOME / START POSITION
+===================================================== */
 
 function centerOnAmino(){
 
     const amino =
-        generators[0];
+        byId(
+            "amino"
+        );
 
 
     worldX =
 
-        window.innerWidth / 2 -
+        window.innerWidth/2 -
 
-        800;
+        amino.x;
 
 
     worldY =
 
-        window.innerHeight / 2 -
+        window.innerHeight/2 -
 
         amino.y;
 
 
-    updateWorldPosition();
+    renderWorld();
 
 }
 
 
-/* =========================================================
-   HOME
-========================================================= */
-
 document
-.getElementById("home-button")
+.getElementById("home")
 .addEventListener(
-
     "click",
+    e=>{
 
-    event => {
-
-        event.stopPropagation();
+        e.stopPropagation();
 
         centerOnAmino();
 
     }
-
 );
 
 
-/* =========================================================
-   PRODUKCJA
-========================================================= */
+/* =====================================================
+   PRODUCTION LOOP
+===================================================== */
 
 setInterval(
-
-    () => {
+    ()=>{
 
         entropy +=
-
-            getProduction() /
-            10;
+            production()/10;
 
 
         updateUI();
 
     },
-
     100
-
 );
 
 
-/* =========================================================
-   TERAZ URUCHAMIAMY CAŁY GRAF.
-
-   THREE JESZCZE NIE ISTNIEJE.
-========================================================= */
+/* =====================================================
+   START
+===================================================== */
 
 drawLines();
 
 updateUI();
 
 centerOnAmino();
-
-
-/* =========================================================
-   RESIZE
-========================================================= */
-
-window.addEventListener(
-
-    "resize",
-
-    () => {
-
-        centerOnAmino();
-
-    }
-
-);
-
-
-/* =========================================================
-   THREE.JS
-
-   ŁADUJEMY DOPIERO TERAZ.
-
-   Jeśli się zepsuje,
-   graf już istnieje.
-========================================================= */
-
-let THREE = null;
-
-let threeAnimations = [];
-
-
-import(
-    "https://cdn.jsdelivr.net/npm/three@0.180.0/+esm"
-)
-
-.then(module => {
-
-    THREE = module;
-
-
-    document
-    .getElementById("three-info")
-    .textContent =
-
-        "Modele 3D aktywne";
-
-
-    /* Tworzymy modele pojedynczo */
-
-    let delay = 0;
-
-
-    modelCanvases.forEach(item => {
-
-        setTimeout(
-
-            () => {
-
-                try{
-
-                    create3DModel(
-
-                        item.canvas,
-
-                        item.model
-
-                    );
-
-                }
-
-                catch(error){
-
-                    console.error(
-
-                        "Błąd modelu",
-
-                        item.model,
-
-                        error
-
-                    );
-
-                }
-
-            },
-
-            delay
-
-        );
-
-
-        delay += 70;
-
-    });
-
-
-    requestAnimationFrame(
-        animateThree
-    );
-
-
-    setTimeout(
-
-        () => {
-
-            const info =
-
-                document.getElementById(
-                    "three-info"
-                );
-
-
-            if(info){
-
-                info.remove();
-
-            }
-
-        },
-
-        2500
-
-    );
-
-})
-
-.catch(error => {
-
-    console.error(
-        "Three.js error:",
-        error
-    );
-
-
-    document
-    .getElementById("three-info")
-    .textContent =
-
-        "3D niedostępne — używam modeli zastępczych.";
-
-});
-
-
-/* =========================================================
-   MATERIAŁ
-========================================================= */
-
-function makeMaterial(
-    color,
-    roughness = 0.55,
-    metalness = 0.05
-){
-
-    return new THREE.MeshStandardMaterial({
-
-        color:color,
-
-        roughness:roughness,
-
-        metalness:metalness
-
-    });
-
-}
-
-
-/* =========================================================
-   KULA
-========================================================= */
-
-function makeSphere(
-    radius,
-    color,
-    segments = 20
-){
-
-    return new THREE.Mesh(
-
-        new THREE.SphereGeometry(
-
-            radius,
-
-            segments,
-
-            Math.max(
-                12,
-                segments - 4
-            )
-
-        ),
-
-        makeMaterial(color)
-
-    );
-
-}
-
-
-/* =========================================================
-   BOND
-========================================================= */
-
-function addBond(
-    group,
-    start,
-    end,
-    radius = 0.055,
-    color = 0xd0d5d3
-){
-
-    const startVector =
-
-        new THREE.Vector3(
-            start[0],
-            start[1],
-            start[2]
-        );
-
-
-    const endVector =
-
-        new THREE.Vector3(
-            end[0],
-            end[1],
-            end[2]
-        );
-
-
-    const direction =
-
-        new THREE.Vector3()
-        .subVectors(
-
-            endVector,
-
-            startVector
-
-        );
-
-
-    const length =
-        direction.length();
-
-
-    const mesh =
-
-        new THREE.Mesh(
-
-            new THREE.CylinderGeometry(
-
-                radius,
-
-                radius,
-
-                length,
-
-                10
-
-            ),
-
-            makeMaterial(
-                color,
-                0.35,
-                0.12
-            )
-
-        );
-
-
-    mesh.position
-
-        .copy(startVector)
-
-        .add(endVector)
-
-        .multiplyScalar(0.5);
-
-
-    mesh.quaternion.setFromUnitVectors(
-
-        new THREE.Vector3(
-            0,
-            1,
-            0
-        ),
-
-        direction
-        .clone()
-        .normalize()
-
-    );
-
-
-    group.add(mesh);
-
-}
-
-
-/* =========================================================
-   CREATE 3D MODEL
-========================================================= */
-
-function create3DModel(
-    canvas,
-    type
-){
-
-    if(!THREE){
-
-        return;
-
-    }
-
-
-    /* Czyścimy fallback */
-
-    const context =
-        canvas.getContext("2d");
-
-
-    if(context){
-
-        context.clearRect(
-            0,
-            0,
-            canvas.width,
-            canvas.height
-        );
-
-    }
-
-
-    const renderer =
-
-        new THREE.WebGLRenderer({
-
-            canvas:canvas,
-
-            alpha:true,
-
-            antialias:true,
-
-            powerPreference:"high-performance"
-
-        });
-
-
-    renderer.setSize(
-        240,
-        240,
-        false
-    );
-
-
-    renderer.setPixelRatio(
-
-        Math.min(
-            window.devicePixelRatio || 1,
-            1.5
-        )
-
-    );
-
-
-    renderer.setClearColor(
-        0x000000,
-        0
-    );
-
-
-    const scene =
-        new THREE.Scene();
-
-
-    const camera =
-
-        new THREE.PerspectiveCamera(
-
-            34,
-
-            1,
-
-            0.1,
-
-            100
-
-        );
-
-
-    camera.position.set(
-        0,
-        0,
-        6
-    );
-
-
-    /* LIGHT */
-
-    const ambient =
-
-        new THREE.AmbientLight(
-
-            0xffffff,
-
-            1.7
-
-        );
-
-
-    scene.add(ambient);
-
-
-    const keyLight =
-
-        new THREE.DirectionalLight(
-
-            0xffffff,
-
-            3.5
-
-        );
-
-
-    keyLight.position.set(
-        4,
-        5,
-        5
-    );
-
-
-    scene.add(keyLight);
-
-
-    const blueLight =
-
-        new THREE.DirectionalLight(
-
-            0x4df0c5,
-
-            2
-
-        );
-
-
-    blueLight.position.set(
-        -4,
-        1,
-        -3
-    );
-
-
-    scene.add(blueLight);
-
-
-    const group =
-        new THREE.Group();
-
-
-    scene.add(group);
-
-
-    /* =====================================================
-       AMINOKWAS
-    ===================================================== */
-
-    if(type === "amino"){
-
-        const atoms = [
-
-            {
-                p:[0,0,0],
-                r:.36,
-                c:0x4d78c6
-            },
-
-            {
-                p:[-.82,.1,.15],
-                r:.32,
-                c:0xd74949
-            },
-
-            {
-                p:[.82,.15,-.1],
-                r:.29,
-                c:0xeaeaea
-            },
-
-            {
-                p:[0,.83,.2],
-                r:.27,
-                c:0xffffff
-            },
-
-            {
-                p:[-.95,-.67,-.18],
-                r:.29,
-                c:0xd74949
-            },
-
-            {
-                p:[.45,-.72,.35],
-                r:.24,
-                c:0xf1f1f1
-            }
-
-        ];
-
-
-        atoms.forEach(atom => {
-
-            const mesh =
-
-                makeSphere(
-                    atom.r,
-                    atom.c,
-                    24
-                );
-
-
-            mesh.position.set(
-                atom.p[0],
-                atom.p[1],
-                atom.p[2]
-            );
-
-
-            group.add(mesh);
-
-        });
-
-
-        addBond(
-            group,
-            [0,0,0],
-            [-.82,.1,.15]
-        );
-
-
-        addBond(
-            group,
-            [0,0,0],
-            [.82,.15,-.1]
-        );
-
-
-        addBond(
-            group,
-            [0,0,0],
-            [0,.83,.2]
-        );
-
-
-        addBond(
-            group,
-            [-.82,.1,.15],
-            [-.95,-.67,-.18]
-        );
-
-
-        addBond(
-            group,
-            [0,0,0],
-            [.45,-.72,.35]
-        );
-
-
-        group.scale.setScalar(
-            1.3
-        );
-
-    }
-
-
-    /* =====================================================
-       DNA
-    ===================================================== */
-
-    else if(type === "dna"){
-
-        const count = 24;
-
-
-        let previousA = null;
-
-        let previousB = null;
-
-
-        for(
-            let i = 0;
-            i < count;
-            i++
-        ){
-
-            const y =
-                (i - count/2) * .11;
-
-
-            const angle =
-                i * .52;
-
-
-            const radius =
-                .63;
-
-
-            const aPosition = [
-
-                Math.sin(angle) * radius,
-
-                y,
-
-                Math.cos(angle) * radius
-
-            ];
-
-
-            const bPosition = [
-
-                -Math.sin(angle) * radius,
-
-                y,
-
-                -Math.cos(angle) * radius
-
-            ];
-
-
-            const a =
-
-                makeSphere(
-                    .095,
-                    0x2ab9ef,
-                    16
-                );
-
-
-            a.position.set(
-                ...aPosition
-            );
-
-
-            const b =
-
-                makeSphere(
-                    .095,
-                    0xc65bd0,
-                    16
-                );
-
-
-            b.position.set(
-                ...bPosition
-            );
-
-
-            group.add(
-                a,
-                b
-            );
-
-
-            if(
-                i % 2 === 0
-            ){
-
-                addBond(
-
-                    group,
-
-                    aPosition,
-
-                    bPosition,
-
-                    .025,
-
-                    0xdce3e2
-
-                );
-
-            }
-
-
-            if(previousA){
-
-                addBond(
-
-                    group,
-
-                    previousA,
-
-                    aPosition,
-
-                    .04,
-
-                    0x29a9df
-
-                );
-
-
-                addBond(
-
-                    group,
-
-                    previousB,
-
-                    bPosition,
-
-                    .04,
-
-                    0xb24cc3
-
-                );
-
-            }
-
-
-            previousA =
-                aPosition;
-
-
-            previousB =
-                bPosition;
-
-        }
-
-
-        group.rotation.z =
-            .12;
-
-
-        group.scale.setScalar(
-            1.15
-        );
-
-    }
-
-
-    /* =====================================================
-       PROKARIOT
-    ===================================================== */
-
-    else if(type === "prokaryote"){
-
-        const cell =
-
-            makeSphere(
-                1,
-                0x4f8d62,
-                32
-            );
-
-
-        cell.scale.set(
-            1.45,
-            .7,
-            .72
-        );
-
-
-        group.add(cell);
-
-
-        /* DNA */
-
-        const dnaCurve =
-            new THREE.CatmullRomCurve3([
-
-                new THREE.Vector3(-.55,.1,.72),
-
-                new THREE.Vector3(-.2,.38,.79),
-
-                new THREE.Vector3(.25,.23,.81),
-
-                new THREE.Vector3(.48,-.1,.76),
-
-                new THREE.Vector3(.05,-.31,.78),
-
-                new THREE.Vector3(-.4,-.18,.76)
-
-            ]);
-
-
-        const dnaTube =
-
-            new THREE.Mesh(
-
-                new THREE.TubeGeometry(
-
-                    dnaCurve,
-
-                    40,
-
-                    .035,
-
-                    8,
-
-                    false
-
-                ),
-
-                makeMaterial(
-                    0xd3e487
-                )
-
-            );
-
-
-        group.add(dnaTube);
-
-
-        /* rybosomy */
-
-        for(
-            let i = 0;
-            i < 12;
-            i++
-        ){
-
-            const dot =
-
-                makeSphere(
-                    .055,
-                    0xe1e8a8,
-                    10
-                );
-
-
-            const angle =
-                i * 2.1;
-
-
-            dot.position.set(
-
-                Math.sin(angle) *
-                (.3 + (i%3)*.18),
-
-                Math.cos(angle*1.4) *
-                .35,
-
-                .7 +
-                (i%2)*.04
-
-            );
-
-
-            group.add(dot);
-
-        }
-
-
-        /* wić */
-
-        const flagellaCurve =
-
-            new THREE.CatmullRomCurve3([
-
-                new THREE.Vector3(1.25,0,0),
-
-                new THREE.Vector3(1.8,.35,0),
-
-                new THREE.Vector3(2.15,-.25,.15),
-
-                new THREE.Vector3(2.55,.25,-.1)
-
-            ]);
-
-
-        const flagella =
-
-            new THREE.Mesh(
-
-                new THREE.TubeGeometry(
-
-                    flagellaCurve,
-
-                    30,
-
-                    .035,
-
-                    8,
-
-                    false
-
-                ),
-
-                makeMaterial(
-                    0x5bcda2
-                )
-
-            );
-
-
-        group.add(flagella);
-
-
-        group.scale.setScalar(
-            .9
-        );
-
-    }
-
-
-    /* =====================================================
-       EUKARIOT
-    ===================================================== */
-
-    else if(type === "eukaryote"){
-
-        const cell =
-
-            makeSphere(
-                1.25,
-                0x376c7e,
-                32
-            );
-
-
-        group.add(cell);
-
-
-        const nucleus =
-
-            makeSphere(
-                .52,
-                0x8759a0,
-                24
-            );
-
-
-        nucleus.position.set(
-            -.22,
-            .12,
-            .86
-        );
-
-
-        group.add(nucleus);
-
-
-        for(
-            let i = 0;
-            i < 5;
-            i++
-        ){
-
-            const mito =
-
-                makeSphere(
-                    .18,
-                    0xc76850,
-                    16
-                );
-
-
-            mito.scale.set(
-                1.7,
-                .7,
-                .65
-            );
-
-
-            const angle =
-                i * 1.35;
-
-
-            mito.position.set(
-
-                Math.cos(angle) *
-                .7,
-
-                Math.sin(angle) *
-                .7,
-
-                .75
-
-            );
-
-
-            mito.rotation.z =
-                angle;
-
-
-            group.add(mito);
-
-        }
-
-
-        group.scale.setScalar(
-            .9
-        );
-
-    }
-
-
-    /* =====================================================
-       GĄBKA
-    ===================================================== */
-
-    else if(type === "sponge"){
-
-        const heights = [
-            1.7,
-            1.25,
-            2,
-            1.4,
-            1.65
-        ];
-
-
-        heights.forEach(
-            (height,index) => {
-
-                const tube =
-
-                    new THREE.Mesh(
-
-                        new THREE.CylinderGeometry(
-
-                            .26,
-
-                            .38,
-
-                            height,
-
-                            16,
-
-                            1,
-
-                            true
-
-                        ),
-
-                        makeMaterial(
-                            0xd18a36,
-                            .8
-                        )
-
-                    );
-
-
-                tube.position.set(
-
-                    (index - 2) * .34,
-
-                    height/2 - .7,
-
-                    (index%2) * .3 - .15
-
-                );
-
-
-                tube.rotation.z =
-
-                    (index - 2) *
-                    .04;
-
-
-                group.add(tube);
-
-            }
-        );
-
-
-        group.scale.setScalar(
-            1.05
-        );
-
-    }
-
-
-    /* =====================================================
-       MEDUZA
-    ===================================================== */
-
-    else if(type === "jellyfish"){
-
-        const dome =
-
-            new THREE.Mesh(
-
-                new THREE.SphereGeometry(
-
-                    1,
-
-                    32,
-
-                    20,
-
-                    0,
-
-                    Math.PI*2,
-
-                    0,
-
-                    Math.PI/2
-
-                ),
-
-                new THREE.MeshStandardMaterial({
-
-                    color:0x8195dd,
-
-                    transparent:true,
-
-                    opacity:.8,
-
-                    roughness:.2
-
-                })
-
-            );
-
-
-        dome.rotation.x =
-            Math.PI;
-
-
-        group.add(dome);
-
-
-        for(
-            let i = 0;
-            i < 8;
-            i++
-        ){
-
-            const x =
-                (i - 3.5) * .17;
-
-
-            const curve =
-
-                new THREE.CatmullRomCurve3([
-
-                    new THREE.Vector3(x,-.1,0),
-
-                    new THREE.Vector3(
-                        x+.1*Math.sin(i),
-                        -.6,
-                        .1*Math.cos(i)
-                    ),
-
-                    new THREE.Vector3(
-                        x-.1*Math.cos(i),
-                        -1.2,
-                        -.1*Math.sin(i)
-                    ),
-
-                    new THREE.Vector3(
-                        x+.15*Math.sin(i*2),
-                        -1.75,
-                        .1
-                    )
-
-                ]);
-
-
-            const tentacle =
-
-                new THREE.Mesh(
-
-                    new THREE.TubeGeometry(
-
-                        curve,
-
-                        24,
-
-                        .025,
-
-                        6,
-
-                        false
-
-                    ),
-
-                    makeMaterial(
-                        0xa283d5,
-                        .5
-                    )
-
-                );
-
-
-            group.add(tentacle);
-
-        }
-
-
-        group.position.y =
-            .45;
-
-
-        group.scale.setScalar(
-            1.05
-        );
-
-    }
-
-
-    /* =====================================================
-       PŁAZINIEC
-    ===================================================== */
-
-    else if(type === "flatworm"){
-
-        const body =
-
-            makeSphere(
-                1,
-                0xb85d58,
-                30
-            );
-
-
-        body.scale.set(
-            1.55,
-            .38,
-            .25
-        );
-
-
-        group.add(body);
-
-
-        const head =
-
-            makeSphere(
-                .55,
-                0xc86b62,
-                24
-            );
-
-
-        head.scale.set(
-            .75,
-            .55,
-            .45
-        );
-
-
-        head.position.x =
-            1.1;
-
-
-        group.add(head);
-
-
-        const eye1 =
-            makeSphere(
-                .07,
-                0x080808,
-                10
-            );
-
-
-        eye1.position.set(
-            1.35,
-            .14,
-            .38
-        );
-
-
-        const eye2 =
-            eye1.clone();
-
-
-        eye2.position.set(
-            1.18,
-            .14,
-            .43
-        );
-
-
-        group.add(
-            eye1,
-            eye2
-        );
-
-
-        group.scale.setScalar(
-            1
-        );
-
-    }
-
-
-    /* =====================================================
-       RYBA
-    ===================================================== */
-
-    else if(type === "fish"){
-
-        createAnimal(
-            group,
-            "fish"
-        );
-
-    }
-
-
-    /* =====================================================
-       CZWORONÓG
-    ===================================================== */
-
-    else if(type === "tetrapod"){
-
-        createAnimal(
-            group,
-            "tetrapod"
-        );
-
-    }
-
-
-    /* =====================================================
-       SSAK
-    ===================================================== */
-
-    else if(type === "mammal"){
-
-        createAnimal(
-            group,
-            "mammal"
-        );
-
-    }
-
-
-    /* =====================================================
-       NACZELNE
-    ===================================================== */
-
-    else if(type === "primate"){
-
-        createPrimate(
-            group,
-            false
-        );
-
-    }
-
-
-    /* =====================================================
-       CZŁOWIEK
-    ===================================================== */
-
-    else if(type === "human"){
-
-        createPrimate(
-            group,
-            true
-        );
-
-    }
-
-
-    threeAnimations.push({
-
-        renderer:renderer,
-
-        scene:scene,
-
-        camera:camera,
-
-        group:group,
-
-        offset:
-            Math.random() *
-            Math.PI * 2
-
-    });
-
-}
-
-
-/* =========================================================
-   FISH / TETRAPOD / MAMMAL
-========================================================= */
-
-function createAnimal(
-    group,
-    type
-){
-
-    let color =
-        0x478da4;
-
-
-    if(type === "tetrapod"){
-
-        color =
-            0x638b48;
-
-    }
-
-
-    if(type === "mammal"){
-
-        color =
-            0x79624f;
-
-    }
-
-
-    const body =
-
-        makeSphere(
-            1,
-            color,
-            28
-        );
-
-
-    body.scale.set(
-        1.35,
-        .62,
-        .58
-    );
-
-
-    group.add(body);
-
-
-    const head =
-
-        makeSphere(
-            .48,
-            color,
-            24
-        );
-
-
-    head.position.set(
-        1.16,
-        .2,
-        0
-    );
-
-
-    group.add(head);
-
-
-    const eye =
-
-        makeSphere(
-            .07,
-            0x050505,
-            10
-        );
-
-
-    eye.position.set(
-        1.48,
-        .33,
-        .34
-    );
-
-
-    group.add(eye);
-
-
-    if(type === "fish"){
-
-        const tail =
-
-            new THREE.Mesh(
-
-                new THREE.ConeGeometry(
-
-                    .63,
-
-                    .95,
-
-                    3
-
-                ),
-
-                makeMaterial(
-                    color
-                )
-
-            );
-
-
-        tail.rotation.z =
-            -Math.PI / 2;
-
-
-        tail.position.x =
-            -1.45;
-
-
-        group.add(tail);
-
-
-        const topFin =
-
-            new THREE.Mesh(
-
-                new THREE.ConeGeometry(
-
-                    .35,
-
-                    .7,
-
-                    3
-
-                ),
-
-                makeMaterial(
-                    0x36768b
-                )
-
-            );
-
-
-        topFin.position.set(
-            0,
-            .75,
-            0
-        );
-
-
-        group.add(topFin);
-
-    }
-
-
-    else{
-
-        const positions = [
-
-            [-.65,-.55,.38],
-            [.55,-.55,.38],
-            [-.65,-.55,-.38],
-            [.55,-.55,-.38]
-
-        ];
-
-
-        positions.forEach(
-            position => {
-
-                const leg =
-
-                    new THREE.Mesh(
-
-                        new THREE.CylinderGeometry(
-
-                            .1,
-
-                            .13,
-
-                            .85,
-
-                            10
-
-                        ),
-
-                        makeMaterial(
-                            color
-                        )
-
-                    );
-
-
-                leg.position.set(
-                    ...position
-                );
-
-
-                group.add(leg);
-
-            }
-        );
-
-
-        const tailCurve =
-
-            new THREE.CatmullRomCurve3([
-
-                new THREE.Vector3(-1.2,0,0),
-
-                new THREE.Vector3(-1.65,.1,.1),
-
-                new THREE.Vector3(-1.9,.35,.15)
-
-            ]);
-
-
-        const tail =
-
-            new THREE.Mesh(
-
-                new THREE.TubeGeometry(
-
-                    tailCurve,
-
-                    18,
-
-                    .07,
-
-                    8,
-
-                    false
-
-                ),
-
-                makeMaterial(
-                    color
-                )
-
-            );
-
-
-        group.add(tail);
-
-    }
-
-
-    group.scale.setScalar(
-        .82
-    );
-
-}
-
-
-/* =========================================================
-   NACZELNY / CZŁOWIEK
-========================================================= */
-
-function createPrimate(
-    group,
-    human
-){
-
-    const skinColor =
-
-        human
-        ? 0xc58e6c
-        : 0x755644;
-
-
-    const torsoColor =
-
-        human
-        ? 0x416b8f
-        : 0x5a4234;
-
-
-    const torso =
-
-        makeSphere(
-            .72,
-            torsoColor,
-            28
-        );
-
-
-    torso.scale.set(
-        .72,
-        1.15,
-        .55
-    );
-
-
-    group.add(torso);
-
-
-    const head =
-
-        makeSphere(
-            .46,
-            skinColor,
-            28
-        );
-
-
-    head.position.y =
-        1.12;
-
-
-    group.add(head);
-
-
-    const eye1 =
-
-        makeSphere(
-            .055,
-            0x090909,
-            10
-        );
-
-
-    eye1.position.set(
-        -.15,
-        1.18,
-        .43
-    );
-
-
-    const eye2 =
-        eye1.clone();
-
-
-    eye2.position.x =
-        .15;
-
-
-    group.add(
-        eye1,
-        eye2
-    );
-
-
-    const limbMaterial =
-
-        makeMaterial(
-            human
-            ? 0xb87f61
-            : 0x644838
-        );
-
-
-    function limb(
-        x,
-        y,
-        rotation,
-        length
-    ){
-
-        const mesh =
-
-            new THREE.Mesh(
-
-                new THREE.CylinderGeometry(
-
-                    .105,
-
-                    .135,
-
-                    length,
-
-                    10
-
-                ),
-
-                limbMaterial
-
-            );
-
-
-        mesh.position.set(
-            x,
-            y,
-            0
-        );
-
-
-        mesh.rotation.z =
-            rotation;
-
-
-        group.add(mesh);
-
-    }
-
-
-    limb(
-        -.68,
-        .1,
-        human ? .12 : .48,
-        1.35
-    );
-
-
-    limb(
-        .68,
-        .1,
-        human ? -.12 : -.48,
-        1.35
-    );
-
-
-    limb(
-        -.28,
-        -1.02,
-        human ? .04 : .18,
-        1.5
-    );
-
-
-    limb(
-        .28,
-        -1.02,
-        human ? -.04 : -.18,
-        1.5
-    );
-
-
-    if(human){
-
-        /* włosy */
-
-        const hair =
-
-            makeSphere(
-                .43,
-                0x36251f,
-                24
-            );
-
-
-        hair.scale.set(
-            1,
-            .55,
-            1
-        );
-
-
-        hair.position.set(
-            0,
-            1.35,
-            -.08
-        );
-
-
-        group.add(hair);
-
-    }
-
-
-    group.scale.setScalar(
-        .8
-    );
-
-}
-
-
-/* =========================================================
-   ANIMACJA
-
-   360° / 5 sekund
-========================================================= */
-
-function animateThree(time){
-
-    if(!THREE){
-
-        return;
-
-    }
-
-
-    const seconds =
-        time / 1000;
-
-
-    threeAnimations.forEach(
-        item => {
-
-            item.group.rotation.y =
-
-                item.offset +
-
-                seconds *
-                (
-                    Math.PI * 2 / 5
-                );
-
-
-            item.group.rotation.x =
-
-                Math.sin(
-                    seconds * .45
-                ) * .07;
-
-
-            item.renderer.render(
-
-                item.scene,
-
-                item.camera
-
-            );
-
-        }
-    );
-
-
-    requestAnimationFrame(
-        animateThree
-    );
-
-}
 
 </script>
 
