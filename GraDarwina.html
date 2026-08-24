@@ -15,503 +15,476 @@
     user-select:none;
 }
 
+html,body{
+    width:100%;
+    height:100%;
+}
+
 body{
     font-family:Arial,Helvetica,sans-serif;
-    background:
-        radial-gradient(circle at 50% 50%,#18342e 0%,#0c1e1b 35%,#06100f 75%,#030807 100%);
     color:white;
     overflow:hidden;
+
+    background:
+        radial-gradient(circle at 50% 50%,#16302a 0%,#0b1a18 35%,#050d0c 70%,#020606 100%);
+}
+
+/* ==============================
+   TŁO
+============================== */
+
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+
+    background-image:
+        radial-gradient(circle,#65e6c2 1px,transparent 1px),
+        radial-gradient(circle,#ffffff 1px,transparent 1px);
+
+    background-size:
+        130px 130px,
+        210px 210px;
+
+    background-position:
+        0 0,
+        60px 80px;
+
+    opacity:.08;
 }
 
 
-/* =========================
-   GÓRNY PANEL
-========================= */
+/* ==============================
+   HUD
+============================== */
 
 #hud{
-
     position:fixed;
-
     top:15px;
     left:50%;
-
     transform:translateX(-50%);
 
-    width:390px;
+    width:410px;
+    max-width:92%;
 
-    background:rgba(10,15,15,.94);
+    background:rgba(9,14,13,.94);
+    border:1px solid #52615d;
+    border-radius:16px;
 
-    border:1px solid #56605c;
-
-    border-radius:15px;
-
-    padding:10px 20px;
+    padding:11px 20px;
 
     z-index:1000;
 
     box-shadow:
-        0 5px 20px #000,
-        inset 0 0 15px rgba(255,255,255,.03);
-
+        0 8px 25px rgba(0,0,0,.65),
+        inset 0 0 18px rgba(255,255,255,.03);
 }
 
 #entropy{
-
     font-size:27px;
     font-weight:bold;
-
-    color:white;
-
 }
 
 #production{
-
-    font-size:15px;
-
-    color:#83eaa7;
-
+    color:#72efc1;
+    font-size:14px;
     margin-top:3px;
-
 }
 
 #hint{
-
+    color:#8a9894;
     font-size:11px;
-
-    color:#8e9b96;
-
     margin-top:5px;
-
 }
 
 
-/* =========================
-   SCROLL
-========================= */
+/* ==============================
+   ŚWIAT
+============================== */
 
 #viewport{
-
     position:absolute;
-
     inset:0;
 
     overflow-y:auto;
     overflow-x:hidden;
-
 }
 
 #tree{
-
     position:relative;
 
     width:1100px;
-
     max-width:100%;
 
-    height:3000px;
+    height:3050px;
 
     margin:auto;
-
 }
 
 
-/* =========================
-   SVG LINIE
-========================= */
+/* ==============================
+   LINIE
+============================== */
 
 #connections{
-
     position:absolute;
+    inset:0;
 
     width:100%;
     height:100%;
 
-    inset:0;
-
     z-index:1;
-
     pointer-events:none;
-
 }
 
 .mainLine{
-
-    stroke:#53766c;
-
-    stroke-width:5;
-
-    opacity:.6;
-
+    stroke:#41675e;
+    stroke-width:6;
+    opacity:.45;
 }
 
 .mainLine.active{
-
-    stroke:#39e2bd;
-
-    filter:drop-shadow(0 0 6px #39e2bd);
+    stroke:#37e8c1;
 
     opacity:1;
 
+    filter:
+        drop-shadow(0 0 5px #37e8c1);
 }
 
 .upgradeLine{
-
-    stroke:#53685f;
-
+    stroke:#526c64;
     stroke-width:3;
-
-    opacity:.55;
-
+    opacity:.5;
 }
 
 .upgradeLine.active{
-
-    stroke:#4fdcbf;
-
-    opacity:1;
-
-    filter:drop-shadow(0 0 4px #31d8b8);
-
+    stroke:#39d9b6;
+    opacity:.9;
 }
 
 
-/* =========================
+/* ==============================
    GENERATOR
-========================= */
+============================== */
 
 .generator{
-
     position:absolute;
 
-    width:112px;
-    height:112px;
+    left:50%;
+
+    width:126px;
+    height:126px;
 
     transform:translate(-50%,-50%);
 
     border-radius:50%;
 
     background:
-        radial-gradient(circle,#18201e 0%,#0d1211 70%);
+        radial-gradient(circle at 40% 30%,#273633,#101716 58%,#050807 100%);
 
-    border:4px solid #3b675c;
+    border:4px solid #3f665d;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    z-index:20;
 
     cursor:pointer;
 
-    z-index:10;
+    perspective:600px;
 
-    display:flex;
-
-    justify-content:center;
-    align-items:center;
-
-    transition:.15s;
-
+    transition:
+        transform .15s,
+        border-color .2s,
+        opacity .2s,
+        box-shadow .2s;
 }
 
-.generator.available{
-
-    border-color:#19e2bc;
-
-    box-shadow:
-        0 0 8px #17af94,
-        0 0 22px rgba(20,230,190,.3),
-        inset 0 0 15px rgba(20,230,190,.1);
-
-}
-
+.generator.available,
 .generator.owned{
-
-    border-color:#17e6c0;
+    border-color:#27e1bd;
 
     box-shadow:
-        0 0 12px rgba(23,230,192,.5);
-
+        0 0 10px rgba(39,225,189,.8),
+        0 0 28px rgba(39,225,189,.22),
+        inset 0 0 16px rgba(39,225,189,.08);
 }
 
 .generator.locked{
-
-    opacity:.3;
-
+    opacity:.27;
     cursor:default;
-
 }
 
 .generator:not(.locked):hover{
-
     transform:
         translate(-50%,-50%)
         scale(1.08);
-
-}
-
-.generator:active{
-
-    transform:
-        translate(-50%,-50%)
-        scale(.96);
-
 }
 
 
-/* =========================
-   IKONY SVG
-========================= */
+/* ==============================
+   MODEL 3D
+============================== */
 
-.icon{
+.model3d{
+    width:88px;
+    height:88px;
 
-    width:72px;
-    height:72px;
+    transform-style:preserve-3d;
 
+    animation:
+        rotateModel 5s linear infinite;
+
+    filter:
+        drop-shadow(0 8px 6px rgba(0,0,0,.55));
 }
 
-.icon svg{
-
+.model3d svg{
     width:100%;
     height:100%;
 
-    filter:
-        drop-shadow(0 3px 3px #000);
+    overflow:visible;
+}
+
+@keyframes rotateModel{
+
+    0%{
+        transform:
+            rotateY(0deg)
+            rotateX(8deg);
+    }
+
+    25%{
+        transform:
+            rotateY(90deg)
+            rotateX(4deg);
+    }
+
+    50%{
+        transform:
+            rotateY(180deg)
+            rotateX(-5deg);
+    }
+
+    75%{
+        transform:
+            rotateY(270deg)
+            rotateX(4deg);
+    }
+
+    100%{
+        transform:
+            rotateY(360deg)
+            rotateX(8deg);
+    }
 
 }
 
 
-/* =========================
-   OPIS GENERATORA
-========================= */
+/* ==============================
+   TEKST GENERATORA
+============================== */
 
-.generatorName{
-
+.level{
     position:absolute;
 
-    top:117px;
+    right:-12px;
+    top:-12px;
+
+    min-width:39px;
+    height:39px;
+
+    padding:0 7px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:#101312;
+
+    border:2px solid #26332f;
+    border-radius:25px;
+
+    font-weight:bold;
+
+    z-index:30;
+}
+
+.generatorName{
+    position:absolute;
+
+    top:132px;
     left:50%;
 
     transform:translateX(-50%);
 
-    width:240px;
+    width:270px;
 
     text-align:center;
 
     font-size:19px;
-
-    font-weight:700;
+    font-weight:bold;
 
     text-shadow:
-        0 2px 3px #000,
+        0 2px 4px #000,
         0 0 5px #000;
-
 }
 
 .generatorPrice{
-
     position:absolute;
 
-    top:143px;
+    top:158px;
     left:50%;
 
     transform:translateX(-50%);
 
-    color:#4be8c2;
-
-    font-size:14px;
-
     white-space:nowrap;
 
-}
+    color:#47eac1;
 
-.level{
-
-    position:absolute;
-
-    right:-15px;
-    top:-15px;
-
-    min-width:38px;
-
-    height:38px;
-
-    display:flex;
-
-    align-items:center;
-    justify-content:center;
-
-    border-radius:50%;
-
-    background:#111;
-
-    border:2px solid #222;
-
-    font-weight:bold;
-
+    font-size:14px;
 }
 
 
-/* =========================
-   UPGRADE
-========================= */
+/* ==============================
+   ULEPSZENIA
+============================== */
 
 .upgrade{
-
     position:absolute;
 
-    width:170px;
-    min-height:76px;
+    width:190px;
+    height:78px;
 
     transform:translate(-50%,-50%);
 
-    background:
-        linear-gradient(145deg,#202724,#151918);
-
-    border:2px solid #59655f;
-
-    border-radius:6px;
-
-    cursor:pointer;
-
-    z-index:10;
-
     display:grid;
-
     grid-template-columns:58px 1fr;
 
     align-items:center;
 
     padding:7px;
 
-    transition:.15s;
+    background:
+        linear-gradient(145deg,#202724,#111615);
+
+    border:2px solid #53615c;
+    border-radius:7px;
 
     box-shadow:
-        0 4px 8px rgba(0,0,0,.6);
+        0 5px 10px rgba(0,0,0,.55);
 
+    cursor:pointer;
+
+    z-index:15;
+
+    transition:.15s;
 }
 
 .upgrade:hover{
-
     transform:
         translate(-50%,-50%)
         scale(1.05);
-
 }
 
 .upgrade.locked{
-
-    opacity:.25;
-
+    opacity:.22;
     cursor:default;
-
 }
 
 .upgrade.bought{
-
-    border-color:#35d9af;
+    border-color:#32dbb4;
 
     background:
-        linear-gradient(145deg,#174138,#112b26);
-
+        linear-gradient(145deg,#164036,#0e2923);
 }
 
 .upgradeIcon{
-
-    width:50px;
-    height:50px;
-
-    border:2px solid #4a5e57;
-
-    background:#101514;
+    width:51px;
+    height:51px;
 
     display:flex;
-
     align-items:center;
     justify-content:center;
 
+    background:#0d1211;
+
+    border:2px solid #485b55;
 }
 
 .upgradeIcon svg{
-
     width:42px;
     height:42px;
-
 }
 
 .upgradeText{
-
     padding-left:8px;
-
 }
 
 .upgradeTitle{
-
     font-size:13px;
-
     font-weight:bold;
-
-    margin-bottom:3px;
-
 }
 
 .upgradeEffect{
+    margin-top:3px;
 
     font-size:11px;
 
-    color:#93e176;
-
+    color:#8dda72;
 }
 
 .upgradeCost{
-
-    font-size:11px;
-
-    color:#4ce1bd;
-
     margin-top:2px;
 
+    color:#46daba;
+
+    font-size:11px;
 }
 
 
-/* =========================
-   KLIK ENTROPII
-========================= */
+/* ==============================
+   +1 ENTROPII
+============================== */
 
-.clickNumber{
-
+.clickText{
     position:fixed;
 
     z-index:3000;
 
     pointer-events:none;
 
-    color:#52efcc;
+    color:#56f4cd;
 
     font-size:21px;
-
     font-weight:bold;
 
-    text-shadow:0 2px 3px black;
+    text-shadow:
+        0 2px 3px #000;
 
-    animation:float .75s forwards;
-
+    animation:
+        floatClick .8s forwards;
 }
 
-@keyframes float{
+@keyframes floatClick{
 
     from{
-
         opacity:1;
 
         transform:
             translate(-50%,-50%)
             scale(1);
-
     }
 
     to{
-
         opacity:0;
 
         transform:
-            translate(-50%,-100px)
-            scale(1.25);
-
+            translate(-50%,-110px)
+            scale(1.3);
     }
 
 }
@@ -533,7 +506,7 @@ body{
     </div>
 
     <div id="hint">
-        Kliknięcie pustego miejsca = +1 entropii
+        Klikaj puste miejsce na ekranie, aby zdobywać entropię
     </div>
 
 </div>
@@ -541,205 +514,282 @@ body{
 
 <div id="viewport">
 
-<div id="tree">
+    <div id="tree">
 
-<svg id="connections"></svg>
+        <svg id="connections"></svg>
 
-</div>
+    </div>
 
 </div>
 
 
 <script>
 
-/* =====================================================
-   PROSTE IKONY SVG
-===================================================== */
+/* ==========================================================
+   MODELE
+========================================================== */
 
-const icons = {
+const models = {
 
+
+/* AMINOKWAS */
 
 amino:`
 
 <svg viewBox="0 0 100 100">
 
-<g stroke="#ddd" stroke-width="5">
+<defs>
 
-<line x1="30" y1="55" x2="50" y2="40"/>
-<line x1="50" y1="40" x2="70" y2="55"/>
-<line x1="50" y1="40" x2="50" y2="20"/>
+<radialGradient id="red">
+<stop offset="0%" stop-color="#ff9b9b"/>
+<stop offset="55%" stop-color="#e34d4d"/>
+<stop offset="100%" stop-color="#7d1717"/>
+</radialGradient>
 
-</g>
+<radialGradient id="blue">
+<stop offset="0%" stop-color="#b8d8ff"/>
+<stop offset="60%" stop-color="#5489c8"/>
+<stop offset="100%" stop-color="#1e3961"/>
+</radialGradient>
 
-<circle cx="30" cy="55" r="11" fill="#e84c4c"/>
-<circle cx="50" cy="40" r="12" fill="#8899c9"/>
-<circle cx="70" cy="55" r="11" fill="#eee"/>
-<circle cx="50" cy="20" r="9" fill="#eee"/>
+<radialGradient id="white">
+<stop offset="0%" stop-color="#fff"/>
+<stop offset="65%" stop-color="#cfd5d4"/>
+<stop offset="100%" stop-color="#6d7371"/>
+</radialGradient>
 
-</svg>
-`,
+</defs>
 
+<g stroke="#c5ccca" stroke-width="6" stroke-linecap="round">
 
-protein:`
-
-<svg viewBox="0 0 100 100">
-
-<path
-d="M15 60
-C20 20 50 20 48 45
-C45 70 75 82 82 55
-C88 30 68 18 58 35
-C48 52 72 65 75 48"
-fill="none"
-stroke="#737cff"
-stroke-width="9"
-stroke-linecap="round"/>
-
-<circle cx="24" cy="38" r="6" fill="#a8afff"/>
-<circle cx="59" cy="74" r="6" fill="#a8afff"/>
-
-</svg>
-`,
-
-
-rna:`
-
-<svg viewBox="0 0 100 100">
-
-<path
-d="M30 15
-C70 30 30 45 70 60
-C30 75 50 85 65 90"
-fill="none"
-stroke="#d778db"
-stroke-width="8"
-stroke-linecap="round"/>
-
-<g stroke="#eee" stroke-width="3">
-
-<line x1="37" y1="25" x2="60" y2="31"/>
-<line x1="39" y1="44" x2="62" y2="50"/>
-<line x1="41" y1="64" x2="62" y2="70"/>
+<line x1="50" y1="48" x2="25" y2="62"/>
+<line x1="50" y1="48" x2="72" y2="62"/>
+<line x1="50" y1="48" x2="50" y2="20"/>
+<line x1="25" y1="62" x2="15" y2="82"/>
 
 </g>
 
+<circle cx="50" cy="48" r="13" fill="url(#blue)"/>
+<circle cx="25" cy="62" r="12" fill="url(#red)"/>
+<circle cx="72" cy="62" r="11" fill="url(#white)"/>
+<circle cx="50" cy="19" r="10" fill="url(#white)"/>
+<circle cx="15" cy="82" r="9" fill="url(#red)"/>
+
 </svg>
 `,
 
+
+/* DNA */
 
 dna:`
 
 <svg viewBox="0 0 100 100">
 
-<path
-d="M30 10
-C75 28 75 72 30 90"
-fill="none"
-stroke="#31b9f4"
-stroke-width="7"/>
+<defs>
+
+<linearGradient id="dna1">
+<stop stop-color="#87efff"/>
+<stop offset=".45" stop-color="#2699df"/>
+<stop offset="1" stop-color="#075088"/>
+</linearGradient>
+
+<linearGradient id="dna2">
+<stop stop-color="#e15fe0"/>
+<stop offset=".5" stop-color="#775bd6"/>
+<stop offset="1" stop-color="#423090"/>
+</linearGradient>
+
+</defs>
 
 <path
-d="M70 10
-C25 28 25 72 70 90"
+d="M28 8
+C75 25 75 40 50 50
+C25 60 25 77 72 92"
 fill="none"
-stroke="#6ee5ff"
-stroke-width="7"/>
+stroke="url(#dna1)"
+stroke-width="8"
+stroke-linecap="round"/>
 
-<g stroke="#ccc" stroke-width="3">
+<path
+d="M72 8
+C25 25 25 40 50 50
+C75 60 75 77 28 92"
+fill="none"
+stroke="url(#dna2)"
+stroke-width="8"
+stroke-linecap="round"/>
 
-<line x1="38" y1="22" x2="62" y2="22"/>
-<line x1="31" y1="38" x2="69" y2="38"/>
-<line x1="31" y1="58" x2="69" y2="58"/>
-<line x1="38" y1="77" x2="62" y2="77"/>
+<g stroke="#c9edf1" stroke-width="3">
+
+<line x1="36" y1="17" x2="64" y2="17"/>
+<line x1="29" y1="32" x2="71" y2="32"/>
+<line x1="38" y1="46" x2="62" y2="46"/>
+<line x1="38" y1="55" x2="62" y2="55"/>
+<line x1="29" y1="69" x2="71" y2="69"/>
+<line x1="36" y1="84" x2="64" y2="84"/>
 
 </g>
 
 </svg>
 `,
 
+
+/* PROKARIOT */
 
 prokaryote:`
 
 <svg viewBox="0 0 100 100">
 
+<defs>
+
+<radialGradient id="bac">
+<stop offset="0" stop-color="#8acb80"/>
+<stop offset=".65" stop-color="#4d8e5c"/>
+<stop offset="1" stop-color="#183b30"/>
+</radialGradient>
+
+</defs>
+
 <ellipse
-cx="47"
+cx="45"
 cy="50"
-rx="33"
-ry="22"
-fill="#4b8068"
-stroke="#84d3a9"
+rx="34"
+ry="24"
+fill="url(#bac)"
+stroke="#8ae2a7"
 stroke-width="4"/>
 
 <path
-d="M22 44 Q45 25 74 45"
+d="M20 51
+C30 27 63 27 73 49
+C61 66 34 70 20 51"
 fill="none"
-stroke="#a5d28a"
+stroke="#b9e775"
 stroke-width="3"/>
 
-<circle cx="39" cy="48" r="4" fill="#d2e4b7"/>
-<circle cx="52" cy="58" r="3" fill="#d2e4b7"/>
-<circle cx="62" cy="42" r="3" fill="#d2e4b7"/>
+<g fill="#d4ecaf">
+
+<circle cx="29" cy="43" r="3"/>
+<circle cx="39" cy="58" r="3"/>
+<circle cx="52" cy="39" r="3"/>
+<circle cx="61" cy="55" r="3"/>
+
+</g>
 
 <path
-d="M80 50 C100 45 94 70 88 78"
+d="M78 52
+C102 45 99 69 87 82
+C83 87 88 92 95 92"
 fill="none"
-stroke="#5ec994"
+stroke="#6bc9a0"
 stroke-width="4"/>
 
 </svg>
 `,
 
+
+/* EUKARIOT */
 
 eukaryote:`
 
 <svg viewBox="0 0 100 100">
 
+<defs>
+
+<radialGradient id="cell">
+<stop stop-color="#6fa4b5"/>
+<stop offset=".65" stop-color="#355d70"/>
+<stop offset="1" stop-color="#142934"/>
+</radialGradient>
+
+<radialGradient id="nucleus">
+<stop stop-color="#cf9deb"/>
+<stop offset=".7" stop-color="#73568e"/>
+<stop offset="1" stop-color="#392a4c"/>
+</radialGradient>
+
+</defs>
+
 <circle
 cx="50"
 cy="50"
-r="38"
-fill="#364b5e"
-stroke="#6dcee5"
+r="40"
+fill="url(#cell)"
+stroke="#78d6db"
 stroke-width="4"/>
 
 <circle
-cx="47"
-cy="48"
-r="16"
-fill="#835f94"
-stroke="#c390d4"
-stroke-width="4"/>
+cx="45"
+cy="47"
+r="18"
+fill="url(#nucleus)"
+stroke="#dab4ef"
+stroke-width="3"/>
 
 <ellipse
 cx="70"
-cy="65"
-rx="11"
-ry="6"
-fill="#ce8063"/>
+cy="67"
+rx="12"
+ry="7"
+fill="#c56d51"
+stroke="#e9a080"
+stroke-width="2"/>
+
+<path
+d="M61 67
+Q70 60 79 67
+Q70 73 61 67"
+fill="none"
+stroke="#7c3327"
+stroke-width="2"/>
 
 <ellipse
 cx="27"
-cy="65"
-rx="10"
+cy="68"
+rx="9"
 ry="5"
-fill="#ce8063"/>
+fill="#bfc85b"/>
 
 </svg>
 `,
 
 
-multi:`
+/* GĄBKA */
+
+sponge:`
 
 <svg viewBox="0 0 100 100">
 
-<g fill="#4c89b4" stroke="#78caee" stroke-width="3">
+<defs>
 
-<circle cx="50" cy="25" r="13"/>
-<circle cx="30" cy="42" r="13"/>
-<circle cx="70" cy="42" r="13"/>
-<circle cx="38" cy="66" r="13"/>
-<circle cx="62" cy="66" r="13"/>
+<linearGradient id="spg" x1="0" y1="0" x2="1" y2="1">
+<stop stop-color="#ffc85b"/>
+<stop offset=".5" stop-color="#dc8432"/>
+<stop offset="1" stop-color="#723418"/>
+</linearGradient>
+
+</defs>
+
+<path
+d="M25 83
+C21 66 25 46 31 20
+C33 11 46 10 49 21
+L52 36
+C55 18 68 18 71 28
+C77 48 75 68 78 83
+Z"
+fill="url(#spg)"
+stroke="#f1b24c"
+stroke-width="3"/>
+
+<g fill="#6c371c">
+
+<circle cx="36" cy="34" r="4"/>
+<circle cx="32" cy="55" r="3"/>
+<circle cx="42" cy="70" r="4"/>
+<circle cx="62" cy="48" r="4"/>
+<circle cx="66" cy="67" r="3"/>
+<circle cx="61" cy="30" r="5"/>
 
 </g>
 
@@ -747,303 +797,359 @@ multi:`
 `,
 
 
-animal:`
+/* MEDUZA */
+
+jellyfish:`
 
 <svg viewBox="0 0 100 100">
 
-<ellipse cx="50" cy="55" rx="30" ry="22"
-fill="#c35d69"/>
+<defs>
 
-<circle cx="72" cy="43" r="13"
-fill="#cf7180"/>
+<radialGradient id="jel">
+<stop stop-color="#d6e5ff"/>
+<stop offset=".55" stop-color="#8da4e8"/>
+<stop offset="1" stop-color="#403870"/>
+</radialGradient>
 
-<circle cx="76" cy="40" r="3" fill="#111"/>
+</defs>
 
-<path d="M22 60 Q10 48 18 35"
+<path
+d="M18 48
+C18 12 82 12 82 48
+C67 61 33 61 18 48Z"
+fill="url(#jel)"
+stroke="#c5d7ff"
+stroke-width="3"
+opacity=".92"/>
+
+<g
 fill="none"
-stroke="#d5747f"
-stroke-width="6"/>
+stroke="#a48ee0"
+stroke-width="5"
+stroke-linecap="round">
 
-<path d="M40 75 L35 90 M60 75 L65 90"
-stroke="#d5747f"
-stroke-width="6"/>
+<path d="M29 52 C20 68 34 76 27 91"/>
+<path d="M42 55 C37 70 48 80 42 94"/>
+<path d="M57 55 C63 70 52 81 59 94"/>
+<path d="M71 52 C81 68 67 78 73 91"/>
+
+</g>
 
 </svg>
 `,
 
 
-chordate:`
+/* PŁAZINIEC */
+
+flatworm:`
 
 <svg viewBox="0 0 100 100">
 
-<path
-d="M10 55
-Q35 32 65 40
-Q78 43 90 50
-Q75 58 65 62
-Q35 72 10 55"
-fill="#897454"
-stroke="#c2a77a"
-stroke-width="4"/>
+<defs>
 
-<circle cx="72" cy="48" r="3" fill="#111"/>
+<linearGradient id="worm" x1="0" x2="1">
+<stop stop-color="#9f514c"/>
+<stop offset=".5" stop-color="#d7786e"/>
+<stop offset="1" stop-color="#70312f"/>
+</linearGradient>
+
+</defs>
 
 <path
-d="M18 55 L75 54"
-stroke="#ead9b1"
+d="M16 47
+C31 27 66 27 84 45
+C73 51 73 58 84 64
+C60 76 28 72 16 55
+C11 52 11 50 16 47Z"
+fill="url(#worm)"
+stroke="#ef9588"
 stroke-width="3"/>
 
+<circle cx="29" cy="44" r="3" fill="#111"/>
+<circle cx="38" cy="42" r="3" fill="#111"/>
+
+<path
+d="M50 38
+C46 48 46 58 52 66"
+stroke="#854139"
+stroke-width="3"
+fill="none"/>
+
 </svg>
 `,
 
+
+/* RYBA */
 
 fish:`
 
 <svg viewBox="0 0 100 100">
 
+<defs>
+
+<linearGradient id="fishbody">
+<stop stop-color="#8bd4e4"/>
+<stop offset=".45" stop-color="#4189a5"/>
+<stop offset="1" stop-color="#163c58"/>
+</linearGradient>
+
+</defs>
+
 <ellipse
-cx="48"
-cy="50"
-rx="30"
-ry="18"
-fill="#47859d"
-stroke="#82d1df"
-stroke-width="4"/>
+cx="50"
+cy="51"
+rx="31"
+ry="19"
+fill="url(#fishbody)"
+stroke="#94e0e9"
+stroke-width="3"/>
 
 <polygon
-points="18,50 5,35 5,65"
-fill="#4a899f"/>
+points="20,51 5,34 5,68"
+fill="#34758e"/>
 
 <polygon
-points="46,32 58,18 64,36"
-fill="#397788"/>
+points="45,34 58,18 64,37"
+fill="#32798c"/>
 
-<circle cx="67" cy="45" r="4" fill="#111"/>
+<polygon
+points="46,68 59,83 65,64"
+fill="#2d7186"/>
+
+<circle cx="70" cy="45" r="4" fill="#101010"/>
+<circle cx="69" cy="44" r="1.3" fill="#fff"/>
 
 <path
-d="M25 52 Q45 60 65 51"
+d="M30 52 Q48 61 67 53"
 fill="none"
-stroke="#b9e0e5"
+stroke="#b7e5e8"
 stroke-width="2"/>
 
 </svg>
 `,
 
 
+/* CZWORONÓG */
+
 tetrapod:`
 
 <svg viewBox="0 0 100 100">
 
+<defs>
+
+<linearGradient id="tetra">
+<stop stop-color="#9ab76a"/>
+<stop offset=".5" stop-color="#5c803d"/>
+<stop offset="1" stop-color="#263a22"/>
+</linearGradient>
+
+</defs>
+
 <ellipse
-cx="48"
-cy="52"
-rx="30"
-ry="18"
-fill="#769a43"/>
+cx="47"
+cy="51"
+rx="29"
+ry="17"
+fill="url(#tetra)"/>
 
-<circle
+<ellipse
 cx="72"
-cy="42"
-r="13"
-fill="#7fab48"/>
+cy="44"
+rx="14"
+ry="12"
+fill="url(#tetra)"/>
 
-<circle cx="76" cy="39" r="3" fill="#111"/>
+<circle cx="76" cy="41" r="3" fill="#050505"/>
 
 <path
-d="M30 66 L20 83
-M42 66 L36 86
-M60 66 L67 84
-M70 61 L82 77"
-stroke="#a5bc63"
+d="M31 62 L20 80 L12 82
+M42 64 L38 84 L31 87
+M59 63 L69 80 L77 80
+M68 58 L82 70 L88 68"
+stroke="#789953"
 stroke-width="7"
+fill="none"
 stroke-linecap="round"/>
 
 <path
-d="M20 49 Q6 43 10 27"
-fill="none"
-stroke="#769a43"
-stroke-width="7"/>
+d="M20 51
+C8 48 6 36 14 27"
+stroke="#5c803d"
+stroke-width="7"
+fill="none"/>
 
 </svg>
 `,
 
 
-reptile:`
-
-<svg viewBox="0 0 100 100">
-
-<ellipse
-cx="45"
-cy="52"
-rx="30"
-ry="15"
-fill="#597d3e"/>
-
-<circle
-cx="72"
-cy="47"
-r="11"
-fill="#70954d"/>
-
-<circle cx="76" cy="44" r="2.8" fill="#101010"/>
-
-<path
-d="M20 54 Q5 62 6 76"
-fill="none"
-stroke="#597d3e"
-stroke-width="7"/>
-
-<path
-d="M33 63 L25 77
-M55 63 L62 78"
-stroke="#6c944a"
-stroke-width="6"/>
-
-</svg>
-`,
-
-
-synapsid:`
-
-<svg viewBox="0 0 100 100">
-
-<ellipse
-cx="45"
-cy="55"
-rx="30"
-ry="19"
-fill="#735e4b"/>
-
-<circle
-cx="72"
-cy="47"
-r="13"
-fill="#826c55"/>
-
-<polygon
-points="67,35 71,20 77,38"
-fill="#5d4c3e"/>
-
-<circle cx="77" cy="44" r="3" fill="#111"/>
-
-<path
-d="M20 63 L15 80
-M35 68 L32 85
-M58 68 L62 85
-M70 62 L80 77"
-stroke="#826c55"
-stroke-width="6"/>
-
-</svg>
-`,
-
+/* SSAK */
 
 mammal:`
 
 <svg viewBox="0 0 100 100">
 
+<defs>
+
+<linearGradient id="fur">
+<stop stop-color="#a08a70"/>
+<stop offset=".5" stop-color="#6e5c4b"/>
+<stop offset="1" stop-color="#352b25"/>
+</linearGradient>
+
+</defs>
+
 <ellipse
 cx="45"
-cy="56"
+cy="53"
 rx="29"
 ry="20"
-fill="#756b62"/>
+fill="url(#fur)"/>
 
 <circle
-cx="70"
-cy="46"
-r="14"
-fill="#82776d"/>
+cx="71"
+cy="43"
+r="15"
+fill="url(#fur)"/>
 
 <polygon
-points="63,35 63,20 71,35"
-fill="#6d625a"/>
+points="61,34 62,17 71,34"
+fill="#655345"/>
 
 <polygon
-points="72,34 80,21 80,39"
-fill="#6d625a"/>
+points="72,31 81,18 81,38"
+fill="#655345"/>
 
-<circle cx="74" cy="44" r="3" fill="#111"/>
-
-<path
-d="M20 52 Q5 44 13 30"
-fill="none"
-stroke="#756b62"
-stroke-width="5"/>
+<circle cx="76" cy="41" r="3" fill="#070707"/>
 
 <path
-d="M31 70 L29 88
-M58 70 L60 88"
-stroke="#82776d"
-stroke-width="7"/>
-
-</svg>
-`
-
-};
-
-
-/* =====================================================
-   ULEPSZENIA
-===================================================== */
-
-const upgradeIcon = {
-
-replication:`
-
-<svg viewBox="0 0 100 100">
-
-<path d="M25 20 C75 35 75 65 25 80"
+d="M20 52
+C5 45 8 28 19 25"
 fill="none"
-stroke="#da6fd7"
-stroke-width="8"/>
+stroke="#665446"
+stroke-width="6"/>
 
-<path d="M75 20 C25 35 25 65 75 80"
-fill="none"
-stroke="#8e66d7"
-stroke-width="5"/>
+<path
+d="M31 68 L29 88
+M55 69 L57 88
+M66 64 L72 84"
+stroke="#766251"
+stroke-width="7"
+stroke-linecap="round"/>
 
 </svg>
 `,
 
-membrane:`
+
+/* NACZELNE */
+
+primate:`
 
 <svg viewBox="0 0 100 100">
 
-<rect x="15" y="30" width="70" height="40"
-rx="8"
-fill="#a9604b"/>
+<defs>
 
-<g fill="#e0ad72">
+<linearGradient id="primatefur">
+<stop stop-color="#99775d"/>
+<stop offset=".55" stop-color="#604837"/>
+<stop offset="1" stop-color="#2d211c"/>
+</linearGradient>
 
-<circle cx="25" cy="40" r="5"/>
-<circle cx="40" cy="40" r="5"/>
-<circle cx="55" cy="40" r="5"/>
-<circle cx="70" cy="40" r="5"/>
+</defs>
 
-<circle cx="25" cy="60" r="5"/>
-<circle cx="40" cy="60" r="5"/>
-<circle cx="55" cy="60" r="5"/>
-<circle cx="70" cy="60" r="5"/>
+<ellipse
+cx="48"
+cy="54"
+rx="23"
+ry="28"
+fill="url(#primatefur)"/>
 
-</g>
+<circle
+cx="50"
+cy="28"
+r="19"
+fill="url(#primatefur)"/>
+
+<ellipse
+cx="50"
+cy="32"
+rx="11"
+ry="10"
+fill="#b99271"/>
+
+<circle cx="44" cy="25" r="3" fill="#090909"/>
+<circle cx="56" cy="25" r="3" fill="#090909"/>
+
+<path
+d="M30 52 L14 74
+M67 52 L84 72
+M39 76 L29 92
+M58 77 L69 92"
+stroke="#654a39"
+stroke-width="9"
+stroke-linecap="round"/>
 
 </svg>
 `,
 
-generic:`
+
+/* CZŁOWIEK */
+
+human:`
 
 <svg viewBox="0 0 100 100">
 
-<circle cx="50" cy="50" r="30"
-fill="#386d60"
-stroke="#69d5bb"
-stroke-width="5"/>
+<defs>
+
+<linearGradient id="skin">
+<stop stop-color="#f1c5a5"/>
+<stop offset=".55" stop-color="#c98f70"/>
+<stop offset="1" stop-color="#754b39"/>
+</linearGradient>
+
+<linearGradient id="body">
+<stop stop-color="#708fae"/>
+<stop offset="1" stop-color="#293d53"/>
+</linearGradient>
+
+</defs>
+
+<circle
+cx="50"
+cy="19"
+r="13"
+fill="url(#skin)"/>
 
 <path
-d="M50 25 V75 M25 50 H75"
-stroke="#d7fff6"
+d="M37 34
+Q50 28 63 34
+L68 63
+L59 66
+L57 91
+L47 91
+L45 66
+L36 64
+Z"
+fill="url(#body)"/>
+
+<path
+d="M38 39 L20 61
+M62 39 L80 61"
+stroke="url(#skin)"
 stroke-width="8"
+stroke-linecap="round"/>
+
+<path
+d="M44 63 L38 91
+M57 63 L63 91"
+stroke="#3a4b5e"
+stroke-width="10"
+stroke-linecap="round"/>
+
+<path
+d="M39 11 Q50 2 61 11"
+stroke="#392a23"
+stroke-width="7"
+fill="none"
 stroke-linecap="round"/>
 
 </svg>
@@ -1052,430 +1158,272 @@ stroke-linecap="round"/>
 };
 
 
-/* =====================================================
-   GENERATORY
-===================================================== */
+/* ==========================================================
+   IKONA ULEPSZENIA
+========================================================== */
 
-const generators=[
+const upgradeSVG = `
+
+<svg viewBox="0 0 100 100">
+
+<defs>
+
+<radialGradient id="ugrad">
+<stop stop-color="#67efd0"/>
+<stop offset=".6" stop-color="#287f6c"/>
+<stop offset="1" stop-color="#10382f"/>
+</radialGradient>
+
+</defs>
+
+<circle
+cx="50"
+cy="50"
+r="29"
+fill="url(#ugrad)"
+stroke="#8affe1"
+stroke-width="4"/>
+
+<path
+d="M50 28 V72
+M28 50 H72"
+stroke="#e7fff9"
+stroke-width="9"
+stroke-linecap="round"/>
+
+</svg>
+
+`;
+
+
+/* ==========================================================
+   DANE GENERATORÓW
+========================================================== */
+
+const generators = [
 
 {
-id:"amino",
-name:"Aminokwas",
-icon:"amino",
-x:50,
-y:2800,
-baseCost:10,
-production:.2,
+    id:"amino",
+    name:"Aminokwas",
+    model:"amino",
+    y:2820,
+    cost:10,
+    production:.2,
 
-upgrades:[
-
-{
-name:"Więcej aminokwasów",
-effect:0.5,
-cost:80
+    upgrades:[
+        ["Więcej aminokwasów",.5,80],
+        ["Łączenie aminokwasów",.5,120]
+    ]
 },
 
 {
-name:"Łączenie aminokwasów",
-effect:0.25,
-cost:120
-}
+    id:"dna",
+    name:"DNA",
+    model:"dna",
+    y:2590,
+    cost:50,
+    production:1,
 
-]
+    upgrades:[
+        ["Replikacja DNA",.5,300],
+        ["Naprawa DNA",.5,400]
+    ]
 },
 
 {
-id:"protein",
-name:"Białko",
-icon:"protein",
-x:46,
-y:2600,
-baseCost:30,
-production:.5,
+    id:"prokaryote",
+    name:"Komórka prokariotyczna",
+    model:"prokaryote",
+    y:2360,
+    cost:250,
+    production:4,
 
-upgrades:[
-
-{
-name:"Fałdowanie białek",
-effect:.5,
-cost:200
+    upgrades:[
+        ["Błona komórkowa",.5,1300],
+        ["Rybosomy",.5,1600]
+    ]
 },
 
 {
-name:"Enzymy",
-effect:.25,
-cost:250
-}
+    id:"eukaryote",
+    name:"Komórka eukariotyczna",
+    model:"eukaryote",
+    y:2130,
+    cost:1200,
+    production:15,
 
-]
+    upgrades:[
+        ["Jądro komórkowe",.5,6500],
+        ["Mitochondria",.5,8000]
+    ]
 },
 
 {
-id:"rna",
-name:"RNA",
-icon:"rna",
-x:54,
-y:2400,
-baseCost:100,
-production:1,
+    id:"sponge",
+    name:"Gąbka",
+    model:"sponge",
+    y:1900,
+    cost:6000,
+    production:55,
 
-upgrades:[
-
-{
-name:"Replikacja RNA",
-effect:.5,
-cost:500,
-special:"replication"
+    upgrades:[
+        ["Pory wodne",.5,30000],
+        ["Choanocyty",.5,40000]
+    ]
 },
 
 {
-name:"Stabilność RNA",
-effect:.25,
-cost:650
-}
+    id:"jellyfish",
+    name:"Meduza",
+    model:"jellyfish",
+    y:1670,
+    cost:30000,
+    production:180,
 
-]
+    upgrades:[
+        ["Komórki parzydełkowe",.5,150000],
+        ["Sieć nerwowa",.5,180000]
+    ]
 },
 
 {
-id:"dna",
-name:"DNA",
-icon:"dna",
-x:46,
-y:2200,
-baseCost:300,
-production:2,
+    id:"flatworm",
+    name:"Płaziniec",
+    model:"flatworm",
+    y:1440,
+    cost:150000,
+    production:600,
 
-upgrades:[
-
-{
-name:"Naprawa DNA",
-effect:.5,
-cost:1500
+    upgrades:[
+        ["Symetria dwuboczna",.5,750000],
+        ["Cefalizacja",.5,900000]
+    ]
 },
 
 {
-name:"Stabilność DNA",
-effect:.25,
-cost:1800
-}
+    id:"fish",
+    name:"Ryba",
+    model:"fish",
+    y:1210,
+    cost:800000,
+    production:2200,
 
-]
+    upgrades:[
+        ["Lepsze skrzela",.5,4000000],
+        ["Silniejsze płetwy",.5,5000000]
+    ]
 },
 
 {
-id:"prokaryote",
-name:"Komórka prokariotyczna",
-icon:"prokaryote",
-x:54,
-y:2000,
-baseCost:900,
-production:5,
+    id:"tetrapod",
+    name:"Czworonóg",
+    model:"tetrapod",
+    y:980,
+    cost:4000000,
+    production:7500,
 
-upgrades:[
-
-{
-name:"Błona komórkowa",
-effect:.5,
-cost:5000,
-special:"membrane"
+    upgrades:[
+        ["Silniejsze kończyny",.5,20000000],
+        ["Wydajniejsze płuca",.5,25000000]
+    ]
 },
 
 {
-name:"Ruchliwość",
-effect:.25,
-cost:6000
-}
+    id:"mammal",
+    name:"Ssak",
+    model:"mammal",
+    y:750,
+    cost:20000000,
+    production:26000,
 
-]
+    upgrades:[
+        ["Stałocieplność",.5,100000000],
+        ["Opieka nad młodymi",.5,130000000]
+    ]
 },
 
 {
-id:"eukaryote",
-name:"Komórka eukariotyczna",
-icon:"eukaryote",
-x:46,
-y:1800,
-baseCost:2800,
-production:14,
+    id:"primate",
+    name:"Naczelne",
+    model:"primate",
+    y:520,
+    cost:100000000,
+    production:90000,
 
-upgrades:[
-
-{
-name:"Jądro komórkowe",
-effect:.5,
-cost:14000
+    upgrades:[
+        ["Chwytne dłonie",.5,500000000],
+        ["Większy mózg",.5,650000000]
+    ]
 },
 
 {
-name:"Mitochondria",
-effect:.5,
-cost:17000
-}
+    id:"human",
+    name:"Człowiek",
+    model:"human",
+    y:290,
+    cost:500000000,
+    production:350000,
 
-]
-},
-
-{
-id:"multi",
-name:"Wielokomórkowiec",
-icon:"multi",
-x:54,
-y:1600,
-baseCost:8000,
-production:35,
-
-upgrades:[
-
-{
-name:"Komunikacja komórek",
-effect:.5,
-cost:40000
-},
-
-{
-name:"Specjalizacja komórek",
-effect:.5,
-cost:45000
-}
-
-]
-},
-
-{
-id:"animal",
-name:"Zwierzę",
-icon:"animal",
-x:46,
-y:1400,
-baseCost:25000,
-production:90,
-
-upgrades:[
-
-{
-name:"Tkanki właściwe",
-effect:.5,
-cost:120000
-},
-
-{
-name:"Układ nerwowy",
-effect:.5,
-cost:140000
-}
-
-]
-},
-
-{
-id:"chordate",
-name:"Strunowiec",
-icon:"chordate",
-x:54,
-y:1200,
-baseCost:80000,
-production:230,
-
-upgrades:[
-
-{
-name:"Struna grzbietowa",
-effect:.5,
-cost:400000
-},
-
-{
-name:"Cewka nerwowa",
-effect:.5,
-cost:450000
-}
-
-]
-},
-
-{
-id:"fish",
-name:"Ryba",
-icon:"fish",
-x:46,
-y:1000,
-baseCost:250000,
-production:600,
-
-upgrades:[
-
-{
-name:"Lepsze płetwy",
-effect:.5,
-cost:1200000
-},
-
-{
-name:"Wydajne skrzela",
-effect:.5,
-cost:1400000
-}
-
-]
-},
-
-{
-id:"tetrapod",
-name:"Czworonóg",
-icon:"tetrapod",
-x:54,
-y:800,
-baseCost:750000,
-production:1600,
-
-upgrades:[
-
-{
-name:"Silniejsze kończyny",
-effect:.5,
-cost:3500000
-},
-
-{
-name:"Wydajne płuca",
-effect:.5,
-cost:4200000
-}
-
-]
-},
-
-{
-id:"reptile",
-name:"Gad",
-icon:"reptile",
-x:46,
-y:600,
-baseCost:2200000,
-production:4200,
-
-upgrades:[
-
-{
-name:"Jajo owodniowe",
-effect:.5,
-cost:10000000
-},
-
-{
-name:"Łuski ochronne",
-effect:.5,
-cost:12000000
-}
-
-]
-},
-
-{
-id:"synapsid",
-name:"Synapsyd",
-icon:"synapsid",
-x:54,
-y:400,
-baseCost:6500000,
-production:11000,
-
-upgrades:[
-
-{
-name:"Zróżnicowane zęby",
-effect:.5,
-cost:32000000
-},
-
-{
-name:"Lepszy metabolizm",
-effect:.5,
-cost:38000000
-}
-
-]
-},
-
-{
-id:"mammal",
-name:"Ssak",
-icon:"mammal",
-x:50,
-y:200,
-baseCost:20000000,
-production:30000,
-
-upgrades:[
-
-{
-name:"Stałocieplność",
-effect:.5,
-cost:100000000
-},
-
-{
-name:"Opieka nad młodymi",
-effect:.5,
-cost:120000000
-}
-
-]
+    upgrades:[
+        ["Mowa",.5,2500000000],
+        ["Myślenie abstrakcyjne",.5,3000000000]
+    ]
 }
 
 ];
 
 
-/* =====================================================
-   STARTOWE DANE
-===================================================== */
-
 let entropy=0;
-
 let clickPower=1;
 
 generators.forEach(g=>{
 
     g.level=0;
 
-    g.upgrades.forEach(u=>{
-        u.bought=false;
-    });
+    g.upgrades=
+        g.upgrades.map(u=>({
+
+            name:u[0],
+            effect:u[1],
+            cost:u[2],
+            bought:false
+
+        }));
 
 });
 
 
-const tree=document.getElementById("tree");
+const tree=
+    document.getElementById("tree");
 
-const svg=document.getElementById("connections");
+const connections=
+    document.getElementById("connections");
 
 
-/* =====================================================
-   TWORZENIE ELEMENTÓW
-===================================================== */
+/* ==========================================================
+   TWORZENIE GENERATORÓW
+========================================================== */
 
 generators.forEach((g,index)=>{
 
-    const generator=document.createElement("div");
+    const element=
+        document.createElement("div");
 
-    generator.className="generator";
+    element.className="generator";
 
-    generator.id="generator-"+g.id;
+    element.id="generator-"+g.id;
 
-    generator.style.left=g.x+"%";
-    generator.style.top=g.y+"px";
+    element.style.top=g.y+"px";
 
-    generator.innerHTML=`
+
+    element.innerHTML=`
 
         <div class="level">
             x0
         </div>
 
-        <div class="icon">
-
-            ${icons[g.icon]}
-
+        <div class="model3d">
+            ${models[g.model]}
         </div>
 
         <div class="generatorName">
@@ -1486,104 +1434,85 @@ generators.forEach((g,index)=>{
 
     `;
 
-    generator.onclick=e=>{
 
-        e.stopPropagation();
+    element.addEventListener(
+        "click",
+        e=>{
 
-        buyGenerator(index);
+            e.stopPropagation();
 
-    };
+            buyGenerator(index);
 
-    tree.appendChild(generator);
+        }
+    );
 
 
-    /* =========================
-       UPGRADE LEWY
-    ========================= */
+    tree.appendChild(element);
+
 
     createUpgrade(
         g,
         index,
         0,
-        24
+        23
     );
 
-
-    /* =========================
-       UPGRADE PRAWY
-    ========================= */
 
     createUpgrade(
         g,
         index,
         1,
-        76
+        77
     );
 
 });
 
 
-function createUpgrade(
-    generator,
-    generatorIndex,
-    upgradeIndex,
-    x
-){
+/* ==========================================================
+   ULEPSZENIE
+========================================================== */
 
-    const data=
-        generator.upgrades[upgradeIndex];
+function createUpgrade(g,gIndex,uIndex,x){
+
+    const u=
+        g.upgrades[uIndex];
+
 
     const element=
         document.createElement("div");
 
+
     element.className="upgrade";
 
     element.id=
-        "upgrade-"+
-        generator.id+
-        "-"+
-        upgradeIndex;
+        `upgrade-${g.id}-${uIndex}`;
+
 
     element.style.left=x+"%";
 
-    element.style.top=
-        generator.y+"px";
-
-
-    let selectedIcon=
-        data.special
-        ? upgradeIcon[data.special]
-        : upgradeIcon.generic;
+    element.style.top=g.y+"px";
 
 
     element.innerHTML=`
 
         <div class="upgradeIcon">
 
-            ${selectedIcon}
+            ${upgradeSVG}
 
         </div>
 
         <div class="upgradeText">
 
             <div class="upgradeTitle">
-
-                ${data.name}
-
+                ${u.name}
             </div>
 
             <div class="upgradeEffect">
-
-                +${Math.round(data.effect*100)}%
-                produkcji
-
+                +${u.effect*100}% produkcji
             </div>
 
             <div class="upgradeCost">
-
-                ${format(data.cost)}
-                entropii
-
+                ${format(u.cost)} entropii
             </div>
 
         </div>
@@ -1591,16 +1520,19 @@ function createUpgrade(
     `;
 
 
-    element.onclick=e=>{
+    element.addEventListener(
+        "click",
+        e=>{
 
-        e.stopPropagation();
+            e.stopPropagation();
 
-        buyUpgrade(
-            generatorIndex,
-            upgradeIndex
-        );
+            buyUpgrade(
+                gIndex,
+                uIndex
+            );
 
-    };
+        }
+    );
 
 
     tree.appendChild(element);
@@ -1608,15 +1540,15 @@ function createUpgrade(
 }
 
 
-/* =====================================================
-   KOSZT GENERATORA
-===================================================== */
+/* ==========================================================
+   KOSZT
+========================================================== */
 
-function costOf(g){
+function generatorCost(g){
 
     return Math.floor(
 
-        g.baseCost *
+        g.cost *
         Math.pow(
             1.17,
             g.level
@@ -1627,9 +1559,9 @@ function costOf(g){
 }
 
 
-/* =====================================================
-   KUPOWANIE
-===================================================== */
+/* ==========================================================
+   KUPOWANIE GENERATORA
+========================================================== */
 
 function buyGenerator(index){
 
@@ -1637,106 +1569,108 @@ function buyGenerator(index){
         generators[index];
 
 
-    const unlocked=
-        index===0 ||
-        generators[index-1].level>0;
-
-
-    if(!unlocked)
+    if(
+        index>0 &&
+        generators[index-1].level===0
+    ){
         return;
+    }
 
 
-    const price=
-        costOf(g);
+    const cost=
+        generatorCost(g);
 
 
-    if(entropy<price)
+    if(entropy<cost){
         return;
+    }
 
 
-    entropy-=price;
+    entropy-=cost;
 
     g.level++;
 
-    update();
-
-}
-
-
-/* =====================================================
-   KUPOWANIE UPGRADE
-===================================================== */
-
-function buyUpgrade(
-    generatorIndex,
-    upgradeIndex
-){
-
-    const generator=
-        generators[generatorIndex];
-
-    const upgrade=
-        generator.upgrades[upgradeIndex];
-
-
-    if(generator.level===0)
-        return;
-
-
-    if(upgrade.bought)
-        return;
-
-
-    if(entropy<upgrade.cost)
-        return;
-
-
-    entropy-=upgrade.cost;
-
-    upgrade.bought=true;
 
     update();
 
 }
 
 
-/* =====================================================
-   MNOŻNIK UPGRADE
-===================================================== */
+/* ==========================================================
+   KUPOWANIE ULEPSZENIA
+========================================================== */
+
+function buyUpgrade(gIndex,uIndex){
+
+    const g=
+        generators[gIndex];
+
+    const u=
+        g.upgrades[uIndex];
+
+
+    if(g.level===0){
+        return;
+    }
+
+
+    if(u.bought){
+        return;
+    }
+
+
+    if(entropy<u.cost){
+        return;
+    }
+
+
+    entropy-=u.cost;
+
+    u.bought=true;
+
+
+    update();
+
+}
+
+
+/* ==========================================================
+   MNOŻNIK
+========================================================== */
 
 function multiplier(g){
 
-    let multiplier=1;
+    let result=1;
 
 
     g.upgrades.forEach(u=>{
 
         if(u.bought){
 
-            multiplier+=u.effect;
+            result+=u.effect;
 
         }
 
     });
 
 
-    return multiplier;
+    return result;
 
 }
 
 
-/* =====================================================
+/* ==========================================================
    PRODUKCJA
-===================================================== */
+========================================================== */
 
 function production(){
 
-    let total=0;
+    let result=0;
 
 
     generators.forEach(g=>{
 
-        total+=
+        result+=
 
             g.production *
 
@@ -1747,14 +1681,14 @@ function production(){
     });
 
 
-    return total;
+    return result;
 
 }
 
 
-/* =====================================================
-   FORMAT LICZBY
-===================================================== */
+/* ==========================================================
+   FORMATOWANIE
+========================================================== */
 
 function format(n){
 
@@ -1783,148 +1717,19 @@ function format(n){
 }
 
 
-/* =====================================================
-   AKTUALIZOWANIE UI
-===================================================== */
-
-function update(){
-
-    document.getElementById("entropy")
-    .textContent=
-        format(entropy)+
-        " entropii";
-
-
-    document.getElementById("production")
-    .textContent=
-        "+"+
-        format(production())+
-        " / s";
-
-
-    generators.forEach((g,index)=>{
-
-
-        const el=
-            document.getElementById(
-                "generator-"+g.id
-            );
-
-
-        const unlocked=
-            index===0 ||
-            generators[index-1].level>0;
-
-
-        el.classList.remove(
-            "locked",
-            "available",
-            "owned"
-        );
-
-
-        if(!unlocked){
-
-            el.classList.add("locked");
-
-        }
-        else if(g.level===0){
-
-            el.classList.add("available");
-
-        }
-        else{
-
-            el.classList.add("owned");
-
-        }
-
-
-        el.querySelector(".level")
-        .textContent=
-            "x"+g.level;
-
-
-        el.querySelector(
-            ".generatorPrice"
-        ).textContent=
-
-            format(costOf(g))+
-            " entropii";
-
-
-        /* =========================
-           UPGRADE
-        ========================= */
-
-        g.upgrades.forEach((u,i)=>{
-
-            const upgrade=
-
-                document.getElementById(
-
-                    "upgrade-"+
-                    g.id+
-                    "-"+
-                    i
-
-                );
-
-
-            upgrade.classList.remove(
-                "locked",
-                "bought"
-            );
-
-
-            if(g.level===0){
-
-                upgrade.classList.add(
-                    "locked"
-                );
-
-            }
-
-            if(u.bought){
-
-                upgrade.classList.add(
-                    "bought"
-                );
-
-
-                upgrade.querySelector(
-                    ".upgradeEffect"
-                ).textContent=
-                    "AKTYWNE";
-
-            }
-
-        });
-
-    });
-
-
-    updateLines();
-
-}
-
-
-/* =====================================================
+/* ==========================================================
    LINIE
-===================================================== */
+========================================================== */
 
 function drawLines(){
 
-    svg.innerHTML="";
-
+    connections.innerHTML="";
 
     const width=
         tree.clientWidth;
 
 
-    /* =========================
-       GŁÓWNA ŚCIEŻKA
-    ========================= */
+    /* PIONOWA GŁÓWNA LINIA */
 
     for(
         let i=0;
@@ -1948,7 +1753,7 @@ function drawLines(){
 
         line.setAttribute(
             "x1",
-            width*a.x/100
+            width/2
         );
 
         line.setAttribute(
@@ -1958,7 +1763,7 @@ function drawLines(){
 
         line.setAttribute(
             "x2",
-            width*b.x/100
+            width/2
         );
 
         line.setAttribute(
@@ -1971,23 +1776,22 @@ function drawLines(){
             "mainLine"
         );
 
+
         line.id=
-            "mainLine-"+i;
+            "main-"+i;
 
 
-        svg.appendChild(line);
+        connections.appendChild(line);
 
     }
 
 
-    /* =========================
-       LINIE DO UPGRADE
-    ========================= */
+    /* LINIE ULEPSZEŃ */
 
     generators.forEach((g,index)=>{
 
-        [24,76].forEach(
-            (x,upgradeIndex)=>{
+        [23,77].forEach(
+            (x,uIndex)=>{
 
             const line=
                 document.createElementNS(
@@ -1998,7 +1802,7 @@ function drawLines(){
 
             line.setAttribute(
                 "x1",
-                width*g.x/100
+                width/2
             );
 
             line.setAttribute(
@@ -2023,14 +1827,10 @@ function drawLines(){
 
 
             line.id=
-
-                "upgradeLine-"+
-                index+
-                "-"+
-                upgradeIndex;
+                `upline-${index}-${uIndex}`;
 
 
-            svg.appendChild(line);
+            connections.appendChild(line);
 
         });
 
@@ -2039,47 +1839,139 @@ function drawLines(){
 }
 
 
-/* =====================================================
-   AKTYWNE LINIE
-===================================================== */
+/* ==========================================================
+   UI
+========================================================== */
 
-function updateLines(){
+function update(){
+
+    document.getElementById(
+        "entropy"
+    ).textContent=
+
+        format(entropy)+
+        " entropii";
+
+
+    document.getElementById(
+        "production"
+    ).textContent=
+
+        "+"+
+        format(production())+
+        " / s";
+
 
     generators.forEach((g,index)=>{
 
-
-        if(index<
-            generators.length-1
-        ){
-
-            const line=
-                document.getElementById(
-                    "mainLine-"+index
-                );
+        const element=
+            document.getElementById(
+                "generator-"+g.id
+            );
 
 
-            if(g.level>0)
-                line.classList.add(
-                    "active"
-                );
-            else
-                line.classList.remove(
-                    "active"
-                );
+        const unlocked=
+
+            index===0 ||
+
+            generators[index-1]
+            .level>0;
+
+
+        element.classList.remove(
+            "locked",
+            "available",
+            "owned"
+        );
+
+
+        if(!unlocked){
+
+            element.classList.add(
+                "locked"
+            );
+
+        }
+
+        else if(g.level===0){
+
+            element.classList.add(
+                "available"
+            );
+
+        }
+
+        else{
+
+            element.classList.add(
+                "owned"
+            );
 
         }
 
 
-        g.upgrades.forEach((u,i)=>{
+        element.querySelector(
+            ".level"
+        ).textContent=
+
+            "x"+g.level;
+
+
+        element.querySelector(
+            ".generatorPrice"
+        ).textContent=
+
+            format(
+                generatorCost(g)
+            )+
+            " entropii";
+
+
+        g.upgrades.forEach((u,uIndex)=>{
+
+            const upgrade=
+                document.getElementById(
+                    `upgrade-${g.id}-${uIndex}`
+                );
+
+
+            upgrade.classList.remove(
+                "locked",
+                "bought"
+            );
+
+
+            if(g.level===0){
+
+                upgrade.classList.add(
+                    "locked"
+                );
+
+            }
+
+
+            if(u.bought){
+
+                upgrade.classList.add(
+                    "bought"
+                );
+
+
+                upgrade.querySelector(
+                    ".upgradeEffect"
+                ).textContent=
+                    "AKTYWNE";
+
+            }
+
+        });
+
+
+        if(index<generators.length-1){
 
             const line=
                 document.getElementById(
-
-                    "upgradeLine-"+
-                    index+
-                    "-"+
-                    i
-
+                    "main-"+index
                 );
 
 
@@ -2089,8 +1981,32 @@ function updateLines(){
                     "active"
                 );
 
+            }else{
+
+                line.classList.remove(
+                    "active"
+                );
+
             }
-            else{
+
+        }
+
+
+        g.upgrades.forEach((u,uIndex)=>{
+
+            const line=
+                document.getElementById(
+                    `upline-${index}-${uIndex}`
+                );
+
+
+            if(g.level>0){
+
+                line.classList.add(
+                    "active"
+                );
+
+            }else{
 
                 line.classList.remove(
                     "active"
@@ -2105,77 +2021,81 @@ function updateLines(){
 }
 
 
-/* =====================================================
-   KLIKANIE W TŁO
-===================================================== */
+/* ==========================================================
+   KLIKANIE TŁA
+========================================================== */
 
 document.addEventListener(
-"click",
-e=>{
+    "click",
+    e=>{
 
-    if(
-        e.target.closest(".generator") ||
-        e.target.closest(".upgrade") ||
-        e.target.closest("#hud")
-    ){
-        return;
+        if(
+            e.target.closest(".generator") ||
+            e.target.closest(".upgrade") ||
+            e.target.closest("#hud")
+        ){
+            return;
+        }
+
+
+        entropy+=clickPower;
+
+
+        const text=
+            document.createElement("div");
+
+
+        text.className=
+            "clickText";
+
+
+        text.textContent=
+            "+"+clickPower;
+
+
+        text.style.left=
+            e.clientX+"px";
+
+        text.style.top=
+            e.clientY+"px";
+
+
+        document.body.appendChild(text);
+
+
+        setTimeout(
+            ()=>text.remove(),
+            800
+        );
+
+
+        update();
+
     }
+);
 
 
-    entropy+=clickPower;
+/* ==========================================================
+   PRODUKCJA AUTOMATYCZNA
+========================================================== */
+
+setInterval(
+    ()=>{
+
+        entropy+=
+            production()/10;
 
 
-    const text=
-        document.createElement("div");
+        update();
+
+    },
+    100
+);
 
 
-    text.className=
-        "clickNumber";
-
-
-    text.textContent=
-        "+"+clickPower;
-
-
-    text.style.left=
-        e.clientX+"px";
-
-
-    text.style.top=
-        e.clientY+"px";
-
-
-    document.body.appendChild(text);
-
-
-    setTimeout(
-        ()=>text.remove(),
-        750
-    );
-
-
-    update();
-
-});
-
-
-/* =====================================================
-   AUTOMATYCZNA PRODUKCJA
-===================================================== */
-
-setInterval(()=>{
-
-    entropy+=
-        production()/10;
-
-    update();
-
-},100);
-
-
-/* =====================================================
+/* ==========================================================
    START
-===================================================== */
+========================================================== */
 
 drawLines();
 
@@ -2183,33 +2103,33 @@ update();
 
 
 window.addEventListener(
-"resize",
-()=>{
+    "resize",
+    ()=>{
 
-    drawLines();
+        drawLines();
 
-    updateLines();
+        update();
 
-});
+    }
+);
 
 
 window.addEventListener(
-"load",
-()=>{
+    "load",
+    ()=>{
 
-    const viewport=
-        document.getElementById(
-            "viewport"
-        );
+        const viewport=
+            document.getElementById(
+                "viewport"
+            );
 
 
-    viewport.scrollTop=
+        viewport.scrollTop=
+            viewport.scrollHeight -
+            viewport.clientHeight;
 
-        viewport.scrollHeight -
-
-        viewport.clientHeight;
-
-});
+    }
+);
 
 </script>
 
