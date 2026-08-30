@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Animals vs Bacteria</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:
+        linear-gradient(#8ed6ff 0 35%, #5fba47 35% 100%);
+    min-height:100vh;
+    overflow:hidden;
+    user-select:none;
+}
+
+/* =========================
+   GÓRNY PANEL
+========================= */
+
+#topbar{
+    height:110px;
+    background:#2b2b2b;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 20px;
+    border-bottom:5px solid #111;
+}
+
+#energyBox{
+    width:110px;
+    height:80px;
+    background:#ffe66d;
+    border:4px solid #a98000;
+    border-radius:12px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.card{
+    width:100px;
+    height:85px;
+    background:#eeeeee;
+    border:4px solid #555;
+    border-radius:10px;
+    cursor:pointer;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    transition:0.15s;
+}
+
+.card:hover{
+    transform:scale(1.05);
+}
+
+.card.selected{
+    border-color:#ffe600;
+    background:#fff7aa;
+}
+
+.card .icon{
+    font-size:36px;
+}
+
+.card .name{
+    font-size:12px;
+    font-weight:bold;
+}
+
+.card .cost{
+    font-size:12px;
+    color:#444;
+}
+
+#scoreBox{
+    margin-left:auto;
+    color:white;
+    font-size:20px;
+    font-weight:bold;
+}
+
+/* =========================
+   POLE GRY
+========================= */
+
+#gameWrapper{
+    position:relative;
+    width:100vw;
+    height:calc(100vh - 110px);
+}
+
+#game{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+
+    width:1080px;
+    height:600px;
+
+    display:grid;
+    grid-template-columns:repeat(9, 120px);
+    grid-template-rows:repeat(5, 120px);
+
+    border:6px solid #28451e;
+    overflow:hidden;
+
+    background:#6dbb4b;
+}
+
+.cell{
+    position:relative;
+    border:1px solid rgba(0,0,0,0.13);
+}
+
+.cell:nth-child(even){
+    background:rgba(255,255,255,0.05);
+}
+
+/* =========================
+   ZWIERZĘTA
+========================= */
+
+.animal{
+    position:absolute;
+    width:100px;
+    height:100px;
+    left:10px;
+    top:10px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:68px;
+
+    animation:animalIdle 1.5s infinite alternate ease-in-out;
+    z-index:5;
+}
+
+@keyframes animalIdle{
+    from{
+        transform:translateY(0);
+    }
+    to{
+        transform:translateY(-4px);
+    }
+}
+
+.health{
+    position:absolute;
+    bottom:2px;
+    left:10px;
+
+    width:80px;
+    height:8px;
+
+    background:#600;
+    border:1px solid #222;
+}
+
+.healthInner{
+    height:100%;
+    background:#44ff44;
+}
+
+/* =========================
+   BAKTERIE
+========================= */
+
+.bacteria{
+    position:absolute;
+    width:80px;
+    height:80px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:62px;
+    z-index:10;
+
+    filter:drop-shadow(2px 3px 2px rgba(0,0,0,.35));
+}
+
+.bacteriaHealth{
+    position:absolute;
+    bottom:-2px;
+    left:10px;
+
+    width:60px;
+    height:7px;
+
+    background:#600;
+    border:1px solid black;
+}
+
+.bacteriaHealthInner{
+    height:100%;
+    background:#00ff5e;
+}
+
+/* =========================
+   POCISKI
+========================= */
+
+.projectile{
+    position:absolute;
+
+    width:20px;
+    height:20px;
+
+    border-radius:50%;
+    background:#94ff37;
+
+    box-shadow:
+        0 0 8px #54ff00,
+        inset 0 0 5px white;
+
+    z-index:8;
+}
+
+/* pocisk pszczoły */
+
+.beeShot{
+    background:#ffe600;
+
+    width:14px;
+    height:14px;
+
+    box-shadow:0 0 7px #ffe600;
+}
+
+/* =========================
+   ATP
+========================= */
+
+.atp{
+    position:absolute;
+
+    width:60px;
+    height:60px;
+
+    border-radius:50%;
+
+    background:
+        radial-gradient(circle,#fffbd5,#ffe82f);
+
+    border:4px solid #d6a600;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-weight:bold;
+    color:#855e00;
+
+    cursor:pointer;
+
+    z-index:50;
+
+    animation:atpFloat 1s infinite alternate ease-in-out;
+}
+
+@keyframes atpFloat{
+    from{
+        transform:translateY(0) rotate(-4deg);
+    }
+
+    to{
+        transform:translateY(-8px) rotate(4deg);
+    }
+}
+
+/* =========================
+   KOMUNIKATY
+========================= */
+
+#startMessage{
+    position:absolute;
+
+    left:50%;
+    top:20px;
+    transform:translateX(-50%);
+
+    color:white;
+
+    font-size:34px;
+    font-weight:bold;
+
+    text-shadow:3px 3px 3px black;
+
+    z-index:100;
+}
+
+#gameOver{
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.8);
+
+    display:none;
+
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+
+    color:white;
+
+    z-index:1000;
+}
+
+#gameOver h1{
+    font-size:65px;
+    margin:0 0 20px;
+}
+
+button{
+    padding:15px 30px;
+    font-size:22px;
+    cursor:pointer;
+
+    border:none;
+    border-radius:10px;
+
+    background:#76d950;
+    font-weight:bold;
+}
+
+button:hover{
+    background:#95ef72;
+}
+
+/* =========================
+   SKALOWANIE
+========================= */
+
+@media(max-width:1100px){
+    #game{
+        transform:
+            translate(-50%,-50%)
+            scale(.8);
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="topbar">
+
+    <div id="energyBox">
+        ⚡ ATP
+        <div id="energy">150</div>
+    </div>
+
+    <div
+        class="card selected"
+        data-animal="frog"
+        onclick="selectAnimal(this)"
+    >
+        <div class="icon">🐸</div>
+        <div class="name">Żaba</div>
+        <div class="cost">100 ATP</div>
+    </div>
+
+    <div
+        class="card"
+        data-animal="hedgehog"
+        onclick="selectAnimal(this)"
+    >
+        <div class="icon">🦔</div>
+        <div class="name">Jeż</div>
+        <div class="cost">75 ATP</div>
+    </div>
+
+    <div
+        class="card"
+        data-animal="bee"
+        onclick="selectAnimal(this)"
+    >
+        <div class="icon">🐝</div>
+        <div class="name">Pszczoła</div>
+        <div class="cost">150 ATP</div>
+    </div>
+
+    <div
+        class="card"
+        data-animal="snail"
+        onclick="selectAnimal(this)"
+    >
+        <div class="icon">🐌</div>
+        <div class="name">Ślimak</div>
+        <div class="cost">50 ATP</div>
+    </div>
+
+    <div id="scoreBox">
+        🦠 Pokonane bakterie:
+        <span id="score">0</span>
+    </div>
+
+</div>
+
+<div id="gameWrapper">
+
+    <div id="startMessage">
+        ANIMALS vs BACTERIA
+    </div>
+
+    <div id="game"></div>
+
+</div>
+
+<div id="gameOver">
+
+    <h1>🦠 INFEKCJA!</h1>
+
+    <p style="font-size:24px">
+        Bakterie przedostały się przez obronę.
+    </p>
+
+    <button onclick="location.reload()">
+        Zagraj ponownie
+    </button>
+
+</div>
+
+<script>
+
+/* ==========================================================
+   PODSTAWOWE USTAWIENIA
+========================================================== */
+
+const ROWS = 5;
+const COLS = 9;
+
+const CELL_WIDTH = 120;
+const CELL_HEIGHT = 120;
+
+const game = document.getElementById("game");
+
+let energy = 150;
+let score = 0;
+
+let selectedAnimal = "frog";
+
+let animals = [];
+let bacteria = [];
+let projectiles = [];
+
+let gameRunning = true;
+
+
+/* ==========================================================
+   DANE ZWIERZĄT
+========================================================== */
+
+const animalData = {
+
+    frog:{
+        emoji:"🐸",
+
+        cost:100,
+
+        health:180,
+
+        fireRate:1400,
+
+        damage:25,
+
+        projectileSpeed:5
+    },
+
+    hedgehog:{
+        emoji:"🦔",
+
+        cost:75,
+
+        health:600,
+
+        fireRate:0,
+
+        damage:0,
+
+        projectileSpeed:0
+    },
+
+    bee:{
+        emoji:"🐝",
+
+        cost:150,
+
+        health:120,
+
+        fireRate:650,
+
+        damage:14,
+
+        projectileSpeed:8
+    },
+
+    snail:{
+        emoji:"🐌",
+
+        cost:50,
+
+        health:300,
+
+        fireRate:0,
+
+        damage:0,
+
+        projectileSpeed:0
+    }
+
+};
+
+
+/* ==========================================================
+   TWORZENIE PLANSZY
+========================================================== */
+
+function createBoard(){
+
+    for(let row = 0; row < ROWS; row++){
+
+        for(let col = 0; col < COLS; col++){
+
+            const cell = document.createElement("div");
+
+            cell.className = "cell";
+
+            cell.dataset.row = row;
+            cell.dataset.col = col;
+
+            cell.addEventListener(
+                "click",
+                () => placeAnimal(row,col)
+            );
+
+            game.appendChild(cell);
+        }
+    }
+}
+
+createBoard();
+
+
+/* ==========================================================
+   WYBÓR ZWIERZĘCIA
+========================================================== */
+
+function selectAnimal(card){
+
+    document
+        .querySelectorAll(".card")
+        .forEach(c => c.classList.remove("selected"));
+
+    card.classList.add("selected");
+
+    selectedAnimal = card.dataset.animal;
+}
+
+
+/* ==========================================================
+   STAWIANIE ZWIERZĘCIA
+========================================================== */
+
+function placeAnimal(row,col){
+
+    if(!gameRunning) return;
+
+    const occupied = animals.some(
+        animal =>
+            animal.row === row &&
+            animal.col === col
+    );
+
+    if(occupied) return;
+
+    const data = animalData[selectedAnimal];
+
+    if(energy < data.cost){
+
+        flashEnergy();
+
+        return;
+    }
+
+    energy -= data.cost;
+
+    updateEnergy();
+
+
+    const animal = {
+
+        type:selectedAnimal,
+
+        row:row,
+
+        col:col,
+
+        x:col * CELL_WIDTH,
+
+        y:row * CELL_HEIGHT,
+
+        health:data.health,
+
+        maxHealth:data.health,
+
+        lastShot:0
+    };
+
+
+    const element = document.createElement("div");
+
+    element.className = "animal";
+
+    element.innerHTML = `
+
+        ${data.emoji}
+
+        <div class="health">
+
+            <div
+                class="healthInner"
+                style="width:100%"
+            ></div>
+
+        </div>
+
+    `;
+
+    const cellIndex =
+        row * COLS + col;
+
+    game.children[cellIndex]
+        .appendChild(element);
+
+    animal.element = element;
+
+    animals.push(animal);
+}
+
+
+/* ==========================================================
+   BRAK ENERGII
+========================================================== */
+
+function flashEnergy(){
+
+    const box =
+        document.getElementById("energyBox");
+
+    box.style.background = "#ff5555";
+
+    setTimeout(()=>{
+
+        box.style.background = "#ffe66d";
+
+    },300);
+}
+
+
+/* ==========================================================
+   BAKTERIE
+========================================================== */
+
+function spawnBacteria(){
+
+    if(!gameRunning) return;
+
+    const row =
+        Math.floor(Math.random() * ROWS);
+
+
+    let health = 140;
+
+    let speed = 0.45;
+
+    let emoji = "🦠";
+
+
+    /*
+    Co 10 pokonanych bakterii
+    przeciwnicy robią się trochę mocniejsi.
+    */
+
+    health +=
+        Math.floor(score / 10) * 20;
+
+    speed +=
+        Math.min(score / 300,0.6);
+
+
+    const enemy = {
+
+        row:row,
+
+        x:1080,
+
+        y:
+            row * CELL_HEIGHT +
+            20,
+
+        health:health,
+
+        maxHealth:health,
+
+        speed:speed,
+
+        attackTimer:0
+    };
+
+
+    const element =
+        document.createElement("div");
+
+    element.className = "bacteria";
+
+    element.innerHTML = `
+
+        ${emoji}
+
+        <div class="bacteriaHealth">
+
+            <div
+                class="bacteriaHealthInner"
+                style="width:100%"
+            ></div>
+
+        </div>
+
+    `;
+
+
+    game.appendChild(element);
+
+    enemy.element = element;
+
+    bacteria.push(enemy);
+}
+
+
+/* ==========================================================
+   ATAKI ZWIERZĄT
+========================================================== */
+
+function updateAnimals(time){
+
+    animals.forEach(animal => {
+
+        const data =
+            animalData[animal.type];
+
+
+        /*
+        Zwierzęta bez ataku dystansowego
+        */
+
+        if(data.fireRate === 0)
+            return;
+
+
+        /*
+        Czy w tym rzędzie istnieje bakteria
+        po prawej stronie?
+        */
+
+        const enemyAhead =
+            bacteria.some(enemy =>
+
+                enemy.row === animal.row &&
+
+                enemy.x >
+                animal.x + 50
+            );
+
+
+        if(!enemyAhead)
+            return;
+
+
+        if(
+            time - animal.lastShot >
+            data.fireRate
+        ){
+
+            shoot(animal);
+
+            animal.lastShot = time;
+        }
+    });
+}
+
+
+/* ==========================================================
+   STRZELANIE
+========================================================== */
+
+function shoot(animal){
+
+    const data =
+        animalData[animal.type];
+
+
+    const projectile = {
+
+        row:animal.row,
+
+        x:
+            animal.x +
+            75,
+
+        y:
+            animal.row *
+            CELL_HEIGHT +
+            52,
+
+        speed:
+            data.projectileSpeed,
+
+        damage:
+            data.damage,
+
+        type:
+            animal.type
+    };
+
+
+    const element =
+        document.createElement("div");
+
+    element.className =
+        "projectile";
+
+
+    if(animal.type === "bee"){
+
+        element.classList.add(
+            "beeShot"
+        );
+    }
+
+
+    game.appendChild(element);
+
+    projectile.element =
+        element;
+
+    projectiles.push(
+        projectile
+    );
+}
+
+
+/* ==========================================================
+   RUCH POCISKÓW
+========================================================== */
+
+function updateProjectiles(){
+
+    for(
+        let i =
+            projectiles.length - 1;
+
+        i >= 0;
+
+        i--
+    ){
+
+        const projectile =
+            projectiles[i];
+
+
+        projectile.x +=
+            projectile.speed;
+
+
+        projectile.element.style.left =
+            projectile.x + "px";
+
+        projectile.element.style.top =
+            projectile.y + "px";
+
+
+        /*
+        Kolizja z bakterią
+        */
+
+        let hit = false;
+
+
+        for(
+            let j =
+                bacteria.length - 1;
+
+            j >= 0;
+
+            j--
+        ){
+
+            const enemy =
+                bacteria[j];
+
+
+            if(
+                enemy.row ===
+                projectile.row
+                &&
+                projectile.x >
+                enemy.x
+                &&
+                projectile.x <
+                enemy.x + 80
+            ){
+
+                enemy.health -=
+                    projectile.damage;
+
+
+                updateEnemyHealth(
+                    enemy
+                );
+
+
+                projectile.element.remove();
+
+                projectiles.splice(
+                    i,1
+                );
+
+                hit = true;
+
+
+                if(
+                    enemy.health <= 0
+                ){
+
+                    killBacteria(
+                        enemy,
+                        j
+                    );
+                }
+
+
+                break;
+            }
+        }
+
+
+        if(hit)
+            continue;
+
+
+        /*
+        Usuwanie pocisków poza planszą
+        */
+
+        if(
+            projectile.x >
+            1100
+        ){
+
+            projectile.element.remove();
+
+            projectiles.splice(
+                i,1
+            );
+        }
+    }
+}
+
+
+/* ==========================================================
+   RUCH BAKTERII
+========================================================== */
+
+function updateBacteria(delta){
+
+    for(
+        let i =
+            bacteria.length - 1;
+
+        i >= 0;
+
+        i--
+    ){
+
+        const enemy =
+            bacteria[i];
+
+
+        /*
+        Szukanie zwierzęcia przed bakterią
+        */
+
+        let blockingAnimal =
+            null;
+
+
+        animals.forEach(animal => {
+
+            if(
+                animal.row ===
+                    enemy.row
+                &&
+                enemy.x <
+                    animal.x + 110
+                &&
+                enemy.x >
+                    animal.x
+            ){
+
+                blockingAnimal =
+                    animal;
+            }
+        });
+
+
+        /*
+        ATAK
+        */
+
+        if(blockingAnimal){
+
+            enemy.attackTimer +=
+                delta;
+
+
+            if(
+                enemy.attackTimer >
+                700
+            ){
+
+                damageAnimal(
+                    blockingAnimal,
+                    35
+                );
+
+                enemy.attackTimer = 0;
+            }
+
+        }
+
+        else{
+
+            enemy.x -=
+                enemy.speed;
+        }
+
+
+        /*
+        Pozycja
+        */
+
+        enemy.element.style.left =
+            enemy.x + "px";
+
+        enemy.element.style.top =
+            enemy.y + "px";
+
+
+        /*
+        Bakteria przeszła linię obrony
+        */
+
+        if(enemy.x < -40){
+
+            endGame();
+
+            return;
+        }
+    }
+}
+
+
+/* ==========================================================
+   OBRAŻENIA ZWIERZĘCIA
+========================================================== */
+
+function damageAnimal(
+    animal,
+    amount
+){
+
+    animal.health -= amount;
+
+
+    const percent =
+
+        Math.max(
+            0,
+            animal.health /
+            animal.maxHealth *
+            100
+        );
+
+
+    animal.element
+        .querySelector(
+            ".healthInner"
+        )
+        .style.width =
+            percent + "%";
+
+
+    if(animal.health <= 0){
+
+        animal.element.remove();
+
+
+        animals =
+            animals.filter(
+                a => a !== animal
+            );
+    }
+}
+
+
+/* ==========================================================
+   HP BAKTERII
+========================================================== */
+
+function updateEnemyHealth(enemy){
+
+    const percent =
+
+        Math.max(
+            0,
+            enemy.health /
+            enemy.maxHealth *
+            100
+        );
+
+
+    enemy.element
+        .querySelector(
+            ".bacteriaHealthInner"
+        )
+        .style.width =
+            percent + "%";
+}
+
+
+/* ==========================================================
+   ŚMIERĆ BAKTERII
+========================================================== */
+
+function killBacteria(
+    enemy,
+    index
+){
+
+    enemy.element.remove();
+
+    bacteria.splice(
+        index,
+        1
+    );
+
+    score++;
+
+    document
+        .getElementById("score")
+        .textContent =
+            score;
+
+
+    /*
+    Bonus ATP
+    */
+
+    if(
+        Math.random() <
+        0.3
+    ){
+
+        energy += 15;
+
+        updateEnergy();
+    }
+}
+
+
+/* ==========================================================
+   ATP
+========================================================== */
+
+function spawnATP(){
+
+    if(!gameRunning)
+        return;
+
+
+    const atp =
+        document.createElement("div");
+
+    atp.className = "atp";
+
+    atp.innerHTML = "ATP";
+
+
+    atp.style.left =
+
+        Math.random() *
+        (game.clientWidth - 80)
+        + "px";
+
+
+    atp.style.top =
+
+        Math.random() *
+        (game.clientHeight - 80)
+        + "px";
+
+
+    atp.onclick = ()=>{
+
+        energy += 25;
+
+        updateEnergy();
+
+        atp.remove();
+    };
+
+
+    game.appendChild(atp);
+
+
+    /*
+    znika po 8 sekundach
+    */
+
+    setTimeout(()=>{
+
+        if(atp.parentElement)
+            atp.remove();
+
+    },8000);
+}
+
+
+/* ==========================================================
+   ENERGIA
+========================================================== */
+
+function updateEnergy(){
+
+    document
+        .getElementById(
+            "energy"
+        )
+        .textContent =
+            energy;
+}
+
+
+/* ==========================================================
+   GAME OVER
+========================================================== */
+
+function endGame(){
+
+    gameRunning = false;
+
+    document
+        .getElementById(
+            "gameOver"
+        )
+        .style.display =
+            "flex";
+}
+
+
+/* ==========================================================
+   GŁÓWNA PĘTLA GRY
+========================================================== */
+
+let lastTime =
+    performance.now();
+
+
+function gameLoop(time){
+
+    if(!gameRunning)
+        return;
+
+
+    const delta =
+        time - lastTime;
+
+    lastTime =
+        time;
+
+
+    updateAnimals(time);
+
+    updateProjectiles();
+
+    updateBacteria(delta);
+
+
+    requestAnimationFrame(
+        gameLoop
+    );
+}
+
+
+requestAnimationFrame(
+    gameLoop
+);
+
+
+/* ==========================================================
+   SPAWN
+========================================================== */
+
+setInterval(()=>{
+
+    if(gameRunning)
+        spawnBacteria();
+
+},3500);
+
+
+setInterval(()=>{
+
+    if(gameRunning)
+        spawnATP();
+
+},5000);
+
+
+/*
+Pierwsza bakteria pojawia się
+szybciej.
+*/
+
+setTimeout(
+    spawnBacteria,
+    1800
+);
+
+
+/*
+Usunięcie napisu startowego
+*/
+
+setTimeout(()=>{
+
+    const text =
+        document.getElementById(
+            "startMessage"
+        );
+
+    if(text)
+        text.remove();
+
+},3000);
+
+</script>
+
+</body>
+</html>
