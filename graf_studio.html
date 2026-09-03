@@ -47,12 +47,15 @@
   }
   #stage.connect-focus::after{opacity:1}
   #stage.connect-focus .node{
-    box-shadow:0 0 0 5px rgba(255,255,255,.08),0 0 28px rgba(0,201,212,.30);
+    border-color:#7df8ff !important;
+    box-shadow:0 0 0 6px rgba(0,201,212,.14),0 0 34px rgba(0,201,212,.48);
   }
   #stage.connect-focus .node:hover{
-    transform:scale(1.05);
-    border-color:#7df8ff;
-    box-shadow:0 0 0 7px rgba(0,201,212,.16),0 0 35px rgba(0,201,212,.55)
+    transform:scale(1.03);
+  }
+  #stage.connect-focus .node.connect-source{
+    outline:4px solid rgba(255,255,255,.85);
+    outline-offset:5px;
   }
   .edge{stroke:#aab7c9;stroke-width:3;fill:none;pointer-events:stroke;cursor:pointer}
   .edge.selected{stroke:var(--accent);stroke-width:5}
@@ -211,11 +214,7 @@
     <label>Opis obrazu</label>
     <textarea id="aiPrompt" placeholder="np. realistyczna cząsteczka DNA, ciemne tło, naukowa ilustracja"></textarea>
   </div>
-  <div class="field">
-    <label>Klucz Pollinations AI</label>
-    <input id="aiKey" type="password" placeholder="Wklej klucz na czas tej sesji">
-  </div>
-  <div class="aiNote">Najpierw zaznacz koło. Klucz jest trzymany tylko w pamięci tej karty (sessionStorage), nie zapisuję go w projekcie.</div>
+  <div class="aiNote">Najpierw zaznacz koło, potem opisz obraz. Generator spróbuje utworzyć grafikę i wstawić ją bezpośrednio do koła.</div>
   <button id="aiGenerate" class="btn" style="width:100%">✦ Wygeneruj i dodaj do koła</button>
   <button id="removeImage" class="btn" style="width:100%;margin-top:7px">Usuń obraz z koła</button>
   <div id="aiStatus" class="aiStatus"></div>
@@ -499,11 +498,6 @@
   const aiPanel=$('#aiPanel');
   $('#aiFab').onclick=()=>aiPanel.classList.toggle('open');
   $('#aiClose').onclick=()=>aiPanel.classList.remove('open');
-  $('#aiKey').value=sessionStorage.getItem('graphStudioPollinationsKey')||'';
-  $('#aiKey').addEventListener('input',e=>{
-    sessionStorage.setItem('graphStudioPollinationsKey',e.target.value.trim());
-  });
-
   function blobToDataURL(blob){
     return new Promise((resolve,reject)=>{
       const r=new FileReader();
@@ -514,21 +508,19 @@
   $('#aiGenerate').onclick=async()=>{
     const status=$('#aiStatus');
     if(selected?.type!=='node'){
-      status.textContent='Najpierw zaznacz koło, do którego mam dodać obraz.';
+      status.textContent='Najpierw zaznacz koło, do którego chcesz dodać obraz.';
       return;
     }
     const prompt=$('#aiPrompt').value.trim();
-    const key=$('#aiKey').value.trim();
     if(!prompt){status.textContent='Wpisz opis obrazu.';return;}
-    if(!key){status.textContent='Wklej swój klucz Pollinations AI.';return;}
 
     const targetId=selected.id;
     status.textContent='Generuję obraz…';
     $('#aiGenerate').disabled=true;
     try{
       const url='https://gen.pollinations.ai/image/'+encodeURIComponent(prompt)+'?model=flux&width=768&height=768&nologo=true';
-      const res=await fetch(url,{headers:{'Authorization':'Bearer '+key}});
-      if(!res.ok) throw new Error('HTTP '+res.status);
+      const res=await fetch(url);
+      if(!res.ok) throw new Error('Generator wymaga autoryzacji ('+res.status+')');
       const blob=await res.blob();
       const dataUrl=await blobToDataURL(blob);
       const n=nodeById(targetId);
@@ -537,7 +529,7 @@
       status.textContent='✓ Obraz został dodany do koła.';
       render();
     }catch(err){
-      status.textContent='Nie udało się wygenerować obrazu: '+err.message;
+      status.textContent='Generator AI nie pozwolił na wygenerowanie obrazu bez logowania. Sam edytor grafów działa normalnie.';
     }finally{
       $('#aiGenerate').disabled=false;
     }
