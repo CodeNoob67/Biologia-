@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Graph Studio</title>
+<style>
+  :root{
+    --bg:#0c1017; --panel:#121823; --panel2:#171f2c; --line:#283448;
+    --text:#eef4ff; --muted:#91a0b6; --accent:#00c9d4; --danger:#ff4f72;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text);overflow:hidden}
+  button,input,select{font:inherit}
+  .app{height:100%;display:grid;grid-template-rows:58px 1fr}
+  .topbar{
+    display:flex;align-items:center;gap:10px;padding:0 14px;
+    background:rgba(18,24,35,.97);border-bottom:1px solid var(--line);z-index:10
+  }
+  .brand{font-weight:800;letter-spacing:.3px;margin-right:12px}
+  .brand span{color:var(--accent)}
+  .btn{
+    height:36px;border:1px solid var(--line);background:#182130;color:var(--text);
+    border-radius:10px;padding:0 12px;cursor:pointer;transition:.15s
+  }
+  .btn:hover{background:#202c3e;transform:translateY(-1px)}
+  .btn.active{background:#123d44;border-color:#1aaab2;color:#cfffff}
+  .btn.danger:hover{background:#4b1d2a;border-color:#7a2b40}
+  .spacer{flex:1}
+  .zoomText{color:var(--muted);font-size:13px;min-width:52px;text-align:center}
+
+  .main{min-height:0;display:grid;grid-template-columns:1fr 290px}
+  .stageWrap{position:relative;overflow:hidden;background:#0b0f16}
+  #stage{
+    position:absolute;inset:0;overflow:hidden;cursor:default;
+    background-image:
+      linear-gradient(#18202d 1px, transparent 1px),
+      linear-gradient(90deg,#18202d 1px, transparent 1px);
+    background-size:32px 32px;
+  }
+  #world{position:absolute;left:0;top:0;transform-origin:0 0;width:5000px;height:5000px}
+  #svg{position:absolute;left:0;top:0;width:5000px;height:5000px;overflow:visible;pointer-events:none}
+  .edge{stroke:#aab7c9;stroke-width:3;fill:none;pointer-events:stroke;cursor:pointer}
+  .edge.selected{stroke:var(--accent);stroke-width:5}
+  .node{
+    position:absolute;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    background:#202a39;border:3px solid #66758a;color:white;
+    min-width:30px;min-height:30px;cursor:grab;user-select:none;
+    box-shadow:0 8px 22px rgba(0,0,0,.27);
+  }
+  .node:active{cursor:grabbing}
+  .node.selected{outline:4px solid rgba(0,201,212,.25);border-color:var(--accent)}
+  .node.connect-source{box-shadow:0 0 0 7px rgba(0,201,212,.18),0 8px 22px rgba(0,0,0,.27)}
+  .nodeLabel{
+    position:absolute;left:50%;top:calc(100% + 8px);transform:translateX(-50%);
+    white-space:nowrap;font-size:14px;font-weight:650;text-shadow:0 2px 5px #000;
+    pointer-events:none
+  }
+
+  .sidebar{
+    background:var(--panel);border-left:1px solid var(--line);padding:16px;overflow:auto
+  }
+  .sidebar h3{margin:4px 0 14px;font-size:15px}
+  .section{padding:14px 0;border-bottom:1px solid var(--line)}
+  .field{display:grid;gap:7px;margin:11px 0}
+  .field label{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.6px}
+  .field input[type="text"], .field input[type="number"]{
+    width:100%;background:#0d131d;border:1px solid var(--line);color:var(--text);
+    border-radius:9px;padding:9px 10px;outline:none
+  }
+  .field input:focus{border-color:#3b8290}
+  .field input[type="range"]{width:100%}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .colorRow{display:flex;align-items:center;gap:10px}
+  input[type="color"]{width:46px;height:34px;border:0;background:none;padding:0;cursor:pointer}
+  .hint{
+    position:absolute;left:14px;bottom:14px;background:rgba(13,18,27,.88);
+    border:1px solid var(--line);border-radius:10px;padding:9px 12px;
+    font-size:12px;color:var(--muted);pointer-events:none
+  }
+  .empty{color:var(--muted);font-size:13px;line-height:1.5}
+  .fileInput{display:none}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="brand">Graph <span>Studio</span></div>
+    <button id="addNodeBtn" class="btn">＋ Koło</button>
+    <button id="connectBtn" class="btn">↗ Połącz</button>
+    <button id="deleteBtn" class="btn danger">Usuń</button>
+    <div class="spacer"></div>
+    <button id="zoomOut" class="btn">−</button>
+    <div id="zoomText" class="zoomText">100%</div>
+    <button id="zoomIn" class="btn">＋</button>
+    <button id="fitBtn" class="btn">Dopasuj</button>
+    <button id="saveBtn" class="btn">Zapisz</button>
+    <button id="loadBtn" class="btn">Wczytaj</button>
+    <button id="exportBtn" class="btn">Eksport JSON</button>
+    <label class="btn" style="display:flex;align-items:center">Import JSON<input id="importInput" class="fileInput" type="file" accept=".json,application/json"></label>
+  </div>
+
+  <div class="main">
+    <div class="stageWrap">
+      <div id="stage">
+        <div id="world">
+          <svg id="svg"></svg>
+          <div id="nodes"></div>
+        </div>
+      </div>
+      <div class="hint">Dwuklik na tle = nowe koło • przeciągnij koło • kółko myszy = zoom • przeciągnij tło PPM = przesuwanie</div>
+    </div>
+
+    <aside class="sidebar">
+      <h3>Właściwości</h3>
+      <div id="emptyState" class="empty">Zaznacz koło albo połączenie, aby je edytować.</div>
+
+      <div id="nodePanel" style="display:none">
+        <div class="section">
+          <div class="field">
+            <label>Nazwa</label>
+            <input id="nodeName" type="text" placeholder="np. DNA">
+          </div>
+          <div class="field">
+            <label>Rozmiar: <span id="sizeValue">90</span> px</label>
+            <input id="nodeSize" type="range" min="30" max="250" value="90">
+          </div>
+          <div class="field">
+            <label>Kolor koła</label>
+            <div class="colorRow"><input id="nodeColor" type="color" value="#202a39"><span id="nodeColorText">#202a39</span></div>
+          </div>
+          <div class="field">
+            <label>Kolor obramowania</label>
+            <div class="colorRow"><input id="borderColor" type="color" value="#66758a"><span id="borderColorText">#66758a</span></div>
+          </div>
+          <div class="field">
+            <label>Grubość obramowania</label>
+            <input id="borderWidth" type="range" min="0" max="12" value="3">
+          </div>
+        </div>
+        <div class="section row">
+          <div class="field"><label>X</label><input id="nodeX" type="number"></div>
+          <div class="field"><label>Y</label><input id="nodeY" type="number"></div>
+        </div>
+      </div>
+
+      <div id="edgePanel" style="display:none">
+        <div class="section">
+          <div class="field">
+            <label>Grubość linii: <span id="edgeWidthValue">3</span> px</label>
+            <input id="edgeWidth" type="range" min="1" max="14" value="3">
+          </div>
+          <div class="field">
+            <label>Kolor linii</label>
+            <div class="colorRow"><input id="edgeColor" type="color" value="#aab7c9"><span id="edgeColorText">#aab7c9</span></div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>
+(() => {
+  const stage = document.querySelector('#stage');
+  const world = document.querySelector('#world');
+  const nodesLayer = document.querySelector('#nodes');
+  const svg = document.querySelector('#svg');
+
+  let nodes = [];
+  let edges = [];
+  let selected = null;
+  let connectMode = false;
+  let connectSource = null;
+  let scale = 1;
+  let panX = 0, panY = 0;
+  let idCounter = 1;
+
+  const $ = s => document.querySelector(s);
+  const uid = p => p + (idCounter++);
+
+  function worldPoint(clientX, clientY){
+    const r = stage.getBoundingClientRect();
+    return {x:(clientX-r.left-panX)/scale, y:(clientY-r.top-panY)/scale};
+  }
+
+  function applyView(){
+    world.style.transform = `translate(${panX}px,${panY}px) scale(${scale})`;
+    $('#zoomText').textContent = Math.round(scale*100)+'%';
+  }
+
+  function addNode(x=450,y=300,name='Nowy element'){
+    const n = {
+      id:uid('n'), x,y,size:90,name,
+      color:'#202a39', border:'#66758a', borderWidth:3
+    };
+    nodes.push(n);
+    render();
+    select({type:'node',id:n.id});
+  }
+
+  function addEdge(a,b){
+    if(a===b || edges.some(e => (e.a===a&&e.b===b)||(e.a===b&&e.b===a))) return;
+    edges.push({id:uid('e'),a,b,color:'#aab7c9',width:3});
+    render();
+  }
+
+  function nodeById(id){return nodes.find(n=>n.id===id)}
+  function edgeById(id){return edges.find(e=>e.id===id)}
+
+  function render(){
+    nodesLayer.innerHTML='';
+    svg.innerHTML='';
+
+    edges.forEach(e=>{
+      const a=nodeById(e.a), b=nodeById(e.b);
+      if(!a||!b)return;
+      const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+      line.setAttribute('x1',a.x+a.size/2); line.setAttribute('y1',a.y+a.size/2);
+      line.setAttribute('x2',b.x+b.size/2); line.setAttribute('y2',b.y+b.size/2);
+      line.setAttribute('class','edge'+(selected?.type==='edge'&&selected.id===e.id?' selected':''));
+      line.setAttribute('stroke',e.color); line.setAttribute('stroke-width',e.width);
+      line.style.pointerEvents='stroke';
+      line.addEventListener('pointerdown',ev=>{ev.stopPropagation();select({type:'edge',id:e.id})});
+      svg.appendChild(line);
+    });
+
+    nodes.forEach(n=>{
+      const el=document.createElement('div');
+      el.className='node'+(selected?.type==='node'&&selected.id===n.id?' selected':'')+(connectSource===n.id?' connect-source':'');
+      el.dataset.id=n.id;
+      Object.assign(el.style,{
+        left:n.x+'px', top:n.y+'px', width:n.size+'px', height:n.size+'px',
+        background:n.color,borderColor:n.border,borderWidth:n.borderWidth+'px'
+      });
+      const lab=document.createElement('div');
+      lab.className='nodeLabel'; lab.textContent=n.name;
+      el.appendChild(lab);
+
+      let dragging=false, dx=0,dy=0;
+      el.addEventListener('pointerdown',ev=>{
+        ev.stopPropagation();
+        if(connectMode){
+          if(!connectSource){connectSource=n.id;render();}
+          else{
+            addEdge(connectSource,n.id);
+            connectSource=null; connectMode=false; $('#connectBtn').classList.remove('active');
+            render();
+          }
+          return;
+        }
+        select({type:'node',id:n.id});
+        dragging=true;
+        const p=worldPoint(ev.clientX,ev.clientY); dx=p.x-n.x; dy=p.y-n.y;
+        el.setPointerCapture(ev.pointerId);
+      });
+      el.addEventListener('pointermove',ev=>{
+        if(!dragging)return;
+        const p=worldPoint(ev.clientX,ev.clientY);
+        n.x=Math.round(p.x-dx); n.y=Math.round(p.y-dy);
+        renderEdgesOnly();
+        updatePanel();
+        el.style.left=n.x+'px'; el.style.top=n.y+'px';
+      });
+      el.addEventListener('pointerup',()=>dragging=false);
+      nodesLayer.appendChild(el);
+    });
+    updatePanel();
+  }
+
+  function renderEdgesOnly(){
+    [...svg.children].forEach((line,i)=>{
+      const e=edges[i], a=nodeById(e.a), b=nodeById(e.b);
+      if(!a||!b)return;
+      line.setAttribute('x1',a.x+a.size/2); line.setAttribute('y1',a.y+a.size/2);
+      line.setAttribute('x2',b.x+b.size/2); line.setAttribute('y2',b.y+b.size/2);
+    });
+  }
+
+  function select(v){ selected=v; render(); }
+
+  function updatePanel(){
+    $('#emptyState').style.display=selected?'none':'block';
+    $('#nodePanel').style.display=selected?.type==='node'?'block':'none';
+    $('#edgePanel').style.display=selected?.type==='edge'?'block':'none';
+
+    if(selected?.type==='node'){
+      const n=nodeById(selected.id); if(!n)return;
+      $('#nodeName').value=n.name; $('#nodeSize').value=n.size; $('#sizeValue').textContent=n.size;
+      $('#nodeColor').value=n.color; $('#nodeColorText').textContent=n.color;
+      $('#borderColor').value=n.border; $('#borderColorText').textContent=n.border;
+      $('#borderWidth').value=n.borderWidth; $('#nodeX').value=n.x; $('#nodeY').value=n.y;
+    }
+    if(selected?.type==='edge'){
+      const e=edgeById(selected.id); if(!e)return;
+      $('#edgeWidth').value=e.width; $('#edgeWidthValue').textContent=e.width;
+      $('#edgeColor').value=e.color; $('#edgeColorText').textContent=e.color;
+    }
+  }
+
+  $('#addNodeBtn').onclick=()=>{
+    const p=worldPoint(stage.clientWidth/2+stage.getBoundingClientRect().left,stage.clientHeight/2+stage.getBoundingClientRect().top);
+    addNode(p.x-45,p.y-45);
+  };
+
+  stage.addEventListener('dblclick',e=>{
+    if(e.target.closest('.node'))return;
+    const p=worldPoint(e.clientX,e.clientY); addNode(p.x-45,p.y-45);
+  });
+
+  $('#connectBtn').onclick=()=>{
+    connectMode=!connectMode; connectSource=null;
+    $('#connectBtn').classList.toggle('active',connectMode); render();
+  };
+
+  function removeSelected(){
+    if(!selected)return;
+    if(selected.type==='node'){
+      nodes=nodes.filter(n=>n.id!==selected.id);
+      edges=edges.filter(e=>e.a!==selected.id&&e.b!==selected.id);
+    } else edges=edges.filter(e=>e.id!==selected.id);
+    selected=null; render();
+  }
+  $('#deleteBtn').onclick=removeSelected;
+  addEventListener('keydown',e=>{
+    if((e.key==='Delete'||e.key==='Backspace') && !['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) removeSelected();
+    if(e.key==='Escape'){connectMode=false;connectSource=null;$('#connectBtn').classList.remove('active');selected=null;render();}
+  });
+
+  stage.addEventListener('pointerdown',e=>{
+    if(e.button!==0 && e.button!==2)return;
+    if(e.target.closest('.node')||e.target.tagName==='line')return;
+    if(e.button===0){selected=null;render();return;}
+  });
+  stage.addEventListener('contextmenu',e=>e.preventDefault());
+
+  let panning=false, lastX=0,lastY=0;
+  stage.addEventListener('pointerdown',e=>{
+    if(e.button!==2)return;
+    panning=true;lastX=e.clientX;lastY=e.clientY;stage.setPointerCapture(e.pointerId);
+  });
+  stage.addEventListener('pointermove',e=>{
+    if(!panning)return;
+    panX+=e.clientX-lastX;panY+=e.clientY-lastY;lastX=e.clientX;lastY=e.clientY;applyView();
+  });
+  stage.addEventListener('pointerup',e=>{if(e.button===2)panning=false});
+
+  function zoomAt(factor,cx=stage.clientWidth/2,cy=stage.clientHeight/2){
+    const old=scale; scale=Math.max(.2,Math.min(3,scale*factor));
+    panX=cx-(cx-panX)*(scale/old); panY=cy-(cy-panY)*(scale/old); applyView();
+  }
+  stage.addEventListener('wheel',e=>{
+    e.preventDefault();
+    const r=stage.getBoundingClientRect();
+    zoomAt(e.deltaY<0?1.1:.9,e.clientX-r.left,e.clientY-r.top);
+  },{passive:false});
+  $('#zoomIn').onclick=()=>zoomAt(1.15);
+  $('#zoomOut').onclick=()=>zoomAt(.87);
+
+  $('#fitBtn').onclick=()=>{
+    if(!nodes.length){scale=1;panX=0;panY=0;applyView();return}
+    const minX=Math.min(...nodes.map(n=>n.x)), minY=Math.min(...nodes.map(n=>n.y));
+    const maxX=Math.max(...nodes.map(n=>n.x+n.size)), maxY=Math.max(...nodes.map(n=>n.y+n.size));
+    const w=maxX-minX+160,h=maxY-minY+160;
+    scale=Math.min(stage.clientWidth/w,stage.clientHeight/h,1.5);
+    panX=(stage.clientWidth-(maxX-minX)*scale)/2-minX*scale;
+    panY=(stage.clientHeight-(maxY-minY)*scale)/2-minY*scale;
+    applyView();
+  };
+
+  function bindNodeInput(sel,key,parse=v=>v){
+    $(sel).addEventListener('input',e=>{
+      if(selected?.type!=='node')return;
+      const n=nodeById(selected.id);n[key]=parse(e.target.value);render();
+    });
+  }
+  bindNodeInput('#nodeName','name');
+  bindNodeInput('#nodeSize','size',Number);
+  bindNodeInput('#nodeColor','color');
+  bindNodeInput('#borderColor','border');
+  bindNodeInput('#borderWidth','borderWidth',Number);
+  bindNodeInput('#nodeX','x',Number);
+  bindNodeInput('#nodeY','y',Number);
+
+  $('#edgeWidth').addEventListener('input',e=>{
+    if(selected?.type!=='edge')return;edgeById(selected.id).width=Number(e.target.value);render();
+  });
+  $('#edgeColor').addEventListener('input',e=>{
+    if(selected?.type!=='edge')return;edgeById(selected.id).color=e.target.value;render();
+  });
+
+  function project(){return {nodes,edges,idCounter,view:{scale,panX,panY}}}
+  $('#saveBtn').onclick=()=>{
+    localStorage.setItem('graphStudioProject',JSON.stringify(project()));
+    $('#saveBtn').textContent='✓ Zapisano';setTimeout(()=>$('#saveBtn').textContent='Zapisz',900);
+  };
+  $('#loadBtn').onclick=()=>{
+    const raw=localStorage.getItem('graphStudioProject');if(!raw)return alert('Brak zapisanego projektu.');
+    loadProject(JSON.parse(raw));
+  };
+  function loadProject(d){
+    nodes=d.nodes||[];edges=d.edges||[];idCounter=d.idCounter||1;
+    scale=d.view?.scale||1;panX=d.view?.panX||0;panY=d.view?.panY||0;
+    selected=null;connectMode=false;connectSource=null;applyView();render();
+  }
+  $('#exportBtn').onclick=()=>{
+    const blob=new Blob([JSON.stringify(project(),null,2)],{type:'application/json'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='moj-graf.json';a.click();URL.revokeObjectURL(a.href);
+  };
+  $('#importInput').addEventListener('change',async e=>{
+    const f=e.target.files[0];if(!f)return;
+    try{loadProject(JSON.parse(await f.text()))}catch{alert('Nieprawidłowy plik JSON.')}
+    e.target.value='';
+  });
+
+  // sample
+  addNode(340,240,'Początek');
+  addNode(610,240,'Etap 2');
+  addNode(880,380,'Cel');
+  addEdge(nodes[0].id,nodes[1].id); addEdge(nodes[1].id,nodes[2].id);
+  selected=null; render(); applyView();
+})();
+</script>
+</body>
+</html>
