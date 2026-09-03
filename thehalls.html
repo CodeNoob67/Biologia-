@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>THE HALLS — 3D Horror</title>
+<style>
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000;font-family:Arial,sans-serif;color:#fff}
+canvas{display:block}
+#ui{position:fixed;inset:0;pointer-events:none}
+#cross{position:absolute;left:50%;top:50%;width:8px;height:8px;border:1px solid #ddd;border-radius:50%;transform:translate(-50%,-50%);opacity:.7}
+#hud{position:absolute;left:18px;top:18px;background:#0008;padding:10px 12px;border-radius:8px;font-size:13px;line-height:1.5}
+#objective{position:absolute;top:20px;left:50%;transform:translateX(-50%);font-size:17px;text-shadow:0 2px 5px #000}
+#message{position:absolute;left:50%;bottom:18%;transform:translateX(-50%);font-size:20px;text-shadow:0 2px 5px #000;opacity:0;transition:.25s}
+#start,#win,#dead{position:fixed;inset:0;background:#000e;display:flex;align-items:center;justify-content:center;z-index:20}
+.card{width:min(620px,calc(100vw - 50px));background:#101010;border:1px solid #555;padding:28px;border-radius:10px;box-shadow:0 0 60px #000}
+h1{letter-spacing:7px;margin:0 0 15px;font-size:40px}
+button{pointer-events:auto;background:#8e1717;color:#fff;border:0;border-radius:6px;padding:12px 20px;font-weight:bold;font-size:16px;cursor:pointer}
+#win,#dead{display:none}
+#jumpscare{position:fixed;inset:0;z-index:50;background:#000;display:none;align-items:center;justify-content:center;overflow:hidden}
+#face{position:relative;width:min(75vw,700px);height:min(85vh,750px);background:#d7d0bd;border-radius:48% 48% 42% 42%;box-shadow:0 0 100px #8b0000;animation:shake .055s infinite alternate}
+.eye{position:absolute;top:25%;width:22%;height:18%;background:#050505;border-radius:50%;box-shadow:inset 0 0 25px #500}
+.eye:after{content:"";position:absolute;left:35%;top:35%;width:28%;height:28%;background:#e00000;border-radius:50%;box-shadow:0 0 25px red}
+.eye.l{left:17%}.eye.r{right:17%}
+.mouth{position:absolute;left:20%;bottom:15%;width:60%;height:28%;background:#050000;border-radius:10% 10% 50% 50%;overflow:hidden}
+.tooth{position:absolute;top:0;width:9%;height:45%;background:#eee;clip-path:polygon(0 0,100% 0,50% 100%)}
+#static{position:fixed;inset:0;z-index:49;pointer-events:none;opacity:.05;background-image:repeating-linear-gradient(0deg,#fff 0,#fff 1px,#000 1px,#000 3px);animation:noise .08s infinite}
+@keyframes shake{from{transform:translate(-12px,7px) scale(1.08) rotate(-1deg)}to{transform:translate(13px,-8px) scale(1.16) rotate(1deg)}}
+@keyframes noise{50%{transform:translateY(3px)}}
+</style>
+</head>
+<body>
+<div id="start"><div class="card">
+<h1>THE HALLS</h1>
+<p>Obudziłeś się w opuszczonym kompleksie. Znajdź <b>3 bezpieczniki</b>, uruchom wyjście i uciekaj.</p>
+<p><b>WASD</b> — ruch · <b>Shift</b> — bieg · <b>F</b> — latarka · <b>E</b> — podnieś/użyj · mysz — rozglądanie</p>
+<p style="opacity:.65">Załóż słuchawki, jeśli chcesz mocniejszy efekt.</p>
+<button id="play">WEJDŹ</button>
+</div></div>
+<div id="win"><div class="card"><h1>UCIEKŁEŚ</h1><p>Drzwi zatrzasnęły się za tobą. Coś zostało po drugiej stronie.</p><button onclick="location.reload()">ZAGRAJ PONOWNIE</button></div></div>
+<div id="dead"><div class="card"><h1>ZŁAPAŁ CIĘ</h1><p>Nie zatrzymuj się, kiedy światła zaczynają mrugać.</p><button onclick="location.reload()">SPRÓBUJ PONOWNIE</button></div></div>
+<div id="jumpscare"><div id="face"><div class="eye l"></div><div class="eye r"></div><div class="mouth" id="mouth"></div></div></div>
+<div id="static"></div>
+<div id="ui"><div id="cross"></div><div id="hud"></div><div id="objective"></div><div id="message"></div></div>
+
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import {PointerLockControls} from 'three/addons/controls/PointerLockControls.js';
+
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0x030405);
+scene.fog=new THREE.FogExp2(0x030405,.055);
+const camera=new THREE.PerspectiveCamera(72,innerWidth/innerHeight,.1,120);
+const renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.shadowMap.enabled=true;document.body.appendChild(renderer.domElement);
+const controls=new PointerLockControls(camera,document.body);
+
+scene.add(new THREE.HemisphereLight(0x18202b,0x050505,.18));
+const flash=new THREE.SpotLight(0xe8f0ff,7,18,Math.PI/7,.45,1.5);
+flash.castShadow=true;camera.add(flash);camera.add(flash.target);flash.position.set(0,0,0);flash.target.position.set(0,0,-1);scene.add(camera);
+
+const wallMat=new THREE.MeshStandardMaterial({color:0x30332f,roughness:.95});
+const floorMat=new THREE.MeshStandardMaterial({color:0x181918,roughness:1});
+const ceilMat=new THREE.MeshStandardMaterial({color:0x222322,roughness:1});
+const wallGeo=new THREE.BoxGeometry(1,3,1);
+const walls=[];
+function wall(x,z,sx=1,sz=1){
+ const m=new THREE.Mesh(wallGeo,wallMat);m.position.set(x,1.5,z);m.scale.set(sx,1,sz);m.castShadow=m.receiveShadow=true;scene.add(m);walls.push(m);return m;
+}
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(80,80),floorMat);floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);
+const ceil=new THREE.Mesh(new THREE.PlaneGeometry(80,80),ceilMat);ceil.rotation.x=Math.PI/2;ceil.position.y=3;scene.add(ceil);
+
+// maze outer walls
+wall(0,-20,40,1);wall(0,20,40,1);wall(-20,0,1,40);wall(20,0,1,40);
+// interior corridors
+[
+[-12,-13,1,13],[-12,10,1,10],[-5,-8,14,1],[-5,8,14,1],
+[4,-14,1,12],[4,11,1,18],[12,-6,16,1],[12,6,16,1],
+[-4,15,16,1],[-15,0,10,1],[14,14,1,12],[-2,-16,12,1],
+[9,-15,1,8],[-7,2,10,1],[0,3,1,9]
+].forEach(a=>wall(...a));
+
+// ceiling lamps
+const lamps=[];
+for(let x=-16;x<=16;x+=8)for(let z=-16;z<=16;z+=8){
+ const bulb=new THREE.PointLight(0xbac8b2,.65,8,2);bulb.position.set(x,2.65,z);scene.add(bulb);lamps.push(bulb);
+ const fixture=new THREE.Mesh(new THREE.BoxGeometry(1.5,.08,.35),new THREE.MeshBasicMaterial({color:0xb8c1ad}));fixture.position.set(x,2.94,z);scene.add(fixture);
+}
+
+// creepy figures
+function monster(x,z,scale=1){
+ const g=new THREE.Group();
+ const skin=new THREE.MeshStandardMaterial({color:0xc5c0ad,roughness:1});
+ const dark=new THREE.MeshStandardMaterial({color:0x080808,roughness:1});
+ const body=new THREE.Mesh(new THREE.CylinderGeometry(.28,.42,1.5,8),dark);body.position.y=.85;g.add(body);
+ const head=new THREE.Mesh(new THREE.SphereGeometry(.38,12,8),skin);head.scale.y=1.25;head.position.y=1.75;g.add(head);
+ for(const ex of [-.14,.14]){const e=new THREE.Mesh(new THREE.SphereGeometry(.065,8,6),new THREE.MeshBasicMaterial({color:0xff0000}));e.position.set(ex,1.82,-.34);g.add(e)}
+ const mouth=new THREE.Mesh(new THREE.BoxGeometry(.24,.08,.035),new THREE.MeshBasicMaterial({color:0x020000}));mouth.position.set(0,1.6,-.37);g.add(mouth);
+ g.position.set(x,0,z);g.scale.setScalar(scale);scene.add(g);return g;
+}
+const stalkers=[monster(-16,-15,.9),monster(16,15,1.05),monster(8,-10,.85)];
+stalkers.forEach(m=>m.visible=false);
+
+// fuses
+const fusePositions=[[-16,15],[16,-15],[8,10]];
+const fuses=[];
+const fuseMat=new THREE.MeshStandardMaterial({color:0xff9c20,emissive:0xff5500,emissiveIntensity:1.5});
+for(const [x,z] of fusePositions){
+ const f=new THREE.Mesh(new THREE.BoxGeometry(.22,.55,.22),fuseMat);f.position.set(x,.45,z);scene.add(f);fuses.push(f);
+ const l=new THREE.PointLight(0xff6a00,1.4,4);l.position.set(x,.7,z);scene.add(l);f.userData.light=l;
+}
+
+// exit
+const exitMat=new THREE.MeshStandardMaterial({color:0x501010,emissive:0x200000});
+const exitDoor=new THREE.Mesh(new THREE.BoxGeometry(2.4,2.7,.25),exitMat);exitDoor.position.set(0,1.35,19.35);scene.add(exitDoor);
+const exitLight=new THREE.PointLight(0xff0000,2,7);exitLight.position.set(0,2.5,18);scene.add(exitLight);
+
+camera.position.set(0,1.72,-18);
+let keys={},fuseCount=0,flashOn=true,started=false,dead=false,won=false,monsterActive=false;
+const hud=document.getElementById('hud'),objective=document.getElementById('objective'),message=document.getElementById('message');
+document.getElementById('play').onclick=()=>controls.lock();
+controls.addEventListener('lock',()=>{document.getElementById('start').style.display='none';started=true;initAudio()});
+controls.addEventListener('unlock',()=>{if(!dead&&!won&&started)document.getElementById('start').style.display='flex'});
+document.addEventListener('keydown',e=>{
+ keys[e.code]=true;
+ if(e.code==='KeyF'){flashOn=!flashOn;flash.visible=flashOn}
+ if(e.code==='KeyE')interact();
+});
+document.addEventListener('keyup',e=>keys[e.code]=false);
+
+function nearXZ(a,b,d){return Math.hypot(a.x-b.x,a.z-b.z)<d}
+function interact(){
+ for(const f of fuses){
+  if(f.visible&&nearXZ(camera.position,f.position,1.8)){
+   f.visible=false;f.userData.light.visible=false;fuseCount++;beep(560,.12,.06);say('Znaleziono bezpiecznik.');
+   if(fuseCount===1){stalkers[0].visible=true;setTimeout(()=>stalkers[0].visible=false,1100)}
+   if(fuseCount===2){monsterActive=true;stalkers[2].visible=true;say('Coś cię usłyszało...')}
+   if(fuseCount===3){exitMat.emissive.setHex(0x005500);exitLight.color.setHex(0x33ff55);say('WYJŚCIE MA ZASILANIE. UCIEKAJ.')}
+   return;
+  }
+ }
+ if(fuseCount===3&&nearXZ(camera.position,exitDoor.position,2.2)){
+  won=true;controls.unlock();document.getElementById('start').style.display='none';document.getElementById('win').style.display='flex';
+ }
+}
+let sayTimer;
+function say(t){message.textContent=t;message.style.opacity=1;clearTimeout(sayTimer);sayTimer=setTimeout(()=>message.style.opacity=0,1800)}
+
+function blocked(p){
+ for(const w of walls){
+  const b=new THREE.Box3().setFromObject(w).expandByScalar(.25);
+  if(b.containsPoint(new THREE.Vector3(p.x,1.3,p.z)))return true;
+ }
+ return false;
+}
+const vel=new THREE.Vector3();
+function movement(dt){
+ if(!controls.isLocked||dead||won)return;
+ const f=new THREE.Vector3();camera.getWorldDirection(f);f.y=0;f.normalize();
+ const r=new THREE.Vector3().crossVectors(f,new THREE.Vector3(0,1,0)).normalize();
+ const d=new THREE.Vector3();
+ if(keys.KeyW)d.add(f);if(keys.KeyS)d.sub(f);if(keys.KeyD)d.add(r);if(keys.KeyA)d.sub(r);
+ if(d.lengthSq())d.normalize();
+ const speed=keys.ShiftLeft?5.3:3.3;
+ const old=camera.position.clone();
+ camera.position.addScaledVector(d,speed*dt);
+ camera.position.y=1.72;
+ if(blocked(camera.position))camera.position.copy(old);
+}
+
+function updateMonster(dt,t){
+ if(!monsterActive||dead||won)return;
+ const m=stalkers[2];
+ const dir=new THREE.Vector3(camera.position.x-m.position.x,0,camera.position.z-m.position.z);
+ const dist=dir.length();
+ if(dist>0.01){dir.normalize();m.position.addScaledVector(dir,(dist<8?2.25:1.3)*dt);m.lookAt(camera.position.x,1.2,camera.position.z)}
+ if(dist<1.25)doJumpscare();
+ if(Math.sin(t*10)>0.86&&dist<10)lamps.forEach(l=>l.intensity=Math.random()*.25);
+}
+
+function doJumpscare(){
+ if(dead)return;dead=true;controls.unlock();document.getElementById('start').style.display='none';
+ const js=document.getElementById('jumpscare');js.style.display='flex';
+ scream();
+ setTimeout(()=>{js.style.display='none';document.getElementById('dead').style.display='flex'},1150);
+}
+
+// WebAudio generated ambience and scare — no external sound files
+let ac,hum;
+function initAudio(){
+ if(ac)return;ac=new (window.AudioContext||window.webkitAudioContext)();
+ const o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.value=48;g.gain.value=.025;o.connect(g).connect(ac.destination);o.start();hum=o;
+}
+function beep(freq,dur,vol){
+ if(!ac)return;const o=ac.createOscillator(),g=ac.createGain();o.type='square';o.frequency.value=freq;g.gain.setValueAtTime(vol,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+dur);o.connect(g).connect(ac.destination);o.start();o.stop(ac.currentTime+dur);
+}
+function scream(){
+ if(!ac)return;
+ const buffer=ac.createBuffer(1,ac.sampleRate*1.1,ac.sampleRate),data=buffer.getChannelData(0);
+ for(let i=0;i<data.length;i++){const env=1-i/data.length;data[i]=(Math.random()*2-1)*env}
+ const src=ac.createBufferSource(),filter=ac.createBiquadFilter(),g=ac.createGain();
+ filter.type='bandpass';filter.frequency.value=1250;filter.Q.value=.7;g.gain.value=.8;src.buffer=buffer;src.connect(filter).connect(g).connect(ac.destination);src.start();
+ const o=ac.createOscillator(),og=ac.createGain();o.type='sawtooth';o.frequency.setValueAtTime(180,ac.currentTime);o.frequency.exponentialRampToValueAtTime(55,ac.currentTime+1);og.gain.setValueAtTime(.35,ac.currentTime);og.gain.exponentialRampToValueAtTime(.001,ac.currentTime+1);o.connect(og).connect(ac.destination);o.start();o.stop(ac.currentTime+1);
+}
+for(let i=0;i<9;i++){const tooth=document.createElement('div');tooth.className='tooth';tooth.style.left=(i*11)+'%';document.getElementById('mouth').appendChild(tooth)}
+
+const clock=new THREE.Clock();
+function animate(){
+ requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05),t=performance.now()/1000;
+ movement(dt);updateMonster(dt,t);
+ if(started&&!dead&&!won){
+   // random light flicker
+   lamps.forEach((l,i)=>{if(!monsterActive||i%2)l.intensity=.45+.2*Math.sin(t*2+i);});
+   hud.innerHTML=`Bezpieczniki: <b>${fuseCount}/3</b><br>Latarka: <b>${flashOn?'WŁ.':'WYŁ.'}</b>`;
+   objective.textContent=fuseCount<3?'Znajdź bezpieczniki':'WRÓĆ DO CZERWONYCH DRZWI';
+ }
+ renderer.render(scene,camera);
+}
+animate();
+window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
+</script>
+</body>
+</html>
