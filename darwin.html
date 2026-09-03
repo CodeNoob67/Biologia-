@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Evolution: Cell to Human</title>
+<style>
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#06141d;font-family:Arial,sans-serif;color:#fff}
+canvas{display:block}
+#hud{position:fixed;inset:0;pointer-events:none}
+#stats{position:absolute;left:14px;top:14px;background:#001018cc;padding:11px 13px;border-radius:10px;line-height:1.55}
+#stage{position:absolute;top:14px;left:50%;transform:translateX(-50%);background:#001018cc;padding:10px 15px;border-radius:10px;text-align:center}
+#bar{width:320px;height:12px;background:#222;border-radius:8px;overflow:hidden;margin-top:6px}
+#fill{height:100%;width:0;background:linear-gradient(90deg,#54ff8a,#ffe85c)}
+#msg{position:absolute;left:50%;bottom:18%;transform:translateX(-50%);font-size:22px;text-shadow:0 2px 5px #000;opacity:0;transition:.2s}
+#cross{position:absolute;left:50%;top:50%;width:12px;height:12px;border:2px solid #fff;border-radius:50%;transform:translate(-50%,-50%);opacity:.7}
+#start,#evo,#win{position:fixed;inset:0;background:#001018ee;z-index:10;display:flex;align-items:center;justify-content:center}
+#evo,#win{display:none}
+.card{width:min(650px,calc(100vw - 50px));background:#10242d;border:1px solid #58717a;border-radius:14px;padding:26px;box-shadow:0 15px 60px #000}
+h1{margin-top:0}button{cursor:pointer;border:0;border-radius:8px;padding:12px 18px;font-weight:bold;font-size:16px;background:#62d887;color:#07150c}
+.choice{display:block;width:100%;margin:8px 0;text-align:left;background:#1d4c5d;color:white}
+</style>
+</head>
+<body>
+<div id="start"><div class="card"><h1>🧬 EVOLUTION</h1><p>Zaczynasz jako maleńka komórka. Zdobywaj biomasę, unikaj większych organizmów i ewoluuj przez setki milionów lat.</p><p><b>WASD</b> ruch · <b>mysz</b> kierunek · <b>Shift</b> sprint/atak · <b>Spacja</b> zryw</p><button id="play">ROZPOCZNIJ ŻYCIE</button></div></div>
+<div id="evo"><div class="card"><h1>NOWA EWOLUCJA</h1><p id="evoText"></p><div id="choices"></div></div></div>
+<div id="win"><div class="card"><h1>HOMO SAPIENS</h1><p>Od pojedynczej komórki do człowieka. Przetrwałeś całą drogę.</p><button onclick="location.reload()">OD POCZĄTKU</button></div></div>
+<div id="hud"><div id="stats"></div><div id="stage"><div id="stageName"></div><div id="bar"><div id="fill"></div></div></div><div id="cross"></div><div id="msg"></div></div>
+
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import {PointerLockControls} from 'three/addons/controls/PointerLockControls.js';
+
+const stages=[
+ {name:'Komórka eukariotyczna',era:'~1,8 mld lat temu',need:8,size:.45,color:0x67e8f9,speed:5},
+ {name:'Wielokomórkowiec',era:'~800 mln lat temu',need:13,size:.65,color:0x8cff91,speed:5.3},
+ {name:'Wczesne zwierzę',era:'~600 mln lat temu',need:18,size:.85,color:0xffc766,speed:5.6},
+ {name:'Strunowiec',era:'~520 mln lat temu',need:23,size:1.05,color:0x72a7ff,speed:6},
+ {name:'Ryba',era:'~450 mln lat temu',need:28,size:1.25,color:0x4fc0ff,speed:6.5},
+ {name:'Czworonóg',era:'~370 mln lat temu',need:34,size:1.45,color:0x74b85a,speed:6.2},
+ {name:'Wczesny owodniowiec',era:'~310 mln lat temu',need:40,size:1.6,color:0xb39a68,speed:6.4},
+ {name:'Synapsyd',era:'~270 mln lat temu',need:46,size:1.8,color:0xa77b55,speed:6.6},
+ {name:'Wczesny ssak',era:'~200 mln lat temu',need:53,size:1.65,color:0x80624c,speed:7},
+ {name:'Ssak łożyskowy',era:'~80 mln lat temu',need:60,size:1.8,color:0x9a765c,speed:7.2},
+ {name:'Naczelny',era:'~55 mln lat temu',need:68,size:1.9,color:0xa47c5e,speed:7.5},
+ {name:'Małpa człekokształtna',era:'~18 mln lat temu',need:76,size:2,color:0x76543f,speed:7.7},
+ {name:'Australopithecus',era:'~4 mln lat temu',need:85,size:2.05,color:0x9a704f,speed:8},
+ {name:'Homo habilis',era:'~2,4 mln lat temu',need:95,size:2.1,color:0xa97a57,speed:8.2},
+ {name:'Homo erectus',era:'~1,9 mln lat temu',need:108,size:2.15,color:0xb88763,speed:8.5},
+ {name:'Homo sapiens',era:'~300 tys. lat temu',need:0,size:2.2,color:0xc9936c,speed:8.8}
+];
+
+let idx=0,bio=0,hp=100,kills=0,paused=false,ended=false,keys={},dash=0;
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x0a3140);scene.fog=new THREE.FogExp2(0x0a3140,.018);
+const camera=new THREE.PerspectiveCamera(70,innerWidth/innerHeight,.1,200);camera.position.set(0,8,12);
+const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;document.body.appendChild(renderer.domElement);
+const controls=new PointerLockControls(camera,document.body);
+play.onclick=()=>controls.lock();controls.addEventListener('lock',()=>start.style.display='none');
+
+scene.add(new THREE.HemisphereLight(0xbcecff,0x17351b,1.5));
+const light=new THREE.DirectionalLight(0xffffff,1.3);light.position.set(20,35,15);scene.add(light);
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(180,180),new THREE.MeshStandardMaterial({color:0x214f3d,roughness:1}));ground.rotation.x=-Math.PI/2;scene.add(ground);
+const grid=new THREE.GridHelper(180,90,0x2e6c5a,0x285746);grid.position.y=.01;scene.add(grid);
+
+const player=new THREE.Group();scene.add(player);
+function buildPlayer(){
+ player.clear();const s=stages[idx],mat=new THREE.MeshStandardMaterial({color:s.color,roughness:.65});
+ if(idx<4){let body=new THREE.Mesh(new THREE.SphereGeometry(s.size,18,12),mat);body.scale.z=1.4;player.add(body);
+   for(let i=0;i<5;i++){let f=new THREE.Mesh(new THREE.CylinderGeometry(.025,.06,s.size*1.8,6),mat);f.rotation.x=Math.PI/2;f.rotation.z=(i-2)*.15;f.position.z=s.size*1.3;player.add(f)}
+ }else if(idx<10){let body=new THREE.Mesh(new THREE.SphereGeometry(s.size*.55,16,10),mat);body.scale.set(1,0.7,1.8);player.add(body);
+   let head=new THREE.Mesh(new THREE.SphereGeometry(s.size*.32,12,8),mat);head.position.z=-s.size;player.add(head);
+   for(let q of [-1,1])for(let z of [-.45,.45]){let leg=new THREE.Mesh(new THREE.CylinderGeometry(.09,.12,s.size*.8,7),mat);leg.position.set(q*s.size*.45,-s.size*.55,z*s.size);player.add(leg)}
+ }else{let body=new THREE.Mesh(new THREE.CapsuleGeometry(s.size*.28,s.size*.7,6,10),mat);body.position.y=s.size*.75;player.add(body);
+   let head=new THREE.Mesh(new THREE.SphereGeometry(s.size*.25,14,10),mat);head.position.y=s.size*1.45;player.add(head);
+   for(let q of [-1,1]){let leg=new THREE.Mesh(new THREE.CapsuleGeometry(.11,s.size*.75,5,8),mat);leg.position.set(q*.22,s.size*.05,0);player.add(leg)}
+ }
+ player.position.y=Math.max(.7,s.size*.5);
+}
+buildPlayer();
+
+const mobs=[];
+function spawnMob(){
+ let rel=Math.random()<.68?-1:1,mi=Math.max(0,Math.min(stages.length-1,idx+rel+(Math.random()<.15?rel:0)));
+ let ss=stages[mi],scale=.65+mi*.055;
+ let m=new THREE.Mesh(new THREE.IcosahedronGeometry(scale,1),new THREE.MeshStandardMaterial({color:mi<=idx?0x72e36c:0xe85b55,roughness:.7}));
+ let a=Math.random()*Math.PI*2,r=18+Math.random()*42;m.position.set(Math.cos(a)*r,scale,Math.sin(a)*r);m.userData={level:mi,speed:1.2+Math.random()*1.4,phase:Math.random()*10};scene.add(m);mobs.push(m);
+}
+for(let i=0;i<55;i++)spawnMob();
+
+document.addEventListener('keydown',e=>keys[e.code]=1);document.addEventListener('keyup',e=>keys[e.code]=0);
+function say(t){msg.textContent=t;msg.style.opacity=1;clearTimeout(say.t);say.t=setTimeout(()=>msg.style.opacity=0,1200)}
+
+function evolve(){
+ paused=true;controls.unlock();evo.style.display='flex';
+ evoText.textContent=`Masz dość biomasy. ${stages[idx].name} może wykonać kolejny krok.`;
+ choices.innerHTML='';
+ const options=[
+   ['Większe ciało','Więcej maksymalnego zdrowia'],
+   ['Szybszy ruch','Łatwiejsza ucieczka i polowanie'],
+   ['Lepsze zmysły','Większy zasięg wykrywania']
+ ];
+ options.forEach((o,n)=>{let b=document.createElement('button');b.className='choice';b.innerHTML=`<b>${o[0]}</b><br><small>${o[1]}</small>`;b.onclick=()=>{if(n===0)hp=Math.min(130,hp+25);idx++;bio=0;buildPlayer();evo.style.display='none';paused=false;if(idx===stages.length-1){ended=true;win.style.display='flex'}else controls.lock()};choices.appendChild(b)});
+}
+
+function move(dt){
+ if(!controls.isLocked||paused||ended)return;
+ let f=new THREE.Vector3();camera.getWorldDirection(f);f.y=0;f.normalize();let r=new THREE.Vector3().crossVectors(f,new THREE.Vector3(0,1,0)).normalize(),d=new THREE.Vector3();
+ if(keys.KeyW)d.add(f);if(keys.KeyS)d.sub(f);if(keys.KeyD)d.add(r);if(keys.KeyA)d.sub(r);if(d.lengthSq())d.normalize();
+ let sp=stages[idx].speed*(keys.ShiftLeft?1.45:1);player.position.addScaledVector(d,sp*dt);
+ player.position.x=THREE.MathUtils.clamp(player.position.x,-82,82);player.position.z=THREE.MathUtils.clamp(player.position.z,-82,82);
+ camera.position.lerp(new THREE.Vector3(player.position.x,player.position.y+6+stages[idx].size,player.position.z+10+stages[idx].size*2),.08);
+ camera.lookAt(player.position.x,player.position.y,player.position.z);
+ if(keys.Space&&dash<=0){player.position.addScaledVector(f,3.5);dash=1}
+ dash=Math.max(0,dash-dt);
+}
+
+function mobsUpdate(dt,t){
+ for(let i=mobs.length-1;i>=0;i--){
+   let m=mobs[i],d=new THREE.Vector3(player.position.x-m.position.x,0,player.position.z-m.position.z),dist=d.length();m.rotation.y+=.015;m.position.y=Math.max(.4,m.geometry.parameters.radius||.5)+Math.sin(t*2+m.userData.phase)*.12;
+   if(dist<13){d.normalize();if(m.userData.level>idx)m.position.addScaledVector(d,m.userData.speed*dt);else m.position.addScaledVector(d,-m.userData.speed*.55*dt)}
+   if(dist<stages[idx].size*.7+1){
+     if(m.userData.level<=idx){
+       bio+=2+Math.max(0,m.userData.level);kills++;scene.remove(m);mobs.splice(i,1);spawnMob();say('+ biomasa');
+       if(idx<stages.length-1&&bio>=stages[idx].need)setTimeout(evolve,150);
+     }else{
+       hp-=18*dt;if(hp<=0){hp=100;bio=Math.max(0,bio-5);player.position.set(0,player.position.y,0);say('Ledwo przetrwałeś!')}
+     }
+   }
+ }
+}
+
+const clock=new THREE.Clock();
+function loop(){requestAnimationFrame(loop);let dt=Math.min(clock.getDelta(),.05),t=performance.now()/1000;move(dt);mobsUpdate(dt,t);
+ const s=stages[idx];stats.innerHTML=`❤️ Zdrowie: <b>${Math.round(hp)}</b><br>🧬 Biomasa: <b>${bio}</b><br>Pokonane organizmy: ${kills}`;
+ stageName.innerHTML=`<b>${s.name}</b> — ${s.era}`;fill.style.width=(idx===stages.length-1?100:Math.min(100,bio/s.need*100))+'%';
+ renderer.render(scene,camera)}
+loop();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
+</script></body></html>
