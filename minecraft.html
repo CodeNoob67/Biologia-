@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VoxelCraft 3D</title>
+<style>
+  html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #87ceeb;
+    user-select: none;
+  }
+  canvas { display: block; }
+
+  #hud {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  #crosshair {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 18px;
+    height: 18px;
+    transform: translate(-50%, -50%);
+  }
+  #crosshair::before, #crosshair::after {
+    content: "";
+    position: absolute;
+    background: rgba(255,255,255,.95);
+    box-shadow: 0 0 2px #000;
+  }
+  #crosshair::before {
+    left: 8px; top: 1px; width: 2px; height: 16px;
+  }
+  #crosshair::after {
+    left: 1px; top: 8px; width: 16px; height: 2px;
+  }
+
+  #info {
+    position: absolute;
+    left: 12px;
+    top: 12px;
+    padding: 8px 10px;
+    background: rgba(0,0,0,.45);
+    color: #fff;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  #hotbar {
+    position: absolute;
+    left: 50%;
+    bottom: 18px;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 4px;
+  }
+  .slot {
+    width: 58px;
+    height: 58px;
+    border: 3px solid rgba(255,255,255,.45);
+    background: rgba(20,20,20,.6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 11px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    text-shadow: 1px 1px 2px #000;
+  }
+  .slot.selected {
+    border-color: #fff;
+    transform: translateY(-5px);
+    background: rgba(70,70,70,.8);
+  }
+  .cubeIcon {
+    width: 24px;
+    height: 24px;
+    border: 2px solid rgba(255,255,255,.4);
+    margin-bottom: 3px;
+  }
+
+  #startScreen, #inventoryPanel {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.65);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+  }
+  #startCard, #inventoryCard {
+    background: rgba(35,35,35,.95);
+    border: 2px solid #777;
+    border-radius: 12px;
+    padding: 24px;
+    width: min(620px, calc(100vw - 40px));
+    box-shadow: 0 10px 40px rgba(0,0,0,.5);
+  }
+  #startCard h1, #inventoryCard h2 {
+    margin-top: 0;
+  }
+  .btn {
+    pointer-events: auto;
+    cursor: pointer;
+    padding: 11px 18px;
+    color: white;
+    background: #2d8f3c;
+    border: none;
+    border-radius: 7px;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .btn:hover { filter: brightness(1.1); }
+
+  #inventoryPanel { display: none; pointer-events: auto; }
+  #inventoryGrid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(100px,1fr));
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .invItem {
+    background: #444;
+    border: 2px solid #666;
+    border-radius: 6px;
+    padding: 8px;
+  }
+  #crafting {
+    border-top: 1px solid #777;
+    padding-top: 12px;
+  }
+  .recipe {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #3e3e3e;
+    padding: 8px;
+    border-radius: 6px;
+    margin: 6px 0;
+    gap: 12px;
+  }
+  .recipe button {
+    cursor: pointer;
+    background: #9a6b2f;
+    color: white;
+    border: 0;
+    border-radius: 5px;
+    padding: 7px 10px;
+  }
+
+  #msg {
+    position: absolute;
+    left: 50%;
+    top: 64%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 16px;
+    text-shadow: 2px 2px 3px black;
+    opacity: 0;
+    transition: opacity .2s;
+  }
+</style>
+</head>
+<body>
+
+<div id="startScreen">
+  <div id="startCard">
+    <h1>VoxelCraft 3D</h1>
+    <p>Prosta gra inspirowana voxelowymi sandboxami.</p>
+    <p><b>Sterowanie:</b> WASD – ruch, Spacja – skok, Shift – sprint, mysz – patrzenie, lewy przycisk – niszcz, prawy – postaw blok, 1–6 / kółko myszy – wybór bloku, E – ekwipunek i crafting.</p>
+    <p>Teren jest generowany proceduralnie. Są drzewa, kamień, ziemia, trawa i piasek.</p>
+    <button class="btn" id="playBtn">GRAJ</button>
+  </div>
+</div>
+
+<div id="inventoryPanel">
+  <div id="inventoryCard">
+    <h2>Ekwipunek i crafting</h2>
+    <div id="inventoryGrid"></div>
+    <div id="crafting">
+      <h3>Crafting</h3>
+      <div class="recipe">
+        <span>4 × Drewno → 1 × Deski</span>
+        <button data-recipe="planks">Wytwórz</button>
+      </div>
+      <div class="recipe">
+        <span>2 × Deski → 4 × Patyki</span>
+        <button data-recipe="sticks">Wytwórz</button>
+      </div>
+      <div class="recipe">
+        <span>3 × Kamień + 2 × Patyki → 1 × Kilof</span>
+        <button data-recipe="pickaxe">Wytwórz</button>
+      </div>
+    </div>
+    <p style="opacity:.75">Kilof przyspiesza niszczenie kamienia. Naciśnij E, aby wrócić do gry.</p>
+  </div>
+</div>
+
+<div id="hud">
+  <div id="crosshair"></div>
+  <div id="info"></div>
+  <div id="hotbar"></div>
+  <div id="msg"></div>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
+
+const BLOCK = {
+  grass:   { name:'Trawa', color:0x58a84c, solid:true },
+  dirt:    { name:'Ziemia', color:0x7b4d2a, solid:true },
+  stone:   { name:'Kamień', color:0x777777, solid:true },
+  sand:    { name:'Piasek', color:0xd6c181, solid:true },
+  wood:    { name:'Drewno', color:0x8b5a2b, solid:true },
+  leaves:  { name:'Liście', color:0x2f7f39, solid:true },
+  planks:  { name:'Deski', color:0xb6864e, solid:true }
+};
+
+const placeable = ['grass','dirt','stone','sand','wood','planks'];
+let selectedIndex = 0;
+
+const inventory = {
+  grass: 20,
+  dirt: 30,
+  stone: 20,
+  sand: 15,
+  wood: 12,
+  leaves: 0,
+  planks: 0,
+  sticks: 0,
+  pickaxe: 0
+};
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x87c9f4);
+scene.fog = new THREE.Fog(0x87c9f4, 22, 72);
+
+const camera = new THREE.PerspectiveCamera(75, innerWidth/innerHeight, 0.1, 150);
+camera.position.set(0, 12, 0);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+document.body.appendChild(renderer.domElement);
+
+const hemi = new THREE.HemisphereLight(0xbfe7ff, 0x5b5037, 1.6);
+scene.add(hemi);
+
+const sun = new THREE.DirectionalLight(0xffffff, 1.8);
+sun.position.set(30, 45, 20);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+sun.shadow.camera.left = -40;
+sun.shadow.camera.right = 40;
+sun.shadow.camera.top = 40;
+sun.shadow.camera.bottom = -40;
+scene.add(sun);
+
+const controls = new PointerLockControls(camera, document.body);
+
+const startScreen = document.getElementById('startScreen');
+const inventoryPanel = document.getElementById('inventoryPanel');
+const playBtn = document.getElementById('playBtn');
+const info = document.getElementById('info');
+const hotbar = document.getElementById('hotbar');
+const msg = document.getElementById('msg');
+const inventoryGrid = document.getElementById('inventoryGrid');
+
+playBtn.addEventListener('click', () => controls.lock());
+
+controls.addEventListener('lock', () => {
+  startScreen.style.display = 'none';
+  inventoryPanel.style.display = 'none';
+});
+controls.addEventListener('unlock', () => {
+  if (!inventoryOpen) startScreen.style.display = 'flex';
+});
+
+const blockGeo = new THREE.BoxGeometry(1,1,1);
+const mats = {};
+for (const [k,v] of Object.entries(BLOCK)) {
+  mats[k] = new THREE.MeshLambertMaterial({ color:v.color });
+}
+
+const blocks = new Map();
+const blockGroup = new THREE.Group();
+scene.add(blockGroup);
+
+function key(x,y,z){ return `${x},${y},${z}`; }
+
+function addBlock(x,y,z,type, collect=false){
+  const k = key(x,y,z);
+  if(blocks.has(k)) return;
+  const mesh = new THREE.Mesh(blockGeo, mats[type]);
+  mesh.position.set(x,y,z);
+  mesh.userData = { x,y,z,type };
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  blockGroup.add(mesh);
+  blocks.set(k, mesh);
+  if(collect && inventory[type] !== undefined) inventory[type]++;
+}
+
+function removeBlock(x,y,z, collect=true){
+  const k = key(x,y,z);
+  const mesh = blocks.get(k);
+  if(!mesh) return;
+  blockGroup.remove(mesh);
+  blocks.delete(k);
+  if(collect && inventory[mesh.userData.type] !== undefined){
+    inventory[mesh.userData.type]++;
+  }
+}
+
+function getBlock(x,y,z){ return blocks.get(key(x,y,z)); }
+
+// Simple deterministic value noise
+function hash2(x,z){
+  let n = x * 374761393 + z * 668265263;
+  n = (n ^ (n >> 13)) * 1274126177;
+  n = n ^ (n >> 16);
+  return (n >>> 0) / 4294967295;
+}
+function smoothNoise(x,z){
+  const xi = Math.floor(x), zi = Math.floor(z);
+  const xf = x-xi, zf=z-zi;
+  const s = t => t*t*(3-2*t);
+  const a = hash2(xi,zi), b=hash2(xi+1,zi), c=hash2(xi,zi+1), d=hash2(xi+1,zi+1);
+  const u=s(xf), v=s(zf);
+  const ab=a*(1-u)+b*u, cd=c*(1-u)+d*u;
+  return ab*(1-v)+cd*v;
+}
+function fbm(x,z){
+  let v=0, a=.55, f=.08;
+  for(let i=0;i<4;i++){
+    v += smoothNoise(x*f,z*f)*a;
+    f *= 2;
+    a *= .5;
+  }
+  return v;
+}
+function terrainHeight(x,z){
+  const h = 3 + Math.floor(fbm(x,z)*8);
+  return Math.max(2, Math.min(10,h));
+}
+
+const WORLD = 22;
+for(let x=-WORLD; x<=WORLD; x++){
+  for(let z=-WORLD; z<=WORLD; z++){
+    const h = terrainHeight(x,z);
+    const beach = h <= 4;
+    for(let y=0; y<=h; y++){
+      let type = 'stone';
+      if(y === h) type = beach ? 'sand' : 'grass';
+      else if(y >= h-2) type = beach ? 'sand' : 'dirt';
+      addBlock(x,y,z,type);
+    }
+
+    const treeChance = hash2(x*7+17,z*11-3);
+    if(!beach && h>=5 && treeChance > .965 && Math.abs(x)>2 && Math.abs(z)>2){
+      const trunkH = 3 + Math.floor(hash2(x+99,z-71)*2);
+      for(let t=1;t<=trunkH;t++) addBlock(x,h+t,z,'wood');
+      const top = h + trunkH;
+      for(let dx=-2;dx<=2;dx++){
+        for(let dz=-2;dz<=2;dz++){
+          for(let dy=-1;dy<=1;dy++){
+            if(Math.abs(dx)+Math.abs(dz)+Math.abs(dy) < 4){
+              if(!(dx===0 && dz===0 && dy<0)) addBlock(x+dx,top+dy,z+dz,'leaves');
+            }
+          }
+        }
+      }
+      addBlock(x,top+2,z,'leaves');
+    }
+  }
+}
+
+// Water plane for visual natural terrain
+const waterGeo = new THREE.PlaneGeometry(120,120);
+const waterMat = new THREE.MeshPhongMaterial({
+  color: 0x3f8fc4,
+  transparent:true,
+  opacity:.55,
+  side:THREE.DoubleSide
+});
+const water = new THREE.Mesh(waterGeo, waterMat);
+water.rotation.x = -Math.PI/2;
+water.position.y = 3.45;
+scene.add(water);
+
+// Player physics
+const player = {
+  height: 1.75,
+  radius: 0.32,
+  speed: 5.5,
+  sprint: 8.2,
+  jump: 7.2,
+  velY: 0,
+  onGround: false
+};
+
+const keys = {};
+document.addEventListener('keydown', e => {
+  keys[e.code] = true;
+
+  if(e.code.startsWith('Digit')){
+    const n = Number(e.code.replace('Digit','')) - 1;
+    if(n >= 0 && n < placeable.length){
+      selectedIndex = n;
+      updateHotbar();
+    }
+  }
+
+  if(e.code === 'KeyE'){
+    toggleInventory();
+  }
+});
+document.addEventListener('keyup', e => keys[e.code] = false);
+
+let inventoryOpen = false;
+function toggleInventory(){
+  inventoryOpen = !inventoryOpen;
+  if(inventoryOpen){
+    controls.unlock();
+    startScreen.style.display = 'none';
+    inventoryPanel.style.display = 'flex';
+    updateInventory();
+  }else{
+    inventoryPanel.style.display = 'none';
+    controls.lock();
+  }
+}
+
+function isSolidAt(x,y,z){
+  const bx = Math.floor(x + .5);
+  const by = Math.floor(y + .5);
+  const bz = Math.floor(z + .5);
+  return blocks.has(key(bx,by,bz));
+}
+
+function collides(px,py,pz){
+  const r = player.radius;
+  const bottom = py - player.height;
+  const top = py - 0.05;
+  const samples = [
+    [-r,0,-r],[r,0,-r],[-r,0,r],[r,0,r],
+    [-r,.8,-r],[r,.8,-r],[-r,.8,r],[r,.8,r],
+    [-r,1.55,-r],[r,1.55,-r],[-r,1.55,r],[r,1.55,r]
+  ];
+  for(const [dx,dy,dz] of samples){
+    if(isSolidAt(px+dx, bottom+dy, pz+dz)) return true;
+  }
+  if(isSolidAt(px, top, pz)) return true;
+  return false;
+}
+
+function respawnIfNeeded(){
+  if(camera.position.y < -10){
+    camera.position.set(0, 14, 0);
+    player.velY = 0;
+  }
+}
+
+function movePlayer(dt){
+  if(!controls.isLocked || inventoryOpen) return;
+
+  const dir = new THREE.Vector3();
+  const forward = new THREE.Vector3();
+  camera.getWorldDirection(forward);
+  forward.y = 0;
+  forward.normalize();
+  const right = new THREE.Vector3().crossVectors(forward, new THREE.Vector3(0,1,0)).normalize();
+
+  if(keys.KeyW) dir.add(forward);
+  if(keys.KeyS) dir.sub(forward);
+  if(keys.KeyD) dir.add(right);
+  if(keys.KeyA) dir.sub(right);
+  if(dir.lengthSq()>0) dir.normalize();
+
+  const speed = keys.ShiftLeft ? player.sprint : player.speed;
+  const dx = dir.x * speed * dt;
+  const dz = dir.z * speed * dt;
+
+  const oldX = camera.position.x;
+  camera.position.x += dx;
+  if(collides(camera.position.x, camera.position.y, camera.position.z)) camera.position.x = oldX;
+
+  const oldZ = camera.position.z;
+  camera.position.z += dz;
+  if(collides(camera.position.x, camera.position.y, camera.position.z)) camera.position.z = oldZ;
+
+  player.velY -= 19 * dt;
+  if(keys.Space && player.onGround){
+    player.velY = player.jump;
+    player.onGround = false;
+  }
+
+  const oldY = camera.position.y;
+  camera.position.y += player.velY * dt;
+
+  if(collides(camera.position.x, camera.position.y, camera.position.z)){
+    if(player.velY < 0) player.onGround = true;
+    camera.position.y = oldY;
+    player.velY = 0;
+  }else{
+    // tiny ray-like floor check
+    const feet = camera.position.y - player.height - .06;
+    player.onGround = isSolidAt(camera.position.x, feet, camera.position.z);
+  }
+
+  respawnIfNeeded();
+}
+
+// Raycast mining/building
+const raycaster = new THREE.Raycaster();
+raycaster.far = 6;
+let breakTarget = null;
+let breakProgress = 0;
+let mouseDown = false;
+
+const outline = new THREE.LineSegments(
+  new THREE.EdgesGeometry(new THREE.BoxGeometry(1.03,1.03,1.03)),
+  new THREE.LineBasicMaterial({ color:0xffffff })
+);
+outline.visible = false;
+scene.add(outline);
+
+function getTarget(){
+  raycaster.setFromCamera(new THREE.Vector2(0,0), camera);
+  const hits = raycaster.intersectObjects(blockGroup.children, false);
+  return hits.length ? hits[0] : null;
+}
+
+function canPlaceAt(x,y,z){
+  if(blocks.has(key(x,y,z))) return false;
+  const minX = camera.position.x-player.radius;
+  const maxX = camera.position.x+player.radius;
+  const minZ = camera.position.z-player.radius;
+  const maxZ = camera.position.z+player.radius;
+  const minY = camera.position.y-player.height;
+  const maxY = camera.position.y;
+  const bx0=x-.5, bx1=x+.5, by0=y-.5, by1=y+.5, bz0=z-.5, bz1=z+.5;
+  const overlap = bx1>minX && bx0<maxX && by1>minY && by0<maxY && bz1>minZ && bz0<maxZ;
+  return !overlap;
+}
+
+document.addEventListener('mousedown', e => {
+  if(!controls.isLocked) return;
+  if(e.button===0) mouseDown = true;
+  if(e.button===2){
+    const hit = getTarget();
+    if(!hit) return;
+    const n = hit.face.normal.clone();
+    const p = hit.object.position.clone().add(n);
+    const x=Math.round(p.x), y=Math.round(p.y), z=Math.round(p.z);
+    const type = placeable[selectedIndex];
+    if(inventory[type] > 0 && canPlaceAt(x,y,z)){
+      addBlock(x,y,z,type);
+      inventory[type]--;
+      updateHotbar();
+    }else if(inventory[type] <= 0){
+      flash(`Brak: ${BLOCK[type].name}`);
+    }
+  }
+});
+document.addEventListener('mouseup', e => {
+  if(e.button===0){
+    mouseDown = false;
+    breakTarget = null;
+    breakProgress = 0;
+  }
+});
+document.addEventListener('contextmenu', e => e.preventDefault());
+
+document.addEventListener('wheel', e => {
+  if(!controls.isLocked) return;
+  selectedIndex += e.deltaY > 0 ? 1 : -1;
+  if(selectedIndex < 0) selectedIndex = placeable.length-1;
+  if(selectedIndex >= placeable.length) selectedIndex = 0;
+  updateHotbar();
+}, {passive:true});
+
+function processMining(dt){
+  const hit = getTarget();
+  if(hit){
+    outline.visible = true;
+    outline.position.copy(hit.object.position);
+  }else outline.visible = false;
+
+  if(!mouseDown || !hit){
+    breakTarget=null;
+    breakProgress=0;
+    return;
+  }
+
+  const id = key(hit.object.position.x, hit.object.position.y, hit.object.position.z);
+  if(breakTarget !== id){
+    breakTarget = id;
+    breakProgress = 0;
+  }
+
+  const type = hit.object.userData.type;
+  let needed = type==='stone' ? 0.75 : (type==='wood' ? 0.5 : 0.3);
+  if(type==='stone' && inventory.pickaxe > 0) needed = 0.18;
+
+  breakProgress += dt;
+  if(breakProgress >= needed){
+    removeBlock(hit.object.userData.x, hit.object.userData.y, hit.object.userData.z, true);
+    breakTarget=null;
+    breakProgress=0;
+    updateHotbar();
+  }
+}
+
+function updateHotbar(){
+  hotbar.innerHTML = '';
+  placeable.forEach((type,i)=>{
+    const s = document.createElement('div');
+    s.className = 'slot' + (i===selectedIndex ? ' selected':'');
+    const ic = document.createElement('div');
+    ic.className='cubeIcon';
+    ic.style.background = '#' + BLOCK[type].color.toString(16).padStart(6,'0');
+    const txt = document.createElement('div');
+    txt.textContent = `${i+1}. ${BLOCK[type].name} ×${inventory[type]}`;
+    s.append(ic,txt);
+    hotbar.appendChild(s);
+  });
+}
+
+function updateInventory(){
+  inventoryGrid.innerHTML='';
+  const names = {
+    grass:'Trawa', dirt:'Ziemia', stone:'Kamień', sand:'Piasek',
+    wood:'Drewno', leaves:'Liście', planks:'Deski', sticks:'Patyki', pickaxe:'Kilof'
+  };
+  for(const [k,v] of Object.entries(inventory)){
+    const el = document.createElement('div');
+    el.className='invItem';
+    el.innerHTML=`<b>${names[k]}</b><br>× ${v}`;
+    inventoryGrid.appendChild(el);
+  }
+}
+
+document.querySelectorAll('[data-recipe]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const r = btn.dataset.recipe;
+    if(r==='planks'){
+      if(inventory.wood>=4){
+        inventory.wood-=4; inventory.planks+=1; flash('Wytworzono deski!');
+      }else flash('Potrzebujesz 4 drewna.');
+    }
+    if(r==='sticks'){
+      if(inventory.planks>=2){
+        inventory.planks-=2; inventory.sticks+=4; flash('Wytworzono patyki!');
+      }else flash('Potrzebujesz 2 desek.');
+    }
+    if(r==='pickaxe'){
+      if(inventory.stone>=3 && inventory.sticks>=2){
+        inventory.stone-=3; inventory.sticks-=2; inventory.pickaxe+=1; flash('Wytworzono kamienny kilof!');
+      }else flash('Potrzebujesz 3 kamienia i 2 patyków.');
+    }
+    updateInventory();
+    updateHotbar();
+  });
+});
+
+let msgTimer=null;
+function flash(text){
+  msg.textContent=text;
+  msg.style.opacity='1';
+  clearTimeout(msgTimer);
+  msgTimer=setTimeout(()=>msg.style.opacity='0',1200);
+}
+
+function updateInfo(){
+  const p = camera.position;
+  const type = placeable[selectedIndex];
+  info.innerHTML =
+    `X: ${p.x.toFixed(1)} &nbsp; Y: ${p.y.toFixed(1)} &nbsp; Z: ${p.z.toFixed(1)}<br>`+
+    `Blok: <b>${BLOCK[type].name}</b> ×${inventory[type]}<br>`+
+    `Kilof: ${inventory.pickaxe>0 ? 'TAK' : 'NIE'} &nbsp; | &nbsp; E = crafting`;
+}
+
+// Nice sun disc
+const sunDisc = new THREE.Mesh(
+  new THREE.SphereGeometry(2.2,16,16),
+  new THREE.MeshBasicMaterial({color:0xfff2a3})
+);
+sunDisc.position.set(-35,45,-55);
+scene.add(sunDisc);
+
+// Clouds
+const cloudMat = new THREE.MeshLambertMaterial({color:0xffffff});
+for(let i=0;i<18;i++){
+  const cx=(hash2(i,3)-.5)*80;
+  const cz=(hash2(i,17)-.5)*80;
+  const cy=17+hash2(i,33)*8;
+  for(let c=0;c<4;c++){
+    const cloud = new THREE.Mesh(new THREE.BoxGeometry(3+hash2(i,c)*4, .8, 2.4), cloudMat);
+    cloud.position.set(cx+c*2.3,cy,cz+(c%2)*.8);
+    cloud.material.transparent=true;
+    cloud.material.opacity=.88;
+    scene.add(cloud);
+  }
+}
+
+// Find safe spawn height
+camera.position.set(0, terrainHeight(0,0)+4.5, 0);
+
+const clock = new THREE.Clock();
+function animate(){
+  requestAnimationFrame(animate);
+  const dt = Math.min(clock.getDelta(), .05);
+  movePlayer(dt);
+  processMining(dt);
+  updateInfo();
+
+  // subtle water shimmer
+  water.material.opacity = .52 + Math.sin(performance.now()*.0015)*.035;
+
+  renderer.render(scene,camera);
+}
+updateHotbar();
+updateInventory();
+animate();
+
+window.addEventListener('resize', ()=>{
+  camera.aspect = innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth,innerHeight);
+});
+</script>
+</body>
+</html>
