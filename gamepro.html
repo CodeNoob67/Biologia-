@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>...</title>
+<style>
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000;font-family:Arial,Helvetica,sans-serif}
+canvas{display:block}
+#overlay,#end{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:20;color:#fff}
+#end{display:none;background:#000e}
+.card{max-width:560px;padding:28px;border:1px solid #444;border-radius:12px;background:#111;box-shadow:0 20px 70px #000}
+h1{margin:0 0 12px;font-size:38px;letter-spacing:4px}
+button{background:#fff;color:#000;border:0;border-radius:8px;padding:12px 20px;font-weight:700;font-size:16px;cursor:pointer}
+#hud{position:fixed;inset:0;pointer-events:none;color:#fff;z-index:5}
+#top{position:absolute;top:15px;left:50%;transform:translateX(-50%);background:#0008;padding:8px 12px;border-radius:8px;font-size:14px}
+#left{position:absolute;left:14px;top:14px;background:#0008;padding:9px 11px;border-radius:8px;font-size:13px;line-height:1.5}
+#cross{position:absolute;left:50%;top:50%;width:12px;height:12px;transform:translate(-50%,-50%)}
+#cross:before,#cross:after{content:"";position:absolute;background:#fff;box-shadow:0 0 4px #000}
+#cross:before{left:5px;top:0;width:2px;height:12px}
+#cross:after{left:0;top:5px;width:12px;height:2px}
+#msg{position:absolute;left:50%;bottom:18%;transform:translateX(-50%);font-size:19px;text-shadow:0 2px 5px #000;opacity:0;transition:.2s}
+</style>
+</head>
+<body>
+<div id="overlay"><div class="card">
+<h1>???</h1>
+<p>Nie czytaj za dużo. Kliknij i odkryj sam.</p>
+<p><b>WASD</b> — ruch · <b>mysz</b> — rozglądanie · <b>Spacja</b> — skok · <b>E</b> — interakcja</p>
+<button id="start">START</button>
+</div></div>
+<div id="end"><div class="card"><h1 id="endTitle">KONIEC</h1><p id="endText"></p><button onclick="location.reload()">JESZCZE RAZ</button></div></div>
+<div id="hud"><div id="top"></div><div id="left"></div><div id="cross"></div><div id="msg"></div></div>
+
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import {PointerLockControls} from 'three/addons/controls/PointerLockControls.js';
+
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0x060814);
+scene.fog=new THREE.FogExp2(0x060814,.022);
+
+const camera=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,.1,180);
+camera.position.set(0,2,8);
+
+const renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.setSize(innerWidth,innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.shadowMap.enabled=true;
+document.body.appendChild(renderer.domElement);
+
+const controls=new PointerLockControls(camera,document.body);
+document.getElementById('start').onclick=()=>controls.lock();
+controls.addEventListener('lock',()=>document.getElementById('overlay').style.display='none');
+controls.addEventListener('unlock',()=>{if(!ended)document.getElementById('overlay').style.display='flex'});
+
+scene.add(new THREE.HemisphereLight(0x6777aa,0x111118,.7));
+const moon=new THREE.DirectionalLight(0xbfd5ff,1.3);
+moon.position.set(-20,35,10);moon.castShadow=true;scene.add(moon);
+
+const floorMat=new THREE.MeshStandardMaterial({color:0x1a1b20,roughness:.93,metalness:.05});
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(120,120),floorMat);
+floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);
+
+const grid=new THREE.GridHelper(120,60,0x303440,0x20232b);
+grid.position.y=.01;scene.add(grid);
+
+const obstacles=[];
+function box(x,y,z,sx,sy,sz,color=0x34363f){
+ const m=new THREE.Mesh(new THREE.BoxGeometry(sx,sy,sz),new THREE.MeshStandardMaterial({color,roughness:.85}));
+ m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;scene.add(m);obstacles.push(m);return m;
+}
+
+// mysterious arena
+box(0,2,-42,80,4,2);
+box(-40,2,0,2,4,84);
+box(40,2,0,2,4,84);
+for(let z=-30;z<=30;z+=12){
+ box(-18,2,z,2,4,8,0x292c35);
+ box(18,2,z+6,2,4,8,0x292c35);
+}
+for(let i=0;i<10;i++){
+ const a=i/10*Math.PI*2,r=24;
+ box(Math.cos(a)*r,1.5,Math.sin(a)*r,2.5,3,2.5,0x252832);
+}
+
+// glowing towers
+const towers=[];
+for(let i=0;i<5;i++){
+ const a=i/5*Math.PI*2+.4,r=17;
+ const x=Math.cos(a)*r,z=Math.sin(a)*r-7;
+ const g=new THREE.Group();
+ const base=new THREE.Mesh(new THREE.CylinderGeometry(1.2,1.6,4,8),new THREE.MeshStandardMaterial({color:0x17191f,metalness:.6,roughness:.35}));
+ base.position.y=2;g.add(base);
+ const orb=new THREE.Mesh(new THREE.SphereGeometry(.55,16,12),new THREE.MeshStandardMaterial({color:0x00d8ff,emissive:0x00aacc,emissiveIntensity:2}));
+ orb.position.y=4.6;g.add(orb);
+ const light=new THREE.PointLight(0x00ddff,2.2,9);light.position.y=4.6;g.add(light);
+ g.position.set(x,0,z);scene.add(g);
+ towers.push({g,orb,active:true});
+}
+
+// central object
+const core=new THREE.Group();
+const ring1=new THREE.Mesh(new THREE.TorusGeometry(2.2,.14,12,48),new THREE.MeshStandardMaterial({color:0xffae00,emissive:0xff7800,emissiveIntensity:1.5,metalness:.7}));
+ring1.rotation.x=Math.PI/2;
+const ring2=ring1.clone();ring2.rotation.y=Math.PI/2;
+const crystal=new THREE.Mesh(new THREE.OctahedronGeometry(1.25),new THREE.MeshStandardMaterial({color:0xffc85a,emissive:0xff7b00,emissiveIntensity:2,metalness:.3,roughness:.2}));
+core.add(ring1,ring2,crystal);core.position.set(0,3,-7);scene.add(core);
+const coreLight=new THREE.PointLight(0xff8a00,3,16);coreLight.position.copy(core.position);scene.add(coreLight);
+
+// stars
+const starsGeo=new THREE.BufferGeometry();
+const arr=[];
+for(let i=0;i<700;i++){arr.push((Math.random()-.5)*180,20+Math.random()*80,(Math.random()-.5)*180)}
+starsGeo.setAttribute('position',new THREE.Float32BufferAttribute(arr,3));
+scene.add(new THREE.Points(starsGeo,new THREE.PointsMaterial({color:0xffffff,size:.18})));
+
+// moving hazards
+const drones=[];
+for(let i=0;i<7;i++){
+ const d=new THREE.Mesh(new THREE.IcosahedronGeometry(.65,0),new THREE.MeshStandardMaterial({color:0x991122,emissive:0xaa0011,emissiveIntensity:1.6}));
+ d.position.set((Math.random()-.5)*30,1.2,(Math.random()-.5)*45-5);
+ d.userData.phase=Math.random()*10;scene.add(d);drones.push(d);
+}
+
+// collectible fragments
+const shards=[];
+for(let i=0;i<7;i++){
+ const s=new THREE.Mesh(new THREE.TetrahedronGeometry(.45),new THREE.MeshStandardMaterial({color:0x79ff86,emissive:0x2cff48,emissiveIntensity:2}));
+ s.position.set((Math.random()-.5)*55,.8,(Math.random()-.5)*55-5);scene.add(s);shards.push(s);
+}
+
+let keys={},vy=0,onGround=true,ended=false,shardCount=0,towerCount=0;
+document.addEventListener('keydown',e=>{keys[e.code]=true;if(e.code==='KeyE')interact()});
+document.addEventListener('keyup',e=>keys[e.code]=false);
+
+function collides(pos){
+ const pbox=new THREE.Box3(
+   new THREE.Vector3(pos.x-.32,.1,pos.z-.32),
+   new THREE.Vector3(pos.x+.32,1.8,pos.z+.32)
+ );
+ return obstacles.some(o=>pbox.intersectsBox(new THREE.Box3().setFromObject(o)));
+}
+
+function interact(){
+ for(const t of towers){
+   if(t.active && camera.position.distanceTo(t.g.position)<2.8){
+     if(shardCount<=0){say('Brakuje energii.');return}
+     shardCount--;towerCount++;t.active=false;
+     t.orb.material.emissive.setHex(0x101010);t.orb.material.color.setHex(0x444444);
+     t.g.children.forEach(c=>{if(c.isLight)c.intensity=.15});
+     say('Wieża wygaszona.');
+     if(towerCount===5)say('Rdzeń jest odsłonięty.');
+     return;
+   }
+ }
+ if(towerCount===5 && camera.position.distanceTo(core.position)<3.7){
+   finish(true);
+ }
+}
+
+function say(t){
+ const m=document.getElementById('msg');m.textContent=t;m.style.opacity=1;
+ clearTimeout(say.timer);say.timer=setTimeout(()=>m.style.opacity=0,1500);
+}
+
+function finish(win){
+ ended=true;controls.unlock();
+ document.getElementById('overlay').style.display='none';
+ document.getElementById('end').style.display='flex';
+ document.getElementById('endTitle').textContent=win?'UDAŁO SIĘ':'KONIEC';
+ document.getElementById('endText').textContent=win?'Zrozumiałeś zasady świata bez instrukcji.':'Coś cię dopadło.';
+}
+
+function movement(dt){
+ if(!controls.isLocked||ended)return;
+ const f=new THREE.Vector3();camera.getWorldDirection(f);f.y=0;f.normalize();
+ const r=new THREE.Vector3().crossVectors(f,new THREE.Vector3(0,1,0)).normalize();
+ const d=new THREE.Vector3();
+ if(keys.KeyW)d.add(f);if(keys.KeyS)d.sub(f);if(keys.KeyD)d.add(r);if(keys.KeyA)d.sub(r);
+ if(d.lengthSq())d.normalize();
+ const old=camera.position.clone();
+ camera.position.addScaledVector(d,(keys.ShiftLeft?7:4.6)*dt);
+ if(collides(camera.position))camera.position.x=old.x,camera.position.z=old.z;
+
+ vy-=17*dt;
+ if(keys.Space&&onGround){vy=6.5;onGround=false}
+ camera.position.y+=vy*dt;
+ if(camera.position.y<=1.72){camera.position.y=1.72;vy=0;onGround=true}
+}
+
+function updateCollectibles(t){
+ shards.forEach(s=>{
+   if(!s.visible)return;
+   s.rotation.y+=.02;s.rotation.x+=.01;s.position.y=.85+Math.sin(t*2+s.position.x)*.15;
+   if(camera.position.distanceTo(s.position)<1.2){
+     s.visible=false;shardCount++;say('Zebrano fragment energii.');
+   }
+ });
+}
+
+function updateDrones(dt,t){
+ drones.forEach((d,i)=>{
+   const dir=new THREE.Vector3(camera.position.x-d.position.x,0,camera.position.z-d.position.z);
+   const dist=dir.length();
+   if(dist<14){
+     dir.normalize();d.position.addScaledVector(dir,(1.2+i*.07)*dt);
+   }else{
+     d.position.x+=Math.sin(t*.7+d.userData.phase)*.18*dt;
+     d.position.z+=Math.cos(t*.6+d.userData.phase)*.18*dt;
+   }
+   d.rotation.x+=.03;d.rotation.y+=.04;
+   if(dist<.9)finish(false);
+ });
+}
+
+const top=document.getElementById('top'),left=document.getElementById('left');
+const clock=new THREE.Clock();
+function animate(){
+ requestAnimationFrame(animate);
+ const dt=Math.min(clock.getDelta(),.05),t=performance.now()/1000;
+ movement(dt);updateCollectibles(t);updateDrones(dt,t);
+ ring1.rotation.z+=.012;ring2.rotation.x+=.009;crystal.rotation.y+=.018;crystal.rotation.x+=.006;
+ core.position.y=3+Math.sin(t*1.8)*.18;coreLight.position.y=core.position.y;
+ top.textContent=towerCount<5?'Znajdź sposób na wyłączenie 5 wież':'Podejdź do rdzenia i naciśnij E';
+ left.innerHTML=`Energia: <b>${shardCount}</b><br>Wieże: <b>${towerCount}/5</b>`;
+ renderer.render(scene,camera);
+}
+animate();
+
+window.addEventListener('resize',()=>{
+ camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)
+});
+</script>
+</body>
+</html>
