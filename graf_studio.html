@@ -39,7 +39,21 @@
     background-size:32px 32px;
   }
   #world{position:absolute;left:0;top:0;transform-origin:0 0;width:5000px;height:5000px}
-  #svg{position:absolute;left:0;top:0;width:5000px;height:5000px;overflow:visible;pointer-events:none}
+  #svg{position:absolute;left:0;top:0;width:5000px;height:5000px;overflow:visible;pointer-events:none;z-index:1}
+  #nodes{position:absolute;left:0;top:0;width:5000px;height:5000px;z-index:3}
+  #stage::after{
+    content:"";position:absolute;inset:0;background:rgba(3,7,12,.68);
+    opacity:0;pointer-events:none;transition:opacity .18s;z-index:2
+  }
+  #stage.connect-focus::after{opacity:1}
+  #stage.connect-focus .node{
+    box-shadow:0 0 0 5px rgba(255,255,255,.08),0 0 28px rgba(0,201,212,.30);
+  }
+  #stage.connect-focus .node:hover{
+    transform:scale(1.05);
+    border-color:#7df8ff;
+    box-shadow:0 0 0 7px rgba(0,201,212,.16),0 0 35px rgba(0,201,212,.55)
+  }
   .edge{stroke:#aab7c9;stroke-width:3;fill:none;pointer-events:stroke;cursor:pointer}
   .edge.selected{stroke:var(--accent);stroke-width:5}
   .node{
@@ -80,6 +94,33 @@
   }
   .empty{color:var(--muted);font-size:13px;line-height:1.5}
   .fileInput{display:none}
+
+  .aiFab{
+    position:fixed;right:22px;bottom:22px;z-index:40;width:56px;height:56px;
+    border:1px solid #314158;border-radius:18px;background:#172231;color:white;
+    font-size:22px;font-weight:800;cursor:pointer;box-shadow:0 12px 34px rgba(0,0,0,.42)
+  }
+  .aiPanel{
+    position:fixed;right:22px;bottom:90px;z-index:40;width:340px;
+    background:#111925;border:1px solid #2b384c;border-radius:16px;
+    box-shadow:0 18px 50px rgba(0,0,0,.48);padding:14px;display:none
+  }
+  .aiPanel.open{display:block}
+  .aiHead{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+  .aiHead strong{font-size:15px}
+  .aiClose{border:0;background:transparent;color:#91a0b6;font-size:20px;cursor:pointer}
+  .aiPanel textarea{
+    width:100%;min-height:82px;resize:vertical;background:#0b111a;color:white;
+    border:1px solid #2b384c;border-radius:10px;padding:10px;outline:none
+  }
+  .aiPanel textarea:focus,.aiPanel input:focus{border-color:#3d8a95}
+  .aiPanel input[type="password"]{
+    width:100%;background:#0b111a;color:white;border:1px solid #2b384c;
+    border-radius:10px;padding:9px 10px;outline:none
+  }
+  .aiNote{font-size:11px;color:#8090a6;line-height:1.45;margin:8px 0}
+  .aiStatus{font-size:12px;color:#9fb0c7;min-height:18px;margin-top:8px}
+  .node.hasImage{background-size:cover!important;background-position:center!important;background-repeat:no-repeat!important}
 </style>
 </head>
 <body>
@@ -135,7 +176,7 @@
           </div>
           <div class="field">
             <label>Grubość obramowania</label>
-            <input id="borderWidth" type="range" min="0" max="12" value="3">
+            <input id="borderWidth" type="number" min="0" max="30" step="1" value="3">
           </div>
         </div>
         <div class="section row">
@@ -158,6 +199,26 @@
       </div>
     </aside>
   </div>
+</div>
+
+<button id="aiFab" class="aiFab" title="AI obrazy">AI</button>
+<div id="aiPanel" class="aiPanel">
+  <div class="aiHead">
+    <strong>AI — obraz do koła</strong>
+    <button id="aiClose" class="aiClose">×</button>
+  </div>
+  <div class="field">
+    <label>Opis obrazu</label>
+    <textarea id="aiPrompt" placeholder="np. realistyczna cząsteczka DNA, ciemne tło, naukowa ilustracja"></textarea>
+  </div>
+  <div class="field">
+    <label>Klucz Pollinations AI</label>
+    <input id="aiKey" type="password" placeholder="Wklej klucz na czas tej sesji">
+  </div>
+  <div class="aiNote">Najpierw zaznacz koło. Klucz jest trzymany tylko w pamięci tej karty (sessionStorage), nie zapisuję go w projekcie.</div>
+  <button id="aiGenerate" class="btn" style="width:100%">✦ Wygeneruj i dodaj do koła</button>
+  <button id="removeImage" class="btn" style="width:100%;margin-top:7px">Usuń obraz z koła</button>
+  <div id="aiStatus" class="aiStatus"></div>
 </div>
 
 <script>
@@ -192,7 +253,7 @@
   function addNode(x=450,y=300,name='Nowy element'){
     const n = {
       id:uid('n'), x,y,size:90,name,
-      color:'#202a39', border:'#66758a', borderWidth:3
+      color:'#202a39', border:'#66758a', borderWidth:3, image:null
     };
     nodes.push(n);
     render();
@@ -227,11 +288,12 @@
 
     nodes.forEach(n=>{
       const el=document.createElement('div');
-      el.className='node'+(selected?.type==='node'&&selected.id===n.id?' selected':'')+(connectSource===n.id?' connect-source':'');
+      el.className='node'+(selected?.type==='node'&&selected.id===n.id?' selected':'')+(connectSource===n.id?' connect-source':'')+(n.image?' hasImage':'');
       el.dataset.id=n.id;
       Object.assign(el.style,{
         left:n.x+'px', top:n.y+'px', width:n.size+'px', height:n.size+'px',
-        background:n.color,borderColor:n.border,borderWidth:n.borderWidth+'px'
+        background:n.image ? `url("${n.image}")` : n.color,
+        borderColor:n.border,borderWidth:n.borderWidth+'px'
       });
       const lab=document.createElement('div');
       lab.className='nodeLabel'; lab.textContent=n.name;
@@ -241,17 +303,31 @@
       el.addEventListener('pointerdown',ev=>{
         ev.stopPropagation();
         if(connectMode){
-          if(!connectSource){connectSource=n.id;render();}
-          else{
-            addEdge(connectSource,n.id);
-            connectSource=null; connectMode=false; $('#connectBtn').classList.remove('active');
+          if(!connectSource){
+            connectSource=n.id;
+            selected={type:'node',id:n.id};
+            render();
+          } else {
+            const first=connectSource;
+            connectSource=null;
+            connectMode=false;
+            stage.classList.remove('connect-focus');
+            $('#connectBtn').classList.remove('active');
+            addEdge(first,n.id);
             render();
           }
           return;
         }
-        select({type:'node',id:n.id});
+
+        selected={type:'node',id:n.id};
+        document.querySelectorAll('.node.selected').forEach(x=>x.classList.remove('selected'));
+        el.classList.add('selected');
+        document.querySelectorAll('.edge.selected').forEach(x=>x.classList.remove('selected'));
+        updatePanel();
+
         dragging=true;
-        const p=worldPoint(ev.clientX,ev.clientY); dx=p.x-n.x; dy=p.y-n.y;
+        const pt=worldPoint(ev.clientX,ev.clientY);
+        dx=pt.x-n.x; dy=pt.y-n.y;
         el.setPointerCapture(ev.pointerId);
       });
       el.addEventListener('pointermove',ev=>{
@@ -310,7 +386,9 @@
 
   $('#connectBtn').onclick=()=>{
     connectMode=!connectMode; connectSource=null;
-    $('#connectBtn').classList.toggle('active',connectMode); render();
+    $('#connectBtn').classList.toggle('active',connectMode);
+    stage.classList.toggle('connect-focus',connectMode);
+    render();
   };
 
   function removeSelected(){
@@ -324,7 +402,10 @@
   $('#deleteBtn').onclick=removeSelected;
   addEventListener('keydown',e=>{
     if((e.key==='Delete'||e.key==='Backspace') && !['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) removeSelected();
-    if(e.key==='Escape'){connectMode=false;connectSource=null;$('#connectBtn').classList.remove('active');selected=null;render();}
+    if(e.key==='Escape'){
+      connectMode=false;connectSource=null;stage.classList.remove('connect-focus');
+      $('#connectBtn').classList.remove('active');selected=null;render();
+    }
   });
 
   stage.addEventListener('pointerdown',e=>{
@@ -401,7 +482,7 @@
   function loadProject(d){
     nodes=d.nodes||[];edges=d.edges||[];idCounter=d.idCounter||1;
     scale=d.view?.scale||1;panX=d.view?.panX||0;panY=d.view?.panY||0;
-    selected=null;connectMode=false;connectSource=null;applyView();render();
+    selected=null;connectMode=false;connectSource=null;stage.classList.remove('connect-focus');applyView();render();
   }
   $('#exportBtn').onclick=()=>{
     const blob=new Blob([JSON.stringify(project(),null,2)],{type:'application/json'});
@@ -412,6 +493,61 @@
     try{loadProject(JSON.parse(await f.text()))}catch{alert('Nieprawidłowy plik JSON.')}
     e.target.value='';
   });
+
+
+  // AI image panel
+  const aiPanel=$('#aiPanel');
+  $('#aiFab').onclick=()=>aiPanel.classList.toggle('open');
+  $('#aiClose').onclick=()=>aiPanel.classList.remove('open');
+  $('#aiKey').value=sessionStorage.getItem('graphStudioPollinationsKey')||'';
+  $('#aiKey').addEventListener('input',e=>{
+    sessionStorage.setItem('graphStudioPollinationsKey',e.target.value.trim());
+  });
+
+  function blobToDataURL(blob){
+    return new Promise((resolve,reject)=>{
+      const r=new FileReader();
+      r.onload=()=>resolve(r.result); r.onerror=reject; r.readAsDataURL(blob);
+    });
+  }
+
+  $('#aiGenerate').onclick=async()=>{
+    const status=$('#aiStatus');
+    if(selected?.type!=='node'){
+      status.textContent='Najpierw zaznacz koło, do którego mam dodać obraz.';
+      return;
+    }
+    const prompt=$('#aiPrompt').value.trim();
+    const key=$('#aiKey').value.trim();
+    if(!prompt){status.textContent='Wpisz opis obrazu.';return;}
+    if(!key){status.textContent='Wklej swój klucz Pollinations AI.';return;}
+
+    const targetId=selected.id;
+    status.textContent='Generuję obraz…';
+    $('#aiGenerate').disabled=true;
+    try{
+      const url='https://gen.pollinations.ai/image/'+encodeURIComponent(prompt)+'?model=flux&width=768&height=768&nologo=true';
+      const res=await fetch(url,{headers:{'Authorization':'Bearer '+key}});
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      const blob=await res.blob();
+      const dataUrl=await blobToDataURL(blob);
+      const n=nodeById(targetId);
+      if(!n) throw new Error('Koło już nie istnieje');
+      n.image=dataUrl;
+      status.textContent='✓ Obraz został dodany do koła.';
+      render();
+    }catch(err){
+      status.textContent='Nie udało się wygenerować obrazu: '+err.message;
+    }finally{
+      $('#aiGenerate').disabled=false;
+    }
+  };
+
+  $('#removeImage').onclick=()=>{
+    if(selected?.type!=='node'){ $('#aiStatus').textContent='Najpierw zaznacz koło.'; return; }
+    const n=nodeById(selected.id);
+    if(n){n.image=null;render();$('#aiStatus').textContent='Obraz usunięty.';}
+  };
 
   // sample
   addNode(340,240,'Początek');
