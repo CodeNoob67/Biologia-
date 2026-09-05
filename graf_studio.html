@@ -257,12 +257,14 @@
     nodes.push(n);
     render();
     select({type:'node',id:n.id});
+    autoSave();
   }
 
   function addEdge(a,b){
     if(a===b || edges.some(e => (e.a===a&&e.b===b)||(e.a===b&&e.b===a))) return;
     edges.push({id:uid('e'),a,b,color:'#aab7c9',width:3});
     render();
+    autoSave();
   }
 
   function nodeById(id){return nodes.find(n=>n.id===id)}
@@ -337,7 +339,10 @@
         updatePanel();
         el.style.left=n.x+'px'; el.style.top=n.y+'px';
       });
-      el.addEventListener('pointerup',()=>dragging=false);
+      el.addEventListener('pointerup',()=>{
+        if(dragging) autoSave();
+        dragging=false;
+      });
       nodesLayer.appendChild(el);
     });
     updatePanel();
@@ -396,7 +401,7 @@
       nodes=nodes.filter(n=>n.id!==selected.id);
       edges=edges.filter(e=>e.a!==selected.id&&e.b!==selected.id);
     } else edges=edges.filter(e=>e.id!==selected.id);
-    selected=null; render();
+    selected=null; render(); autoSave();
   }
   $('#deleteBtn').onclick=removeSelected;
   addEventListener('keydown',e=>{
@@ -451,7 +456,7 @@
   function bindNodeInput(sel,key,parse=v=>v){
     $(sel).addEventListener('input',e=>{
       if(selected?.type!=='node')return;
-      const n=nodeById(selected.id);n[key]=parse(e.target.value);render();
+      const n=nodeById(selected.id);n[key]=parse(e.target.value);render();autoSave();
     });
   }
   bindNodeInput('#nodeName','name');
@@ -463,17 +468,34 @@
   bindNodeInput('#nodeY','y',Number);
 
   $('#edgeWidth').addEventListener('input',e=>{
-    if(selected?.type!=='edge')return;edgeById(selected.id).width=Number(e.target.value);render();
+    if(selected?.type!=='edge')return;edgeById(selected.id).width=Number(e.target.value);render();autoSave();
   });
   $('#edgeColor').addEventListener('input',e=>{
-    if(selected?.type!=='edge')return;edgeById(selected.id).color=e.target.value;render();
+    if(selected?.type!=='edge')return;edgeById(selected.id).color=e.target.value;render();autoSave();
   });
 
   function project(){return {nodes,edges,idCounter,view:{scale,panX,panY}}}
-  $('#saveBtn').onclick=()=>{
-    localStorage.setItem('graphStudioProject',JSON.stringify(project()));
-    $('#saveBtn').textContent='✓ Zapisano';setTimeout(()=>$('#saveBtn').textContent='Zapisz',900);
-  };
+
+  let saveTimer=null;
+  function persistProject(showMessage=false){
+    try{
+      localStorage.setItem('graphStudioProject',JSON.stringify(project()));
+      if(showMessage){
+        $('#saveBtn').textContent='✓ Zapisano';
+        setTimeout(()=>$('#saveBtn').textContent='Zapisz',900);
+      }
+    }catch(err){
+      console.warn('Nie udało się zapisać projektu:',err);
+      if(showMessage) alert('Przeglądarka nie pozwoliła zapisać projektu lokalnie.');
+    }
+  }
+
+  function autoSave(){
+    clearTimeout(saveTimer);
+    saveTimer=setTimeout(()=>persistProject(false),120);
+  }
+
+  $('#saveBtn').onclick=()=>persistProject(true);
   $('#loadBtn').onclick=()=>{
     const raw=localStorage.getItem('graphStudioProject');if(!raw)return alert('Brak zapisanego projektu.');
     loadProject(JSON.parse(raw));
@@ -527,7 +549,7 @@
       if(!n) throw new Error('Koło już nie istnieje');
       n.image=dataUrl;
       status.textContent='✓ Obraz został dodany do koła.';
-      render();
+      render();autoSave();
     }catch(err){
       status.textContent='Generator AI nie pozwolił na wygenerowanie obrazu bez logowania. Sam edytor grafów działa normalnie.';
     }finally{
@@ -538,15 +560,35 @@
   $('#removeImage').onclick=()=>{
     if(selected?.type!=='node'){ $('#aiStatus').textContent='Najpierw zaznacz koło.'; return; }
     const n=nodeById(selected.id);
-    if(n){n.image=null;render();$('#aiStatus').textContent='Obraz usunięty.';}
+    if(n){n.image=null;render();autoSave();$('#aiStatus').textContent='Obraz usunięty.';}
   };
 
-  // sample
-  addNode(340,240,'Początek');
-  addNode(610,240,'Etap 2');
-  addNode(880,380,'Cel');
-  addEdge(nodes[0].id,nodes[1].id); addEdge(nodes[1].id,nodes[2].id);
-  selected=null; render(); applyView();
+  // Start: automatycznie przywróć ostatni zapis.
+  const savedProject = localStorage.getItem('graphStudioProject');
+
+  if(savedProject){
+    try{
+      loadProject(JSON.parse(savedProject));
+    }catch(err){
+      console.warn('Uszkodzony zapis, tworzę nowy projekt.',err);
+      nodes=[]; edges=[]; idCounter=1;
+      addNode(340,240,'Początek');
+      addNode(610,240,'Etap 2');
+      addNode(880,380,'Cel');
+      addEdge(nodes[0].id,nodes[1].id);
+      addEdge(nodes[1].id,nodes[2].id);
+      selected=null; render(); applyView(); persistProject(false);
+    }
+  } else {
+    addNode(340,240,'Początek');
+    addNode(610,240,'Etap 2');
+    addNode(880,380,'Cel');
+    addEdge(nodes[0].id,nodes[1].id);
+    addEdge(nodes[1].id,nodes[2].id);
+    selected=null; render(); applyView(); persistProject(false);
+  }
+
+  window.addEventListener('beforeunload',()=>persistProject(false));
 })();
 </script>
 </body>
