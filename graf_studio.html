@@ -23,7 +23,29 @@
   .bgSwatch{height:30px;border-radius:8px;border:2px solid rgba(255,255,255,.13);cursor:pointer}
   .patternGrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}
   .patternBtn{height:34px;border:1px solid var(--line);border-radius:8px;background:#182130;color:var(--text);cursor:pointer}
-  .patternBtn.active{border-color:var(--accent);box-shadow:0 0 0 2px rgba(0,201,212,.18)})
+  .patternBtn.active{border-color:var(--accent);box-shadow:0 0 0 2px rgba(0,201,212,.18)}
+
+  .toolTab{display:flex;align-items:center;gap:7px;height:38px;padding:0 12px;border:1px solid var(--line);border-radius:10px;background:#182130;color:var(--text);cursor:pointer;font-weight:700;white-space:nowrap;transition:.15s}
+  .toolTab:hover{background:#202c3e;transform:translateY(-1px)}
+  .toolTab.active{background:#123d44;border-color:#1aaab2;color:#cfffff}
+  .toolTab.danger:hover{background:#4b1d2a;border-color:#7a2b40}
+  .modalOverlay{position:fixed;inset:0;background:rgba(3,7,12,.72);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;z-index:100;padding:24px}
+  .modalOverlay.open{display:flex}
+  .modalCard{width:min(760px,94vw);max-height:86vh;overflow:auto;background:#111925;border:1px solid #2b384c;border-radius:20px;box-shadow:0 28px 90px rgba(0,0,0,.58);padding:20px}
+  .modalHead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+  .modalHead h2{margin:0;font-size:20px}
+  .modalClose{width:38px;height:38px;border:1px solid var(--line);border-radius:10px;background:#182130;color:var(--text);font-size:22px;cursor:pointer}
+  .modalIntro{margin:-6px 0 18px;color:var(--muted);font-size:13px;line-height:1.55}
+  .bgPreview{height:150px;border:1px solid var(--line);border-radius:14px;margin:12px 0 18px;overflow:hidden;position:relative}
+  .bgPreview::after{content:'Podgląd tła';position:absolute;left:12px;bottom:10px;padding:5px 8px;border-radius:7px;background:rgba(0,0,0,.48);color:white;font-size:12px}
+  .legendGrid{display:grid;grid-template-columns:minmax(190px,1fr) minmax(230px,1.5fr);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .legendRow{display:contents}
+  .legendCell{padding:12px 14px;border-bottom:1px solid var(--line);background:#121a27}
+  .legendRow:last-child .legendCell{border-bottom:0}
+  .legendCell.action{font-weight:750;color:#eaf3ff}
+  .legendCell.how{color:#aebcd0;border-left:1px solid var(--line)}
+  kbd{display:inline-block;min-width:28px;padding:3px 7px;margin:0 2px;border:1px solid #43526a;border-bottom-width:2px;border-radius:6px;background:#0c121c;color:#eaf3ff;font:700 12px/1.3 Segoe UI,Arial,sans-serif;text-align:center}
+
   .topbar{
     display:flex;align-items:center;gap:10px;padding:0 14px;
     background:rgba(18,24,35,.97);border-bottom:1px solid var(--line);z-index:10
@@ -143,43 +165,13 @@
 <div class="app">
   <div class="topbar">
     <div class="brand">Graph <span>Studio</span></div>
-    <button id="addNodeBtn" class="btn">＋ Koło</button>
-    <button id="connectBtn" class="btn">↗ Połącz</button>
-    <button id="deleteBtn" class="btn danger">Usuń</button>
-    <div class="toolbarGroup">
-      <button id="undoBtn" class="btn icon" title="Cofnij (Ctrl+Z)">↶</button>
-      <button id="redoBtn" class="btn icon" title="Ponów (Ctrl+Y)">↷</button>
-    </div>
-    <div class="bgMenuWrap">
-      <button id="bgBtn" class="btn">▦ Tło</button>
-      <div id="bgMenu" class="bgMenu">
-        <div class="field" style="margin-top:0">
-          <label>Kolor tła</label>
-          <div class="colorRow"><input id="stageBgColor" type="color" value="#0b0f16"><span id="stageBgColorText">#0b0f16</span></div>
-          <div class="bgSwatches">
-            <button class="bgSwatch" data-bg="#0b0f16" style="background:#0b0f16"></button>
-            <button class="bgSwatch" data-bg="#111827" style="background:#111827"></button>
-            <button class="bgSwatch" data-bg="#171717" style="background:#171717"></button>
-            <button class="bgSwatch" data-bg="#f8fafc" style="background:#f8fafc"></button>
-            <button class="bgSwatch" data-bg="#fff7ed" style="background:#fff7ed"></button>
-            <button class="bgSwatch" data-bg="#071a12" style="background:#071a12"></button>
-          </div>
-        </div>
-        <div class="field">
-          <label>Wzór</label>
-          <div class="patternGrid">
-            <button class="patternBtn active" data-pattern="grid">▦ Siatka</button>
-            <button class="patternBtn" data-pattern="dots">⠿ Kropki</button>
-            <button class="patternBtn" data-pattern="cross">✣ Techniczny</button>
-            <button class="patternBtn" data-pattern="none">□ Czyste</button>
-          </div>
-        </div>
-        <div class="field">
-          <label>Rozmiar wzoru: <span id="gridSizeValue">32</span> px</label>
-          <input id="gridSize" type="range" min="12" max="80" value="32">
-        </div>
-      </div>
-    </div>
+    <button id="addNodeBtn" class="toolTab">＋ Koła</button>
+    <button id="connectBtn" class="toolTab">↗ Połączenia</button>
+    <button id="deleteBtn" class="toolTab danger">⌫ Usuń</button>
+    <button id="undoBtn" class="toolTab" title="Cofnij (Ctrl+Z)">↶ Undo</button>
+    <button id="redoBtn" class="toolTab" title="Ponów (Ctrl+Y)">↷ Redo</button>
+    <button id="bgBtn" class="toolTab">▦ Tła</button>
+    <button id="keybindsBtn" class="toolTab">⌨ Keybinds</button>
     <div class="spacer"></div>
     <button id="zoomOut" class="btn">−</button>
     <div id="zoomText" class="zoomText">100%</div>
@@ -199,7 +191,7 @@
           <div id="nodes"></div>
         </div>
       </div>
-      <div class="hint">Dwuklik na tle = nowe koło • przeciągnij koło • LPM na pustym tle = przesuwanie • kółko myszy = zoom • Ctrl+Z = cofnij</div>
+      <div class="hint">LPM na pustym tle = przesuwanie • przeciągnij koło = ruch koła • kółko myszy = zoom • Keybinds = pełna legenda sterowania</div>
     </div>
 
     <aside class="sidebar">
@@ -248,6 +240,56 @@
         </div>
       </div>
     </aside>
+  </div>
+</div>
+
+<div id="bgModal" class="modalOverlay" aria-hidden="true">
+  <div class="modalCard" role="dialog" aria-modal="true" aria-labelledby="bgModalTitle">
+    <div class="modalHead"><h2 id="bgModalTitle">▦ Tła</h2><button class="modalClose" data-close-modal="bgModal">×</button></div>
+    <div class="modalIntro">Wybierz kolor i wzór planszy. Ustawienia są zapisywane razem z projektem.</div>
+    <div id="bgPreview" class="bgPreview"></div>
+    <div class="field">
+      <label>Kolor tła</label>
+      <div class="colorRow"><input id="stageBgColor" type="color" value="#0b0f16"><span id="stageBgColorText">#0b0f16</span></div>
+      <div class="bgSwatches">
+        <button class="bgSwatch" data-bg="#0b0f16" style="background:#0b0f16" title="Ciemny"></button>
+        <button class="bgSwatch" data-bg="#111827" style="background:#111827" title="Granatowy"></button>
+        <button class="bgSwatch" data-bg="#171717" style="background:#171717" title="Grafit"></button>
+        <button class="bgSwatch" data-bg="#f8fafc" style="background:#f8fafc" title="Jasny"></button>
+        <button class="bgSwatch" data-bg="#fff7ed" style="background:#fff7ed" title="Kremowy"></button>
+        <button class="bgSwatch" data-bg="#071a12" style="background:#071a12" title="Zielony"></button>
+      </div>
+    </div>
+    <div class="field">
+      <label>Wzór</label>
+      <div class="patternGrid">
+        <button class="patternBtn active" data-pattern="grid">▦ Siatka</button>
+        <button class="patternBtn" data-pattern="dots">⠿ Kropki</button>
+        <button class="patternBtn" data-pattern="cross">✣ Techniczny</button>
+        <button class="patternBtn" data-pattern="none">□ Czyste</button>
+      </div>
+    </div>
+    <div class="field"><label>Rozmiar wzoru: <span id="gridSizeValue">32</span> px</label><input id="gridSize" type="range" min="12" max="80" value="32"></div>
+  </div>
+</div>
+
+<div id="keybindsModal" class="modalOverlay" aria-hidden="true">
+  <div class="modalCard" role="dialog" aria-modal="true" aria-labelledby="keybindsTitle">
+    <div class="modalHead"><h2 id="keybindsTitle">⌨ Keybinds — legenda sterowania</h2><button class="modalClose" data-close-modal="keybindsModal">×</button></div>
+    <div class="modalIntro">Tu masz całą legendę Graph Studio — jak na legendzie mapy: czynność po lewej, sposób wykonania po prawej.</div>
+    <div class="legendGrid">
+      <div class="legendRow"><div class="legendCell action">Dodać koło</div><div class="legendCell how">Kliknij zakładkę <b>＋ Koła</b> na górze.</div></div>
+      <div class="legendRow"><div class="legendCell action">Przesunąć koło</div><div class="legendCell how">Przytrzymaj <kbd>LPM</kbd> na kole i przeciągnij.</div></div>
+      <div class="legendRow"><div class="legendCell action">Przesunąć ekran</div><div class="legendCell how">Przytrzymaj <kbd>LPM</kbd> na pustym tle i przeciągnij.</div></div>
+      <div class="legendRow"><div class="legendCell action">Połączyć dwa koła</div><div class="legendCell how">Kliknij <b>↗ Połączenia</b>, potem pierwsze koło i drugie koło.</div></div>
+      <div class="legendRow"><div class="legendCell action">Zaznaczyć element</div><div class="legendCell how">Kliknij koło albo linię <kbd>LPM</kbd>.</div></div>
+      <div class="legendRow"><div class="legendCell action">Usunąć element</div><div class="legendCell how">Zaznacz element i kliknij <b>⌫ Usuń</b> albo <kbd>Delete</kbd>.</div></div>
+      <div class="legendRow"><div class="legendCell action">Cofnąć zmianę</div><div class="legendCell how"><kbd>Ctrl</kbd> + <kbd>Z</kbd> albo zakładka <b>↶ Undo</b>.</div></div>
+      <div class="legendRow"><div class="legendCell action">Przywrócić zmianę</div><div class="legendCell how"><kbd>Ctrl</kbd> + <kbd>Y</kbd> lub <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd>, albo <b>↷ Redo</b>.</div></div>
+      <div class="legendRow"><div class="legendCell action">Przybliżyć / oddalić</div><div class="legendCell how">Obracaj <b>kółkiem myszy</b> albo użyj przycisków <b>− / ＋</b>.</div></div>
+      <div class="legendRow"><div class="legendCell action">Anulować tryb łączenia</div><div class="legendCell how">Naciśnij <kbd>Esc</kbd>.</div></div>
+      <div class="legendRow"><div class="legendCell action">Zmienić tło</div><div class="legendCell how">Kliknij zakładkę <b>▦ Tła</b> i wybierz kolor, wzór oraz rozmiar wzoru.</div></div>
+    </div>
   </div>
 </div>
 
@@ -306,6 +348,7 @@
     $('#stageBgColorText').textContent=appearance.bg;
     $('#gridSize').value=appearance.gridSize;
     $('#gridSizeValue').textContent=appearance.gridSize;
+    if(document.querySelector('#bgPreview')) updateBgPreview?.();
     document.querySelectorAll('.patternBtn').forEach(b=>b.classList.toggle('active',b.dataset.pattern===appearance.pattern));
   }
 
@@ -477,11 +520,6 @@
     addNode(p.x-45,p.y-45);
   };
 
-  stage.addEventListener('dblclick',e=>{
-    if(e.target.closest('.node')||panMoved)return;
-    const p=worldPoint(e.clientX,e.clientY); addNode(p.x-45,p.y-45);
-  });
-
   $('#connectBtn').onclick=()=>{
     connectMode=!connectMode; connectSource=null;
     $('#connectBtn').classList.toggle('active',connectMode);
@@ -501,6 +539,7 @@
   addEventListener('keydown',e=>{
     if((e.key==='Delete'||e.key==='Backspace') && !['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) removeSelected();
     if(e.key==='Escape'){
+      document.querySelectorAll('.modalOverlay.open').forEach(closeModal);
       connectMode=false;connectSource=null;stage.classList.remove('connect-focus');
       $('#connectBtn').classList.remove('active');selected=null;render();
     }
@@ -628,18 +667,33 @@
     if((e.ctrlKey||e.metaKey)&&(e.key.toLowerCase()==='y'||(e.shiftKey&&e.key.toLowerCase()==='z'))){e.preventDefault();redo();}
   });
 
-  // Wygląd tła
-  const bgMenu=$('#bgMenu');
-  $('#bgBtn').onclick=e=>{e.stopPropagation();bgMenu.classList.toggle('open')};
-  bgMenu.addEventListener('pointerdown',e=>e.stopPropagation());
-  document.addEventListener('pointerdown',e=>{if(!e.target.closest('.bgMenuWrap'))bgMenu.classList.remove('open')});
-  $('#stageBgColor').addEventListener('input',e=>{appearance.bg=e.target.value;applyAppearance();autoSave();});
-  $('#stageBgColor').addEventListener('change',pushHistory);
-  document.querySelectorAll('.bgSwatch').forEach(b=>b.onclick=()=>{appearance.bg=b.dataset.bg;applyAppearance();pushHistory();autoSave();});
-  document.querySelectorAll('.patternBtn').forEach(b=>b.onclick=()=>{appearance.pattern=b.dataset.pattern;applyAppearance();pushHistory();autoSave();});
-  $('#gridSize').addEventListener('input',e=>{appearance.gridSize=Number(e.target.value);applyAppearance();autoSave();});
-  $('#gridSize').addEventListener('change',pushHistory);
+  // Okna Tła i Keybinds
+  const bgModal=$('#bgModal');
+  const keybindsModal=$('#keybindsModal');
+  function openModal(el){ el.classList.add('open'); el.setAttribute('aria-hidden','false'); }
+  function closeModal(el){ el.classList.remove('open'); el.setAttribute('aria-hidden','true'); }
+  $('#bgBtn').onclick=()=>openModal(bgModal);
+  $('#keybindsBtn').onclick=()=>openModal(keybindsModal);
+  document.querySelectorAll('[data-close-modal]').forEach(b=>b.onclick=()=>closeModal($('#'+b.dataset.closeModal)));
+  document.querySelectorAll('.modalOverlay').forEach(m=>m.addEventListener('pointerdown',e=>{if(e.target===m)closeModal(m);}));
 
+  function updateBgPreview(){
+    const p=$('#bgPreview'); if(!p)return;
+    p.style.backgroundColor=appearance.bg;
+    const c=appearance.bg.toLowerCase()==='#f8fafc'||appearance.bg.toLowerCase()==='#fff7ed'?'rgba(40,55,75,.22)':'rgba(160,185,215,.18)';
+    const s=appearance.gridSize+'px';
+    if(appearance.pattern==='grid'){p.style.backgroundImage=`linear-gradient(${c} 1px,transparent 1px),linear-gradient(90deg,${c} 1px,transparent 1px)`;p.style.backgroundSize=`${s} ${s}`;}
+    else if(appearance.pattern==='dots'){p.style.backgroundImage=`radial-gradient(circle,${c} 1.5px,transparent 1.6px)`;p.style.backgroundSize=`${s} ${s}`;}
+    else if(appearance.pattern==='cross'){p.style.backgroundImage=`linear-gradient(${c} 1px,transparent 1px),linear-gradient(90deg,${c} 1px,transparent 1px)`;p.style.backgroundSize=`${s} ${s}`;}
+    else {p.style.backgroundImage='none';}
+  }
+
+  $('#stageBgColor').addEventListener('input',e=>{appearance.bg=e.target.value;applyAppearance();updateBgPreview();autoSave();});
+  $('#stageBgColor').addEventListener('change',pushHistory);
+  document.querySelectorAll('.bgSwatch').forEach(b=>b.onclick=()=>{appearance.bg=b.dataset.bg;applyAppearance();updateBgPreview();pushHistory();autoSave();});
+  document.querySelectorAll('.patternBtn').forEach(b=>b.onclick=()=>{appearance.pattern=b.dataset.pattern;applyAppearance();updateBgPreview();pushHistory();autoSave();});
+  $('#gridSize').addEventListener('input',e=>{appearance.gridSize=Number(e.target.value);applyAppearance();updateBgPreview();autoSave();});
+  $('#gridSize').addEventListener('change',pushHistory);
 
   // AI image panel
   const aiPanel=$('#aiPanel');
