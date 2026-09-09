@@ -12,7 +12,18 @@
   *{box-sizing:border-box}
   html,body{height:100%;margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text);overflow:hidden}
   button,input,select{font:inherit}
-  .app{height:100%;display:grid;grid-template-rows:58px 1fr}
+  .app{height:100%;display:grid;grid-template-rows:64px 1fr}
+  .toolbarGroup{display:flex;align-items:center;gap:7px}
+  .btn.icon{width:38px;padding:0;font-size:18px}
+  .btn:disabled{opacity:.38;cursor:not-allowed;transform:none}
+  .bgMenuWrap{position:relative}
+  .bgMenu{position:absolute;top:44px;right:0;width:285px;padding:12px;background:#111925;border:1px solid #2b384c;border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.48);display:none;z-index:60}
+  .bgMenu.open{display:block}
+  .bgSwatches{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin-top:8px}
+  .bgSwatch{height:30px;border-radius:8px;border:2px solid rgba(255,255,255,.13);cursor:pointer}
+  .patternGrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}
+  .patternBtn{height:34px;border:1px solid var(--line);border-radius:8px;background:#182130;color:var(--text);cursor:pointer}
+  .patternBtn.active{border-color:var(--accent);box-shadow:0 0 0 2px rgba(0,201,212,.18)})
   .topbar{
     display:flex;align-items:center;gap:10px;padding:0 14px;
     background:rgba(18,24,35,.97);border-bottom:1px solid var(--line);z-index:10
@@ -32,12 +43,14 @@
   .main{min-height:0;display:grid;grid-template-columns:1fr 290px}
   .stageWrap{position:relative;overflow:hidden;background:#0b0f16}
   #stage{
-    position:absolute;inset:0;overflow:hidden;cursor:default;
-    background-image:
-      linear-gradient(#18202d 1px, transparent 1px),
-      linear-gradient(90deg,#18202d 1px, transparent 1px);
-    background-size:32px 32px;
+    --stage-bg:#0b0f16; --grid-color:#18202d; --grid-size:32px;
+    position:absolute;inset:0;overflow:hidden;cursor:grab;background-color:var(--stage-bg);
   }
+  #stage.panning{cursor:grabbing}
+  #stage[data-pattern="grid"]{background-image:linear-gradient(var(--grid-color) 1px,transparent 1px),linear-gradient(90deg,var(--grid-color) 1px,transparent 1px);background-size:var(--grid-size) var(--grid-size)}
+  #stage[data-pattern="dots"]{background-image:radial-gradient(circle,var(--grid-color) 1.5px,transparent 1.6px);background-size:var(--grid-size) var(--grid-size)}
+  #stage[data-pattern="cross"]{background-image:linear-gradient(var(--grid-color) 1px,transparent 1px),linear-gradient(90deg,var(--grid-color) 1px,transparent 1px),radial-gradient(circle,var(--grid-color) 1.5px,transparent 1.6px);background-size:64px 64px,64px 64px,16px 16px}
+  #stage[data-pattern="none"]{background-image:none}
   #world{position:absolute;left:0;top:0;transform-origin:0 0;width:5000px;height:5000px}
   #svg{position:absolute;left:0;top:0;width:5000px;height:5000px;overflow:visible;pointer-events:none;z-index:1}
   #nodes{position:absolute;left:0;top:0;width:5000px;height:5000px;z-index:3}
@@ -133,6 +146,40 @@
     <button id="addNodeBtn" class="btn">＋ Koło</button>
     <button id="connectBtn" class="btn">↗ Połącz</button>
     <button id="deleteBtn" class="btn danger">Usuń</button>
+    <div class="toolbarGroup">
+      <button id="undoBtn" class="btn icon" title="Cofnij (Ctrl+Z)">↶</button>
+      <button id="redoBtn" class="btn icon" title="Ponów (Ctrl+Y)">↷</button>
+    </div>
+    <div class="bgMenuWrap">
+      <button id="bgBtn" class="btn">▦ Tło</button>
+      <div id="bgMenu" class="bgMenu">
+        <div class="field" style="margin-top:0">
+          <label>Kolor tła</label>
+          <div class="colorRow"><input id="stageBgColor" type="color" value="#0b0f16"><span id="stageBgColorText">#0b0f16</span></div>
+          <div class="bgSwatches">
+            <button class="bgSwatch" data-bg="#0b0f16" style="background:#0b0f16"></button>
+            <button class="bgSwatch" data-bg="#111827" style="background:#111827"></button>
+            <button class="bgSwatch" data-bg="#171717" style="background:#171717"></button>
+            <button class="bgSwatch" data-bg="#f8fafc" style="background:#f8fafc"></button>
+            <button class="bgSwatch" data-bg="#fff7ed" style="background:#fff7ed"></button>
+            <button class="bgSwatch" data-bg="#071a12" style="background:#071a12"></button>
+          </div>
+        </div>
+        <div class="field">
+          <label>Wzór</label>
+          <div class="patternGrid">
+            <button class="patternBtn active" data-pattern="grid">▦ Siatka</button>
+            <button class="patternBtn" data-pattern="dots">⠿ Kropki</button>
+            <button class="patternBtn" data-pattern="cross">✣ Techniczny</button>
+            <button class="patternBtn" data-pattern="none">□ Czyste</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>Rozmiar wzoru: <span id="gridSizeValue">32</span> px</label>
+          <input id="gridSize" type="range" min="12" max="80" value="32">
+        </div>
+      </div>
+    </div>
     <div class="spacer"></div>
     <button id="zoomOut" class="btn">−</button>
     <div id="zoomText" class="zoomText">100%</div>
@@ -152,7 +199,7 @@
           <div id="nodes"></div>
         </div>
       </div>
-      <div class="hint">Dwuklik na tle = nowe koło • przeciągnij koło • kółko myszy = zoom • przeciągnij tło PPM = przesuwanie</div>
+      <div class="hint">Dwuklik na tle = nowe koło • przeciągnij koło • LPM na pustym tle = przesuwanie • kółko myszy = zoom • Ctrl+Z = cofnij</div>
     </div>
 
     <aside class="sidebar">
@@ -235,6 +282,8 @@
   let scale = 1;
   let panX = 0, panY = 0;
   let idCounter = 1;
+  let appearance = {bg:'#0b0f16', pattern:'grid', gridSize:32};
+  let undoStack = [], redoStack = [], restoringHistory = false;
 
   const $ = s => document.querySelector(s);
   const uid = p => p + (idCounter++);
@@ -249,6 +298,51 @@
     $('#zoomText').textContent = Math.round(scale*100)+'%';
   }
 
+  function applyAppearance(){
+    stage.style.setProperty('--stage-bg',appearance.bg);
+    stage.style.setProperty('--grid-size',appearance.gridSize+'px');
+    stage.dataset.pattern=appearance.pattern;
+    $('#stageBgColor').value=appearance.bg;
+    $('#stageBgColorText').textContent=appearance.bg;
+    $('#gridSize').value=appearance.gridSize;
+    $('#gridSizeValue').textContent=appearance.gridSize;
+    document.querySelectorAll('.patternBtn').forEach(b=>b.classList.toggle('active',b.dataset.pattern===appearance.pattern));
+  }
+
+  function snapshot(){
+    return JSON.stringify({nodes,edges,idCounter,view:{scale,panX,panY},appearance});
+  }
+  function pushHistory(){
+    if(restoringHistory)return;
+    const now=snapshot();
+    if(undoStack[undoStack.length-1]!==now){
+      undoStack.push(now);
+      if(undoStack.length>100) undoStack.shift();
+    }
+    redoStack=[]; updateHistoryButtons();
+  }
+  function updateHistoryButtons(){
+    $('#undoBtn').disabled=undoStack.length<=1;
+    $('#redoBtn').disabled=redoStack.length===0;
+  }
+  function restoreSnapshot(raw){
+    const d=JSON.parse(raw); restoringHistory=true;
+    nodes=d.nodes||[]; edges=d.edges||[]; idCounter=d.idCounter||1;
+    scale=d.view?.scale??1; panX=d.view?.panX??0; panY=d.view?.panY??0;
+    appearance={bg:d.appearance?.bg||'#0b0f16',pattern:d.appearance?.pattern||'grid',gridSize:d.appearance?.gridSize||32};
+    selected=null;connectMode=false;connectSource=null;stage.classList.remove('connect-focus');$('#connectBtn').classList.remove('active');
+    applyAppearance();applyView();render();persistProject(false);restoringHistory=false;updateHistoryButtons();
+  }
+  function undo(){
+    if(undoStack.length<=1)return;
+    redoStack.push(undoStack.pop());
+    restoreSnapshot(undoStack[undoStack.length-1]);
+  }
+  function redo(){
+    if(!redoStack.length)return;
+    const raw=redoStack.pop();undoStack.push(raw);restoreSnapshot(raw);
+  }
+
   function addNode(x=450,y=300,name='Nowy element'){
     const n = {
       id:uid('n'), x,y,size:90,name,
@@ -257,14 +351,14 @@
     nodes.push(n);
     render();
     select({type:'node',id:n.id});
-    autoSave();
+    pushHistory(); autoSave();
   }
 
   function addEdge(a,b){
     if(a===b || edges.some(e => (e.a===a&&e.b===b)||(e.a===b&&e.b===a))) return;
     edges.push({id:uid('e'),a,b,color:'#aab7c9',width:3});
     render();
-    autoSave();
+    pushHistory(); autoSave();
   }
 
   function nodeById(id){return nodes.find(n=>n.id===id)}
@@ -340,7 +434,7 @@
         el.style.left=n.x+'px'; el.style.top=n.y+'px';
       });
       el.addEventListener('pointerup',()=>{
-        if(dragging) autoSave();
+        if(dragging){ pushHistory(); autoSave(); }
         dragging=false;
       });
       nodesLayer.appendChild(el);
@@ -384,7 +478,7 @@
   };
 
   stage.addEventListener('dblclick',e=>{
-    if(e.target.closest('.node'))return;
+    if(e.target.closest('.node')||panMoved)return;
     const p=worldPoint(e.clientX,e.clientY); addNode(p.x-45,p.y-45);
   });
 
@@ -401,7 +495,7 @@
       nodes=nodes.filter(n=>n.id!==selected.id);
       edges=edges.filter(e=>e.a!==selected.id&&e.b!==selected.id);
     } else edges=edges.filter(e=>e.id!==selected.id);
-    selected=null; render(); autoSave();
+    selected=null; render(); pushHistory(); autoSave();
   }
   $('#deleteBtn').onclick=removeSelected;
   addEventListener('keydown',e=>{
@@ -412,23 +506,27 @@
     }
   });
 
-  stage.addEventListener('pointerdown',e=>{
-    if(e.button!==0 && e.button!==2)return;
-    if(e.target.closest('.node')||e.target.tagName==='line')return;
-    if(e.button===0){selected=null;render();return;}
-  });
   stage.addEventListener('contextmenu',e=>e.preventDefault());
 
-  let panning=false, lastX=0,lastY=0;
+  let panning=false, lastX=0,lastY=0, panMoved=false;
   stage.addEventListener('pointerdown',e=>{
-    if(e.button!==2)return;
-    panning=true;lastX=e.clientX;lastY=e.clientY;stage.setPointerCapture(e.pointerId);
+    if(e.button!==0)return;
+    if(e.target.closest('.node')||e.target.tagName==='line')return;
+    if(connectMode)return;
+    selected=null;render();
+    panning=true;panMoved=false;lastX=e.clientX;lastY=e.clientY;
+    stage.classList.add('panning');stage.setPointerCapture(e.pointerId);
   });
   stage.addEventListener('pointermove',e=>{
     if(!panning)return;
-    panX+=e.clientX-lastX;panY+=e.clientY-lastY;lastX=e.clientX;lastY=e.clientY;applyView();
+    const dx=e.clientX-lastX,dy=e.clientY-lastY;
+    if(Math.abs(dx)+Math.abs(dy)>1)panMoved=true;
+    panX+=dx;panY+=dy;lastX=e.clientX;lastY=e.clientY;applyView();
   });
-  stage.addEventListener('pointerup',e=>{if(e.button===2)panning=false});
+  stage.addEventListener('pointerup',e=>{
+    if(!panning)return; panning=false; stage.classList.remove('panning');
+    autoSave();
+  });
 
   function zoomAt(factor,cx=stage.clientWidth/2,cy=stage.clientHeight/2){
     const old=scale; scale=Math.max(.2,Math.min(3,scale*factor));
@@ -458,6 +556,7 @@
       if(selected?.type!=='node')return;
       const n=nodeById(selected.id);n[key]=parse(e.target.value);render();autoSave();
     });
+    $(sel).addEventListener('change',()=>{ if(selected?.type==='node') pushHistory(); });
   }
   bindNodeInput('#nodeName','name');
   bindNodeInput('#nodeSize','size',Number);
@@ -470,11 +569,13 @@
   $('#edgeWidth').addEventListener('input',e=>{
     if(selected?.type!=='edge')return;edgeById(selected.id).width=Number(e.target.value);render();autoSave();
   });
+  $('#edgeWidth').addEventListener('change',pushHistory);
   $('#edgeColor').addEventListener('input',e=>{
     if(selected?.type!=='edge')return;edgeById(selected.id).color=e.target.value;render();autoSave();
   });
+  $('#edgeColor').addEventListener('change',pushHistory);
 
-  function project(){return {nodes,edges,idCounter,view:{scale,panX,panY}}}
+  function project(){return {nodes,edges,idCounter,view:{scale,panX,panY},appearance}}
 
   let saveTimer=null;
   function persistProject(showMessage=false){
@@ -503,7 +604,9 @@
   function loadProject(d){
     nodes=d.nodes||[];edges=d.edges||[];idCounter=d.idCounter||1;
     scale=d.view?.scale||1;panX=d.view?.panX||0;panY=d.view?.panY||0;
-    selected=null;connectMode=false;connectSource=null;stage.classList.remove('connect-focus');applyView();render();
+    appearance={bg:d.appearance?.bg||'#0b0f16',pattern:d.appearance?.pattern||'grid',gridSize:d.appearance?.gridSize||32};
+    selected=null;connectMode=false;connectSource=null;stage.classList.remove('connect-focus');applyAppearance();applyView();render();
+    undoStack=[snapshot()];redoStack=[];updateHistoryButtons();
   }
   $('#exportBtn').onclick=()=>{
     const blob=new Blob([JSON.stringify(project(),null,2)],{type:'application/json'});
@@ -514,6 +617,28 @@
     try{loadProject(JSON.parse(await f.text()))}catch{alert('Nieprawidłowy plik JSON.')}
     e.target.value='';
   });
+
+  // Cofnij / ponów
+  $('#undoBtn').onclick=undo;
+  $('#redoBtn').onclick=redo;
+  addEventListener('keydown',e=>{
+    const typing=['INPUT','TEXTAREA'].includes(document.activeElement.tagName);
+    if(typing)return;
+    if((e.ctrlKey||e.metaKey)&&!e.shiftKey&&e.key.toLowerCase()==='z'){e.preventDefault();undo();}
+    if((e.ctrlKey||e.metaKey)&&(e.key.toLowerCase()==='y'||(e.shiftKey&&e.key.toLowerCase()==='z'))){e.preventDefault();redo();}
+  });
+
+  // Wygląd tła
+  const bgMenu=$('#bgMenu');
+  $('#bgBtn').onclick=e=>{e.stopPropagation();bgMenu.classList.toggle('open')};
+  bgMenu.addEventListener('pointerdown',e=>e.stopPropagation());
+  document.addEventListener('pointerdown',e=>{if(!e.target.closest('.bgMenuWrap'))bgMenu.classList.remove('open')});
+  $('#stageBgColor').addEventListener('input',e=>{appearance.bg=e.target.value;applyAppearance();autoSave();});
+  $('#stageBgColor').addEventListener('change',pushHistory);
+  document.querySelectorAll('.bgSwatch').forEach(b=>b.onclick=()=>{appearance.bg=b.dataset.bg;applyAppearance();pushHistory();autoSave();});
+  document.querySelectorAll('.patternBtn').forEach(b=>b.onclick=()=>{appearance.pattern=b.dataset.pattern;applyAppearance();pushHistory();autoSave();});
+  $('#gridSize').addEventListener('input',e=>{appearance.gridSize=Number(e.target.value);applyAppearance();autoSave();});
+  $('#gridSize').addEventListener('change',pushHistory);
 
 
   // AI image panel
@@ -549,7 +674,7 @@
       if(!n) throw new Error('Koło już nie istnieje');
       n.image=dataUrl;
       status.textContent='✓ Obraz został dodany do koła.';
-      render();autoSave();
+      render();pushHistory();autoSave();
     }catch(err){
       status.textContent='Generator AI nie pozwolił na wygenerowanie obrazu bez logowania. Sam edytor grafów działa normalnie.';
     }finally{
@@ -560,7 +685,7 @@
   $('#removeImage').onclick=()=>{
     if(selected?.type!=='node'){ $('#aiStatus').textContent='Najpierw zaznacz koło.'; return; }
     const n=nodeById(selected.id);
-    if(n){n.image=null;render();autoSave();$('#aiStatus').textContent='Obraz usunięty.';}
+    if(n){n.image=null;render();pushHistory();autoSave();$('#aiStatus').textContent='Obraz usunięty.';}
   };
 
   // Start: automatycznie przywróć ostatni zapis.
@@ -588,6 +713,9 @@
     selected=null; render(); applyView(); persistProject(false);
   }
 
+  applyAppearance();
+  if(!undoStack.length) undoStack=[snapshot()];
+  updateHistoryButtons();
   window.addEventListener('beforeunload',()=>persistProject(false));
 })();
 </script>
