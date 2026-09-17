@@ -180,6 +180,8 @@
   .sheetTabName{overflow:hidden;text-overflow:ellipsis;flex:1}
   .sheetClose{width:20px;height:20px;display:grid;place-items:center;border:0;border-radius:5px;background:transparent;color:#91a0b6;cursor:pointer;font-size:16px;line-height:1}
   .sheetClose:hover{background:#4b1d2a;color:#fff}
+#aiFab,#aiPanel{display:none!important}
+  .emojiBtn{position:relative}
 </style>
 </head>
 <body>
@@ -889,7 +891,103 @@
     animalcell:`<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M9 34C6 19 17 8 32 9c17 0 26 11 23 27-2 14-13 21-28 19C16 54 11 47 9 34Z" fill="#ef8eb3" stroke="#c85886" stroke-width="3"/><circle cx="34" cy="31" r="11" fill="#8f6bd1"/><circle cx="37" cy="28" r="4" fill="#c8b4ef"/><ellipse cx="20" cy="25" rx="5" ry="3" fill="#f5c34f"/><ellipse cx="20" cy="43" rx="6" ry="3" fill="#63c6c3"/><path d="M45 43c4-5 7-5 10-1M14 34c4-3 7-3 10 0" stroke="#f6dce8" stroke-width="3" fill="none" stroke-linecap="round"/></svg>`,
     plantcell:`<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="7" y="8" width="50" height="48" rx="10" fill="#83c96b" stroke="#3f8d48" stroke-width="4"/><rect x="12" y="13" width="40" height="38" rx="8" fill="#b7e58e"/><circle cx="34" cy="31" r="9" fill="#8b6ccf"/><ellipse cx="20" cy="22" rx="6" ry="3" fill="#3aa85a"/><ellipse cx="45" cy="43" rx="6" ry="3" fill="#3aa85a"/><rect x="16" y="31" width="12" height="12" rx="5" fill="#79cbe8" opacity=".9"/></svg>`
   };
+  const EXTRA_CUSTOM_META = [
+    ['kangaroo','🦘','kangur'],
+    ['mouse','🐭','mysz'],
+    ['rat','🐀','szczur'],
+    ['rabbit','🐰','królik'],
+    ['fox','🦊','lis'],
+    ['wolf','🐺','wilk'],
+    ['dog','🐶','pies'],
+    ['cat','🐱','kot'],
+    ['lion','🦁','lew'],
+    ['tiger','🐯','tygrys'],
+    ['horse','🐴','koń'],
+    ['zebra','🦓','zebra'],
+    ['deer','🦌','jeleń'],
+    ['cow','🐮','krowa'],
+    ['pig','🐷','świnia'],
+    ['boar','🐗','dzik'],
+    ['sheep','🐑','owca'],
+    ['goat','🐐','koza'],
+    ['elephant','🐘','słoń'],
+    ['rhino','🦏','nosorożec'],
+    ['hippo','🦛','hipopotam'],
+    ['monkey','🐒','małpa'],
+    ['gorilla','🦍','goryl'],
+    ['orangutan','🦧','orangutan'],
+    ['bat','🦇','nietoperz'],
+    ['chicken','🐔','kura'],
+    ['penguin','🐧','pingwin'],
+    ['eagle','🦅','orzeł'],
+    ['duck','🦆','kaczka'],
+    ['owl','🦉','sowa'],
+    ['frog','🐸','żaba'],
+    ['crocodile','🐊','krokodyl'],
+    ['turtle','🐢','żółw'],
+    ['lizard','🦎','jaszczurka'],
+    ['snake','🐍','wąż'],
+    ['fish','🐟','ryba'],
+    ['tropicalfish','🐠','ryba tropikalna'],
+    ['shark','🦈','rekin'],
+    ['whale','🐋','wieloryb'],
+    ['dolphin','🐬','delfin'],
+    ['octopus','🐙','ośmiornica'],
+    ['crab','🦀','krab'],
+    ['lobster','🦞','homar'],
+    ['shrimp','🦐','krewetka'],
+    ['jellyfish','🪼','meduza'],
+    ['snail','🐌','ślimak'],
+    ['butterfly','🦋','motyl'],
+    ['bee','🐝','pszczoła'],
+    ['ant','🐜','mrówka'],
+    ['beetle','🪲','chrząszcz'],
+    ['spider','🕷️','pająk'],
+    ['scorpion','🦂','skorpion'],
+    ['dna','🧬','DNA'],
+    ['microbe','🦠','bakteria / mikrob'],
+    ['microscope','🔬','mikroskop'],
+    ['testtube','🧪','probówka'],
+    ['petri','🧫','szalka Petriego'],
+    ['seedling','🌱','kiełek'],
+    ['herb','🌿','roślina'],
+    ['tree','🌳','drzewo'],
+    ['fungus','🍄','grzyb'],
+    ['earth','🌍','Ziemia'],
+    ['moon','🌕','Księżyc'],
+    ['sun','☀️','Słońce'],
+    ['star','⭐','gwiazda'],
+    ['galaxy','🌌','galaktyka'],
+    ['comet','☄️','kometa'],
+    ['planet','🪐','planeta'],
+    ['fire','🔥','ogień'],
+    ['water','💧','woda'],
+    ['energy','⚡','energia'],
+    ['brain','🧠','mózg'],
+    ['heartorgan','🫀','serce'],
+    ['lungs','🫁','płuca'],
+    ['bone','🦴','kość'],
+    ['tooth','🦷','ząb'],
+    ['eye','👁️','oko'],
+    ['human','👤','człowiek'],
+    ['baby','👶','dziecko'],
+    ['egg','🥚','jajo'],
+    ['rock','🪨','skała'],
+    ['snow','❄️','lód / śnieg'],
+    ['volcano','🌋','wulkan'],
+    ['ocean','🌊','ocean'],
+    ['kiwi','🥝','kiwi'],
+    ['potato','🥔','ziemniak'],
+    ['banana','🍌','banan'],
+    ['apple','🍎','jabłko'],
+    ['rocket','🚀','rakieta'],
+    ['car','🚗','samochód'],
+    ['plane','✈️','samolot'],
+    ['gear','⚙️','mechanizm'],
+  ];
+  EXTRA_CUSTOM_META.forEach(([id,glyph])=>{ CUSTOM_ICONS[id]=`<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="29" fill="#243044" stroke="#66758a" stroke-width="2"/><text x="32" y="43" text-anchor="middle" font-size="34">${glyph}</text></svg>`; });
   const EMOJIS=[
+    ['custom:kangaroo','kangur'],['custom:mouse','mysz'],['custom:rat','szczur'],['custom:rabbit','królik'],['custom:fox','lis'],['custom:wolf','wilk'],['custom:dog','pies'],['custom:cat','kot'],['custom:lion','lew'],['custom:tiger','tygrys'],['custom:horse','koń'],['custom:zebra','zebra'],['custom:deer','jeleń'],['custom:cow','krowa'],['custom:pig','świnia'],['custom:boar','dzik'],['custom:sheep','owca'],['custom:goat','koza'],['custom:elephant','słoń'],['custom:rhino','nosorożec'],['custom:hippo','hipopotam'],['custom:monkey','małpa'],['custom:gorilla','goryl'],['custom:orangutan','orangutan'],['custom:bat','nietoperz'],['custom:chicken','kura'],['custom:penguin','pingwin'],['custom:eagle','orzeł'],['custom:duck','kaczka'],['custom:owl','sowa'],['custom:frog','żaba'],['custom:crocodile','krokodyl'],['custom:turtle','żółw'],['custom:lizard','jaszczurka'],['custom:snake','wąż'],['custom:fish','ryba'],['custom:tropicalfish','ryba tropikalna'],['custom:shark','rekin'],['custom:whale','wieloryb'],['custom:dolphin','delfin'],['custom:octopus','ośmiornica'],['custom:crab','krab'],['custom:lobster','homar'],['custom:shrimp','krewetka'],['custom:jellyfish','meduza'],['custom:snail','ślimak'],['custom:butterfly','motyl'],['custom:bee','pszczoła'],['custom:ant','mrówka'],['custom:beetle','chrząszcz'],['custom:spider','pająk'],['custom:scorpion','skorpion'],['custom:dna','dna'],['custom:microbe','bakteria / mikrob'],['custom:microscope','mikroskop'],['custom:testtube','probówka'],['custom:petri','szalka petriego'],['custom:seedling','kiełek'],['custom:herb','roślina'],['custom:tree','drzewo'],['custom:fungus','grzyb'],['custom:earth','ziemia'],['custom:moon','księżyc'],['custom:sun','słońce'],['custom:star','gwiazda'],['custom:galaxy','galaktyka'],['custom:comet','kometa'],['custom:planet','planeta'],['custom:fire','ogień'],['custom:water','woda'],['custom:energy','energia'],['custom:brain','mózg'],['custom:heartorgan','serce'],['custom:lungs','płuca'],['custom:bone','kość'],['custom:tooth','ząb'],['custom:eye','oko'],['custom:human','człowiek'],['custom:baby','dziecko'],['custom:egg','jajo'],['custom:rock','skała'],['custom:snow','lód / śnieg'],['custom:volcano','wulkan'],['custom:ocean','ocean'],['custom:kiwi','kiwi'],['custom:potato','ziemniak'],['custom:banana','banan'],['custom:apple','jabłko'],['custom:rocket','rakieta'],['custom:car','samochód'],['custom:plane','samolot'],['custom:gear','mechanizm'],
     ['custom:echidna','kolczatka echidna'],['custom:platypus','dziobak platypus'],['custom:koala','koala własne'],['custom:opossum','opos opossum'],['custom:hamster','chomik własne hamster'],['custom:manatee','manat manatee'],['custom:animalcell','komórka zwierzęca komorka zwierzeca cell'],['custom:plantcell','komórka roślinna komorka roslinna cell'],
     ['🦘','kangur'],['🐭','mysz'],['🐹','chomik'],['🐀','szczur'],['🐰','królik'],['🦊','lis'],['🐺','wilk'],['🐶','pies'],['🐱','kot'],['🦁','lew'],['🐯','tygrys'],['🐴','koń'],['🦓','zebra'],['🦌','jeleń'],['🐮','krowa'],['🐷','świnia'],['🐗','dzik'],['🐑','owca'],['🐐','koza'],['🐘','słoń'],['🦏','nosorożec'],['🦛','hipopotam'],['🐒','małpa'],['🦍','goryl'],['🦧','orangutan'],['🦇','nietoperz'],['🐔','kura'],['🐧','pingwin'],['🦅','orzeł'],['🦆','kaczka'],['🦉','sowa'],['🐸','żaba'],['🐊','krokodyl'],['🐢','żółw'],['🦎','jaszczurka'],['🐍','wąż'],['🐟','ryba'],['🐠','ryba tropikalna'],['🦈','rekin'],['🐋','wieloryb'],['🐬','delfin'],['🐙','ośmiornica'],['🦀','krab'],['🦞','homar'],['🦐','krewetka'],['🪼','meduza'],['🐌','ślimak'],['🦋','motyl'],['🐝','pszczoła'],['🐜','mrówka'],['🪲','chrząszcz'],['🕷️','pająk'],['🦂','skorpion'],
     ['🧬','dna genetyka'],['🦠','mikrob bakteria komórka'],['🔬','mikroskop nauka'],['🧪','probówka chemia'],['⚗️','chemia'],['🧫','szalka bakterie'],['🌱','roślina kiełek'],['🌿','roślina liść'],['🌳','drzewo'],['🍄','grzyb'],['🌍','ziemia planeta'],['🌕','księżyc'],['☀️','słońce'],['⭐','gwiazda'],['🌌','kosmos galaktyka'],['☄️','kometa'],['🪐','planeta saturn'],['🔥','ogień'],['💧','woda kropla'],['⚡','energia prąd'],['🧠','mózg'],['🫀','serce'],['🫁','płuca'],['🦴','kość'],['🦷','ząb'],['👁️','oko'],['👤','człowiek osoba'],['🧑','człowiek'],['👶','dziecko'],['🤖','robot'],['💡','pomysł'],['⚙️','mechanizm koło zębate'],['🔋','bateria energia'],['🚗','samochód'],['🚀','rakieta'],['✈️','samolot'],['🏠','dom'],['🏙️','miasto'],['🏔️','góra'],['🌋','wulkan'],['🌊','ocean fala'],['🪨','skała kamień'],['❄️','śnieg lód'],['🥚','jajo'],['🥝','kiwi owoc'],['🥔','ziemniak'],['🍌','banan'],['🍎','jabłko'],['❤️','serce miłość'],['❓','pytanie'],['❗','wykrzyknik'],['✅','tak gotowe'],['❌','nie błąd']
@@ -901,7 +999,7 @@
     EMOJIS.filter(([emoji,name])=>!q||name.includes(q)||emoji.includes(q)).forEach(([emoji,name])=>{
       const b=document.createElement('button'); b.type='button'; b.className='emojiBtn';
       if(emoji.startsWith('custom:')) b.innerHTML=CUSTOM_ICONS[emoji.slice(7)]||''; else b.textContent=emoji;
-      b.title=name;
+      b.title=name; b.setAttribute('aria-label',name);
       b.onclick=()=>{
         if(selected?.type!=='node')return;
         const n=nodeById(selected.id); if(!n)return;
