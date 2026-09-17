@@ -159,6 +159,12 @@
   .aiNote{font-size:11px;color:#8090a6;line-height:1.45;margin:8px 0}
   .aiStatus{font-size:12px;color:#9fb0c7;min-height:18px;margin-top:8px}
   .node.hasImage{background-size:cover!important;background-position:center!important;background-repeat:no-repeat!important}
+  .nodeIcon{font-size:clamp(20px,45%,72px);line-height:1;pointer-events:none;filter:drop-shadow(0 2px 3px rgba(0,0,0,.35));}
+  .emojiSearch{width:100%;background:#0d131d;border:1px solid var(--line);color:var(--text);border-radius:9px;padding:9px 10px;outline:none}
+  .emojiGrid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;max-height:190px;overflow:auto;margin-top:8px;padding:3px}
+  .emojiBtn{height:38px;border:1px solid var(--line);border-radius:8px;background:#182130;color:white;font-size:22px;cursor:pointer}
+  .emojiBtn:hover{background:#263449;transform:scale(1.05)}
+  .emojiClear{margin-top:8px;width:100%}
 
   .sheetBar{display:flex;align-items:stretch;gap:2px;background:#101722;border-top:1px solid var(--line);padding:5px 8px;overflow-x:auto;overflow-y:hidden;z-index:20}
   .sheetPlus{min-width:34px;height:31px;border:0;background:transparent;color:#dce8f8;font-size:23px;cursor:pointer;border-radius:6px}
@@ -234,6 +240,14 @@
         <div class="section row">
           <div class="field"><label>X</label><input id="nodeX" type="number"></div>
           <div class="field"><label>Y</label><input id="nodeY" type="number"></div>
+        </div>
+        <div class="section">
+          <div class="field">
+            <label>Ikonka emoji</label>
+            <input id="emojiSearch" class="emojiSearch" type="text" placeholder="Szukaj, np. kangur, DNA, ryba...">
+            <div id="emojiGrid" class="emojiGrid"></div>
+            <button id="emojiClear" class="btn emojiClear" type="button">Usuń ikonkę</button>
+          </div>
         </div>
       </div>
 
@@ -415,7 +429,7 @@
   function addNode(x=450,y=300,name='Nowy element'){
     const n = {
       id:uid('n'), x,y,size:90,name,
-      color:'#202a39', border:'#66758a', borderWidth:3, image:null
+      color:'#202a39', border:'#66758a', borderWidth:3, image:null, icon:''
     };
     nodes.push(n);
     render();
@@ -459,6 +473,11 @@
         background:n.image ? `url("${n.image}")` : n.color,
         borderColor:n.border,borderWidth:n.borderWidth+'px'
       });
+      if(n.icon){
+        const icon=document.createElement('div');
+        icon.className='nodeIcon'; icon.textContent=n.icon;
+        el.appendChild(icon);
+      }
       const lab=document.createElement('div');
       lab.className='nodeLabel'; lab.textContent=n.name;
       el.appendChild(lab);
@@ -474,10 +493,17 @@
           } else {
             const first=connectSource;
             connectSource=null;
-            connectMode=false;
-            stage.classList.remove('connect-focus');
-            $('#connectBtn').classList.remove('active');
-            addEdge(first,n.id);
+            if(first!==n.id){
+              const existing=edges.find(e => (e.a===first&&e.b===n.id)||(e.a===n.id&&e.b===first));
+              if(existing){
+                edges=edges.filter(e=>e.id!==existing.id);
+                pushHistory(); autoSave();
+              } else {
+                addEdge(first,n.id);
+              }
+            }
+            // Tryb połączeń pozostaje włączony, aż użytkownik sam go wyłączy.
+            selected=null;
             render();
           }
           return;
@@ -837,6 +863,33 @@
   document.querySelectorAll('.patternBtn').forEach(b=>b.onclick=()=>{appearance.pattern=b.dataset.pattern;applyAppearance();updateBgPreview();pushHistory();autoSave();});
   $('#gridSize').addEventListener('input',e=>{appearance.gridSize=Number(e.target.value);applyAppearance();updateBgPreview();autoSave();});
   $('#gridSize').addEventListener('change',pushHistory);
+
+  // Emoji do wybranego koła
+  const EMOJIS=[
+    ['🦘','kangur'],['🐭','mysz'],['🐹','chomik'],['🐀','szczur'],['🐰','królik'],['🦊','lis'],['🐺','wilk'],['🐶','pies'],['🐱','kot'],['🦁','lew'],['🐯','tygrys'],['🐴','koń'],['🦓','zebra'],['🦌','jeleń'],['🐮','krowa'],['🐷','świnia'],['🐗','dzik'],['🐑','owca'],['🐐','koza'],['🐘','słoń'],['🦏','nosorożec'],['🦛','hipopotam'],['🐒','małpa'],['🦍','goryl'],['🦧','orangutan'],['🦇','nietoperz'],['🐔','kura'],['🐧','pingwin'],['🦅','orzeł'],['🦆','kaczka'],['🦉','sowa'],['🐸','żaba'],['🐊','krokodyl'],['🐢','żółw'],['🦎','jaszczurka'],['🐍','wąż'],['🐟','ryba'],['🐠','ryba tropikalna'],['🦈','rekin'],['🐋','wieloryb'],['🐬','delfin'],['🐙','ośmiornica'],['🦀','krab'],['🦞','homar'],['🦐','krewetka'],['🪼','meduza'],['🐌','ślimak'],['🦋','motyl'],['🐝','pszczoła'],['🐜','mrówka'],['🪲','chrząszcz'],['🕷️','pająk'],['🦂','skorpion'],
+    ['🧬','dna genetyka'],['🦠','mikrob bakteria komórka'],['🔬','mikroskop nauka'],['🧪','probówka chemia'],['⚗️','chemia'],['🧫','szalka bakterie'],['🌱','roślina kiełek'],['🌿','roślina liść'],['🌳','drzewo'],['🍄','grzyb'],['🌍','ziemia planeta'],['🌕','księżyc'],['☀️','słońce'],['⭐','gwiazda'],['🌌','kosmos galaktyka'],['☄️','kometa'],['🪐','planeta saturn'],['🔥','ogień'],['💧','woda kropla'],['⚡','energia prąd'],['🧠','mózg'],['🫀','serce'],['🫁','płuca'],['🦴','kość'],['🦷','ząb'],['👁️','oko'],['👤','człowiek osoba'],['🧑','człowiek'],['👶','dziecko'],['🤖','robot'],['💡','pomysł'],['⚙️','mechanizm koło zębate'],['🔋','bateria energia'],['🚗','samochód'],['🚀','rakieta'],['✈️','samolot'],['🏠','dom'],['🏙️','miasto'],['🏔️','góra'],['🌋','wulkan'],['🌊','ocean fala'],['🪨','skała kamień'],['❄️','śnieg lód'],['🥚','jajo'],['🥝','kiwi owoc'],['🥔','ziemniak'],['🍌','banan'],['🍎','jabłko'],['❤️','serce miłość'],['❓','pytanie'],['❗','wykrzyknik'],['✅','tak gotowe'],['❌','nie błąd']
+  ];
+  function renderEmojiPicker(){
+    const grid=$('#emojiGrid'); if(!grid)return;
+    const q=($('#emojiSearch')?.value||'').trim().toLowerCase();
+    grid.innerHTML='';
+    EMOJIS.filter(([emoji,name])=>!q||name.includes(q)||emoji.includes(q)).forEach(([emoji,name])=>{
+      const b=document.createElement('button'); b.type='button'; b.className='emojiBtn'; b.textContent=emoji; b.title=name;
+      b.onclick=()=>{
+        if(selected?.type!=='node')return;
+        const n=nodeById(selected.id); if(!n)return;
+        n.icon=emoji; render(); pushHistory(); autoSave();
+      };
+      grid.appendChild(b);
+    });
+  }
+  $('#emojiSearch').addEventListener('input',renderEmojiPicker);
+  $('#emojiClear').onclick=()=>{
+    if(selected?.type!=='node')return;
+    const n=nodeById(selected.id); if(!n)return;
+    n.icon=''; render(); pushHistory(); autoSave();
+  };
+  renderEmojiPicker();
 
   // AI image panel
   const aiPanel=$('#aiPanel');
