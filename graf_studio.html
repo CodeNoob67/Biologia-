@@ -163,9 +163,14 @@
   .sheetBar{display:flex;align-items:stretch;gap:2px;background:#101722;border-top:1px solid var(--line);padding:5px 8px;overflow-x:auto;overflow-y:hidden;z-index:20}
   .sheetPlus{min-width:34px;height:31px;border:0;background:transparent;color:#dce8f8;font-size:23px;cursor:pointer;border-radius:6px}
   .sheetPlus:hover{background:#202c3e}
-  .sheetTab{height:31px;min-width:110px;max-width:220px;padding:0 14px;border:0;border-bottom:2px solid transparent;background:#182130;color:#b9c7da;cursor:pointer;border-radius:6px 6px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:650}
+  .sheetTab{height:31px;min-width:110px;max-width:220px;padding:0 7px 0 14px;border:0;border-bottom:2px solid transparent;background:#182130;color:#b9c7da;cursor:grab;border-radius:6px 6px 0 0;white-space:nowrap;font-weight:650;display:flex;align-items:center;gap:8px;user-select:none}
   .sheetTab:hover{background:#202c3e;color:white}
   .sheetTab.active{background:#243247;color:white;border-bottom-color:#00c9d4}
+  .sheetTab.dragging{opacity:.45;cursor:grabbing}
+  .sheetTab.dragOver{outline:2px solid var(--accent);outline-offset:-2px}
+  .sheetTabName{overflow:hidden;text-overflow:ellipsis;flex:1}
+  .sheetClose{width:20px;height:20px;display:grid;place-items:center;border:0;border-radius:5px;background:transparent;color:#91a0b6;cursor:pointer;font-size:16px;line-height:1}
+  .sheetClose:hover{background:#4b1d2a;color:#fff}
 </style>
 </head>
 <body>
@@ -708,7 +713,7 @@
     if(!confirm('Usunąć zapis „'+rec.name+'”?'))return;
     delete all[id]; setProjects(all);
     if(id===currentProjectId){
-      const next=Object.keys(all)[0];
+      const next=orderedProjects(all)[0]?.id;
       if(next){currentProjectId=next;localStorage.setItem(CURRENT_KEY,next);loadProject(all[next].data)}
       else{currentProjectId=null;localStorage.removeItem(CURRENT_KEY);newBlankProject()}
     }
@@ -718,23 +723,48 @@
     const rec=getProjects()[id]; if(!rec)return;
     createProject(rec.name+' — kopia',JSON.parse(JSON.stringify(rec.data))); openProject(currentProjectId);
   }
+  let draggedSheetId=null;
+  function orderedProjects(all=getProjects()){
+    return Object.values(all).map((r,i)=>({...r,_fallbackOrder:i})).sort((a,b)=>(Number.isFinite(a.order)?a.order:a._fallbackOrder)-(Number.isFinite(b.order)?b.order:b._fallbackOrder));
+  }
+  function reorderSheets(dragId,targetId){
+    if(!dragId||!targetId||dragId===targetId)return;
+    const all=getProjects();
+    const ids=orderedProjects(all).map(r=>r.id);
+    const from=ids.indexOf(dragId), to=ids.indexOf(targetId);
+    if(from<0||to<0)return;
+    ids.splice(to,0,ids.splice(from,1)[0]);
+    ids.forEach((id,i)=>all[id].order=i);
+    setProjects(all); updateProjectUI();
+  }
   function updateProjectUI(){
     const all=getProjects(), rec=all[currentProjectId];
     if($('#projectNameInput')) $('#projectNameInput').value=rec?.name||'';
-    const entries=Object.values(all).map((r,i)=>({...r,_fallbackOrder:i})).sort((a,b)=>(Number.isFinite(a.order)?a.order:a._fallbackOrder)-(Number.isFinite(b.order)?b.order:b._fallbackOrder));
+    const entries=orderedProjects(all);
     const tabs=$('#sheetTabs');
     if(tabs){
       tabs.innerHTML='';
       entries.forEach(r=>{
-        const b=document.createElement('button');
+        const b=document.createElement('div');
         b.className='sheetTab'+(r.id===currentProjectId?' active':'');
-        b.textContent=r.name; b.title=r.name+' — kliknij 2×, aby zmienić nazwę';
-        b.onclick=()=>{ if(r.id!==currentProjectId) openProject(r.id); };
+        b.draggable=true; b.dataset.id=r.id;
+        b.title=r.name+' — dwuklik zmienia nazwę; przytrzymaj i przeciągnij, aby zmienić kolejność';
+        const name=document.createElement('span'); name.className='sheetTabName'; name.textContent=r.name;
+        const x=document.createElement('button'); x.className='sheetClose'; x.textContent='×'; x.title='Usuń arkusz';
+        x.onclick=e=>{e.stopPropagation();deleteProject(r.id)};
+        b.append(name,x);
+        b.onclick=e=>{ if(e.target.closest('.sheetClose'))return; if(r.id!==currentProjectId) openProject(r.id); };
         b.ondblclick=e=>{
-          e.preventDefault(); e.stopPropagation();
-          const name=prompt('Nowa nazwa zapisu:',r.name);
-          if(name&&name.trim()){ const x=getProjects(); x[r.id].name=name.trim(); x[r.id].updatedAt=Date.now(); setProjects(x); updateProjectUI(); }
+          if(e.target.closest('.sheetClose'))return;
+          e.preventDefault();e.stopPropagation();
+          const nm=prompt('Nowa nazwa arkusza:',r.name);
+          if(nm&&nm.trim()){const a=getProjects();a[r.id].name=nm.trim();a[r.id].updatedAt=Date.now();setProjects(a);updateProjectUI();}
         };
+        b.addEventListener('dragstart',e=>{draggedSheetId=r.id;b.classList.add('dragging');e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',r.id)});
+        b.addEventListener('dragend',()=>{draggedSheetId=null;b.classList.remove('dragging');document.querySelectorAll('.sheetTab.dragOver').forEach(t=>t.classList.remove('dragOver'))});
+        b.addEventListener('dragover',e=>{e.preventDefault();if(draggedSheetId&&draggedSheetId!==r.id){b.classList.add('dragOver');e.dataTransfer.dropEffect='move'}});
+        b.addEventListener('dragleave',()=>b.classList.remove('dragOver'));
+        b.addEventListener('drop',e=>{e.preventDefault();b.classList.remove('dragOver');reorderSheets(draggedSheetId||e.dataTransfer.getData('text/plain'),r.id)});
         tabs.appendChild(b);
       });
     }
