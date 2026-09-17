@@ -164,6 +164,9 @@
   .emojiGrid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;max-height:190px;overflow:auto;margin-top:8px;padding:3px}
   .emojiBtn{height:38px;border:1px solid var(--line);border-radius:8px;background:#182130;color:white;font-size:22px;cursor:pointer}
   .emojiBtn:hover{background:#263449;transform:scale(1.05)}
+  .emojiBtn svg{width:27px;height:27px;display:block;margin:auto}
+  .nodeIcon.customIcon{display:flex;align-items:center;justify-content:center}
+  .nodeIcon.customIcon svg{width:1em;height:1em;display:block}
   .emojiClear{margin-top:8px;width:100%}
 
   .sheetBar{display:flex;align-items:stretch;gap:2px;background:#101722;border-top:1px solid var(--line);padding:5px 8px;overflow-x:auto;overflow-y:hidden;z-index:20}
@@ -480,7 +483,10 @@
       });
       if(n.icon){
         const icon=document.createElement('div');
-        icon.className='nodeIcon'; icon.textContent=n.icon;
+        const customId = typeof n.icon==='string' && n.icon.startsWith('custom:') ? n.icon.slice(7) : null;
+        icon.className='nodeIcon'+(customId?' customIcon':'');
+        if(customId && CUSTOM_ICONS[customId]) icon.innerHTML=CUSTOM_ICONS[customId];
+        else icon.textContent=n.icon;
         icon.style.fontSize=((n.iconSize ?? 5) * 8 + 8)+'px';
         el.appendChild(icon);
       }
@@ -872,7 +878,19 @@
   $('#gridSize').addEventListener('change',pushHistory);
 
   // Emoji do wybranego koła
+  // Własne ikonki w stylu emoji (SVG) — działają także dla zwierząt bez oficjalnego emoji.
+  const CUSTOM_ICONS={
+    echidna:`<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M10 37 4 31l9-1-5-8 10 4-1-10 8 7 4-10 5 10 8-7-1 11 10-3-6 9 9 2-8 6c-3 9-13 14-25 13C17 53 9 47 10 37Z" fill="#8b5a3c"/><ellipse cx="39" cy="39" rx="18" ry="13" fill="#b9784f"/><path d="M48 38c7-2 11 0 13 3-5 3-10 4-16 3Z" fill="#d49a72"/><circle cx="47" cy="35" r="2.3" fill="#171717"/><circle cx="59" cy="41" r="2" fill="#171717"/><path d="M24 48c-1 5-4 7-8 7M39 50c0 4-2 6-6 7" stroke="#4b3023" stroke-width="3" stroke-linecap="round"/></svg>`,
+    platypus:`<svg viewBox="0 0 64 64" aria-hidden="true"><ellipse cx="31" cy="35" rx="23" ry="15" fill="#8a5a3b"/><ellipse cx="27" cy="28" rx="16" ry="13" fill="#9b6846"/><path d="M38 31c8-5 19-3 23 2-5 6-16 8-24 4Z" fill="#e6a64c"/><circle cx="22" cy="25" r="2.3" fill="#111"/><circle cx="33" cy="25" r="2.3" fill="#111"/><path d="M9 39C2 39 0 45 5 49c6 5 14 2 17-3Z" fill="#6d472f"/><path d="M20 47c-2 6-7 8-11 5M40 47c2 5 7 6 11 3" stroke="#e6a64c" stroke-width="4" stroke-linecap="round"/></svg>`,
+    koala:`<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="13" cy="23" r="11" fill="#8e969f"/><circle cx="51" cy="23" r="11" fill="#8e969f"/><circle cx="13" cy="23" r="6" fill="#c8cdd2"/><circle cx="51" cy="23" r="6" fill="#c8cdd2"/><ellipse cx="32" cy="34" rx="22" ry="24" fill="#aeb5bc"/><circle cx="24" cy="30" r="3" fill="#111"/><circle cx="40" cy="30" r="3" fill="#111"/><ellipse cx="32" cy="39" rx="7" ry="9" fill="#26282b"/><path d="M28 48c3 3 5 3 8 0" stroke="#555" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>`,
+    opossum:`<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M12 42C2 39 1 31 8 27c10-6 29-6 39 2 7 6 5 16-5 20-11 5-23 2-30-7Z" fill="#aeb3b8"/><path d="M39 27c7-8 17-8 22-2-2 8-10 15-20 16Z" fill="#e8d7cf"/><path d="m45 22 4-9 6 9M33 25l-1-10 8 7" fill="#d58c93"/><circle cx="49" cy="29" r="2.4" fill="#111"/><circle cx="60" cy="28" r="2" fill="#e76f7c"/><path d="M9 43C1 45 0 52 7 55c8 4 14-1 15-6" stroke="#e4a0a8" stroke-width="3" fill="none" stroke-linecap="round"/></svg>`,
+    hamster:`<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="17" cy="18" r="10" fill="#c98a4b"/><circle cx="47" cy="18" r="10" fill="#c98a4b"/><circle cx="17" cy="18" r="5" fill="#f1c49a"/><circle cx="47" cy="18" r="5" fill="#f1c49a"/><ellipse cx="32" cy="36" rx="23" ry="24" fill="#d79a58"/><path d="M15 35c4-8 10-12 17-12s13 4 17 12v20H15Z" fill="#f3d2ad"/><circle cx="24" cy="31" r="3" fill="#111"/><circle cx="40" cy="31" r="3" fill="#111"/><ellipse cx="32" cy="39" rx="4" ry="3" fill="#e78383"/><path d="M32 42v4m-7-3h-8m22 0h8" stroke="#6d4935" stroke-width="2" stroke-linecap="round"/></svg>`,
+    manatee:`<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M8 35c0-13 12-22 28-21 14 1 22 10 20 21-2 12-14 18-29 16C16 50 8 44 8 35Z" fill="#8f9ba3"/><path d="M11 39C4 42 2 48 6 53c7 1 12-3 15-8M49 42c7 1 11 5 11 10-6 2-11 0-15-5" fill="#7f8b93"/><circle cx="40" cy="28" r="2.2" fill="#111"/><circle cx="51" cy="34" r="1.5" fill="#343a3e"/><path d="M44 37c3 2 6 2 9 0" stroke="#5e686e" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`,
+    animalcell:`<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M9 34C6 19 17 8 32 9c17 0 26 11 23 27-2 14-13 21-28 19C16 54 11 47 9 34Z" fill="#ef8eb3" stroke="#c85886" stroke-width="3"/><circle cx="34" cy="31" r="11" fill="#8f6bd1"/><circle cx="37" cy="28" r="4" fill="#c8b4ef"/><ellipse cx="20" cy="25" rx="5" ry="3" fill="#f5c34f"/><ellipse cx="20" cy="43" rx="6" ry="3" fill="#63c6c3"/><path d="M45 43c4-5 7-5 10-1M14 34c4-3 7-3 10 0" stroke="#f6dce8" stroke-width="3" fill="none" stroke-linecap="round"/></svg>`,
+    plantcell:`<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="7" y="8" width="50" height="48" rx="10" fill="#83c96b" stroke="#3f8d48" stroke-width="4"/><rect x="12" y="13" width="40" height="38" rx="8" fill="#b7e58e"/><circle cx="34" cy="31" r="9" fill="#8b6ccf"/><ellipse cx="20" cy="22" rx="6" ry="3" fill="#3aa85a"/><ellipse cx="45" cy="43" rx="6" ry="3" fill="#3aa85a"/><rect x="16" y="31" width="12" height="12" rx="5" fill="#79cbe8" opacity=".9"/></svg>`
+  };
   const EMOJIS=[
+    ['custom:echidna','kolczatka echidna'],['custom:platypus','dziobak platypus'],['custom:koala','koala własne'],['custom:opossum','opos opossum'],['custom:hamster','chomik własne hamster'],['custom:manatee','manat manatee'],['custom:animalcell','komórka zwierzęca komorka zwierzeca cell'],['custom:plantcell','komórka roślinna komorka roslinna cell'],
     ['🦘','kangur'],['🐭','mysz'],['🐹','chomik'],['🐀','szczur'],['🐰','królik'],['🦊','lis'],['🐺','wilk'],['🐶','pies'],['🐱','kot'],['🦁','lew'],['🐯','tygrys'],['🐴','koń'],['🦓','zebra'],['🦌','jeleń'],['🐮','krowa'],['🐷','świnia'],['🐗','dzik'],['🐑','owca'],['🐐','koza'],['🐘','słoń'],['🦏','nosorożec'],['🦛','hipopotam'],['🐒','małpa'],['🦍','goryl'],['🦧','orangutan'],['🦇','nietoperz'],['🐔','kura'],['🐧','pingwin'],['🦅','orzeł'],['🦆','kaczka'],['🦉','sowa'],['🐸','żaba'],['🐊','krokodyl'],['🐢','żółw'],['🦎','jaszczurka'],['🐍','wąż'],['🐟','ryba'],['🐠','ryba tropikalna'],['🦈','rekin'],['🐋','wieloryb'],['🐬','delfin'],['🐙','ośmiornica'],['🦀','krab'],['🦞','homar'],['🦐','krewetka'],['🪼','meduza'],['🐌','ślimak'],['🦋','motyl'],['🐝','pszczoła'],['🐜','mrówka'],['🪲','chrząszcz'],['🕷️','pająk'],['🦂','skorpion'],
     ['🧬','dna genetyka'],['🦠','mikrob bakteria komórka'],['🔬','mikroskop nauka'],['🧪','probówka chemia'],['⚗️','chemia'],['🧫','szalka bakterie'],['🌱','roślina kiełek'],['🌿','roślina liść'],['🌳','drzewo'],['🍄','grzyb'],['🌍','ziemia planeta'],['🌕','księżyc'],['☀️','słońce'],['⭐','gwiazda'],['🌌','kosmos galaktyka'],['☄️','kometa'],['🪐','planeta saturn'],['🔥','ogień'],['💧','woda kropla'],['⚡','energia prąd'],['🧠','mózg'],['🫀','serce'],['🫁','płuca'],['🦴','kość'],['🦷','ząb'],['👁️','oko'],['👤','człowiek osoba'],['🧑','człowiek'],['👶','dziecko'],['🤖','robot'],['💡','pomysł'],['⚙️','mechanizm koło zębate'],['🔋','bateria energia'],['🚗','samochód'],['🚀','rakieta'],['✈️','samolot'],['🏠','dom'],['🏙️','miasto'],['🏔️','góra'],['🌋','wulkan'],['🌊','ocean fala'],['🪨','skała kamień'],['❄️','śnieg lód'],['🥚','jajo'],['🥝','kiwi owoc'],['🥔','ziemniak'],['🍌','banan'],['🍎','jabłko'],['❤️','serce miłość'],['❓','pytanie'],['❗','wykrzyknik'],['✅','tak gotowe'],['❌','nie błąd']
   ];
@@ -881,7 +899,9 @@
     const q=($('#emojiSearch')?.value||'').trim().toLowerCase();
     grid.innerHTML='';
     EMOJIS.filter(([emoji,name])=>!q||name.includes(q)||emoji.includes(q)).forEach(([emoji,name])=>{
-      const b=document.createElement('button'); b.type='button'; b.className='emojiBtn'; b.textContent=emoji; b.title=name;
+      const b=document.createElement('button'); b.type='button'; b.className='emojiBtn';
+      if(emoji.startsWith('custom:')) b.innerHTML=CUSTOM_ICONS[emoji.slice(7)]||''; else b.textContent=emoji;
+      b.title=name;
       b.onclick=()=>{
         if(selected?.type!=='node')return;
         const n=nodeById(selected.id); if(!n)return;
