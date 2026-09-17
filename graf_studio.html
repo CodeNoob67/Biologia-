@@ -656,7 +656,8 @@
   }
   function createProject(name='Nowy projekt',data=null){
     const all=getProjects(), id=makeProjectId();
-    all[id]={id,name:uniqueName(name),updatedAt:Date.now(),data:data||project()};
+    const maxOrder=Math.max(-1,...Object.values(all).map((r,i)=>Number.isFinite(r.order)?r.order:i));
+    all[id]={id,name:uniqueName(name),order:maxOrder+1,updatedAt:Date.now(),data:data||project()};
     setProjects(all); currentProjectId=id; localStorage.setItem(CURRENT_KEY,id);
     updateProjectUI(); return id;
   }
@@ -720,7 +721,7 @@
   function updateProjectUI(){
     const all=getProjects(), rec=all[currentProjectId];
     if($('#projectNameInput')) $('#projectNameInput').value=rec?.name||'';
-    const entries=Object.values(all).sort((a,b)=>a.updatedAt-b.updatedAt);
+    const entries=Object.values(all).map((r,i)=>({...r,_fallbackOrder:i})).sort((a,b)=>(Number.isFinite(a.order)?a.order:a._fallbackOrder)-(Number.isFinite(b.order)?b.order:b._fallbackOrder));
     const tabs=$('#sheetTabs');
     if(tabs){
       tabs.innerHTML='';
