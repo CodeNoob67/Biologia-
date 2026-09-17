@@ -246,6 +246,10 @@
             <label>Ikonka emoji</label>
             <input id="emojiSearch" class="emojiSearch" type="text" placeholder="Szukaj, np. kangur, DNA, ryba...">
             <div id="emojiGrid" class="emojiGrid"></div>
+            <div class="field" style="margin-top:10px">
+              <label>Wielkość ikonki: <span id="emojiSizeValue">5</span></label>
+              <input id="emojiSize" type="range" min="1" max="10" step="1" value="5">
+            </div>
             <button id="emojiClear" class="btn emojiClear" type="button">Usuń ikonkę</button>
           </div>
         </div>
@@ -366,6 +370,7 @@
   let idCounter = 1;
   let appearance = {bg:'#0b0f16', pattern:'grid', gridSize:32};
   let undoStack = [], redoStack = [], restoringHistory = false;
+  let lastEmojiSize = Number(localStorage.getItem('graphStudioEmojiSize') || 5);
 
   const $ = s => document.querySelector(s);
   const uid = p => p + (idCounter++);
@@ -429,7 +434,7 @@
   function addNode(x=450,y=300,name='Nowy element'){
     const n = {
       id:uid('n'), x,y,size:90,name,
-      color:'#202a39', border:'#66758a', borderWidth:3, image:null, icon:''
+      color:'#202a39', border:'#66758a', borderWidth:3, image:null, icon:'', iconSize:lastEmojiSize
     };
     nodes.push(n);
     render();
@@ -476,6 +481,7 @@
       if(n.icon){
         const icon=document.createElement('div');
         icon.className='nodeIcon'; icon.textContent=n.icon;
+        icon.style.fontSize=((n.iconSize ?? 5) * 8 + 8)+'px';
         el.appendChild(icon);
       }
       const lab=document.createElement('div');
@@ -559,6 +565,7 @@
       $('#nodeColor').value=n.color; $('#nodeColorText').textContent=n.color;
       $('#borderColor').value=n.border; $('#borderColorText').textContent=n.border;
       $('#borderWidth').value=n.borderWidth; $('#nodeX').value=n.x; $('#nodeY').value=n.y;
+      if($('#emojiSize')){ const es=n.iconSize ?? lastEmojiSize; $('#emojiSize').value=es; $('#emojiSizeValue').textContent=es; }
     }
     if(selected?.type==='edge'){
       const e=edgeById(selected.id); if(!e)return;
@@ -878,12 +885,19 @@
       b.onclick=()=>{
         if(selected?.type!=='node')return;
         const n=nodeById(selected.id); if(!n)return;
-        n.icon=emoji; render(); pushHistory(); autoSave();
+        n.icon=emoji; if(n.iconSize==null)n.iconSize=lastEmojiSize; render(); pushHistory(); autoSave();
       };
       grid.appendChild(b);
     });
   }
   $('#emojiSearch').addEventListener('input',renderEmojiPicker);
+  $('#emojiSize').addEventListener('input',e=>{
+    const v=Math.max(1,Math.min(10,Number(e.target.value)||5));
+    lastEmojiSize=v; localStorage.setItem('graphStudioEmojiSize',String(v));
+    $('#emojiSizeValue').textContent=v;
+    if(selected?.type==='node'){ const n=nodeById(selected.id); if(n){n.iconSize=v; render(); autoSave();} }
+  });
+  $('#emojiSize').addEventListener('change',()=>{ if(selected?.type==='node') pushHistory(); });
   $('#emojiClear').onclick=()=>{
     if(selected?.type!=='node')return;
     const n=nodeById(selected.id); if(!n)return;
