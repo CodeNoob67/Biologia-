@@ -945,26 +945,17 @@
     ['custom:echidna','kolczatka echidna'],['custom:platypus','dziobak platypus'],['custom:koala','koala'],['custom:opossum','opos'],['custom:hamster','chomik'],['custom:manatee','manat'],
     ...MAMMALS.map(([id,name])=>['custom:'+id,name]),
     ['custom:animalcell','komórka zwierzęca komorka zwierzeca'],['custom:plantcell','komórka roślinna komorka roslinna'],
-
-    // Oficjalne emoji Unicode — zachowujemy wszystkie własne ikonki powyżej i dokładamy istniejące emoji.
-    // Ptaki
-    ['🐦','ptak'],['🐧','pingwin'],['🦅','orzeł orzel'],['🦆','kaczka'],['🦢','łabędź labedz'],['🦉','sowa'],['🦤','dodo'],['🪶','pióro pioro'],['🦩','flaming'],['🦚','paw'],['🦜','papuga'],['🐓','kogut'],['🐔','kura'],['🐣','pisklę piskle'],['🐤','kurczak'],['🐥','pisklę przodem'],['🦃','indyk'],['🪿','gęś ges'],
-    // Gady i pokrewne
-    ['🐊','krokodyl'],['🐢','żółw zolw'],['🦎','jaszczurka'],['🐍','wąż waz'],['🐲','smok głowa'],['🐉','smok'],['🦖','tyranozaur dinozaur'],['🦕','zauropod dinozaur'],
-    // Płazy
-    ['🐸','żaba zaba płaz plaz'],
-    // Ryby i inne zwierzęta wodne
-    ['🐟','ryba'],['🐠','ryba tropikalna'],['🐡','rozdymka'],['🦈','rekin'],['🐬','delfin'],['🐳','wieloryb tryskający'],['🐋','wieloryb'],['🦭','foka'],['🪼','meduza'],['🐙','ośmiornica osmiornica'],['🦑','kałamarnica kalamarnica'],['🦀','krab'],['🦞','homar'],['🦐','krewetka'],['🦪','ostryga'],['🐚','muszla'],
-    // Bezkręgowce i inne zwierzęta
-    ['🪱','robak dżdżownica dzdzownica'],['🐌','ślimak slimak'],['🦋','motyl'],['🐛','gąsienica gasienica'],['🐜','mrówka mrowka'],['🐝','pszczoła pszczola'],['🪲','chrząszcz chrzaszcz'],['🐞','biedronka'],['🦗','świerszcz swierszcz'],['🪳','karaluch'],['🕷️','pająk pajak'],['🦂','skorpion'],['🦟','komar'],['🪰','mucha'],
-    // Ssaki — oficjalne emoji też zostają dostępne obok własnej kolekcji
-    ['🐭','mysz'],['🐁','mysz laboratoryjna'],['🐀','szczur'],['🐹','chomik emoji'],['🐰','królik krolik'],['🐇','królik cały'],['🦫','bóbr bobr'],['🦔','jeż jez'],['🦇','nietoperz'],['🐺','wilk'],['🦊','lis'],['🐶','pies'],['🐕','pies cały'],['🐩','pudel'],['🐕‍🦺','pies asystujący'],['🐈','kot'],['🐈‍⬛','czarny kot'],['🦁','lew'],['🐯','tygrys'],['🐆','lampart'],['🐴','koń kon'],['🐎','koń biegnący'],['🦄','jednorożec'],['🦓','zebra'],['🦌','jeleń jelen'],['🦬','bizon'],['🐮','krowa'],['🐂','wół wol'],['🐃','bawół bawol'],['🐄','krowa cała'],['🐷','świnia swinia'],['🐖','świnia cała'],['🐗','dzik'],['🐏','baran'],['🐑','owca'],['🐐','koza'],['🐪','wielbłąd jednogarbny'],['🐫','wielbłąd dwugarbny'],['🦙','lama'],['🦒','żyrafa zyrafa'],['🐘','słoń slon'],['🦣','mamut'],['🦏','nosorożec nosorozec'],['🦛','hipopotam'],['🐒','małpa malpa'],['🦍','goryl'],['🦧','orangutan'],['🐵','małpa twarz'],['🦥','leniwiec'],['🦦','wydra'],['🦨','skunks'],['🦘','kangur'],['🐨','koala emoji'],['🐼','panda'],['🐻','niedźwiedź niedzwiedz'],['🐻‍❄️','niedźwiedź polarny'],
+    // Oficjalne emoji Unicode — kręgowce
+    ['🐶','pies'],['🐱','kot'],['🐭','mysz'],['🐹','chomik'],['🐰','królik krolik'],['🦊','lis'],['🐻','niedźwiedź niedzwiedz'],['🐼','panda'],['🐨','koala'],['🐯','tygrys'],['🦁','lew'],['🐮','krowa'],['🐷','świnia swinia'],['🐸','żaba zaba płaz plaz'],['🐵','małpa malpa'],['🐔','kura'],['🐧','pingwin'],['🐦','ptak'],['🐤','pisklę piskle'],['🦆','kaczka'],['🦅','orzeł orzel'],['🦉','sowa'],['🦇','nietoperz'],['🐺','wilk'],['🐗','dzik'],['🐴','koń kon'],['🦄','jednorożec jednorozec'],['🐝','pszczoła pszczola'],
+    ['🐍','wąż waz gad'],['🦎','jaszczurka gad'],['🐢','żółw zolw gad'],['🐊','krokodyl gad'],['🐲','smok'],['🦖','tyranozaur dinozaur'],['🦕','zauropod dinozaur'],
+    ['🐟','ryba'],['🐠','ryba tropikalna'],['🐡','rozdymka'],['🦈','rekin'],['🐬','delfin'],['🐳','wieloryb'],['🐋','wieloryb fiszbinowiec'],['🦭','foka'],
+    ['🦃','indyk'],['🦚','paw'],['🦜','papuga'],['🦢','łabędź labedz'],['🦩','flaming'],['🕊️','gołąb golab'],
     // Człowiek i etapy życia
-    ['👶','dziecko niemowlę niemowle'],['🧒','dziecko starsze'],['👦','chłopiec chlopiec'],['👧','dziewczynka'],['🧑','osoba człowiek czlowiek'],['👨','mężczyzna mezczyzna'],['👩','kobieta'],['🧓','starsza osoba'],['👴','dziadek starszy mężczyzna'],['👵','babcia starsza kobieta'],['🧬','DNA genetyka'],
+    ['👶','dziecko niemowlę niemowle'],['🧒','dziecko'],['👦','chłopiec chlopiec'],['👧','dziewczynka'],['🧑','człowiek dorosły czlowiek dorosly'],['👨','mężczyzna mezczyzna'],['👩','kobieta'],['🧓','starsza osoba senior'],
     // Organy i anatomia
-    ['🧠','mózg mozg'],['🫀','serce organ'],['🫁','płuca pluca'],['🦷','ząb zab'],['🦴','kość kosc'],['👁️','oko'],['👂','ucho'],['👃','nos'],['👅','język jezyk'],['🫦','usta wargi'],['🖐️','dłoń dlon'],['🦵','noga'],['🦶','stopa'],
-    // Biologia / nauka
-    ['🦠','mikroorganizm bakteria wirus'],['🧫','szalka petriego hodowla'],['🔬','mikroskop'],['🧪','probówka probowka'],['⚗️','kolba chemia'],['🩸','krew kropla krwi'],['💧','woda kropla'],['🌱','kiełek roślina'],['🌿','roślina roslina'],['🍄','grzyb']
+    ['🧠','mózg mozg organ'],['🫀','serce organ'],['🫁','płuca pluca organ'],['🦷','ząb zab zeby'],['🦴','kość kosc szkielet'],['👁️','oko narząd wzroku narzad'],['👂','ucho narząd słuchu narzad'],['👃','nos'],['👅','język jezyk'],['🩸','krew'],
+    // Biologia
+    ['🧬','DNA genetyka'],['🦠','mikrob bakteria'],['🔬','mikroskop'],['🧫','szalka petriego hodowla komórkowa komorkowa']
   ];
   function renderEmojiPicker(){
     const grid=$('#emojiGrid'); if(!grid)return;
