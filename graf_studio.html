@@ -248,8 +248,8 @@
         </div>
         <div class="section">
           <div class="field">
-            <label>Ikonka emoji</label>
-            <input id="emojiSearch" class="emojiSearch" type="text" placeholder="Szukaj, np. kangur, DNA, ryba...">
+            <label>Ikonka — własna kolekcja</label>
+            <input id="emojiSearch" class="emojiSearch" type="text" placeholder="Szukaj zwierzęcia, np. kapibara, ryś, manat...">
             <div id="emojiGrid" class="emojiGrid"></div>
             <div class="field" style="margin-top:10px">
               <label>Wielkość ikonki: <span id="emojiSizeValue">5</span></label>
@@ -891,106 +891,60 @@
     animalcell:`<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M9 34C6 19 17 8 32 9c17 0 26 11 23 27-2 14-13 21-28 19C16 54 11 47 9 34Z" fill="#ef8eb3" stroke="#c85886" stroke-width="3"/><circle cx="34" cy="31" r="11" fill="#8f6bd1"/><circle cx="37" cy="28" r="4" fill="#c8b4ef"/><ellipse cx="20" cy="25" rx="5" ry="3" fill="#f5c34f"/><ellipse cx="20" cy="43" rx="6" ry="3" fill="#63c6c3"/><path d="M45 43c4-5 7-5 10-1M14 34c4-3 7-3 10 0" stroke="#f6dce8" stroke-width="3" fill="none" stroke-linecap="round"/></svg>`,
     plantcell:`<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="7" y="8" width="50" height="48" rx="10" fill="#83c96b" stroke="#3f8d48" stroke-width="4"/><rect x="12" y="13" width="40" height="38" rx="8" fill="#b7e58e"/><circle cx="34" cy="31" r="9" fill="#8b6ccf"/><ellipse cx="20" cy="22" rx="6" ry="3" fill="#3aa85a"/><ellipse cx="45" cy="43" rx="6" ry="3" fill="#3aa85a"/><rect x="16" y="31" width="12" height="12" rx="5" fill="#79cbe8" opacity=".9"/></svg>`
   };
-  const EXTRA_CUSTOM_META = [
-    ['kangaroo','🦘','kangur'],
-    ['mouse','🐭','mysz'],
-    ['rat','🐀','szczur'],
-    ['rabbit','🐰','królik'],
-    ['fox','🦊','lis'],
-    ['wolf','🐺','wilk'],
-    ['dog','🐶','pies'],
-    ['cat','🐱','kot'],
-    ['lion','🦁','lew'],
-    ['tiger','🐯','tygrys'],
-    ['horse','🐴','koń'],
-    ['zebra','🦓','zebra'],
-    ['deer','🦌','jeleń'],
-    ['cow','🐮','krowa'],
-    ['pig','🐷','świnia'],
-    ['boar','🐗','dzik'],
-    ['sheep','🐑','owca'],
-    ['goat','🐐','koza'],
-    ['elephant','🐘','słoń'],
-    ['rhino','🦏','nosorożec'],
-    ['hippo','🦛','hipopotam'],
-    ['monkey','🐒','małpa'],
-    ['gorilla','🦍','goryl'],
-    ['orangutan','🦧','orangutan'],
-    ['bat','🦇','nietoperz'],
-    ['chicken','🐔','kura'],
-    ['penguin','🐧','pingwin'],
-    ['eagle','🦅','orzeł'],
-    ['duck','🦆','kaczka'],
-    ['owl','🦉','sowa'],
-    ['frog','🐸','żaba'],
-    ['crocodile','🐊','krokodyl'],
-    ['turtle','🐢','żółw'],
-    ['lizard','🦎','jaszczurka'],
-    ['snake','🐍','wąż'],
-    ['fish','🐟','ryba'],
-    ['tropicalfish','🐠','ryba tropikalna'],
-    ['shark','🦈','rekin'],
-    ['whale','🐋','wieloryb'],
-    ['dolphin','🐬','delfin'],
-    ['octopus','🐙','ośmiornica'],
-    ['crab','🦀','krab'],
-    ['lobster','🦞','homar'],
-    ['shrimp','🦐','krewetka'],
-    ['jellyfish','🪼','meduza'],
-    ['snail','🐌','ślimak'],
-    ['butterfly','🦋','motyl'],
-    ['bee','🐝','pszczoła'],
-    ['ant','🐜','mrówka'],
-    ['beetle','🪲','chrząszcz'],
-    ['spider','🕷️','pająk'],
-    ['scorpion','🦂','skorpion'],
-    ['dna','🧬','DNA'],
-    ['microbe','🦠','bakteria / mikrob'],
-    ['microscope','🔬','mikroskop'],
-    ['testtube','🧪','probówka'],
-    ['petri','🧫','szalka Petriego'],
-    ['seedling','🌱','kiełek'],
-    ['herb','🌿','roślina'],
-    ['tree','🌳','drzewo'],
-    ['fungus','🍄','grzyb'],
-    ['earth','🌍','Ziemia'],
-    ['moon','🌕','Księżyc'],
-    ['sun','☀️','Słońce'],
-    ['star','⭐','gwiazda'],
-    ['galaxy','🌌','galaktyka'],
-    ['comet','☄️','kometa'],
-    ['planet','🪐','planeta'],
-    ['fire','🔥','ogień'],
-    ['water','💧','woda'],
-    ['energy','⚡','energia'],
-    ['brain','🧠','mózg'],
-    ['heartorgan','🫀','serce'],
-    ['lungs','🫁','płuca'],
-    ['bone','🦴','kość'],
-    ['tooth','🦷','ząb'],
-    ['eye','👁️','oko'],
-    ['human','👤','człowiek'],
-    ['baby','👶','dziecko'],
-    ['egg','🥚','jajo'],
-    ['rock','🪨','skała'],
-    ['snow','❄️','lód / śnieg'],
-    ['volcano','🌋','wulkan'],
-    ['ocean','🌊','ocean'],
-    ['kiwi','🥝','kiwi'],
-    ['potato','🥔','ziemniak'],
-    ['banana','🍌','banan'],
-    ['apple','🍎','jabłko'],
-    ['rocket','🚀','rakieta'],
-    ['car','🚗','samochód'],
-    ['plane','✈️','samolot'],
-    ['gear','⚙️','mechanizm'],
+  // Własna kolekcja: bez zwykłych emoji Unicode. Większość to ssaki.
+  // Dodatkowe zwierzęta korzystają z lekkich SVG w tym samym stylu co pozostałe własne ikonki.
+  function mammalSvg(kind, body='#a8754f', accent='#d9b08c'){
+    const shapes={
+      long:`<ellipse cx="30" cy="36" rx="21" ry="13" fill="${body}"/><circle cx="48" cy="28" r="10" fill="${body}"/><path d="M51 18l5-8 3 10M44 19l-2-8-5 9" fill="${accent}"/><circle cx="51" cy="27" r="2" fill="#111"/><path d="M10 36C2 31 3 24 9 22" stroke="${body}" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M20 46v9M39 46v9" stroke="${body}" stroke-width="5" stroke-linecap="round"/>`,
+      round:`<ellipse cx="31" cy="37" rx="23" ry="17" fill="${body}"/><circle cx="46" cy="27" r="11" fill="${body}"/><circle cx="42" cy="18" r="5" fill="${accent}"/><circle cx="53" cy="20" r="5" fill="${accent}"/><circle cx="49" cy="27" r="2" fill="#111"/><ellipse cx="57" cy="32" rx="4" ry="3" fill="${accent}"/><path d="M18 49v7M39 50v6" stroke="${body}" stroke-width="5" stroke-linecap="round"/>`,
+      hoof:`<ellipse cx="29" cy="35" rx="22" ry="12" fill="${body}"/><path d="M43 32c1-12 5-20 11-22 5 5 5 14 1 24Z" fill="${body}"/><circle cx="53" cy="17" r="2" fill="#111"/><path d="M17 44v12M29 45v11M40 43v13M50 40v16" stroke="${body}" stroke-width="4"/><path d="M50 11l-3-7M55 10l4-7" stroke="${accent}" stroke-width="3" stroke-linecap="round"/>`,
+      marine:`<ellipse cx="31" cy="34" rx="24" ry="14" fill="${body}"/><path d="M9 34 2 25v18Z" fill="${accent}"/><path d="M29 44c5 8 11 10 17 7-2-6-7-9-13-10Z" fill="${accent}"/><circle cx="49" cy="30" r="2" fill="#111"/>`,
+      primate:`<ellipse cx="31" cy="38" rx="18" ry="17" fill="${body}"/><circle cx="32" cy="22" r="14" fill="${body}"/><circle cx="19" cy="22" r="6" fill="${accent}"/><circle cx="45" cy="22" r="6" fill="${accent}"/><ellipse cx="32" cy="26" rx="9" ry="7" fill="${accent}"/><circle cx="27" cy="20" r="2" fill="#111"/><circle cx="37" cy="20" r="2" fill="#111"/><path d="M18 39 7 50M45 39l11 11" stroke="${body}" stroke-width="6" stroke-linecap="round"/>`,
+      rodent:`<ellipse cx="31" cy="38" rx="21" ry="14" fill="${body}"/><circle cx="47" cy="30" r="10" fill="${body}"/><circle cx="44" cy="21" r="6" fill="${accent}"/><circle cx="52" cy="23" r="5" fill="${accent}"/><circle cx="50" cy="29" r="2" fill="#111"/><path d="M11 40C2 45 2 54 10 57" stroke="${accent}" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M55 33h7M54 36h8" stroke="#ddd" stroke-width="1.5"/>`
+    };
+    return `<svg viewBox="0 0 64 64" aria-hidden="true">${shapes[kind]||shapes.long}</svg>`;
+  }
+
+  const MAMMALS = [
+    ['alpaca','alpaka','hoof','#caa77d','#eee0c7'],['antelope','antylopa','hoof','#b27b49','#e4c28f'],['armadillo','pancernik','round','#8d7b68','#b8aa9c'],
+    ['ayeaye','palczak madagaskarski','primate','#5b514c','#c2a58d'],['baboon','pawian','primate','#7c6657','#d0a88d'],['badger','borsuk','round','#555b61','#e8e8e8'],
+    ['beaver','bóbr','rodent','#8a5b3c','#c88955'],['bison','bizon','hoof','#6b432d','#a47452'],['buffalo','bawół','hoof','#49433d','#82776b'],
+    ['camel','wielbłąd','hoof','#b98552','#d9b17f'],['capybara','kapibara','rodent','#9a6b45','#c8996d'],['caracal','karakal','long','#c8874d','#2b211b'],
+    ['cheetah','gepard','long','#d9a64c','#4b3722'],['chinchilla','szynszyla','rodent','#929aa5','#d8dde3'],['chipmunk','pręgowiec','rodent','#a96d3f','#f0c38e'],
+    ['civet','cyweta','long','#8b7764','#d9c6a8'],['cougar','puma','long','#b98b63','#e3c3a1'],['coyote','kojot','long','#9a7a58','#d0b28d'],
+    ['dingo','dingo','long','#c48b4f','#e6bd86'],['donkey','osioł','hoof','#77736e','#bdb7ad'],['dormouse','popielica','rodent','#a7896a','#e1c9ad'],
+    ['dugong','diugoń','marine','#82939a','#b4c2c7'],['eland','eland','hoof','#aa7b54','#d8b896'],['ferret','fretka','long','#8a6a51','#e7d2b8'],
+    ['fossa','fossa','long','#8c6245','#c59a77'],['gazelle','gazela','hoof','#c18c55','#f0d2a8'],['gibbon','gibon','primate','#5e5148','#c7aa8e'],
+    ['giraffe','żyrafa','hoof','#d7a24d','#7a4c2e'],['gnu','gnu','hoof','#665e55','#a89c8e'],['groundhog','świstak','rodent','#8c664a','#c69a76'],
+    ['guineapig','świnka morska','rodent','#b56f42','#f2d1ad'],['hyena','hiena','long','#9b815f','#5c4b38'],['ibex','koziorożec','hoof','#8b735d','#c5ad91'],
+    ['jackal','szakal','long','#9c7651','#d0b184'],['jaguar','jaguar','long','#c9913f','#3c2b1d'],['jerboa','skoczek pustynny','rodent','#c79b6a','#ead1ad'],
+    ['lemur','lemur','primate','#6f7378','#e3e3e3'],['leopard','lampart','long','#d0a14d','#47301e'],['llama','lama','hoof','#bca184','#eee0ce'],
+    ['lynx','ryś','long','#a47d5b','#2d2926'],['macaque','makak','primate','#8b715f','#d4ad91'],['marmoset','marmozeta','primate','#75675d','#e6d7c8'],
+    ['marten','kuna','long','#76513b','#c99c70'],['meerkat','surykatka','long','#b98b5f','#e1bd92'],['mink','norka','long','#4f3b31','#9a7764'],
+    ['mole','kret','round','#4c4a49','#c9b3a8'],['mongoose','mangusta','long','#92735a','#c8a98d'],['moose','łoś','hoof','#76543d','#c69a6b'],
+    ['muskox','piżmowół','hoof','#5f4333','#a98567'],['narwhal','narwal','marine','#9eb4bd','#e9e4cf'],['ocelot','ocelot','long','#c89b5a','#493523'],
+    ['okapi','okapi','hoof','#6e4937','#e5dfd8'],['otter','wydra','long','#75513a','#b78b69'],['pangolin','łuskowiec','round','#92795e','#c2a98b'],
+    ['peccary','pekari','round','#67605a','#a69a8e'],['porcupine','jeżozwierz','round','#6f5b49','#d7c7ae'],['prairiedog','nieświszczuk','rodent','#ad7d55','#dfb58c'],
+    ['proboscismonkey','nosacz sundajski','primate','#9b735e','#d5a68b'],['quokka','kuoka','rodent','#9b704f','#d9ad86'],['raccoon','szop pracz','round','#666a6d','#d8d8d8'],
+    ['redpanda','panda mała','long','#b95d36','#f0c2a4'],['reindeer','renifer','hoof','#8d684c','#d4b18c'],['saiga','suhak','hoof','#b99a71','#e1c7a3'],
+    ['seal','foka','marine','#8c9aa2','#c3cdd2'],['serval','serwal','long','#d0a252','#443425'],['shrew','ryjówka','rodent','#6d625a','#b5a69a'],
+    ['skunk','skunks','long','#27292b','#f1f1f1'],['sloth','leniwiec','round','#887363','#d8c6ad'],['squirrel','wiewiórka','rodent','#b5683d','#e0a06c'],
+    ['stoat','gronostaj','long','#e7e1d8','#292929'],['tapir','tapir','round','#57504c','#9b8f87'],['tarsier','wyrak','primate','#76675d','#d8c4ad'],
+    ['tenrec','tenrek','round','#80654e','#c6a98d'],['vicuna','wikunia','hoof','#c38f5c','#ead0ae'],['walrus','mors','marine','#a87d68','#eee2c8'],
+    ['warthog','guziec','round','#6f5a4c','#c3a48c'],['weasel','łasica','long','#9a6642','#e6c5a3'],['wolverine','rosomak','round','#514239','#b98c68'],
+    ['yak','jak','hoof','#4b4038','#9f8a78'],['zebu','zebu','hoof','#9b8d7d','#d8cfc4'],['orca','orka','marine','#22272b','#f3f5f7'],
+    ['bluewhale','płetwal błękitny','marine','#657f91','#a8becb'],['spermwhale','kaszalot','marine','#6d7780','#aeb8bf'],['porpoise','morświn','marine','#738b96','#b7c8cf'],
+    ['elephantseal','słoń morski','marine','#7d7771','#b7afa8'],['leopardseal','lampart morski','marine','#777d80','#c6c9c9'],['treekangaroo','kangur drzewny','long','#9a5d3e','#d39b73'],
+    ['wombat','wombat','round','#7e6857','#b79a80'],['tasmaniandevil','diabeł tasmański','round','#363332','#c7a98e'],['numbat','mrówkożer workowaty','long','#b66c3e','#e6c09b'],
+    ['bandicoot','jamraj','rodent','#8c6b55','#c6a58b'],['bilby','wielkouch króliczy','rodent','#8a7f77','#d5c6bc'],['sugarglider','lotopałanka','rodent','#8b8580','#e3ded8'],
+    ['anteater','mrówkojad','long','#6e6258','#c3b3a4'],['aardvark','mrównik','long','#9b7762','#d2ad96'],['treepangolin','łuskowiec nadrzewny','round','#8a735b','#c3aa8b']
   ];
-  EXTRA_CUSTOM_META.forEach(([id,glyph])=>{ CUSTOM_ICONS[id]=`<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="29" fill="#243044" stroke="#66758a" stroke-width="2"/><text x="32" y="43" text-anchor="middle" font-size="34">${glyph}</text></svg>`; });
-  const EMOJIS=[
-    ['custom:kangaroo','kangur'],['custom:mouse','mysz'],['custom:rat','szczur'],['custom:rabbit','królik'],['custom:fox','lis'],['custom:wolf','wilk'],['custom:dog','pies'],['custom:cat','kot'],['custom:lion','lew'],['custom:tiger','tygrys'],['custom:horse','koń'],['custom:zebra','zebra'],['custom:deer','jeleń'],['custom:cow','krowa'],['custom:pig','świnia'],['custom:boar','dzik'],['custom:sheep','owca'],['custom:goat','koza'],['custom:elephant','słoń'],['custom:rhino','nosorożec'],['custom:hippo','hipopotam'],['custom:monkey','małpa'],['custom:gorilla','goryl'],['custom:orangutan','orangutan'],['custom:bat','nietoperz'],['custom:chicken','kura'],['custom:penguin','pingwin'],['custom:eagle','orzeł'],['custom:duck','kaczka'],['custom:owl','sowa'],['custom:frog','żaba'],['custom:crocodile','krokodyl'],['custom:turtle','żółw'],['custom:lizard','jaszczurka'],['custom:snake','wąż'],['custom:fish','ryba'],['custom:tropicalfish','ryba tropikalna'],['custom:shark','rekin'],['custom:whale','wieloryb'],['custom:dolphin','delfin'],['custom:octopus','ośmiornica'],['custom:crab','krab'],['custom:lobster','homar'],['custom:shrimp','krewetka'],['custom:jellyfish','meduza'],['custom:snail','ślimak'],['custom:butterfly','motyl'],['custom:bee','pszczoła'],['custom:ant','mrówka'],['custom:beetle','chrząszcz'],['custom:spider','pająk'],['custom:scorpion','skorpion'],['custom:dna','dna'],['custom:microbe','bakteria / mikrob'],['custom:microscope','mikroskop'],['custom:testtube','probówka'],['custom:petri','szalka petriego'],['custom:seedling','kiełek'],['custom:herb','roślina'],['custom:tree','drzewo'],['custom:fungus','grzyb'],['custom:earth','ziemia'],['custom:moon','księżyc'],['custom:sun','słońce'],['custom:star','gwiazda'],['custom:galaxy','galaktyka'],['custom:comet','kometa'],['custom:planet','planeta'],['custom:fire','ogień'],['custom:water','woda'],['custom:energy','energia'],['custom:brain','mózg'],['custom:heartorgan','serce'],['custom:lungs','płuca'],['custom:bone','kość'],['custom:tooth','ząb'],['custom:eye','oko'],['custom:human','człowiek'],['custom:baby','dziecko'],['custom:egg','jajo'],['custom:rock','skała'],['custom:snow','lód / śnieg'],['custom:volcano','wulkan'],['custom:ocean','ocean'],['custom:kiwi','kiwi'],['custom:potato','ziemniak'],['custom:banana','banan'],['custom:apple','jabłko'],['custom:rocket','rakieta'],['custom:car','samochód'],['custom:plane','samolot'],['custom:gear','mechanizm'],
-    ['custom:echidna','kolczatka echidna'],['custom:platypus','dziobak platypus'],['custom:koala','koala własne'],['custom:opossum','opos opossum'],['custom:hamster','chomik własne hamster'],['custom:manatee','manat manatee'],['custom:animalcell','komórka zwierzęca komorka zwierzeca cell'],['custom:plantcell','komórka roślinna komorka roslinna cell'],
-    ['🦘','kangur'],['🐭','mysz'],['🐹','chomik'],['🐀','szczur'],['🐰','królik'],['🦊','lis'],['🐺','wilk'],['🐶','pies'],['🐱','kot'],['🦁','lew'],['🐯','tygrys'],['🐴','koń'],['🦓','zebra'],['🦌','jeleń'],['🐮','krowa'],['🐷','świnia'],['🐗','dzik'],['🐑','owca'],['🐐','koza'],['🐘','słoń'],['🦏','nosorożec'],['🦛','hipopotam'],['🐒','małpa'],['🦍','goryl'],['🦧','orangutan'],['🦇','nietoperz'],['🐔','kura'],['🐧','pingwin'],['🦅','orzeł'],['🦆','kaczka'],['🦉','sowa'],['🐸','żaba'],['🐊','krokodyl'],['🐢','żółw'],['🦎','jaszczurka'],['🐍','wąż'],['🐟','ryba'],['🐠','ryba tropikalna'],['🦈','rekin'],['🐋','wieloryb'],['🐬','delfin'],['🐙','ośmiornica'],['🦀','krab'],['🦞','homar'],['🦐','krewetka'],['🪼','meduza'],['🐌','ślimak'],['🦋','motyl'],['🐝','pszczoła'],['🐜','mrówka'],['🪲','chrząszcz'],['🕷️','pająk'],['🦂','skorpion'],
-    ['🧬','dna genetyka'],['🦠','mikrob bakteria komórka'],['🔬','mikroskop nauka'],['🧪','probówka chemia'],['⚗️','chemia'],['🧫','szalka bakterie'],['🌱','roślina kiełek'],['🌿','roślina liść'],['🌳','drzewo'],['🍄','grzyb'],['🌍','ziemia planeta'],['🌕','księżyc'],['☀️','słońce'],['⭐','gwiazda'],['🌌','kosmos galaktyka'],['☄️','kometa'],['🪐','planeta saturn'],['🔥','ogień'],['💧','woda kropla'],['⚡','energia prąd'],['🧠','mózg'],['🫀','serce'],['🫁','płuca'],['🦴','kość'],['🦷','ząb'],['👁️','oko'],['👤','człowiek osoba'],['🧑','człowiek'],['👶','dziecko'],['🤖','robot'],['💡','pomysł'],['⚙️','mechanizm koło zębate'],['🔋','bateria energia'],['🚗','samochód'],['🚀','rakieta'],['✈️','samolot'],['🏠','dom'],['🏙️','miasto'],['🏔️','góra'],['🌋','wulkan'],['🌊','ocean fala'],['🪨','skała kamień'],['❄️','śnieg lód'],['🥚','jajo'],['🥝','kiwi owoc'],['🥔','ziemniak'],['🍌','banan'],['🍎','jabłko'],['❤️','serce miłość'],['❓','pytanie'],['❗','wykrzyknik'],['✅','tak gotowe'],['❌','nie błąd']
+  MAMMALS.forEach(([id,name,kind,body,accent])=>{ CUSTOM_ICONS[id]=mammalSvg(kind,body,accent); });
+
+  const EMOJIS = [
+    ['custom:echidna','kolczatka echidna'],['custom:platypus','dziobak platypus'],['custom:koala','koala'],['custom:opossum','opos'],['custom:hamster','chomik'],['custom:manatee','manat'],
+    ...MAMMALS.map(([id,name])=>['custom:'+id,name]),
+    ['custom:animalcell','komórka zwierzęca komorka zwierzeca'],['custom:plantcell','komórka roślinna komorka roslinna']
   ];
   function renderEmojiPicker(){
     const grid=$('#emojiGrid'); if(!grid)return;
