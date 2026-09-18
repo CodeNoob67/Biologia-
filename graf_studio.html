@@ -181,6 +181,19 @@
   .sheetClose{width:20px;height:20px;display:grid;place-items:center;border:0;border-radius:5px;background:transparent;color:#91a0b6;cursor:pointer;font-size:16px;line-height:1}
   .sheetClose:hover{background:#4b1d2a;color:#fff}
 #aiFab,#aiPanel{display:none!important}
+  .colorToolWrap{position:relative}
+  .paintMenu{position:absolute;top:44px;left:0;width:330px;padding:12px;background:#111925;border:1px solid #2b384c;border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.48);display:none;z-index:90}
+  .paintMenu.open{display:block}
+  .paintTarget{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px}
+  .paintTarget button{height:34px;border:1px solid var(--line);border-radius:8px;background:#182130;color:var(--text);cursor:pointer}
+  .paintTarget button.active{border-color:var(--accent);background:#123d44}
+  .paintPalette{display:grid;grid-template-columns:repeat(10,1fr);gap:5px;margin:8px 0 11px}
+  .paintSwatch{aspect-ratio:1;border-radius:6px;border:2px solid rgba(255,255,255,.25);cursor:pointer;padding:0}
+  .paintSwatch:hover{transform:scale(1.12);border-color:white}
+  .rgbPickerRow{display:flex;align-items:center;gap:10px;border-top:1px solid var(--line);padding-top:10px}
+  .rgbPickerRow input[type=color]{width:58px;height:40px}
+  .paintValue{font:700 12px monospace;color:#c9d7e8}
+
   .emojiBtn{position:relative}
 </style>
 </head>
@@ -190,6 +203,20 @@
     <div class="brand">Graph <span>Studio</span></div>
     <button id="addNodeBtn" class="toolTab">＋ Koła</button>
     <button id="connectBtn" class="toolTab">↗ Połączenia</button>
+    <div class="colorToolWrap">
+      <button id="paintBtn" class="toolTab">🎨 Kolory</button>
+      <div id="paintMenu" class="paintMenu">
+        <div class="paintTarget">
+          <button id="paintFill" class="active">● Środek</button>
+          <button id="paintBorder">◯ Ramka</button>
+        </div>
+        <div id="paintPalette" class="paintPalette"></div>
+        <div class="rgbPickerRow">
+          <input id="paintRgb" type="color" value="#00c9d4" title="Koło RGB — wybierz dowolny kolor">
+          <div><b>Koło RGB</b><div id="paintValue" class="paintValue">#00C9D4</div></div>
+        </div>
+      </div>
+    </div>
     <button id="deleteBtn" class="toolTab danger">⌫ Usuń</button>
     <button id="undoBtn" class="toolTab" title="Cofnij (Ctrl+Z)">↶ Undo</button>
     <button id="redoBtn" class="toolTab" title="Ponów (Ctrl+Y)">↷ Redo</button>
@@ -228,14 +255,6 @@
           <div class="field">
             <label>Rozmiar: <span id="sizeValue">90</span> px</label>
             <input id="nodeSize" type="range" min="30" max="250" value="90">
-          </div>
-          <div class="field">
-            <label>Kolor koła</label>
-            <div class="colorRow"><input id="nodeColor" type="color" value="#202a39"><span id="nodeColorText">#202a39</span></div>
-          </div>
-          <div class="field">
-            <label>Kolor obramowania</label>
-            <div class="colorRow"><input id="borderColor" type="color" value="#66758a"><span id="borderColorText">#66758a</span></div>
           </div>
           <div class="field">
             <label>Grubość obramowania</label>
@@ -370,6 +389,9 @@
   let selected = null;
   let connectMode = false;
   let connectSource = null;
+  let paintMode = false;
+  let paintTarget = 'color'; // color = środek, border = ramka
+  let paintColor = '#00c9d4';
   let scale = 1;
   let panX = 0, panY = 0;
   let idCounter = 1;
@@ -499,6 +521,12 @@
       let dragging=false, dx=0,dy=0;
       el.addEventListener('pointerdown',ev=>{
         ev.stopPropagation();
+        if(paintMode){
+          n[paintTarget]=paintColor;
+          selected={type:'node',id:n.id};
+          render(); pushHistory(); autoSave();
+          return;
+        }
         if(connectMode){
           if(!connectSource){
             connectSource=n.id;
@@ -570,8 +598,6 @@
     if(selected?.type==='node'){
       const n=nodeById(selected.id); if(!n)return;
       $('#nodeName').value=n.name; $('#nodeSize').value=n.size; $('#sizeValue').textContent=n.size;
-      $('#nodeColor').value=n.color; $('#nodeColorText').textContent=n.color;
-      $('#borderColor').value=n.border; $('#borderColorText').textContent=n.border;
       $('#borderWidth').value=n.borderWidth; $('#nodeX').value=n.x; $('#nodeY').value=n.y;
       if($('#emojiSize')){ const es=n.iconSize ?? lastEmojiSize; $('#emojiSize').value=es; $('#emojiSizeValue').textContent=es; }
     }
@@ -589,10 +615,44 @@
 
   $('#connectBtn').onclick=()=>{
     connectMode=!connectMode; connectSource=null;
+    if(connectMode && paintMode){paintMode=false;$('#paintBtn').classList.remove('active');$('#paintMenu').classList.remove('open');}
     $('#connectBtn').classList.toggle('active',connectMode);
     stage.classList.toggle('connect-focus',connectMode);
     render();
   };
+
+
+  // ===== KOLORY — tryb działa aż do ręcznego wyłączenia =====
+  const PAINT_COLORS=['#000000','#404040','#808080','#C0C0C0','#FFFFFF','#7F0000','#FF0000','#FF7F00','#FFFF00','#7FFF00','#00FF00','#00FF7F','#00FFFF','#007FFF','#0000FF','#7F00FF','#FF00FF','#FF007F','#7F3F00','#A0522D','#D2691E','#F4A460','#FFD700','#FFFACD','#006400','#228B22','#32CD32','#98FB98','#008080','#20B2AA','#87CEEB','#1E90FF','#000080','#4B0082','#800080','#C71585','#FFC0CB','#F5F5DC','#D5D5D5','#00C9D4'];
+  function setPaintTarget(target){
+    paintTarget=target;
+    $('#paintFill').classList.toggle('active',target==='color');
+    $('#paintBorder').classList.toggle('active',target==='border');
+  }
+  function setPaintColor(c){
+    paintColor=c.toUpperCase();
+    $('#paintRgb').value=paintColor;
+    $('#paintValue').textContent=paintColor;
+  }
+  function buildPaintPalette(){
+    const box=$('#paintPalette'); box.innerHTML='';
+    PAINT_COLORS.forEach(c=>{
+      const b=document.createElement('button'); b.className='paintSwatch'; b.style.background=c; b.title=c;
+      b.onclick=e=>{e.stopPropagation();setPaintColor(c)}; box.appendChild(b);
+    });
+  }
+  $('#paintBtn').onclick=e=>{
+    e.stopPropagation();
+    paintMode=!paintMode;
+    $('#paintBtn').classList.toggle('active',paintMode);
+    $('#paintMenu').classList.toggle('open',paintMode);
+    if(paintMode && connectMode){connectMode=false;connectSource=null;$('#connectBtn').classList.remove('active');stage.classList.remove('connect-focus');render();}
+  };
+  $('#paintMenu').onclick=e=>e.stopPropagation();
+  $('#paintFill').onclick=()=>setPaintTarget('color');
+  $('#paintBorder').onclick=()=>setPaintTarget('border');
+  $('#paintRgb').addEventListener('input',e=>setPaintColor(e.target.value));
+  buildPaintPalette(); setPaintTarget('color'); setPaintColor(paintColor);
 
   function removeSelected(){
     if(!selected)return;
@@ -608,7 +668,9 @@
     if(e.key==='Escape'){
       document.querySelectorAll('.modalOverlay.open').forEach(closeModal);
       connectMode=false;connectSource=null;stage.classList.remove('connect-focus');
-      $('#connectBtn').classList.remove('active');selected=null;render();
+      $('#connectBtn').classList.remove('active');
+      paintMode=false; $('#paintBtn').classList.remove('active'); $('#paintMenu').classList.remove('open');
+      selected=null;render();
     }
   });
 
@@ -666,8 +728,6 @@
   }
   bindNodeInput('#nodeName','name');
   bindNodeInput('#nodeSize','size',Number);
-  bindNodeInput('#nodeColor','color');
-  bindNodeInput('#borderColor','border');
   bindNodeInput('#borderWidth','borderWidth',Number);
   bindNodeInput('#nodeX','x',Number);
   bindNodeInput('#nodeY','y',Number);
