@@ -2,445 +2,444 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Atlas Wiedzy</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kroniki Wiedzy</title>
 
 <style>
-*{
-    box-sizing:border-box;
-}
-
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden}
 body{
-    margin:0;
-    overflow:hidden;
-    font-family:Inter,Segoe UI,Arial,sans-serif;
-    background:#090d22;
-    color:white;
-    user-select:none;
+    font-family:"Segoe UI",Arial,sans-serif;
+    background:#111;
+    color:#fff;
 }
 
-button{
-    font-family:inherit;
-}
+/* =========================
+   ŚWIAT
+========================= */
 
-/* ===============================
-   TŁO
-================================ */
-
-#space{
+#world{
     position:fixed;
     inset:0;
     overflow:hidden;
-    z-index:-10;
+    transition:background 1.5s ease;
+}
+
+.world-stone{
     background:
-        radial-gradient(circle at 20% 20%,#352866 0,transparent 35%),
-        radial-gradient(circle at 80% 70%,#133b58 0,transparent 40%),
-        #080c20;
+        linear-gradient(#74b9d4 0 48%,#c89d62 48% 100%);
 }
 
-.star{
+.world-ancient{
+    background:
+        linear-gradient(#69bce2 0 52%,#dfb866 52%);
+}
+
+.world-medieval{
+    background:
+        linear-gradient(#7898a8 0 52%,#6d874f 52%);
+}
+
+/* słońce */
+
+.sun{
     position:absolute;
-    width:4px;
-    height:4px;
+    width:110px;
+    height:110px;
     border-radius:50%;
-    background:white;
-    opacity:.4;
-    animation:twinkle 3s infinite alternate;
+    background:#ffe16b;
+    right:9%;
+    top:8%;
+    box-shadow:0 0 80px #ffe16b99;
 }
 
-@keyframes twinkle{
-    from{opacity:.15;transform:scale(.6)}
-    to{opacity:.8;transform:scale(1.2)}
+/* chmury */
+
+.cloud{
+    position:absolute;
+    width:180px;
+    height:55px;
+    background:#fff9;
+    border-radius:100px;
+    animation:cloudMove 30s linear infinite;
 }
 
-/* ===============================
+.cloud:before,
+.cloud:after{
+    content:"";
+    position:absolute;
+    border-radius:50%;
+    background:inherit;
+}
+
+.cloud:before{
+    width:75px;height:75px;
+    left:30px;top:-30px;
+}
+
+.cloud:after{
+    width:100px;height:100px;
+    right:20px;top:-45px;
+}
+
+@keyframes cloudMove{
+    from{transform:translateX(-300px)}
+    to{transform:translateX(calc(100vw + 300px))}
+}
+
+/* =========================
+   JASKINIA
+========================= */
+
+.cave{
+    position:absolute;
+    left:-5%;
+    bottom:-8%;
+    width:58%;
+    height:82%;
+    background:#575653;
+    border-radius:48% 48% 15% 10%;
+    box-shadow:
+        inset -30px 0 50px #252525,
+        inset 30px 10px 60px #777;
+}
+
+.caveInside{
+    position:absolute;
+    left:14%;
+    bottom:0;
+    width:65%;
+    height:70%;
+    background:#242424;
+    border-radius:50% 50% 0 0;
+}
+
+/* ogień */
+
+.fire{
+    position:absolute;
+    bottom:7%;
+    left:31%;
+    width:60px;
+    height:90px;
+    animation:fire .3s infinite alternate;
+}
+
+.flame{
+    position:absolute;
+    bottom:0;
+    width:55px;
+    height:80px;
+    border-radius:50% 50% 45% 45%;
+    background:#ff6a2a;
+    transform:rotate(45deg);
+}
+
+.flame2{
+    position:absolute;
+    bottom:5px;
+    left:13px;
+    width:34px;
+    height:55px;
+    background:#ffd84b;
+    border-radius:50%;
+}
+
+@keyframes fire{
+    from{transform:scale(1) rotate(-2deg)}
+    to{transform:scale(1.08) rotate(2deg)}
+}
+
+/* =========================
    EKRANY
-================================ */
+========================= */
 
 .screen{
     position:absolute;
     inset:0;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
     opacity:0;
     pointer-events:none;
-    transform:scale(1.04);
+    transform:translateY(30px);
     transition:
-        opacity .55s ease,
-        transform .55s cubic-bezier(.2,.8,.2,1);
+        opacity .7s ease,
+        transform .7s cubic-bezier(.2,.8,.2,1);
 }
 
 .screen.active{
     opacity:1;
     pointer-events:auto;
-    transform:scale(1);
+    transform:none;
 }
 
-h1{
-    font-size:clamp(45px,7vw,95px);
-    margin:0;
-    text-align:center;
-    letter-spacing:-4px;
-}
-
-.subtitle{
-    color:#b8c2e8;
-    font-size:20px;
-    margin-top:15px;
-}
-
-/* ===============================
+/* =========================
    START
-================================ */
+========================= */
 
-.logo{
-    position:relative;
-}
-
-.logo::after{
-    content:"";
-    position:absolute;
-    width:130px;
-    height:12px;
-    background:#6de5ff;
-    border-radius:50%;
-    filter:blur(20px);
-    bottom:-10px;
-    left:50%;
-    transform:translateX(-50%);
-}
-
-.startButton{
-    margin-top:55px;
-    border:0;
-    border-radius:25px;
-    padding:20px 55px;
-    font-size:24px;
-    font-weight:800;
-    background:#ffd45a;
-    color:#302100;
-    cursor:pointer;
-    box-shadow:
-        0 12px 0 #b67c22,
-        0 20px 50px #0008;
-    transition:.18s;
-}
-
-.startButton:hover{
-    transform:translateY(-4px) scale(1.04);
-    box-shadow:
-        0 16px 0 #b67c22,
-        0 25px 60px #000a;
-}
-
-.startButton:active{
-    transform:translateY(8px);
-    box-shadow:0 4px 0 #b67c22;
-}
-
-/* ===============================
-   WYBÓR
-================================ */
-
-.choiceTitle{
-    font-size:42px;
-    margin-bottom:45px;
-}
-
-.choices{
+#start{
     display:flex;
-    gap:35px;
-    flex-wrap:wrap;
+    align-items:center;
     justify-content:center;
-}
-
-.choice{
-    width:310px;
-    height:220px;
-    border:0;
-    border-radius:35px;
-    cursor:pointer;
-    color:white;
-    position:relative;
-    overflow:hidden;
-    transition:.3s;
-    box-shadow:0 25px 70px #0008;
-}
-
-.choice:hover{
-    transform:translateY(-12px) scale(1.03);
-}
-
-.choice.history{
-    background:linear-gradient(145deg,#ef7d44,#c94255);
-}
-
-.choice.literature{
-    background:linear-gradient(145deg,#6557dc,#38359a);
-}
-
-.choiceIcon{
-    font-size:72px;
-    display:block;
-    margin-bottom:10px;
-}
-
-.choiceName{
-    font-size:27px;
-    font-weight:900;
-}
-
-.choiceGlow{
-    position:absolute;
-    width:180px;
-    height:180px;
-    background:#fff3;
-    border-radius:50%;
-    top:-90px;
-    right:-60px;
-}
-
-/* ===============================
-   HUB
-================================ */
-
-#hub{
-    justify-content:flex-start;
-    padding-top:60px;
-}
-
-.hubTitle{
-    font-size:42px;
-}
-
-.hubSubtitle{
-    color:#aeb8db;
-    margin-top:8px;
-}
-
-.gameGrid{
-    display:grid;
-    grid-template-columns:repeat(3,190px);
-    gap:25px;
-    margin-top:45px;
-}
-
-.gameCard{
-    height:180px;
-    border:0;
-    border-radius:28px;
-    background:#171d3c;
-    color:white;
-    cursor:pointer;
-    padding:15px;
-    transition:.25s;
-    box-shadow:
-        inset 0 0 0 2px #ffffff0d,
-        0 20px 35px #0006;
-}
-
-.gameCard:hover{
-    transform:translateY(-8px) rotate(-1deg);
-    background:#20284e;
-}
-
-.gameIcon{
-    font-size:50px;
-}
-
-.gameName{
-    font-weight:800;
-    margin-top:12px;
-    font-size:18px;
-}
-
-.locked{
-    filter:brightness(.45);
-}
-
-.randomCard{
+    text-align:center;
     background:
-        linear-gradient(145deg,#e54c91,#754bd7);
+        radial-gradient(circle at 50% 40%,#273459,#0b0e1b 65%);
 }
 
-/* ===============================
-   TOP BAR
-================================ */
-
-.topbar{
-    position:fixed;
-    top:20px;
-    left:20px;
-    right:20px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    z-index:100;
-    pointer-events:none;
+.title{
+    font-size:clamp(50px,8vw,105px);
+    font-weight:900;
+    letter-spacing:-5px;
+    line-height:.85;
 }
 
-.back{
-    pointer-events:auto;
+.startText{
+    margin-top:25px;
+    color:#bbc5df;
+    font-size:20px;
+}
+
+.bigButton{
     border:0;
-    background:#e64949;
-    color:white;
+    margin-top:40px;
+    padding:19px 42px;
+    border-radius:18px;
+    font-size:21px;
     font-weight:900;
-    padding:13px 20px;
-    border-radius:16px;
     cursor:pointer;
-    display:none;
-}
-
-.score{
-    background:#111733cc;
-    backdrop-filter:blur(15px);
-    padding:12px 18px;
-    border-radius:17px;
-    font-weight:800;
-}
-
-/* ===============================
-   GAME AREA
-================================ */
-
-#game{
-    background:#0b1027;
-}
-
-.gameArea{
-    width:100%;
-    height:100%;
-    position:relative;
-    overflow:hidden;
-}
-
-.gameHeader{
-    position:absolute;
-    top:85px;
-    width:100%;
-    text-align:center;
-    z-index:20;
-}
-
-.gameHeader h2{
-    font-size:35px;
-    margin:0;
-}
-
-.gameHeader p{
-    color:#aab5da;
-}
-
-/* ===============================
-   GRAF
-================================ */
-
-#graphCanvas{
-    position:absolute;
-    inset:0;
-}
-
-.graphLine{
-    position:absolute;
-    height:5px;
-    background:#53648c;
-    transform-origin:left center;
-    border-radius:10px;
-    z-index:1;
-    transition:.4s;
-}
-
-.node{
-    position:absolute;
-    width:120px;
-    height:120px;
-    border-radius:50%;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
-    font-weight:800;
-    cursor:pointer;
-    padding:12px;
-    z-index:5;
-    box-shadow:
-        inset -12px -15px 20px #0003,
-        0 15px 30px #0006;
-    transition:
-        transform .2s,
-        box-shadow .2s;
-}
-
-.node:hover{
-    transform:scale(1.12);
-    box-shadow:
-        inset -12px -15px 20px #0003,
-        0 0 35px #fff4;
-}
-
-.node.correct{
-    animation:correct .6s;
-}
-
-@keyframes correct{
-    50%{transform:scale(1.35)}
-}
-
-/* ===============================
-   TIMELINE
-================================ */
-
-.timeline{
-    position:absolute;
-    left:10%;
-    right:10%;
-    top:55%;
-    height:10px;
-    background:#6675a2;
-    border-radius:10px;
-}
-
-.timelineItem{
-    position:absolute;
-    width:160px;
-    min-height:75px;
-    border-radius:20px;
-    background:#f3b849;
-    color:#302000;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    padding:10px;
-    font-weight:900;
-    cursor:grab;
-    box-shadow:0 12px 25px #0006;
+    background:#ffd54f;
+    color:#302300;
+    box-shadow:0 9px 0 #a87517;
     transition:.2s;
 }
 
-.timelineItem:hover{
-    transform:scale(1.05);
+.bigButton:hover{
+    transform:translateY(-5px) scale(1.04);
+    box-shadow:0 14px 0 #a87517;
 }
 
-/* ===============================
-   QUIZ / DETEKTYW
-================================ */
+.bigButton:active{
+    transform:translateY(5px);
+    box-shadow:0 4px 0 #a87517;
+}
 
-.quizBox{
-    width:min(700px,90%);
-    padding:35px;
-    background:#151c3d;
+/* =========================
+   MAPA / EPOKA
+========================= */
+
+#era{
+    z-index:10;
+}
+
+.eraTop{
+    position:absolute;
+    left:50%;
+    top:25px;
+    transform:translateX(-50%);
+    background:#171717aa;
+    backdrop-filter:blur(12px);
+    padding:12px 25px;
+    border-radius:100px;
+    font-weight:800;
+    z-index:30;
+}
+
+.progress{
+    position:absolute;
+    top:25px;
+    right:25px;
+    z-index:30;
+    background:#111b;
+    padding:12px 18px;
+    border-radius:15px;
+}
+
+/* =========================
+   OPIS — UKŁAD Z RYSUNKU
+========================= */
+
+.story{
+    position:absolute;
+    inset:0;
+    display:grid;
+    grid-template-columns:55% 45%;
+}
+
+.storyPicture{
+    position:relative;
+    overflow:hidden;
+}
+
+.storyText{
+    display:flex;
+    align-items:center;
+    padding:7%;
+    background:
+        linear-gradient(90deg,#1110,#111b 15%,#111e);
+}
+
+.textBox{
+    max-width:600px;
+    animation:textEnter .8s ease;
+}
+
+.textBox h1{
+    font-size:clamp(35px,5vw,70px);
+    line-height:1;
+    margin:0 0 25px;
+}
+
+.textBox p{
+    font-size:20px;
+    line-height:1.6;
+    color:#e0e3e7;
+}
+
+@keyframes textEnter{
+    from{
+        opacity:0;
+        transform:translateX(60px);
+    }
+    to{
+        opacity:1;
+        transform:none;
+    }
+}
+
+/* =========================
+   CZŁOWIEK W JASKINI
+========================= */
+
+.person{
+    position:absolute;
+    width:170px;
+    height:330px;
+    left:37%;
+    bottom:12%;
+}
+
+.head{
+    position:absolute;
+    width:85px;
+    height:85px;
+    background:#d99664;
+    border-radius:50%;
+    left:42px;
+}
+
+.body{
+    position:absolute;
+    width:100px;
+    height:150px;
+    left:34px;
+    top:75px;
+    background:#7a4932;
+    border-radius:40px 40px 20px 20px;
+}
+
+.leg{
+    position:absolute;
+    width:30px;
+    height:115px;
+    background:#70402d;
+    top:210px;
+    border-radius:20px;
+}
+
+.leg1{left:45px;transform:rotate(5deg)}
+.leg2{left:95px;transform:rotate(-6deg)}
+
+.arm{
+    position:absolute;
+    width:100px;
+    height:25px;
+    background:#d99664;
+    top:110px;
+    left:105px;
+    border-radius:20px;
+    transform-origin:left center;
+    animation:paintArm 1.4s ease-in-out infinite alternate;
+}
+
+@keyframes paintArm{
+    from{transform:rotate(-20deg)}
+    to{transform:rotate(12deg)}
+}
+
+.painting{
+    position:absolute;
+    left:63%;
+    top:37%;
+    font-size:80px;
+    filter:sepia(1) saturate(4);
+    animation:paintingGlow 2s infinite alternate;
+}
+
+@keyframes paintingGlow{
+    from{opacity:.6}
+    to{opacity:1}
+}
+
+/* =========================
+   DOLNE PRZYCISKI
+========================= */
+
+.controls{
+    position:absolute;
+    bottom:25px;
+    right:30px;
+    display:flex;
+    gap:12px;
+    z-index:100;
+}
+
+.control{
+    border:0;
+    border-radius:15px;
+    padding:14px 22px;
+    background:#fff;
+    color:#222;
+    font-weight:900;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.control:hover{
+    transform:scale(1.06);
+}
+
+.graphButton{
+    background:#7ce0d2;
+}
+
+/* =========================
+   ZADANIE
+========================= */
+
+#task{
+    background:#10152c;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.taskBox{
+    width:min(760px,90%);
+    background:#1b2244;
+    padding:45px;
     border-radius:35px;
-    box-shadow:0 30px 70px #0008;
+    box-shadow:0 30px 80px #0008;
     text-align:center;
 }
 
-.question{
-    font-size:27px;
-    font-weight:800;
-    margin-bottom:30px;
+.taskType{
+    color:#ffd95b;
+    font-weight:900;
+    letter-spacing:2px;
+}
+
+.taskQuestion{
+    font-size:30px;
+    font-weight:900;
+    margin:20px 0 30px;
 }
 
 .answers{
@@ -450,10 +449,10 @@ h1{
 }
 
 .answer{
-    border:0;
     padding:18px;
-    border-radius:18px;
-    background:#26305d;
+    border:0;
+    border-radius:17px;
+    background:#303b70;
     color:white;
     font-size:17px;
     font-weight:700;
@@ -462,163 +461,209 @@ h1{
 }
 
 .answer:hover{
-    transform:scale(1.03);
-    background:#344178;
+    transform:translateY(-4px);
+    background:#3e4c89;
 }
 
-.answer.good{
-    background:#37b66c;
+.answer.correct{
+    background:#37b76c;
 }
 
-.answer.bad{
-    background:#d64d59;
+.answer.wrong{
+    background:#d84e5b;
 }
 
-/* ===============================
-   MEMORY
-================================ */
+/* =========================
+   GRAF
+========================= */
 
-.memoryGrid{
-    display:grid;
-    grid-template-columns:repeat(4,120px);
-    gap:15px;
+#graph{
+    background:
+        radial-gradient(circle,#1c294b,#080d1d 70%);
 }
 
-.memoryCard{
-    width:120px;
-    height:120px;
-    perspective:600px;
-    cursor:pointer;
-}
-
-.memoryInner{
+.graphTitle{
+    position:absolute;
+    top:30px;
     width:100%;
-    height:100%;
-    transition:.5s;
-    transform-style:preserve-3d;
-    position:relative;
+    text-align:center;
+    z-index:10;
 }
 
-.memoryCard.open .memoryInner{
-    transform:rotateY(180deg);
+.graphTitle h1{
+    margin:0;
+    font-size:40px;
 }
 
-.memoryFace{
+.graphTitle p{
+    color:#aab7d8;
+}
+
+#graphArea{
+    position:absolute;
+    inset:100px 0 0;
+}
+
+.connection{
+    position:absolute;
+    height:6px;
+    background:#67779d;
+    transform-origin:left center;
+    border-radius:10px;
+}
+
+.node{
+    position:absolute;
+    width:135px;
+    height:135px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:10px;
+    font-weight:900;
+    background:#e7a748;
+    box-shadow:
+        inset -15px -15px 25px #0002,
+        0 15px 40px #0008;
+    transform:scale(0);
+    animation:nodeAppear .6s forwards;
+}
+
+.node.locked{
+    background:#242b3d;
+    color:#75809a;
+    border:3px dashed #50596e;
+}
+
+@keyframes nodeAppear{
+    to{transform:scale(1)}
+}
+
+/* =========================
+   PRZEJŚCIE EPOKI
+========================= */
+
+#transition{
+    position:fixed;
+    inset:0;
+    z-index:1000;
+    pointer-events:none;
+    opacity:0;
+    overflow:hidden;
+}
+
+#transition.show{
+    opacity:1;
+}
+
+.darkCloud{
+    position:absolute;
+    width:500px;
+    height:220px;
+    border-radius:50%;
+    background:#171b25;
+    filter:blur(20px);
+    box-shadow:
+        100px 40px 0 #252936,
+        -100px 80px 0 #0d1017;
+}
+
+#transition.show .c1{
+    animation:storm1 2.8s ease-in-out forwards;
+}
+
+#transition.show .c2{
+    animation:storm2 2.8s ease-in-out forwards;
+}
+
+#transition.show .c3{
+    animation:storm3 2.8s ease-in-out forwards;
+}
+
+.c1{top:5%;left:-600px}
+.c2{top:35%;right:-600px}
+.c3{bottom:-100px;left:-600px}
+
+@keyframes storm1{
+    40%,65%{left:20%}
+    100%{left:120%}
+}
+
+@keyframes storm2{
+    40%,65%{right:15%}
+    100%{right:120%}
+}
+
+@keyframes storm3{
+    40%,65%{left:30%}
+    100%{left:130%}
+}
+
+.eraChangeText{
     position:absolute;
     inset:0;
-    border-radius:20px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    padding:8px;
-    backface-visibility:hidden;
-    font-weight:800;
-}
-
-.memoryBack{
-    background:#27315d;
-    font-size:35px;
-}
-
-.memoryFront{
-    background:#ffd45a;
-    color:#322300;
-    transform:rotateY(180deg);
-}
-
-/* ===============================
-   MODAL
-================================ */
-
-.modal{
-    position:fixed;
-    inset:0;
-    background:#050817cc;
-    backdrop-filter:blur(12px);
-    z-index:500;
     display:flex;
     justify-content:center;
     align-items:center;
-    opacity:0;
-    pointer-events:none;
-    transition:.3s;
-}
-
-.modal.show{
-    opacity:1;
-    pointer-events:auto;
-}
-
-.modalBox{
-    width:min(500px,90%);
-    background:#171e41;
-    border-radius:35px;
-    padding:35px;
-    text-align:center;
-    transform:scale(.7);
-    transition:.35s cubic-bezier(.2,1.5,.4,1);
-}
-
-.modal.show .modalBox{
-    transform:scale(1);
-}
-
-.modalIcon{
-    font-size:70px;
-}
-
-.modalBox button{
-    border:0;
-    border-radius:16px;
-    padding:14px 25px;
-    background:#ffd45a;
+    font-size:60px;
     font-weight:900;
-    cursor:pointer;
+    opacity:0;
 }
 
-/* ===============================
-   PARTICLES
-================================ */
+#transition.show .eraChangeText{
+    animation:eraText 2.8s;
+}
 
-.particle{
+@keyframes eraText{
+    35%{opacity:0}
+    48%,62%{opacity:1}
+    75%{opacity:0}
+}
+
+/* =========================
+   POWIADOMIENIE
+========================= */
+
+.reward{
     position:fixed;
-    width:12px;
-    height:12px;
-    border-radius:50%;
-    pointer-events:none;
-    z-index:1000;
-    animation:particle 900ms forwards;
+    left:50%;
+    top:25px;
+    transform:translate(-50%,-150px);
+    background:#ffd755;
+    color:#2d2300;
+    padding:16px 28px;
+    border-radius:18px;
+    font-weight:900;
+    z-index:2000;
+    box-shadow:0 15px 50px #0008;
+    transition:.5s cubic-bezier(.2,1.4,.4,1);
 }
 
-@keyframes particle{
-    to{
-        transform:translate(var(--x),var(--y)) scale(0);
-        opacity:0;
-    }
+.reward.show{
+    transform:translate(-50%,0);
 }
 
-@media(max-width:700px){
+/* =========================
+   RESPONSIVE
+========================= */
 
-    .gameGrid{
-        grid-template-columns:repeat(2,150px);
+@media(max-width:800px){
+    .story{
+        grid-template-columns:1fr;
     }
 
-    .gameCard{
-        height:140px;
+    .storyText{
+        position:absolute;
+        bottom:0;
+        width:100%;
+        min-height:45%;
+        background:#111e;
     }
 
     .answers{
         grid-template-columns:1fr;
-    }
-
-    .memoryGrid{
-        grid-template-columns:repeat(3,90px);
-    }
-
-    .memoryCard{
-        width:90px;
-        height:90px;
     }
 }
 </style>
@@ -626,810 +671,616 @@ h1{
 
 <body>
 
-<div id="space"></div>
+<div id="world" class="world-stone">
 
-<div class="topbar">
-    <button class="back" id="backButton" onclick="goBack()">← POWRÓT</button>
-    <div class="score">⭐ <span id="score">0</span></div>
+    <div class="sun"></div>
+
+    <div class="cloud" style="top:12%;animation-delay:-8s"></div>
+    <div class="cloud" style="top:23%;animation-delay:-19s;transform:scale(.7)"></div>
+
 </div>
 
-<!-- START -->
+<!-- ================= START ================= -->
 
 <section id="start" class="screen active">
 
-    <div class="logo">
-        <h1>ATLAS<br>WIEDZY</h1>
-    </div>
+    <div>
+        <div class="title">
+            KRONIKI<br>WIEDZY
+        </div>
 
-    <div class="subtitle">
-        Interaktywna podróż przez wiedzę
-    </div>
+        <div class="startText">
+            Historia nie jest listą dat.<br>
+            To sieć wydarzeń.
+        </div>
 
-    <button class="startButton" onclick="showScreen('category')">
-        ROZPOCZNIJ
-    </button>
-
-</section>
-
-<!-- CATEGORY -->
-
-<section id="category" class="screen">
-
-    <div class="choiceTitle">
-        Wybierz świat
-    </div>
-
-    <div class="choices">
-
-        <button class="choice history" onclick="chooseCategory('history')">
-
-            <div class="choiceGlow"></div>
-
-            <span class="choiceIcon">🏺</span>
-
-            <span class="choiceName">
-                HISTORYCZNE
-            </span>
-
+        <button class="bigButton" onclick="begin()">
+            ROZPOCZNIJ PODRÓŻ
         </button>
-
-        <button class="choice literature" onclick="chooseCategory('literature')">
-
-            <div class="choiceGlow"></div>
-
-            <span class="choiceIcon">📖</span>
-
-            <span class="choiceName">
-                LITERACKIE
-            </span>
-
-        </button>
-
     </div>
 
 </section>
 
-<!-- HUB -->
+<!-- ================= EPOKA ================= -->
 
-<section id="hub" class="screen">
+<section id="era" class="screen">
 
-    <div class="hubTitle" id="hubTitle">
-        Wybierz doświadczenie
+    <div class="eraTop" id="eraName">
+        EPOKA KAMIENIA
     </div>
 
-    <div class="hubSubtitle">
-        Każde działa inaczej.
+    <div class="progress">
+        ✦ Elementy grafu:
+        <span id="points">1</span>/6
     </div>
 
-    <div class="gameGrid">
+    <div class="story">
 
-        <button class="gameCard" onclick="startMode('graph')">
-            <div class="gameIcon">◉</div>
-            <div class="gameName">SIEĆ</div>
+        <!-- LEWA STRONA -->
+
+        <div class="storyPicture">
+
+            <div class="cave">
+
+                <div class="caveInside"></div>
+
+                <div class="person">
+                    <div class="head"></div>
+                    <div class="body"></div>
+                    <div class="leg leg1"></div>
+                    <div class="leg leg2"></div>
+                    <div class="arm"></div>
+                </div>
+
+                <div class="painting">🦬</div>
+
+                <div class="fire">
+                    <div class="flame"></div>
+                    <div class="flame2"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- PRAWA STRONA -->
+
+        <div class="storyText">
+
+            <div class="textBox">
+
+                <h1 id="storyTitle">
+                    Pierwsi artyści
+                </h1>
+
+                <p id="storyDescription">
+                    Ludzie epoki kamienia pozostawiali na ścianach
+                    jaskiń malowidła przedstawiające między innymi
+                    zwierzęta.
+                    <br><br>
+                    Dzięki takim śladom możemy dziś dowiedzieć się
+                    więcej o życiu ludzi sprzed tysięcy lat.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="controls">
+
+        <button class="control graphButton" onclick="openGraph()">
+            ◉ GRAF
         </button>
 
-        <button class="gameCard" onclick="startMode('timeline')">
-            <div class="gameIcon">⌛</div>
-            <div class="gameName">CZAS</div>
-        </button>
-
-        <button class="gameCard" onclick="startMode('detective')">
-            <div class="gameIcon">🔎</div>
-            <div class="gameName">TAJEMNICA</div>
-        </button>
-
-        <button class="gameCard" onclick="startMode('memory')">
-            <div class="gameIcon">✦</div>
-            <div class="gameName">POŁĄCZENIA</div>
-        </button>
-
-        <button class="gameCard" onclick="startMode('quiz')">
-            <div class="gameIcon">⚡</div>
-            <div class="gameName">WYZWANIE</div>
-        </button>
-
-        <button class="gameCard randomCard" onclick="randomMode()">
-            <div class="gameIcon">?</div>
-            <div class="gameName">NIESPODZIANKA</div>
+        <button class="control" onclick="openTask()">
+            ZADANIE →
         </button>
 
     </div>
 
 </section>
 
-<!-- GAME -->
+<!-- ================= TASK ================= -->
 
-<section id="game" class="screen">
-    <div id="gameArea" class="gameArea"></div>
+<section id="task" class="screen">
+
+    <div class="taskBox">
+
+        <div class="taskType">
+            ODKRYCIE
+        </div>
+
+        <div class="taskQuestion">
+            Dlaczego malowidła jaskiniowe są ważne dla historyków?
+        </div>
+
+        <div class="answers">
+
+            <button class="answer"
+                onclick="answer(this,false)">
+                Pokazują dokładną temperaturę Ziemi
+            </button>
+
+            <button class="answer"
+                onclick="answer(this,true)">
+                Są źródłem informacji o dawnych ludziach
+            </button>
+
+            <button class="answer"
+                onclick="answer(this,false)">
+                Powstały jako współczesne dekoracje
+            </button>
+
+            <button class="answer"
+                onclick="answer(this,false)">
+                Są pierwszymi fotografiami
+            </button>
+
+        </div>
+
+    </div>
+
 </section>
 
-<!-- MODAL -->
+<!-- ================= GRAPH ================= -->
 
-<div class="modal" id="modal">
+<section id="graph" class="screen">
 
-    <div class="modalBox">
+    <div class="graphTitle">
 
-        <div class="modalIcon" id="modalIcon">✨</div>
+        <h1>TWÓJ GRAF HISTORII</h1>
 
-        <h2 id="modalTitle">
-            Świetnie!
-        </h2>
+        <p>
+            Elementy zdobywasz podczas podróży.
+        </p>
 
-        <p id="modalText"></p>
+    </div>
 
-        <button onclick="closeModal()">
-            DALEJ
+    <div id="graphArea"></div>
+
+    <div class="controls">
+
+        <button class="control" onclick="show('era')">
+            ← WRÓĆ
         </button>
 
     </div>
 
+</section>
+
+<!-- ================= TRANSITION ================= -->
+
+<div id="transition">
+
+    <div class="darkCloud c1"></div>
+    <div class="darkCloud c2"></div>
+    <div class="darkCloud c3"></div>
+
+    <div class="eraChangeText" id="eraChangeText">
+        NOWA EPOKA
+    </div>
+
+</div>
+
+<div id="reward" class="reward">
+    ✦ Zdobyto nowy element grafu!
 </div>
 
 <script>
 
-/* ======================================================
-   GLOBAL
-====================================================== */
+/* ===================================================
+   DANE
+=================================================== */
 
-let category = "history";
-let score = 0;
-let currentScreen = "start";
+let graphPoints = 1;
+let taskCompleted = false;
+let currentEra = 0;
 
-const historyData = {
+const eras = [
 
-    graph:[
-        ["Starożytny Egipt","Piramidy","Faraon","Nil"],
-        ["Rzym","Cesarstwo","Legiony","Koloseum"],
-        ["Średniowiecze","Rycerstwo","Zamki","Feudalizm"]
-    ],
+    {
+        name:"EPOKA KAMIENIA",
+        title:"Pierwsi artyści",
+        description:
+        `Ludzie epoki kamienia pozostawiali na ścianach jaskiń
+        malowidła przedstawiające między innymi zwierzęta.
+        <br><br>
+        Dzięki takim śladom możemy dziś dowiedzieć się więcej
+        o życiu ludzi sprzed tysięcy lat.`,
+        world:"world-stone"
+    },
 
-    questions:[
-        {
-            q:"Która cywilizacja zbudowała piramidy w Gizie?",
-            a:["Egipcjanie","Rzymianie","Wikingowie","Aztekowie"],
-            good:0
-        },
-        {
-            q:"Które miasto było centrum Imperium Rzymskiego?",
-            a:["Rzym","Ateny","Paryż","Londyn"],
-            good:0
-        },
-        {
-            q:"Co było charakterystyczne dla europejskiego średniowiecza?",
-            a:["Feudalizm","Internet","Silniki parowe","Lotnictwo"],
-            good:0
-        }
-    ],
+    {
+        name:"STAROŻYTNOŚĆ",
+        title:"Narodziny wielkich cywilizacji",
+        description:
+        `W różnych częściach świata zaczęły rozwijać się
+        miasta, państwa oraz rozbudowane systemy pisma.
+        <br><br>
+        Pismo pozwoliło ludziom zapisywać prawa,
+        wydarzenia i wiedzę dla następnych pokoleń.`,
+        world:"world-ancient"
+    },
 
-    memory:[
-        ["Egipt","Piramidy"],
-        ["Rzym","Legiony"],
-        ["Gutenberg","Druk"],
-        ["Wikingowie","Skandynawia"]
-    ]
-
-};
-
-const literatureData = {
-
-    graph:[
-        ["Literatura","Epika","Liryka","Dramat"],
-        ["Epika","Narrator","Fabuła","Bohater"],
-        ["Dramat","Dialog","Akt","Scena"]
-    ],
-
-    questions:[
-        {
-            q:"Kto opowiada wydarzenia w utworze epickim?",
-            a:["Narrator","Reżyser","Czytelnik","Aktor"],
-            good:0
-        },
-        {
-            q:"Który rodzaj literacki jest związany z przedstawieniem wydarzeń na scenie?",
-            a:["Dramat","Liryka","Legenda","Reportaż"],
-            good:0
-        },
-        {
-            q:"Jak nazywa się ciąg wydarzeń w utworze?",
-            a:["Fabuła","Rym","Akapit","Didaskalia"],
-            good:0
-        }
-    ],
-
-    memory:[
-        ["Epika","Narrator"],
-        ["Dramat","Dialog"],
-        ["Liryka","Podmiot liryczny"],
-        ["Fabuła","Wydarzenia"]
-    ]
-
-};
-
-function data(){
-    return category==="history"
-        ? historyData
-        : literatureData;
-}
-
-/* ======================================================
-   STARS
-====================================================== */
-
-const space=document.getElementById("space");
-
-for(let i=0;i<80;i++){
-
-    const star=document.createElement("div");
-
-    star.className="star";
-
-    star.style.left=Math.random()*100+"%";
-    star.style.top=Math.random()*100+"%";
-
-    const size=Math.random()*3+1;
-
-    star.style.width=size+"px";
-    star.style.height=size+"px";
-
-    star.style.animationDelay=Math.random()*3+"s";
-
-    space.appendChild(star);
-}
-
-/* ======================================================
-   SCREENS
-====================================================== */
-
-function showScreen(id){
-
-    document.querySelectorAll(".screen")
-        .forEach(x=>x.classList.remove("active"));
-
-    document.getElementById(id)
-        .classList.add("active");
-
-    currentScreen=id;
-
-    document.getElementById("backButton").style.display =
-        (id==="start" || id==="category")
-        ? "none"
-        : "block";
-}
-
-function chooseCategory(type){
-
-    category=type;
-
-    document.getElementById("hubTitle").textContent =
-        type==="history"
-        ? "ŚWIAT HISTORII"
-        : "ŚWIAT LITERATURY";
-
-    showScreen("hub");
-}
-
-function goBack(){
-
-    if(currentScreen==="game"){
-        showScreen("hub");
+    {
+        name:"ŚREDNIOWIECZE",
+        title:"Świat zamków i miast",
+        description:
+        `W średniowiecznej Europie rozwijały się miasta,
+        handel, rzemiosło i nowe ośrodki nauki.
+        <br><br>
+        Powstawały zamki, mury miejskie oraz
+        monumentalne budowle.`,
+        world:"world-medieval"
     }
-    else if(currentScreen==="hub"){
-        showScreen("category");
+
+];
+
+const graphNodes = [
+    {
+        name:"Człowiek",
+        x:13,
+        y:46
+    },
+    {
+        name:"Ogień",
+        x:34,
+        y:25
+    },
+    {
+        name:"Malarstwo jaskiniowe",
+        x:37,
+        y:67
+    },
+    {
+        name:"Rolnictwo",
+        x:59,
+        y:30
+    },
+    {
+        name:"Pierwsze miasta",
+        x:65,
+        y:67
+    },
+    {
+        name:"Pismo",
+        x:83,
+        y:45
     }
-}
+];
 
-/* ======================================================
-   MODES
-====================================================== */
+/* ===================================================
+   EKRANY
+=================================================== */
 
-function startMode(mode){
+function show(id){
 
-    showScreen("game");
-
-    const area=document.getElementById("gameArea");
-
-    area.innerHTML="";
-
-    if(mode==="graph") graphGame();
-    if(mode==="timeline") timelineGame();
-    if(mode==="detective") detectiveGame();
-    if(mode==="memory") memoryGame();
-    if(mode==="quiz") quizGame();
-}
-
-function randomMode(){
-
-    const modes=[
-        "graph",
-        "timeline",
-        "detective",
-        "memory",
-        "quiz"
-    ];
-
-    startMode(
-        modes[Math.floor(Math.random()*modes.length)]
-    );
-}
-
-/* ======================================================
-   GRAPH
-====================================================== */
-
-function graphGame(){
-
-    const area=document.getElementById("gameArea");
-
-    const set=
-        data().graph[
-            Math.floor(Math.random()*data().graph.length)
-        ];
-
-    area.innerHTML=`
-        <div class="gameHeader">
-            <h2>ODKRYJ POŁĄCZENIA</h2>
-            <p>Klikaj elementy i odkrywaj sieć wiedzy.</p>
-        </div>
-
-        <div id="graphCanvas"></div>
-    `;
-
-    const canvas=document.getElementById("graphCanvas");
-
-    const centerX=window.innerWidth/2;
-    const centerY=window.innerHeight/2+60;
-
-    const positions=[
-        [centerX-60,centerY-60],
-        [centerX-300,centerY-180],
-        [centerX+180,centerY-180],
-        [centerX-60,centerY+150]
-    ];
-
-    const colors=[
-        "#ef6d5b",
-        "#f4ba4e",
-        "#52c8c5",
-        "#836ee7"
-    ];
-
-    set.forEach((text,i)=>{
-
-        const node=document.createElement("div");
-
-        node.className="node";
-        node.textContent=text;
-
-        node.style.left=positions[i][0]+"px";
-        node.style.top=positions[i][1]+"px";
-        node.style.background=colors[i];
-
-        node.onclick=()=>{
-
-            node.classList.add("correct");
-
-            particles(
-                positions[i][0]+60,
-                positions[i][1]+60
-            );
-
-            addScore(10);
-
-            setTimeout(()=>{
-                node.classList.remove("correct");
-            },600);
-        };
-
-        canvas.appendChild(node);
+    document
+    .querySelectorAll(".screen")
+    .forEach(screen=>{
+        screen.classList.remove("active");
     });
 
-    for(let i=1;i<4;i++){
-
-        createLine(
-            canvas,
-            positions[0][0]+60,
-            positions[0][1]+60,
-            positions[i][0]+60,
-            positions[i][1]+60
-        );
-    }
+    document
+    .getElementById(id)
+    .classList.add("active");
 }
 
-function createLine(parent,x1,y1,x2,y2){
+function begin(){
 
-    const line=document.createElement("div");
+    show("era");
 
-    line.className="graphLine";
-
-    const dx=x2-x1;
-    const dy=y2-y1;
-
-    const length=Math.sqrt(dx*dx+dy*dy);
-    const angle=Math.atan2(dy,dx)*180/Math.PI;
-
-    line.style.left=x1+"px";
-    line.style.top=y1+"px";
-    line.style.width=length+"px";
-    line.style.transform=`rotate(${angle}deg)`;
-
-    parent.appendChild(line);
 }
 
-/* ======================================================
-   TIMELINE
-====================================================== */
+/* ===================================================
+   ZADANIE
+=================================================== */
 
-function timelineGame(){
+function openTask(){
 
-    const area=document.getElementById("gameArea");
+    show("task");
 
-    const events =
-        category==="history"
-        ? [
-            ["Piramidy w Gizie",-2600],
-            ["Imperium Rzymskie",117],
-            ["Druk Gutenberga",1450],
-            ["Pierwszy lot",1903]
-        ]
-        : [
-            ["Antyk",-500],
-            ["Średniowiecze",1000],
-            ["Renesans",1500],
-            ["Romantyzm",1820]
-        ];
-
-    area.innerHTML=`
-        <div class="gameHeader">
-            <h2>LINIA CZASU</h2>
-            <p>Odkryj kolejność wydarzeń.</p>
-        </div>
-
-        <div class="timeline" id="timeline"></div>
-    `;
-
-    const timeline=document.getElementById("timeline");
-
-    events.forEach((event,i)=>{
-
-        const item=document.createElement("div");
-
-        item.className="timelineItem";
-
-        item.innerHTML=
-            event[0]+
-            "<br><small>"+event[1]+"</small>";
-
-        item.style.left=
-            (i/(events.length-1))*80+"%";
-
-        item.style.top=
-            (i%2===0 ? -120 : 40)+"px";
-
-        item.onclick=()=>{
-
-            addScore(5);
-
-            item.style.background="#55d58a";
-
-            particles(
-                item.getBoundingClientRect().left+80,
-                item.getBoundingClientRect().top+40
-            );
-        };
-
-        timeline.appendChild(item);
-    });
 }
 
-/* ======================================================
-   DETECTIVE
-====================================================== */
+function answer(button,correct){
 
-function detectiveGame(){
+    document
+    .querySelectorAll(".answer")
+    .forEach(x=>x.disabled=true);
 
-    const questions=data().questions;
+    if(correct){
 
-    const q=
-        questions[
-            Math.floor(Math.random()*questions.length)
-        ];
+        button.classList.add("correct");
 
-    renderQuestion(
-        "🔎 TAJEMNICA",
-        q
-    );
-}
+        if(!taskCompleted){
 
-/* ======================================================
-   QUIZ
-====================================================== */
+            taskCompleted=true;
 
-function quizGame(){
+            graphPoints++;
 
-    const questions=data().questions;
+            document.getElementById("points")
+                .textContent=graphPoints;
 
-    const q=
-        questions[
-            Math.floor(Math.random()*questions.length)
-        ];
-
-    renderQuestion(
-        "⚡ WYZWANIE",
-        q
-    );
-}
-
-function renderQuestion(title,q){
-
-    const area=document.getElementById("gameArea");
-
-    area.innerHTML=`
-
-        <div style="
-            height:100%;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-        ">
-
-            <div class="quizBox">
-
-                <h2>${title}</h2>
-
-                <div class="question">
-                    ${q.q}
-                </div>
-
-                <div class="answers">
-
-                    ${q.a.map((a,i)=>`
-                        <button
-                            class="answer"
-                            onclick="answerQuestion(this,${i},${q.good})">
-                            ${a}
-                        </button>
-                    `).join("")}
-
-                </div>
-
-            </div>
-
-        </div>
-    `;
-}
-
-function answerQuestion(button,index,good){
-
-    const buttons=document.querySelectorAll(".answer");
-
-    buttons.forEach(b=>b.disabled=true);
-
-    if(index===good){
-
-        button.classList.add("good");
-
-        addScore(25);
-
-        particles(
-            window.innerWidth/2,
-            window.innerHeight/2
-        );
+            showReward();
+        }
 
         setTimeout(()=>{
 
-            showModal(
-                "✨",
-                "Świetnie!",
-                "Odpowiedź jest poprawna."
-            );
+            changeEra();
 
-        },400);
+        },1200);
 
     }else{
 
-        button.classList.add("bad");
-
-        buttons[good].classList.add("good");
+        button.classList.add("wrong");
 
         setTimeout(()=>{
 
-            showModal(
-                "💡",
-                "Prawie!",
-                "Zielona odpowiedź była poprawna."
-            );
+            button.classList.remove("wrong");
 
-        },400);
+            document
+            .querySelectorAll(".answer")
+            .forEach(x=>x.disabled=false);
+
+        },700);
+
     }
+
 }
 
-/* ======================================================
-   MEMORY
-====================================================== */
+/* ===================================================
+   NAGRODA
+=================================================== */
 
-function memoryGame(){
+function showReward(){
 
-    const area=document.getElementById("gameArea");
+    const reward =
+        document.getElementById("reward");
 
-    const pairs=data().memory;
+    reward.classList.add("show");
 
-    let cards=[];
+    setTimeout(()=>{
 
-    pairs.forEach((pair,id)=>{
+        reward.classList.remove("show");
 
-        pair.forEach(text=>{
+    },2200);
 
-            cards.push({
-                text:text,
-                pair:id
-            });
-        });
+}
+
+/* ===================================================
+   PRZEJŚCIE EPOKI
+=================================================== */
+
+function changeEra(){
+
+    if(currentEra >= eras.length-1){
+
+        show("era");
+        return;
+
+    }
+
+    const transition =
+        document.getElementById("transition");
+
+    transition.classList.add("show");
+
+    currentEra++;
+
+    const next=eras[currentEra];
+
+    document.getElementById("eraChangeText")
+        .textContent=next.name;
+
+    setTimeout(()=>{
+
+        loadEra();
+
+    },1400);
+
+    setTimeout(()=>{
+
+        transition.classList.remove("show");
+
+        show("era");
+
+    },2800);
+
+}
+
+/* ===================================================
+   WCZYTYWANIE EPOKI
+=================================================== */
+
+function loadEra(){
+
+    const era=eras[currentEra];
+
+    const world=
+        document.getElementById("world");
+
+    world.className=era.world;
+
+    document.getElementById("eraName")
+        .textContent=era.name;
+
+    document.getElementById("storyTitle")
+        .textContent=era.title;
+
+    document.getElementById("storyDescription")
+        .innerHTML=era.description;
+
+}
+
+/* ===================================================
+   GRAF
+=================================================== */
+
+function openGraph(){
+
+    show("graph");
+
+    drawGraph();
+
+}
+
+function drawGraph(){
+
+    const area =
+        document.getElementById("graphArea");
+
+    area.innerHTML="";
+
+    /* połączenia */
+
+    for(let i=0;i<graphNodes.length-1;i++){
+
+        const a=graphNodes[i];
+        const b=graphNodes[i+1];
+
+        createConnection(
+            area,
+            a.x,
+            a.y,
+            b.x,
+            b.y,
+            i
+        );
+
+    }
+
+    /* punkty */
+
+    graphNodes.forEach((node,index)=>{
+
+        const el=document.createElement("div");
+
+        el.className="node";
+
+        if(index>=graphPoints){
+            el.classList.add("locked");
+            el.innerHTML="🔒<br>???";
+        }
+        else{
+            el.textContent=node.name;
+        }
+
+        el.style.left=
+            `calc(${node.x}% - 67px)`;
+
+        el.style.top=
+            `calc(${node.y}% - 67px)`;
+
+        el.style.animationDelay=
+            index*.08+"s";
+
+        area.appendChild(el);
+
     });
 
-    cards.sort(()=>Math.random()-.5);
-
-    area.innerHTML=`
-
-        <div style="
-            height:100%;
-            display:flex;
-            flex-direction:column;
-            justify-content:center;
-            align-items:center;
-        ">
-
-            <h2>ODKRYJ POŁĄCZENIA</h2>
-
-            <p style="color:#aab5da">
-                Znajdź elementy, które do siebie pasują.
-            </p>
-
-            <div class="memoryGrid">
-
-                ${cards.map((card,i)=>`
-
-                    <div
-                        class="memoryCard"
-                        data-pair="${card.pair}"
-                        onclick="openMemory(this)">
-
-                        <div class="memoryInner">
-
-                            <div class="memoryFace memoryBack">
-                                ?
-                            </div>
-
-                            <div class="memoryFace memoryFront">
-                                ${card.text}
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                `).join("")}
-
-            </div>
-
-        </div>
-    `;
 }
 
-let memoryOpen=[];
+/* ===================================================
+   POŁĄCZENIA
+=================================================== */
 
-function openMemory(card){
+function createConnection(
+    parent,
+    x1,y1,
+    x2,y2,
+    index
+){
 
-    if(
-        card.classList.contains("open") ||
-        memoryOpen.length>=2
-    ) return;
+    const line =
+        document.createElement("div");
 
-    card.classList.add("open");
+    line.className="connection";
 
-    memoryOpen.push(card);
+    if(index>=graphPoints-1){
+        line.style.opacity=".15";
+    }
 
-    if(memoryOpen.length===2){
+    const width =
+        window.innerWidth;
 
-        const [a,b]=memoryOpen;
+    const height =
+        window.innerHeight-100;
 
-        if(a.dataset.pair===b.dataset.pair){
+    const px1=width*x1/100;
+    const py1=height*y1/100;
 
-            addScore(20);
+    const px2=width*x2/100;
+    const py2=height*y2/100;
 
-            particles(
-                window.innerWidth/2,
-                window.innerHeight/2
-            );
+    const dx=px2-px1;
+    const dy=py2-py1;
 
-            memoryOpen=[];
+    const length=
+        Math.sqrt(dx*dx+dy*dy);
 
-        }else{
+    const angle=
+        Math.atan2(dy,dx)*180/Math.PI;
 
-            setTimeout(()=>{
+    line.style.left=px1+"px";
+    line.style.top=py1+"px";
 
-                a.classList.remove("open");
-                b.classList.remove("open");
+    line.style.width=length+"px";
 
-                memoryOpen=[];
+    line.style.transform=
+        `rotate(${angle}deg)`;
 
-            },900);
+    parent.appendChild(line);
+
+}
+
+/* ===================================================
+   PARALLAX
+=================================================== */
+
+document.addEventListener(
+    "mousemove",
+    event=>{
+
+        if(
+            !document
+            .getElementById("era")
+            .classList.contains("active")
+        ) return;
+
+        const x=
+            (event.clientX/window.innerWidth-.5)*10;
+
+        const y=
+            (event.clientY/window.innerHeight-.5)*7;
+
+        document
+        .querySelector(".cave")
+        .style.transform=
+            `translate(${x}px,${y}px)`;
+
+    }
+);
+
+/* ===================================================
+   RESIZE GRAFU
+=================================================== */
+
+window.addEventListener(
+    "resize",
+    ()=>{
+
+        if(
+            document
+            .getElementById("graph")
+            .classList.contains("active")
+        ){
+            drawGraph();
         }
+
     }
-}
-
-/* ======================================================
-   SCORE
-====================================================== */
-
-function addScore(amount){
-
-    score+=amount;
-
-    document.getElementById("score")
-        .textContent=score;
-}
-
-/* ======================================================
-   PARTICLES
-====================================================== */
-
-function particles(x,y){
-
-    for(let i=0;i<18;i++){
-
-        const p=document.createElement("div");
-
-        p.className="particle";
-
-        p.style.left=x+"px";
-        p.style.top=y+"px";
-
-        p.style.background=[
-            "#ffd45a",
-            "#65d6ff",
-            "#ef6b8f",
-            "#6be39b"
-        ][Math.floor(Math.random()*4)];
-
-        p.style.setProperty(
-            "--x",
-            (Math.random()*300-150)+"px"
-        );
-
-        p.style.setProperty(
-            "--y",
-            (Math.random()*300-150)+"px"
-        );
-
-        document.body.appendChild(p);
-
-        setTimeout(()=>p.remove(),900);
-    }
-}
-
-/* ======================================================
-   MODAL
-====================================================== */
-
-function showModal(icon,title,text){
-
-    document.getElementById("modalIcon").textContent=icon;
-    document.getElementById("modalTitle").textContent=title;
-    document.getElementById("modalText").textContent=text;
-
-    document.getElementById("modal")
-        .classList.add("show");
-}
-
-function closeModal(){
-
-    document.getElementById("modal")
-        .classList.remove("show");
-
-    if(currentScreen==="game"){
-        randomMode();
-    }
-}
+);
 
 </script>
 
