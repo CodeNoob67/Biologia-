@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GeoChem — Nauka interaktywna</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#08111f;
+    color:white;
+    overflow:hidden;
+}
+
+button{
+    font-family:inherit;
+}
+
+/* =========================
+   EKRAN STARTOWY
+========================= */
+
+#home{
+    position:fixed;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:
+        radial-gradient(circle at 20% 20%, #173b65, transparent 35%),
+        radial-gradient(circle at 80% 80%, #214c39, transparent 40%),
+        #07101c;
+}
+
+.homeBox{
+    width:min(900px,90%);
+}
+
+.logo{
+    text-align:center;
+    font-size:55px;
+    font-weight:900;
+    margin-bottom:12px;
+}
+
+.subtitle{
+    text-align:center;
+    opacity:.7;
+    font-size:18px;
+    margin-bottom:45px;
+}
+
+.subject{
+    width:100%;
+    height:120px;
+    margin:14px 0;
+    border:0;
+    border-radius:24px;
+    color:white;
+    font-size:32px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.25s;
+    position:relative;
+    overflow:hidden;
+}
+
+.subject:hover{
+    transform:scale(1.025);
+}
+
+.chemButton{
+    background:linear-gradient(135deg,#6236ff,#b137ff);
+}
+
+.geoButton{
+    background:linear-gradient(135deg,#00a65a,#0078ff);
+}
+
+.subject small{
+    display:block;
+    font-size:15px;
+    margin-top:7px;
+    opacity:.75;
+}
+
+/* =========================
+   OGÓLNE
+========================= */
+
+.page{
+    position:fixed;
+    inset:0;
+    display:none;
+    background:#08111f;
+}
+
+.topbar{
+    height:70px;
+    display:flex;
+    align-items:center;
+    gap:20px;
+    padding:0 20px;
+    background:#101c2d;
+    border-bottom:1px solid #26374c;
+}
+
+.back{
+    background:#ff3d4f;
+    border:0;
+    border-radius:12px;
+    padding:12px 22px;
+    font-weight:bold;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.topTitle{
+    font-size:24px;
+    font-weight:bold;
+}
+
+/* =========================
+   CHEMIA
+========================= */
+
+#chemistry{
+    overflow:auto;
+}
+
+.chemContent{
+    padding:25px;
+}
+
+.sectionTitle{
+    font-size:30px;
+    font-weight:bold;
+}
+
+.sectionDesc{
+    opacity:.65;
+    margin:8px 0 25px;
+}
+
+.periodic{
+    display:grid;
+    grid-template-columns:repeat(18, minmax(48px,1fr));
+    gap:5px;
+    min-width:1050px;
+}
+
+.element{
+    height:68px;
+    border-radius:7px;
+    padding:5px;
+    cursor:pointer;
+    transition:.18s;
+    border:1px solid rgba(255,255,255,.15);
+    position:relative;
+}
+
+.element:hover{
+    transform:scale(1.12);
+    z-index:4;
+    box-shadow:0 0 20px rgba(255,255,255,.3);
+}
+
+.number{
+    font-size:10px;
+    opacity:.75;
+}
+
+.symbol{
+    font-size:22px;
+    font-weight:bold;
+    text-align:center;
+}
+
+.elementName{
+    font-size:8px;
+    text-align:center;
+    opacity:.8;
+}
+
+.alkali{background:#b63b47;}
+.alkaline{background:#c87a35;}
+.transition{background:#ad476d;}
+.post{background:#5278a6;}
+.metalloid{background:#3b8c77;}
+.nonmetal{background:#3d9b55;}
+.halogen{background:#568a35;}
+.noble{background:#7045b8;}
+.lanthanide{background:#a64d92;}
+.actinide{background:#8d4977;}
+
+/* =========================
+   MODAL PIERWIASTKA
+========================= */
+
+#elementModal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.78);
+    z-index:20;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    backdrop-filter:blur(8px);
+}
+
+.elementWindow{
+    width:min(1000px,94%);
+    height:min(700px,90%);
+    background:#101c2c;
+    border-radius:25px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    overflow:hidden;
+    box-shadow:0 30px 100px #000;
+}
+
+.elementInfo{
+    padding:35px;
+    overflow:auto;
+}
+
+.bigSymbol{
+    width:120px;
+    height:120px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:20px;
+    background:#6039c7;
+    font-size:55px;
+    font-weight:bold;
+}
+
+.elementTitle{
+    font-size:38px;
+    font-weight:bold;
+    margin-top:20px;
+}
+
+.infoGrid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:25px;
+}
+
+.infoCard{
+    background:#17263a;
+    padding:15px;
+    border-radius:12px;
+}
+
+.infoCard small{
+    opacity:.55;
+}
+
+.infoCard div{
+    font-size:19px;
+    margin-top:5px;
+}
+
+.description{
+    margin-top:25px;
+    line-height:1.6;
+    opacity:.85;
+}
+
+.atomSide{
+    background:
+        radial-gradient(circle,#172a45,#07101d);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+}
+
+.atomLabel{
+    position:absolute;
+    top:25px;
+    font-weight:bold;
+    font-size:20px;
+}
+
+.atomHint{
+    position:absolute;
+    bottom:20px;
+    opacity:.55;
+    font-size:13px;
+}
+
+#atom{
+    width:420px;
+    height:420px;
+    position:relative;
+    transform-style:preserve-3d;
+    cursor:grab;
+}
+
+.nucleus{
+    position:absolute;
+    width:90px;
+    height:90px;
+    left:165px;
+    top:165px;
+    border-radius:50%;
+    background:radial-gradient(circle at 30% 30%,#ffcb4a,#ff4d4d);
+    box-shadow:0 0 40px #ff5c3d;
+    transform:translateZ(20px);
+}
+
+.orbit{
+    position:absolute;
+    left:60px;
+    top:190px;
+    width:300px;
+    height:40px;
+    border:2px solid rgba(100,190,255,.55);
+    border-radius:50%;
+    transform-style:preserve-3d;
+}
+
+.o1{
+    transform:rotateZ(0deg) rotateX(65deg);
+}
+
+.o2{
+    transform:rotateZ(60deg) rotateX(65deg);
+}
+
+.o3{
+    transform:rotateZ(120deg) rotateX(65deg);
+}
+
+.electron{
+    width:18px;
+    height:18px;
+    border-radius:50%;
+    background:#4bc4ff;
+    box-shadow:0 0 15px #4bc4ff;
+    position:absolute;
+    top:9px;
+    left:-9px;
+    animation:electronMove 3s linear infinite;
+}
+
+.o2 .electron{
+    animation-duration:4s;
+}
+
+.o3 .electron{
+    animation-duration:5s;
+}
+
+@keyframes electronMove{
+    0%{left:-9px;}
+    50%{left:291px;}
+    100%{left:-9px;}
+}
+
+.close{
+    position:absolute;
+    right:25px;
+    top:20px;
+    width:45px;
+    height:45px;
+    border-radius:50%;
+    border:0;
+    background:#26374c;
+    color:white;
+    font-size:20px;
+    cursor:pointer;
+    z-index:30;
+}
+
+/* =========================
+   GEOGRAFIA
+========================= */
+
+#geography{
+    background:#020711;
+}
+
+.geoToolbar{
+    position:absolute;
+    left:20px;
+    top:90px;
+    width:240px;
+    background:rgba(10,22,38,.9);
+    backdrop-filter:blur(10px);
+    padding:18px;
+    border-radius:16px;
+    z-index:8;
+}
+
+.geoToolbar h3{
+    margin:0 0 10px;
+}
+
+.geoToolbar p{
+    font-size:13px;
+    opacity:.6;
+    line-height:1.5;
+}
+
+#universeViewport{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    top:70px;
+    overflow:hidden;
+    cursor:grab;
+}
+
+#universe{
+    position:absolute;
+    width:3000px;
+    height:2000px;
+    left:-700px;
+    top:-400px;
+
+    background:
+        radial-gradient(circle at 20% 20%,rgba(60,100,170,.2),transparent 25%),
+        radial-gradient(circle at 70% 50%,rgba(80,30,120,.2),transparent 30%),
+        #020711;
+}
+
+.star{
+    position:absolute;
+    width:2px;
+    height:2px;
+    background:white;
+    border-radius:50%;
+    opacity:.6;
+}
+
+.body{
+    position:absolute;
+    border-radius:50%;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.body:hover{
+    filter:brightness(1.3);
+    transform:scale(1.08);
+}
+
+.sun{
+    width:220px;
+    height:220px;
+    left:1350px;
+    top:850px;
+    background:
+        radial-gradient(circle at 35% 35%,#fff6a0,#ffc529 35%,#ff8500 65%,#e74400);
+    box-shadow:
+        0 0 40px #ff9d00,
+        0 0 100px rgba(255,130,0,.7);
+}
+
+.earth{
+    width:120px;
+    height:120px;
+    left:1900px;
+    top:900px;
+    background:
+        radial-gradient(circle at 30% 40%,#50b05d 0 12%,transparent 13%),
+        radial-gradient(circle at 65% 60%,#55a84f 0 18%,transparent 19%),
+        radial-gradient(circle,#37a4e8,#09599b);
+    box-shadow:0 0 30px rgba(60,150,255,.5);
+}
+
+.moon{
+    width:42px;
+    height:42px;
+    left:2060px;
+    top:820px;
+    background:radial-gradient(circle at 30% 30%,#ddd,#777);
+}
+
+.mars{
+    width:80px;
+    height:80px;
+    left:2300px;
+    top:1050px;
+    background:radial-gradient(circle at 30% 30%,#ef8b55,#9d321f);
+}
+
+.jupiter{
+    width:190px;
+    height:190px;
+    left:700px;
+    top:1250px;
+    background:
+        repeating-linear-gradient(
+            0deg,
+            #b96e43 0 15px,
+            #e5c093 15px 30px,
+            #8d5239 30px 45px
+        );
+}
+
+.saturn{
+    width:150px;
+    height:150px;
+    left:500px;
+    top:500px;
+    background:radial-gradient(circle,#e8ce91,#a88a51);
+}
+
+.saturn:after{
+    content:"";
+    position:absolute;
+    width:250px;
+    height:70px;
+    border:13px solid rgba(220,190,120,.75);
+    border-radius:50%;
+    left:-63px;
+    top:27px;
+    transform:rotate(-20deg);
+}
+
+.nebula{
+    position:absolute;
+    width:500px;
+    height:300px;
+    left:2100px;
+    top:300px;
+    border-radius:50%;
+    background:
+        radial-gradient(ellipse,
+        rgba(158,74,255,.5),
+        rgba(32,120,255,.25),
+        transparent 70%);
+    filter:blur(15px);
+    cursor:pointer;
+}
+
+.objectLabel{
+    position:absolute;
+    top:105%;
+    left:50%;
+    transform:translateX(-50%);
+    white-space:nowrap;
+    font-size:13px;
+    background:rgba(0,0,0,.55);
+    padding:4px 8px;
+    border-radius:7px;
+}
+
+#geoInfo{
+    position:absolute;
+    right:25px;
+    top:95px;
+    width:330px;
+    background:rgba(10,22,38,.94);
+    backdrop-filter:blur(12px);
+    border-radius:20px;
+    padding:25px;
+    z-index:9;
+    display:none;
+}
+
+#geoInfo h2{
+    margin-top:0;
+}
+
+#geoInfo p{
+    line-height:1.6;
+    opacity:.75;
+}
+
+.tag{
+    display:inline-block;
+    background:#1e3858;
+    padding:5px 9px;
+    border-radius:7px;
+    margin:3px;
+    font-size:12px;
+}
+
+/* MOBILE */
+
+@media(max-width:750px){
+
+    .elementWindow{
+        grid-template-columns:1fr;
+        overflow:auto;
+    }
+
+    .atomSide{
+        min-height:450px;
+    }
+
+    .geoToolbar{
+        display:none;
+    }
+
+    #geoInfo{
+        width:90%;
+        right:5%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     HOME
+========================= -->
+
+<div id="home">
+
+<div class="homeBox">
+
+<div class="logo">🔬🌍 GeoChem</div>
+
+<div class="subtitle">
+Interaktywna nauka geografii i chemii
+</div>
+
+<button class="subject geoButton" onclick="openGeo()">
+🌍 GEOGRAFIA
+<small>Odkrywaj Ziemię, planety i inne ciała niebieskie</small>
+</button>
+
+<button class="subject chemButton" onclick="openChem()">
+⚗️ CHEMIA
+<small>Tablica okresowa • pierwiastki • modele atomów</small>
+</button>
+
+</div>
+
+</div>
+
+
+<!-- =========================
+     CHEMIA
+========================= -->
+
+<div id="chemistry" class="page">
+
+<div class="topbar">
+
+<button class="back" onclick="home()">← POWRÓT</button>
+
+<div class="topTitle">
+⚗️ Chemia
+</div>
+
+</div>
+
+<div class="chemContent">
+
+<div class="sectionTitle">
+Tablica okresowa pierwiastków
+</div>
+
+<div class="sectionDesc">
+Kliknij pierwiastek, aby zobaczyć informacje i model atomu.
+</div>
+
+<div id="periodic" class="periodic"></div>
+
+</div>
+
+</div>
+
+
+<!-- =========================
+     MODAL ATOMU
+========================= -->
+
+<div id="elementModal">
+
+<button class="close" onclick="closeElement()">✕</button>
+
+<div class="elementWindow">
+
+<div class="elementInfo">
+
+<div id="bigSymbol" class="bigSymbol">
+H
+</div>
+
+<div id="elementTitle" class="elementTitle">
+Wodór
+</div>
+
+<div id="elementLatin">
+Hydrogen
+</div>
+
+<div class="infoGrid">
+
+<div class="infoCard">
+<small>Liczba atomowa</small>
+<div id="atomicNumber">1</div>
+</div>
+
+<div class="infoCard">
+<small>Masa atomowa</small>
+<div id="atomicMass">1.008 u</div>
+</div>
+
+<div class="infoCard">
+<small>Protony</small>
+<div id="protons">1</div>
+</div>
+
+<div class="infoCard">
+<small>Elektrony</small>
+<div id="electrons">1</div>
+</div>
+
+<div class="infoCard">
+<small>Stan skupienia</small>
+<div id="state">gaz</div>
+</div>
+
+<div class="infoCard">
+<small>Typ</small>
+<div id="type">niemetal</div>
+</div>
+
+</div>
+
+<div id="elementDescription" class="description"></div>
+
+</div>
+
+
+<div class="atomSide">
+
+<div class="atomLabel">
+Model atomu 3D
+</div>
+
+<div id="atom">
+
+<div class="nucleus"></div>
+
+<div class="orbit o1">
+<div class="electron"></div>
+</div>
+
+<div class="orbit o2">
+<div class="electron"></div>
+</div>
+
+<div class="orbit o3">
+<div class="electron"></div>
+</div>
+
+</div>
+
+<div class="atomHint">
+🖱️ Przeciągaj myszką, aby obracać model
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- =========================
+     GEOGRAFIA
+========================= -->
+
+<div id="geography" class="page">
+
+<div class="topbar">
+
+<button class="back" onclick="home()">
+← POWRÓT
+</button>
+
+<div class="topTitle">
+🌍 Geografia
+</div>
+
+</div>
+
+
+<div class="geoToolbar">
+
+<h3>🌌 Odkrywaj świat</h3>
+
+<p>
+Przytrzymaj lewy przycisk myszy i przeciągaj ekran.
+</p>
+
+<p>
+Klikaj planety, gwiazdy, księżyce i inne obiekty, aby poznać informacje.
+</p>
+
+</div>
+
+
+<div id="geoInfo">
+
+<h2 id="geoTitle"></h2>
+
+<div id="geoTags"></div>
+
+<p id="geoDescription"></p>
+
+</div>
+
+
+<div id="universeViewport">
+
+<div id="universe">
+
+<div class="body sun"
+onclick="showGeo(
+'Słońce',
+'Gwiazda',
+'Średnica: około 1,39 mln km. Słońce jest gwiazdą znajdującą się w centrum Układu Słonecznego. Zawiera ponad 99% jego masy. Energia Słońca pochodzi z reakcji syntezy jądrowej.',
+['gwiazda','plazma','Układ Słoneczny']
+)">
+<div class="objectLabel">☀️ Słońce</div>
+</div>
+
+
+<div class="body earth"
+onclick="showGeo(
+'Ziemia',
+'Planeta skalista',
+'Ziemia jest trzecią planetą od Słońca i jedynym znanym miejscem we Wszechświecie, na którym istnieje życie. Około 71% jej powierzchni pokrywa woda.',
+['planeta','skalista','życie']
+)">
+<div class="objectLabel">🌍 Ziemia</div>
+</div>
+
+
+<div class="body moon"
+onclick="showGeo(
+'Księżyc',
+'Naturalny satelita',
+'Księżyc jest naturalnym satelitą Ziemi. Jego grawitacja ma duży wpływ na pływy oceaniczne na naszej planecie.',
+['księżyc','satelita']
+)">
+<div class="objectLabel">🌕 Księżyc</div>
+</div>
+
+
+<div class="body mars"
+onclick="showGeo(
+'Mars',
+'Planeta skalista',
+'Mars nazywany jest Czerwoną Planetą. Jego czerwony kolor pochodzi głównie od związków żelaza znajdujących się na powierzchni.',
+['planeta','skalista','Mars']
+)">
+<div class="objectLabel">🔴 Mars</div>
+</div>
+
+
+<div class="body jupiter"
+onclick="showGeo(
+'Jowisz',
+'Gazowy olbrzym',
+'Jowisz jest największą planetą Układu Słonecznego. Ma potężną atmosferę i słynną Wielką Czerwoną Plamę — ogromną burzę.',
+['gazowy olbrzym','największa planeta']
+)">
+<div class="objectLabel">🟤 Jowisz</div>
+</div>
+
+
+<div class="body saturn"
+onclick="showGeo(
+'Saturn',
+'Gazowy olbrzym',
+'Saturn słynie z ogromnego systemu pierścieni zbudowanych głównie z cząstek lodu i skał.',
+['gazowy olbrzym','pierścienie']
+)">
+<div class="objectLabel">🪐 Saturn</div>
+</div>
+
+
+<div class="nebula"
+onclick="showGeo(
+'Mgławica',
+'Obłok międzygwiazdowy',
+'Mgławice to ogromne obłoki gazu i pyłu znajdujące się w przestrzeni kosmicznej. Niektóre z nich są miejscami powstawania nowych gwiazd.',
+['gaz','pył','gwiazdy']
+)">
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* ================================
+   NAWIGACJA
+================================ */
+
+function hideAll(){
+
+    document.getElementById("home").style.display="none";
+    document.getElementById("chemistry").style.display="none";
+    document.getElementById("geography").style.display="none";
+
+}
+
+function home(){
+
+    hideAll();
+
+    document.getElementById("home").style.display="flex";
+
+}
+
+function openChem(){
+
+    hideAll();
+
+    document.getElementById("chemistry").style.display="block";
+
+}
+
+function openGeo(){
+
+    hideAll();
+
+    document.getElementById("geography").style.display="block";
+
+}
+
+
+/* ================================
+   PIERWIASTKI
+================================ */
+
+const elements = [
+
+{
+n:1,
+symbol:"H",
+name:"Wodór",
+latin:"Hydrogen",
+mass:"1.008",
+group:1,
+period:1,
+type:"Niemetal",
+state:"Gaz",
+class:"nonmetal",
+description:"Najlżejszy i najczęściej występujący pierwiastek we Wszechświecie. Gwiazdy zawierają ogromne ilości wodoru."
+},
+
+{
+n:2,
+symbol:"He",
+name:"Hel",
+latin:"Helium",
+mass:"4.0026",
+group:18,
+period:1,
+type:"Gaz szlachetny",
+state:"Gaz",
+class:"noble",
+description:"Bardzo lekki gaz szlachetny. Powstaje między innymi podczas reakcji zachodzących w gwiazdach."
+},
+
+{
+n:3,
+symbol:"Li",
+name:"Lit",
+latin:"Lithium",
+mass:"6.94",
+group:1,
+period:2,
+type:"Metal alkaliczny",
+state:"Ciało stałe",
+class:"alkali",
+description:"Lekki i reaktywny metal. Lit jest ważnym składnikiem wielu współczesnych akumulatorów."
+},
+
+{
+n:4,
+symbol:"Be",
+name:"Beryl",
+latin:"Beryllium",
+mass:"9.0122",
+group:2,
+period:2,
+type:"Metal ziem alkalicznych",
+state:"Ciało stałe",
+class:"alkaline",
+description:"Lekki, twardy metal wykorzystywany w specjalistycznych stopach."
+},
+
+{
+n:5,
+symbol:"B",
+name:"Bor",
+latin:"Boron",
+mass:"10.81",
+group:13,
+period:2,
+type:"Półmetal",
+state:"Ciało stałe",
+class:"metalloid",
+description:"Pierwiastek o właściwościach pośrednich między metalami i niemetalami."
+},
+
+{
+n:6,
+symbol:"C",
+name:"Węgiel",
+latin:"Carbon",
+mass:"12.011",
+group:14,
+period:2,
+type:"Niemetal",
+state:"Ciało stałe",
+class:"nonmetal",
+description:"Jeden z najważniejszych pierwiastków życia. Tworzy ogromną liczbę związków chemicznych."
+},
+
+{
+n:7,
+symbol:"N",
+name:"Azot",
+latin:"Nitrogen",
+mass:"14.007",
+group:15,
+period:2,
+type:"Niemetal",
+state:"Gaz",
+class:"nonmetal",
+description:"Stanowi około 78% ziemskiej atmosfery."
+},
+
+{
+n:8,
+symbol:"O",
+name:"Tlen",
+latin:"Oxygen",
+mass:"15.999",
+group:16,
+period:2,
+type:"Niemetal",
+state:"Gaz",
+class:"nonmetal",
+description:"Pierwiastek potrzebny do oddychania większości organizmów wykorzystujących oddychanie tlenowe."
+},
+
+{
+n:9,
+symbol:"F",
+name:"Fluor",
+latin:"Fluorine",
+mass:"18.998",
+group:17,
+period:2,
+type:"Halogen",
+state:"Gaz",
+class:"halogen",
+description:"Bardzo reaktywny pierwiastek należący do halogenów."
+},
+
+{
+n:10,
+symbol:"Ne",
+name:"Neon",
+latin:"Neon",
+mass:"20.180",
+group:18,
+period:2,
+type:"Gaz szlachetny",
+state:"Gaz",
+class:"noble",
+description:"Gaz szlachetny znany między innymi z zastosowania w lampach neonowych."
+},
+
+{
+n:11,
+symbol:"Na",
+name:"Sód",
+latin:"Natrium",
+mass:"22.990",
+group:1,
+period:3,
+type:"Metal alkaliczny",
+state:"Ciało stałe",
+class:"alkali",
+description:"Bardzo reaktywny metal. Jony sodu są ważne dla funkcjonowania organizmów."
+},
+
+{
+n:12,
+symbol:"Mg",
+name:"Magnez",
+latin:"Magnesium",
+mass:"24.305",
+group:2,
+period:3,
+type:"Metal ziem alkalicznych",
+state:"Ciało stałe",
+class:"alkaline",
+description:"Lekki metal występujący w wielu minerałach. Jest również ważnym pierwiastkiem biologicznym."
+},
+
+{
+n:13,
+symbol:"Al",
+name:"Glin",
+latin:"Aluminium",
+mass:"26.982",
+group:13,
+period:3,
+type:"Metal",
+state:"Ciało stałe",
+class:"post",
+description:"Lekki metal szeroko wykorzystywany w przemyśle i budownictwie."
+},
+
+{
+n:14,
+symbol:"Si",
+name:"Krzem",
+latin:"Silicon",
+mass:"28.085",
+group:14,
+period:3,
+type:"Półmetal",
+state:"Ciało stałe",
+class:"metalloid",
+description:"Bardzo ważny pierwiastek w elektronice. Krzem jest podstawą wielu półprzewodników."
+},
+
+{
+n:15,
+symbol:"P",
+name:"Fosfor",
+latin:"Phosphorus",
+mass:"30.974",
+group:15,
+period:3,
+type:"Niemetal",
+state:"Ciało stałe",
+class:"nonmetal",
+description:"Ważny składnik DNA, RNA, ATP oraz kości organizmów."
+},
+
+{
+n:16,
+symbol:"S",
+name:"Siarka",
+latin:"Sulfur",
+mass:"32.06",
+group:16,
+period:3,
+type:"Niemetal",
+state:"Ciało stałe",
+class:"nonmetal",
+description:"Żółty niemetal występujący w wielu minerałach i związkach chemicznych."
+},
+
+{
+n:17,
+symbol:"Cl",
+name:"Chlor",
+latin:"Chlorine",
+mass:"35.45",
+group:17,
+period:3,
+type:"Halogen",
+state:"Gaz",
+class:"halogen",
+description:"Reaktywny halogen. Jony chlorkowe występują między innymi w soli kuchennej."
+},
+
+{
+n:18,
+symbol:"Ar",
+name:"Argon",
+latin:"Argon",
+mass:"39.948",
+group:18,
+period:3,
+type:"Gaz szlachetny",
+state:"Gaz",
+class:"noble",
+description:"Gaz szlachetny stanowiący około 0,93% atmosfery Ziemi."
+},
+
+{
+n:19,
+symbol:"K",
+name:"Potas",
+latin:"Kalium",
+mass:"39.098",
+group:1,
+period:4,
+type:"Metal alkaliczny",
+state:"Ciało stałe",
+class:"alkali",
+description:"Reaktywny metal oraz ważny pierwiastek dla organizmów żywych."
+},
+
+{
+n:20,
+symbol:"Ca",
+name:"Wapń",
+latin:"Calcium",
+mass:"40.078",
+group:2,
+period:4,
+type:"Metal ziem alkalicznych",
+state:"Ciało stałe",
+class:"alkaline",
+description:"Ważny składnik kości i zębów. Jony wapnia uczestniczą również w pracy mięśni."
+},
+
+{
+n:26,
+symbol:"Fe",
+name:"Żelazo",
+latin:"Ferrum",
+mass:"55.845",
+group:8,
+period:4,
+type:"Metal przejściowy",
+state:"Ciało stałe",
+class:"transition",
+description:"Jeden z najważniejszych metali. Żelazo jest głównym składnikiem stali i występuje również w hemoglobinie."
+},
+
+{
+n:29,
+symbol:"Cu",
+name:"Miedź",
+latin:"Cuprum",
+mass:"63.546",
+group:11,
+period:4,
+type:"Metal przejściowy",
+state:"Ciało stałe",
+class:"transition",
+description:"Metal bardzo dobrze przewodzący prąd elektryczny."
+},
+
+{
+n:47,
+symbol:"Ag",
+name:"Srebro",
+latin:"Argentum",
+mass:"107.868",
+group:11,
+period:5,
+type:"Metal przejściowy",
+state:"Ciało stałe",
+class:"transition",
+description:"Metal o bardzo wysokim przewodnictwie elektrycznym."
+},
+
+{
+n:79,
+symbol:"Au",
+name:"Złoto",
+latin:"Aurum",
+mass:"196.967",
+group:11,
+period:6,
+type:"Metal przejściowy",
+state:"Ciało stałe",
+class:"transition",
+description:"Ciężki, mało reaktywny metal ceniony od tysięcy lat."
+}
+
+];
+
+
+/* ================================
+   TWORZENIE TABLICY
+================================ */
+
+const periodic =
+document.getElementById("periodic");
+
+elements.forEach(e=>{
+
+    const div =
+    document.createElement("div");
+
+    div.className =
+    "element "+e.class;
+
+    div.style.gridColumn=e.group;
+    div.style.gridRow=e.period;
+
+    div.innerHTML=`
+
+    <div class="number">
+    ${e.n}
+    </div>
+
+    <div class="symbol">
+    ${e.symbol}
+    </div>
+
+    <div class="elementName">
+    ${e.name}
+    </div>
+
+    `;
+
+    div.onclick=()=>openElement(e);
+
+    periodic.appendChild(div);
+
+});
+
+
+/* ================================
+   OKNO PIERWIASTKA
+================================ */
+
+function openElement(e){
+
+    document.getElementById("elementModal")
+    .style.display="flex";
+
+    document.getElementById("bigSymbol")
+    .innerText=e.symbol;
+
+    document.getElementById("elementTitle")
+    .innerText=e.name;
+
+    document.getElementById("elementLatin")
+    .innerText=e.latin;
+
+    document.getElementById("atomicNumber")
+    .innerText=e.n;
+
+    document.getElementById("atomicMass")
+    .innerText=e.mass+" u";
+
+    document.getElementById("protons")
+    .innerText=e.n;
+
+    document.getElementById("electrons")
+    .innerText=e.n;
+
+    document.getElementById("state")
+    .innerText=e.state;
+
+    document.getElementById("type")
+    .innerText=e.type;
+
+    document.getElementById("elementDescription")
+    .innerText=e.description;
+
+}
+
+function closeElement(){
+
+    document.getElementById("elementModal")
+    .style.display="none";
+
+}
+
+
+/* ================================
+   OBRACANIE ATOMU
+================================ */
+
+const atom =
+document.getElementById("atom");
+
+let atomDragging=false;
+
+let previousX=0;
+let previousY=0;
+
+let rotationX=15;
+let rotationY=0;
+
+atom.addEventListener("mousedown",e=>{
+
+    atomDragging=true;
+
+    previousX=e.clientX;
+    previousY=e.clientY;
+
+});
+
+window.addEventListener("mouseup",()=>{
+
+    atomDragging=false;
+
+});
+
+window.addEventListener("mousemove",e=>{
+
+    if(!atomDragging) return;
+
+    const dx=e.clientX-previousX;
+    const dy=e.clientY-previousY;
+
+    rotationY+=dx*.5;
+    rotationX-=dy*.5;
+
+    atom.style.transform=
+    `rotateX(${rotationX}deg)
+     rotateY(${rotationY}deg)`;
+
+    previousX=e.clientX;
+    previousY=e.clientY;
+
+});
+
+
+/* ================================
+   GEOGRAFIA — GWIAZDY
+================================ */
+
+const universe =
+document.getElementById("universe");
+
+for(let i=0;i<400;i++){
+
+    const star =
+    document.createElement("div");
+
+    star.className="star";
+
+    star.style.left=
+    Math.random()*3000+"px";
+
+    star.style.top=
+    Math.random()*2000+"px";
+
+    const size =
+    Math.random()*2+1;
+
+    star.style.width=size+"px";
+    star.style.height=size+"px";
+
+    universe.appendChild(star);
+
+}
+
+
+/* ================================
+   PRZESUWANIE ŚWIATA
+================================ */
+
+const viewport =
+document.getElementById("universeViewport");
+
+let dragging=false;
+
+let startX;
+let startY;
+
+let worldX=-700;
+let worldY=-400;
+
+viewport.addEventListener("mousedown",e=>{
+
+    if(e.target.closest(".body")) return;
+
+    dragging=true;
+
+    startX=e.clientX-worldX;
+    startY=e.clientY-worldY;
+
+    viewport.style.cursor="grabbing";
+
+});
+
+window.addEventListener("mouseup",()=>{
+
+    dragging=false;
+
+    viewport.style.cursor="grab";
+
+});
+
+window.addEventListener("mousemove",e=>{
+
+    if(!dragging) return;
+
+    worldX=e.clientX-startX;
+    worldY=e.clientY-startY;
+
+    universe.style.left=
+    worldX+"px";
+
+    universe.style.top=
+    worldY+"px";
+
+});
+
+
+/* ================================
+   INFORMACJE GEOGRAFICZNE
+================================ */
+
+function showGeo(name,type,description,tags){
+
+    const info=
+    document.getElementById("geoInfo");
+
+    info.style.display="block";
+
+    document.getElementById("geoTitle")
+    .innerText=name;
+
+    document.getElementById("geoDescription")
+    .innerText=description;
+
+    const tagBox=
+    document.getElementById("geoTags");
+
+    tagBox.innerHTML="";
+
+    tags.forEach(tag=>{
+
+        const span=
+        document.createElement("span");
+
+        span.className="tag";
+
+        span.innerText=tag;
+
+        tagBox.appendChild(span);
+
+    });
+
+}
+
+
+/* ================================
+   ESC
+================================ */
+
+window.addEventListener("keydown",e=>{
+
+    if(e.key==="Escape"){
+
+        closeElement();
+
+        document.getElementById("geoInfo")
+        .style.display="none";
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>
