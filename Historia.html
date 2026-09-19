@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atlas Wiedzy</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    overflow:hidden;
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+    background:#090d22;
+    color:white;
+    user-select:none;
+}
+
+button{
+    font-family:inherit;
+}
+
+/* ===============================
+   TŁO
+================================ */
+
+#space{
+    position:fixed;
+    inset:0;
+    overflow:hidden;
+    z-index:-10;
+    background:
+        radial-gradient(circle at 20% 20%,#352866 0,transparent 35%),
+        radial-gradient(circle at 80% 70%,#133b58 0,transparent 40%),
+        #080c20;
+}
+
+.star{
+    position:absolute;
+    width:4px;
+    height:4px;
+    border-radius:50%;
+    background:white;
+    opacity:.4;
+    animation:twinkle 3s infinite alternate;
+}
+
+@keyframes twinkle{
+    from{opacity:.15;transform:scale(.6)}
+    to{opacity:.8;transform:scale(1.2)}
+}
+
+/* ===============================
+   EKRANY
+================================ */
+
+.screen{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    opacity:0;
+    pointer-events:none;
+    transform:scale(1.04);
+    transition:
+        opacity .55s ease,
+        transform .55s cubic-bezier(.2,.8,.2,1);
+}
+
+.screen.active{
+    opacity:1;
+    pointer-events:auto;
+    transform:scale(1);
+}
+
+h1{
+    font-size:clamp(45px,7vw,95px);
+    margin:0;
+    text-align:center;
+    letter-spacing:-4px;
+}
+
+.subtitle{
+    color:#b8c2e8;
+    font-size:20px;
+    margin-top:15px;
+}
+
+/* ===============================
+   START
+================================ */
+
+.logo{
+    position:relative;
+}
+
+.logo::after{
+    content:"";
+    position:absolute;
+    width:130px;
+    height:12px;
+    background:#6de5ff;
+    border-radius:50%;
+    filter:blur(20px);
+    bottom:-10px;
+    left:50%;
+    transform:translateX(-50%);
+}
+
+.startButton{
+    margin-top:55px;
+    border:0;
+    border-radius:25px;
+    padding:20px 55px;
+    font-size:24px;
+    font-weight:800;
+    background:#ffd45a;
+    color:#302100;
+    cursor:pointer;
+    box-shadow:
+        0 12px 0 #b67c22,
+        0 20px 50px #0008;
+    transition:.18s;
+}
+
+.startButton:hover{
+    transform:translateY(-4px) scale(1.04);
+    box-shadow:
+        0 16px 0 #b67c22,
+        0 25px 60px #000a;
+}
+
+.startButton:active{
+    transform:translateY(8px);
+    box-shadow:0 4px 0 #b67c22;
+}
+
+/* ===============================
+   WYBÓR
+================================ */
+
+.choiceTitle{
+    font-size:42px;
+    margin-bottom:45px;
+}
+
+.choices{
+    display:flex;
+    gap:35px;
+    flex-wrap:wrap;
+    justify-content:center;
+}
+
+.choice{
+    width:310px;
+    height:220px;
+    border:0;
+    border-radius:35px;
+    cursor:pointer;
+    color:white;
+    position:relative;
+    overflow:hidden;
+    transition:.3s;
+    box-shadow:0 25px 70px #0008;
+}
+
+.choice:hover{
+    transform:translateY(-12px) scale(1.03);
+}
+
+.choice.history{
+    background:linear-gradient(145deg,#ef7d44,#c94255);
+}
+
+.choice.literature{
+    background:linear-gradient(145deg,#6557dc,#38359a);
+}
+
+.choiceIcon{
+    font-size:72px;
+    display:block;
+    margin-bottom:10px;
+}
+
+.choiceName{
+    font-size:27px;
+    font-weight:900;
+}
+
+.choiceGlow{
+    position:absolute;
+    width:180px;
+    height:180px;
+    background:#fff3;
+    border-radius:50%;
+    top:-90px;
+    right:-60px;
+}
+
+/* ===============================
+   HUB
+================================ */
+
+#hub{
+    justify-content:flex-start;
+    padding-top:60px;
+}
+
+.hubTitle{
+    font-size:42px;
+}
+
+.hubSubtitle{
+    color:#aeb8db;
+    margin-top:8px;
+}
+
+.gameGrid{
+    display:grid;
+    grid-template-columns:repeat(3,190px);
+    gap:25px;
+    margin-top:45px;
+}
+
+.gameCard{
+    height:180px;
+    border:0;
+    border-radius:28px;
+    background:#171d3c;
+    color:white;
+    cursor:pointer;
+    padding:15px;
+    transition:.25s;
+    box-shadow:
+        inset 0 0 0 2px #ffffff0d,
+        0 20px 35px #0006;
+}
+
+.gameCard:hover{
+    transform:translateY(-8px) rotate(-1deg);
+    background:#20284e;
+}
+
+.gameIcon{
+    font-size:50px;
+}
+
+.gameName{
+    font-weight:800;
+    margin-top:12px;
+    font-size:18px;
+}
+
+.locked{
+    filter:brightness(.45);
+}
+
+.randomCard{
+    background:
+        linear-gradient(145deg,#e54c91,#754bd7);
+}
+
+/* ===============================
+   TOP BAR
+================================ */
+
+.topbar{
+    position:fixed;
+    top:20px;
+    left:20px;
+    right:20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    z-index:100;
+    pointer-events:none;
+}
+
+.back{
+    pointer-events:auto;
+    border:0;
+    background:#e64949;
+    color:white;
+    font-weight:900;
+    padding:13px 20px;
+    border-radius:16px;
+    cursor:pointer;
+    display:none;
+}
+
+.score{
+    background:#111733cc;
+    backdrop-filter:blur(15px);
+    padding:12px 18px;
+    border-radius:17px;
+    font-weight:800;
+}
+
+/* ===============================
+   GAME AREA
+================================ */
+
+#game{
+    background:#0b1027;
+}
+
+.gameArea{
+    width:100%;
+    height:100%;
+    position:relative;
+    overflow:hidden;
+}
+
+.gameHeader{
+    position:absolute;
+    top:85px;
+    width:100%;
+    text-align:center;
+    z-index:20;
+}
+
+.gameHeader h2{
+    font-size:35px;
+    margin:0;
+}
+
+.gameHeader p{
+    color:#aab5da;
+}
+
+/* ===============================
+   GRAF
+================================ */
+
+#graphCanvas{
+    position:absolute;
+    inset:0;
+}
+
+.graphLine{
+    position:absolute;
+    height:5px;
+    background:#53648c;
+    transform-origin:left center;
+    border-radius:10px;
+    z-index:1;
+    transition:.4s;
+}
+
+.node{
+    position:absolute;
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    font-weight:800;
+    cursor:pointer;
+    padding:12px;
+    z-index:5;
+    box-shadow:
+        inset -12px -15px 20px #0003,
+        0 15px 30px #0006;
+    transition:
+        transform .2s,
+        box-shadow .2s;
+}
+
+.node:hover{
+    transform:scale(1.12);
+    box-shadow:
+        inset -12px -15px 20px #0003,
+        0 0 35px #fff4;
+}
+
+.node.correct{
+    animation:correct .6s;
+}
+
+@keyframes correct{
+    50%{transform:scale(1.35)}
+}
+
+/* ===============================
+   TIMELINE
+================================ */
+
+.timeline{
+    position:absolute;
+    left:10%;
+    right:10%;
+    top:55%;
+    height:10px;
+    background:#6675a2;
+    border-radius:10px;
+}
+
+.timelineItem{
+    position:absolute;
+    width:160px;
+    min-height:75px;
+    border-radius:20px;
+    background:#f3b849;
+    color:#302000;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:10px;
+    font-weight:900;
+    cursor:grab;
+    box-shadow:0 12px 25px #0006;
+    transition:.2s;
+}
+
+.timelineItem:hover{
+    transform:scale(1.05);
+}
+
+/* ===============================
+   QUIZ / DETEKTYW
+================================ */
+
+.quizBox{
+    width:min(700px,90%);
+    padding:35px;
+    background:#151c3d;
+    border-radius:35px;
+    box-shadow:0 30px 70px #0008;
+    text-align:center;
+}
+
+.question{
+    font-size:27px;
+    font-weight:800;
+    margin-bottom:30px;
+}
+
+.answers{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.answer{
+    border:0;
+    padding:18px;
+    border-radius:18px;
+    background:#26305d;
+    color:white;
+    font-size:17px;
+    font-weight:700;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.answer:hover{
+    transform:scale(1.03);
+    background:#344178;
+}
+
+.answer.good{
+    background:#37b66c;
+}
+
+.answer.bad{
+    background:#d64d59;
+}
+
+/* ===============================
+   MEMORY
+================================ */
+
+.memoryGrid{
+    display:grid;
+    grid-template-columns:repeat(4,120px);
+    gap:15px;
+}
+
+.memoryCard{
+    width:120px;
+    height:120px;
+    perspective:600px;
+    cursor:pointer;
+}
+
+.memoryInner{
+    width:100%;
+    height:100%;
+    transition:.5s;
+    transform-style:preserve-3d;
+    position:relative;
+}
+
+.memoryCard.open .memoryInner{
+    transform:rotateY(180deg);
+}
+
+.memoryFace{
+    position:absolute;
+    inset:0;
+    border-radius:20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:8px;
+    backface-visibility:hidden;
+    font-weight:800;
+}
+
+.memoryBack{
+    background:#27315d;
+    font-size:35px;
+}
+
+.memoryFront{
+    background:#ffd45a;
+    color:#322300;
+    transform:rotateY(180deg);
+}
+
+/* ===============================
+   MODAL
+================================ */
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:#050817cc;
+    backdrop-filter:blur(12px);
+    z-index:500;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    opacity:0;
+    pointer-events:none;
+    transition:.3s;
+}
+
+.modal.show{
+    opacity:1;
+    pointer-events:auto;
+}
+
+.modalBox{
+    width:min(500px,90%);
+    background:#171e41;
+    border-radius:35px;
+    padding:35px;
+    text-align:center;
+    transform:scale(.7);
+    transition:.35s cubic-bezier(.2,1.5,.4,1);
+}
+
+.modal.show .modalBox{
+    transform:scale(1);
+}
+
+.modalIcon{
+    font-size:70px;
+}
+
+.modalBox button{
+    border:0;
+    border-radius:16px;
+    padding:14px 25px;
+    background:#ffd45a;
+    font-weight:900;
+    cursor:pointer;
+}
+
+/* ===============================
+   PARTICLES
+================================ */
+
+.particle{
+    position:fixed;
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    pointer-events:none;
+    z-index:1000;
+    animation:particle 900ms forwards;
+}
+
+@keyframes particle{
+    to{
+        transform:translate(var(--x),var(--y)) scale(0);
+        opacity:0;
+    }
+}
+
+@media(max-width:700px){
+
+    .gameGrid{
+        grid-template-columns:repeat(2,150px);
+    }
+
+    .gameCard{
+        height:140px;
+    }
+
+    .answers{
+        grid-template-columns:1fr;
+    }
+
+    .memoryGrid{
+        grid-template-columns:repeat(3,90px);
+    }
+
+    .memoryCard{
+        width:90px;
+        height:90px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="space"></div>
+
+<div class="topbar">
+    <button class="back" id="backButton" onclick="goBack()">← POWRÓT</button>
+    <div class="score">⭐ <span id="score">0</span></div>
+</div>
+
+<!-- START -->
+
+<section id="start" class="screen active">
+
+    <div class="logo">
+        <h1>ATLAS<br>WIEDZY</h1>
+    </div>
+
+    <div class="subtitle">
+        Interaktywna podróż przez wiedzę
+    </div>
+
+    <button class="startButton" onclick="showScreen('category')">
+        ROZPOCZNIJ
+    </button>
+
+</section>
+
+<!-- CATEGORY -->
+
+<section id="category" class="screen">
+
+    <div class="choiceTitle">
+        Wybierz świat
+    </div>
+
+    <div class="choices">
+
+        <button class="choice history" onclick="chooseCategory('history')">
+
+            <div class="choiceGlow"></div>
+
+            <span class="choiceIcon">🏺</span>
+
+            <span class="choiceName">
+                HISTORYCZNE
+            </span>
+
+        </button>
+
+        <button class="choice literature" onclick="chooseCategory('literature')">
+
+            <div class="choiceGlow"></div>
+
+            <span class="choiceIcon">📖</span>
+
+            <span class="choiceName">
+                LITERACKIE
+            </span>
+
+        </button>
+
+    </div>
+
+</section>
+
+<!-- HUB -->
+
+<section id="hub" class="screen">
+
+    <div class="hubTitle" id="hubTitle">
+        Wybierz doświadczenie
+    </div>
+
+    <div class="hubSubtitle">
+        Każde działa inaczej.
+    </div>
+
+    <div class="gameGrid">
+
+        <button class="gameCard" onclick="startMode('graph')">
+            <div class="gameIcon">◉</div>
+            <div class="gameName">SIEĆ</div>
+        </button>
+
+        <button class="gameCard" onclick="startMode('timeline')">
+            <div class="gameIcon">⌛</div>
+            <div class="gameName">CZAS</div>
+        </button>
+
+        <button class="gameCard" onclick="startMode('detective')">
+            <div class="gameIcon">🔎</div>
+            <div class="gameName">TAJEMNICA</div>
+        </button>
+
+        <button class="gameCard" onclick="startMode('memory')">
+            <div class="gameIcon">✦</div>
+            <div class="gameName">POŁĄCZENIA</div>
+        </button>
+
+        <button class="gameCard" onclick="startMode('quiz')">
+            <div class="gameIcon">⚡</div>
+            <div class="gameName">WYZWANIE</div>
+        </button>
+
+        <button class="gameCard randomCard" onclick="randomMode()">
+            <div class="gameIcon">?</div>
+            <div class="gameName">NIESPODZIANKA</div>
+        </button>
+
+    </div>
+
+</section>
+
+<!-- GAME -->
+
+<section id="game" class="screen">
+    <div id="gameArea" class="gameArea"></div>
+</section>
+
+<!-- MODAL -->
+
+<div class="modal" id="modal">
+
+    <div class="modalBox">
+
+        <div class="modalIcon" id="modalIcon">✨</div>
+
+        <h2 id="modalTitle">
+            Świetnie!
+        </h2>
+
+        <p id="modalText"></p>
+
+        <button onclick="closeModal()">
+            DALEJ
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+
+/* ======================================================
+   GLOBAL
+====================================================== */
+
+let category = "history";
+let score = 0;
+let currentScreen = "start";
+
+const historyData = {
+
+    graph:[
+        ["Starożytny Egipt","Piramidy","Faraon","Nil"],
+        ["Rzym","Cesarstwo","Legiony","Koloseum"],
+        ["Średniowiecze","Rycerstwo","Zamki","Feudalizm"]
+    ],
+
+    questions:[
+        {
+            q:"Która cywilizacja zbudowała piramidy w Gizie?",
+            a:["Egipcjanie","Rzymianie","Wikingowie","Aztekowie"],
+            good:0
+        },
+        {
+            q:"Które miasto było centrum Imperium Rzymskiego?",
+            a:["Rzym","Ateny","Paryż","Londyn"],
+            good:0
+        },
+        {
+            q:"Co było charakterystyczne dla europejskiego średniowiecza?",
+            a:["Feudalizm","Internet","Silniki parowe","Lotnictwo"],
+            good:0
+        }
+    ],
+
+    memory:[
+        ["Egipt","Piramidy"],
+        ["Rzym","Legiony"],
+        ["Gutenberg","Druk"],
+        ["Wikingowie","Skandynawia"]
+    ]
+
+};
+
+const literatureData = {
+
+    graph:[
+        ["Literatura","Epika","Liryka","Dramat"],
+        ["Epika","Narrator","Fabuła","Bohater"],
+        ["Dramat","Dialog","Akt","Scena"]
+    ],
+
+    questions:[
+        {
+            q:"Kto opowiada wydarzenia w utworze epickim?",
+            a:["Narrator","Reżyser","Czytelnik","Aktor"],
+            good:0
+        },
+        {
+            q:"Który rodzaj literacki jest związany z przedstawieniem wydarzeń na scenie?",
+            a:["Dramat","Liryka","Legenda","Reportaż"],
+            good:0
+        },
+        {
+            q:"Jak nazywa się ciąg wydarzeń w utworze?",
+            a:["Fabuła","Rym","Akapit","Didaskalia"],
+            good:0
+        }
+    ],
+
+    memory:[
+        ["Epika","Narrator"],
+        ["Dramat","Dialog"],
+        ["Liryka","Podmiot liryczny"],
+        ["Fabuła","Wydarzenia"]
+    ]
+
+};
+
+function data(){
+    return category==="history"
+        ? historyData
+        : literatureData;
+}
+
+/* ======================================================
+   STARS
+====================================================== */
+
+const space=document.getElementById("space");
+
+for(let i=0;i<80;i++){
+
+    const star=document.createElement("div");
+
+    star.className="star";
+
+    star.style.left=Math.random()*100+"%";
+    star.style.top=Math.random()*100+"%";
+
+    const size=Math.random()*3+1;
+
+    star.style.width=size+"px";
+    star.style.height=size+"px";
+
+    star.style.animationDelay=Math.random()*3+"s";
+
+    space.appendChild(star);
+}
+
+/* ======================================================
+   SCREENS
+====================================================== */
+
+function showScreen(id){
+
+    document.querySelectorAll(".screen")
+        .forEach(x=>x.classList.remove("active"));
+
+    document.getElementById(id)
+        .classList.add("active");
+
+    currentScreen=id;
+
+    document.getElementById("backButton").style.display =
+        (id==="start" || id==="category")
+        ? "none"
+        : "block";
+}
+
+function chooseCategory(type){
+
+    category=type;
+
+    document.getElementById("hubTitle").textContent =
+        type==="history"
+        ? "ŚWIAT HISTORII"
+        : "ŚWIAT LITERATURY";
+
+    showScreen("hub");
+}
+
+function goBack(){
+
+    if(currentScreen==="game"){
+        showScreen("hub");
+    }
+    else if(currentScreen==="hub"){
+        showScreen("category");
+    }
+}
+
+/* ======================================================
+   MODES
+====================================================== */
+
+function startMode(mode){
+
+    showScreen("game");
+
+    const area=document.getElementById("gameArea");
+
+    area.innerHTML="";
+
+    if(mode==="graph") graphGame();
+    if(mode==="timeline") timelineGame();
+    if(mode==="detective") detectiveGame();
+    if(mode==="memory") memoryGame();
+    if(mode==="quiz") quizGame();
+}
+
+function randomMode(){
+
+    const modes=[
+        "graph",
+        "timeline",
+        "detective",
+        "memory",
+        "quiz"
+    ];
+
+    startMode(
+        modes[Math.floor(Math.random()*modes.length)]
+    );
+}
+
+/* ======================================================
+   GRAPH
+====================================================== */
+
+function graphGame(){
+
+    const area=document.getElementById("gameArea");
+
+    const set=
+        data().graph[
+            Math.floor(Math.random()*data().graph.length)
+        ];
+
+    area.innerHTML=`
+        <div class="gameHeader">
+            <h2>ODKRYJ POŁĄCZENIA</h2>
+            <p>Klikaj elementy i odkrywaj sieć wiedzy.</p>
+        </div>
+
+        <div id="graphCanvas"></div>
+    `;
+
+    const canvas=document.getElementById("graphCanvas");
+
+    const centerX=window.innerWidth/2;
+    const centerY=window.innerHeight/2+60;
+
+    const positions=[
+        [centerX-60,centerY-60],
+        [centerX-300,centerY-180],
+        [centerX+180,centerY-180],
+        [centerX-60,centerY+150]
+    ];
+
+    const colors=[
+        "#ef6d5b",
+        "#f4ba4e",
+        "#52c8c5",
+        "#836ee7"
+    ];
+
+    set.forEach((text,i)=>{
+
+        const node=document.createElement("div");
+
+        node.className="node";
+        node.textContent=text;
+
+        node.style.left=positions[i][0]+"px";
+        node.style.top=positions[i][1]+"px";
+        node.style.background=colors[i];
+
+        node.onclick=()=>{
+
+            node.classList.add("correct");
+
+            particles(
+                positions[i][0]+60,
+                positions[i][1]+60
+            );
+
+            addScore(10);
+
+            setTimeout(()=>{
+                node.classList.remove("correct");
+            },600);
+        };
+
+        canvas.appendChild(node);
+    });
+
+    for(let i=1;i<4;i++){
+
+        createLine(
+            canvas,
+            positions[0][0]+60,
+            positions[0][1]+60,
+            positions[i][0]+60,
+            positions[i][1]+60
+        );
+    }
+}
+
+function createLine(parent,x1,y1,x2,y2){
+
+    const line=document.createElement("div");
+
+    line.className="graphLine";
+
+    const dx=x2-x1;
+    const dy=y2-y1;
+
+    const length=Math.sqrt(dx*dx+dy*dy);
+    const angle=Math.atan2(dy,dx)*180/Math.PI;
+
+    line.style.left=x1+"px";
+    line.style.top=y1+"px";
+    line.style.width=length+"px";
+    line.style.transform=`rotate(${angle}deg)`;
+
+    parent.appendChild(line);
+}
+
+/* ======================================================
+   TIMELINE
+====================================================== */
+
+function timelineGame(){
+
+    const area=document.getElementById("gameArea");
+
+    const events =
+        category==="history"
+        ? [
+            ["Piramidy w Gizie",-2600],
+            ["Imperium Rzymskie",117],
+            ["Druk Gutenberga",1450],
+            ["Pierwszy lot",1903]
+        ]
+        : [
+            ["Antyk",-500],
+            ["Średniowiecze",1000],
+            ["Renesans",1500],
+            ["Romantyzm",1820]
+        ];
+
+    area.innerHTML=`
+        <div class="gameHeader">
+            <h2>LINIA CZASU</h2>
+            <p>Odkryj kolejność wydarzeń.</p>
+        </div>
+
+        <div class="timeline" id="timeline"></div>
+    `;
+
+    const timeline=document.getElementById("timeline");
+
+    events.forEach((event,i)=>{
+
+        const item=document.createElement("div");
+
+        item.className="timelineItem";
+
+        item.innerHTML=
+            event[0]+
+            "<br><small>"+event[1]+"</small>";
+
+        item.style.left=
+            (i/(events.length-1))*80+"%";
+
+        item.style.top=
+            (i%2===0 ? -120 : 40)+"px";
+
+        item.onclick=()=>{
+
+            addScore(5);
+
+            item.style.background="#55d58a";
+
+            particles(
+                item.getBoundingClientRect().left+80,
+                item.getBoundingClientRect().top+40
+            );
+        };
+
+        timeline.appendChild(item);
+    });
+}
+
+/* ======================================================
+   DETECTIVE
+====================================================== */
+
+function detectiveGame(){
+
+    const questions=data().questions;
+
+    const q=
+        questions[
+            Math.floor(Math.random()*questions.length)
+        ];
+
+    renderQuestion(
+        "🔎 TAJEMNICA",
+        q
+    );
+}
+
+/* ======================================================
+   QUIZ
+====================================================== */
+
+function quizGame(){
+
+    const questions=data().questions;
+
+    const q=
+        questions[
+            Math.floor(Math.random()*questions.length)
+        ];
+
+    renderQuestion(
+        "⚡ WYZWANIE",
+        q
+    );
+}
+
+function renderQuestion(title,q){
+
+    const area=document.getElementById("gameArea");
+
+    area.innerHTML=`
+
+        <div style="
+            height:100%;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+        ">
+
+            <div class="quizBox">
+
+                <h2>${title}</h2>
+
+                <div class="question">
+                    ${q.q}
+                </div>
+
+                <div class="answers">
+
+                    ${q.a.map((a,i)=>`
+                        <button
+                            class="answer"
+                            onclick="answerQuestion(this,${i},${q.good})">
+                            ${a}
+                        </button>
+                    `).join("")}
+
+                </div>
+
+            </div>
+
+        </div>
+    `;
+}
+
+function answerQuestion(button,index,good){
+
+    const buttons=document.querySelectorAll(".answer");
+
+    buttons.forEach(b=>b.disabled=true);
+
+    if(index===good){
+
+        button.classList.add("good");
+
+        addScore(25);
+
+        particles(
+            window.innerWidth/2,
+            window.innerHeight/2
+        );
+
+        setTimeout(()=>{
+
+            showModal(
+                "✨",
+                "Świetnie!",
+                "Odpowiedź jest poprawna."
+            );
+
+        },400);
+
+    }else{
+
+        button.classList.add("bad");
+
+        buttons[good].classList.add("good");
+
+        setTimeout(()=>{
+
+            showModal(
+                "💡",
+                "Prawie!",
+                "Zielona odpowiedź była poprawna."
+            );
+
+        },400);
+    }
+}
+
+/* ======================================================
+   MEMORY
+====================================================== */
+
+function memoryGame(){
+
+    const area=document.getElementById("gameArea");
+
+    const pairs=data().memory;
+
+    let cards=[];
+
+    pairs.forEach((pair,id)=>{
+
+        pair.forEach(text=>{
+
+            cards.push({
+                text:text,
+                pair:id
+            });
+        });
+    });
+
+    cards.sort(()=>Math.random()-.5);
+
+    area.innerHTML=`
+
+        <div style="
+            height:100%;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+        ">
+
+            <h2>ODKRYJ POŁĄCZENIA</h2>
+
+            <p style="color:#aab5da">
+                Znajdź elementy, które do siebie pasują.
+            </p>
+
+            <div class="memoryGrid">
+
+                ${cards.map((card,i)=>`
+
+                    <div
+                        class="memoryCard"
+                        data-pair="${card.pair}"
+                        onclick="openMemory(this)">
+
+                        <div class="memoryInner">
+
+                            <div class="memoryFace memoryBack">
+                                ?
+                            </div>
+
+                            <div class="memoryFace memoryFront">
+                                ${card.text}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                `).join("")}
+
+            </div>
+
+        </div>
+    `;
+}
+
+let memoryOpen=[];
+
+function openMemory(card){
+
+    if(
+        card.classList.contains("open") ||
+        memoryOpen.length>=2
+    ) return;
+
+    card.classList.add("open");
+
+    memoryOpen.push(card);
+
+    if(memoryOpen.length===2){
+
+        const [a,b]=memoryOpen;
+
+        if(a.dataset.pair===b.dataset.pair){
+
+            addScore(20);
+
+            particles(
+                window.innerWidth/2,
+                window.innerHeight/2
+            );
+
+            memoryOpen=[];
+
+        }else{
+
+            setTimeout(()=>{
+
+                a.classList.remove("open");
+                b.classList.remove("open");
+
+                memoryOpen=[];
+
+            },900);
+        }
+    }
+}
+
+/* ======================================================
+   SCORE
+====================================================== */
+
+function addScore(amount){
+
+    score+=amount;
+
+    document.getElementById("score")
+        .textContent=score;
+}
+
+/* ======================================================
+   PARTICLES
+====================================================== */
+
+function particles(x,y){
+
+    for(let i=0;i<18;i++){
+
+        const p=document.createElement("div");
+
+        p.className="particle";
+
+        p.style.left=x+"px";
+        p.style.top=y+"px";
+
+        p.style.background=[
+            "#ffd45a",
+            "#65d6ff",
+            "#ef6b8f",
+            "#6be39b"
+        ][Math.floor(Math.random()*4)];
+
+        p.style.setProperty(
+            "--x",
+            (Math.random()*300-150)+"px"
+        );
+
+        p.style.setProperty(
+            "--y",
+            (Math.random()*300-150)+"px"
+        );
+
+        document.body.appendChild(p);
+
+        setTimeout(()=>p.remove(),900);
+    }
+}
+
+/* ======================================================
+   MODAL
+====================================================== */
+
+function showModal(icon,title,text){
+
+    document.getElementById("modalIcon").textContent=icon;
+    document.getElementById("modalTitle").textContent=title;
+    document.getElementById("modalText").textContent=text;
+
+    document.getElementById("modal")
+        .classList.add("show");
+}
+
+function closeModal(){
+
+    document.getElementById("modal")
+        .classList.remove("show");
+
+    if(currentScreen==="game"){
+        randomMode();
+    }
+}
+
+</script>
+
+</body>
+</html>
