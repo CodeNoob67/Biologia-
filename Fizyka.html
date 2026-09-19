@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fizyka Interaktywna</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Inter,Arial,sans-serif;
+    background:#f4f7fb;
+    color:#172033;
+}
+
+header{
+    background:white;
+    border-bottom:1px solid #dfe5ee;
+    padding:18px 28px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    position:sticky;
+    top:0;
+    z-index:10;
+}
+
+.logo{
+    font-size:23px;
+    font-weight:800;
+}
+
+.logo span{
+    color:#4776ff;
+}
+
+nav{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+nav button{
+    border:0;
+    background:#eef2f8;
+    padding:10px 15px;
+    border-radius:12px;
+    cursor:pointer;
+    font-weight:600;
+    transition:.2s;
+}
+
+nav button:hover{
+    background:#dce5ff;
+    transform:translateY(-2px);
+}
+
+nav button.active{
+    background:#4776ff;
+    color:white;
+}
+
+main{
+    max-width:1200px;
+    margin:auto;
+    padding:30px 20px;
+}
+
+.hero{
+    margin-bottom:28px;
+}
+
+.hero h1{
+    margin:0;
+    font-size:36px;
+}
+
+.hero p{
+    color:#657087;
+    line-height:1.6;
+}
+
+.section{
+    display:none;
+}
+
+.section.active{
+    display:block;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(330px,1fr));
+    gap:20px;
+}
+
+.card{
+    background:white;
+    border-radius:20px;
+    padding:22px;
+    border:1px solid #e1e6ef;
+    box-shadow:0 7px 25px rgba(30,50,90,.06);
+}
+
+.card h2{
+    margin-top:0;
+}
+
+.description{
+    color:#667085;
+    line-height:1.5;
+}
+
+.formula{
+    background:#f4f7ff;
+    border:1px solid #dce5ff;
+    padding:18px;
+    border-radius:15px;
+    text-align:center;
+    font-size:27px;
+    font-weight:700;
+    margin:15px 0;
+}
+
+.symbol{
+    color:#4776ff;
+    cursor:pointer;
+    border-bottom:2px dotted #4776ff;
+}
+
+.symbol:hover{
+    color:#244fc4;
+}
+
+.controls{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+}
+
+.control{
+    background:#f7f9fc;
+    padding:12px;
+    border-radius:12px;
+}
+
+.control label{
+    display:block;
+    font-size:13px;
+    color:#667085;
+    margin-bottom:6px;
+}
+
+.control input{
+    width:100%;
+    padding:9px;
+    border:1px solid #d7dde8;
+    border-radius:8px;
+    font-size:16px;
+}
+
+.result{
+    margin-top:14px;
+    background:#e9fff3;
+    color:#08783f;
+    border-radius:12px;
+    padding:13px;
+    font-weight:700;
+}
+
+/* SCENY */
+
+.scene{
+    position:relative;
+    height:180px;
+    background:linear-gradient(#ccecff 0 65%,#d8d8d8 65%);
+    border-radius:16px;
+    overflow:hidden;
+    margin-top:18px;
+}
+
+.road{
+    position:absolute;
+    bottom:0;
+    height:63px;
+    width:100%;
+    background:#424955;
+}
+
+.road:after{
+    content:"";
+    position:absolute;
+    top:29px;
+    width:100%;
+    border-top:4px dashed white;
+}
+
+.car{
+    position:absolute;
+    left:10px;
+    bottom:40px;
+    font-size:42px;
+    transition:left .1s linear;
+}
+
+/* SIŁA */
+
+.forceScene{
+    height:180px;
+    background:#f5f7fb;
+}
+
+.boxObject{
+    position:absolute;
+    width:70px;
+    height:70px;
+    background:#d4944d;
+    border-radius:10px;
+    left:80px;
+    bottom:30px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:30px;
+}
+
+.arrow{
+    position:absolute;
+    height:8px;
+    width:100px;
+    background:#4776ff;
+    left:150px;
+    bottom:62px;
+}
+
+.arrow:after{
+    content:"";
+    position:absolute;
+    right:-14px;
+    top:-8px;
+    border-left:18px solid #4776ff;
+    border-top:12px solid transparent;
+    border-bottom:12px solid transparent;
+}
+
+/* GRAWITACJA */
+
+.gravityScene{
+    background:linear-gradient(#ccecff,#f8fcff);
+}
+
+.ball{
+    position:absolute;
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:#ff765d;
+    left:50%;
+    transform:translateX(-50%);
+}
+
+/* WODA */
+
+.pipeScene{
+    background:#f5f7fb;
+    height:200px;
+}
+
+.pipe{
+    position:absolute;
+    left:20px;
+    right:20px;
+    top:65px;
+    height:70px;
+    background:#dce2e8;
+    border:5px solid #7d8794;
+    overflow:hidden;
+}
+
+.water{
+    position:absolute;
+    inset:0;
+    background:#42a5f5;
+    opacity:.75;
+}
+
+.particle{
+    position:absolute;
+    width:12px;
+    height:12px;
+    background:#d9f4ff;
+    border-radius:50%;
+}
+
+/* CIŚNIENIE */
+
+.tank{
+    position:absolute;
+    width:150px;
+    height:140px;
+    border:6px solid #64748b;
+    border-top:none;
+    left:50%;
+    transform:translateX(-50%);
+    bottom:10px;
+}
+
+.tankWater{
+    position:absolute;
+    bottom:0;
+    width:100%;
+    background:#42a5f5;
+    transition:.3s;
+}
+
+/* MODAL */
+
+.modalBackground{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(15,23,42,.45);
+    z-index:100;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+.modal{
+    background:white;
+    width:420px;
+    max-width:100%;
+    border-radius:20px;
+    padding:25px;
+    box-shadow:0 20px 70px rgba(0,0,0,.25);
+}
+
+.modal h2{
+    margin-top:0;
+}
+
+.modal .unit{
+    display:inline-block;
+    background:#edf2ff;
+    color:#4169d8;
+    padding:7px 11px;
+    border-radius:8px;
+    font-weight:bold;
+}
+
+.close{
+    float:right;
+    border:0;
+    background:#eee;
+    width:35px;
+    height:35px;
+    border-radius:50%;
+    cursor:pointer;
+    font-size:18px;
+}
+
+@media(max-width:700px){
+    header{
+        display:block;
+    }
+
+    nav{
+        margin-top:15px;
+    }
+
+    .hero h1{
+        font-size:28px;
+    }
+
+    .controls{
+        grid-template-columns:1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">
+    ⚛️ Fizyka<span>Lab</span>
+</div>
+
+<nav>
+<button class="active" onclick="showSection('kinematyka',this)">Kinematyka</button>
+<button onclick="showSection('dynamika',this)">Dynamika</button>
+<button onclick="showSection('energia',this)">Energia</button>
+<button onclick="showSection('hydro',this)">Hydrodynamika</button>
+<button onclick="showSection('cisnienie',this)">Ciśnienie</button>
+</nav>
+
+</header>
+
+<main>
+
+<div class="hero">
+<h1>Interaktywna fizyka 🔬</h1>
+<p>
+Zmieniaj wartości, obserwuj zjawiska i klikaj symbole we wzorach,
+aby dowiedzieć się, co oznaczają.
+</p>
+</div>
+
+
+<!-- KINEMATYKA -->
+
+<section id="kinematyka" class="section active">
+
+<div class="grid">
+
+<div class="card">
+
+<h2>🚗 Droga</h2>
+
+<p class="description">
+Oblicza drogę przebytą przez obiekt poruszający się ze stałą prędkością.
+</p>
+
+<div class="formula">
+<span class="symbol"
+onclick="info('Droga','s','m','Długość trasy przebytej przez obiekt.')">s</span>
+=
+<span class="symbol"
+onclick="info('Prędkość','v','m/s','Informuje, jaką drogę obiekt pokonuje w określonym czasie.')">v</span>
+·
+<span class="symbol"
+onclick="info('Czas','t','s','Czas trwania ruchu.')">t</span>
+</div>
+
+<div class="controls">
+
+<div class="control">
+<label>Prędkość v [m/s]</label>
+<input id="velocity" type="number" value="10" oninput="updateMotion()">
+</div>
+
+<div class="control">
+<label>Czas t [s]</label>
+<input id="time" type="number" value="5" oninput="updateMotion()">
+</div>
+
+</div>
+
+<div id="distanceResult" class="result"></div>
+
+<div class="scene">
+
+<div class="road"></div>
+<div id="car" class="car">🚗</div>
+
+</div>
+
+</div>
+
+
+<!-- PRĘDKOŚĆ -->
+
+<div class="card">
+
+<h2>🏃 Prędkość</h2>
+
+<p class="description">
+Pokazuje, jak szybko obiekt pokonuje określoną drogę.
+</p>
+
+<div class="formula">
+
+<span class="symbol"
+onclick="info('Prędkość','v','m/s','Zmiana położenia obiektu w czasie.')">v</span>
+
+=
+
+<span class="symbol"
+onclick="info('Droga','s','m','Droga pokonana przez obiekt.')">s</span>
+
+/
+
+<span class="symbol"
+onclick="info('Czas','t','s','Czas ruchu obiektu.')">t</span>
+
+</div>
+
+<div class="controls">
+
+<div class="control">
+<label>Droga s [m]</label>
+<input id="speedS" type="number" value="100" oninput="speedCalc()">
+</div>
+
+<div class="control">
+<label>Czas t [s]</label>
+<input id="speedT" type="number" value="10" oninput="speedCalc()">
+</div>
+
+</div>
+
+<div id="speedResult" class="result"></div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- DYNAMIKA -->
+
+<section id="dynamika" class="section">
+
+<div class="grid">
+
+<div class="card">
+
+<h2>📦 II zasada Newtona</h2>
+
+<p class="description">
+Im większa siła działa na ciało, tym większe może uzyskać przyspieszenie.
+</p>
+
+<div class="formula">
+
+<span class="symbol"
+onclick="info('Siła','F','N','Oddziaływanie mogące zmienić ruch ciała.')">F</span>
+
+=
+
+<span class="symbol"
+onclick="info('Masa','m','kg','Miara ilości materii i bezwładności ciała.')">m</span>
+
+·
+
+<span class="symbol"
+onclick="info('Przyspieszenie','a','m/s²','Zmiana prędkości w czasie.')">a</span>
+
+</div>
+
+<div class="controls">
+
+<div class="control">
+<label>Masa [kg]</label>
+<input id="mass" value="10" type="number" oninput="forceCalc()">
+</div>
+
+<div class="control">
+<label>Przyspieszenie [m/s²]</label>
+<input id="acceleration" value="2" type="number" oninput="forceCalc()">
+</div>
+
+</div>
+
+<div id="forceResult" class="result"></div>
+
+<div class="scene forceScene">
+
+<div class="boxObject">📦</div>
+<div id="forceArrow" class="arrow"></div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ENERGIA -->
+
+<section id="energia" class="section">
+
+<div class="grid">
+
+<div class="card">
+
+<h2>⚡ Energia kinetyczna</h2>
+
+<div class="formula">
+
+<span class="symbol"
+onclick="info('Energia kinetyczna','Eₖ','J','Energia związana z ruchem obiektu.')">Eₖ</span>
+
+=
+
+½
+
+<span class="symbol"
+onclick="info('Masa','m','kg','Masa poruszającego się obiektu.')">m</span>
+
+<span class="symbol"
+onclick="info('Prędkość','v','m/s','Prędkość obiektu.')">v</span>²
+
+</div>
+
+<div class="controls">
+
+<div class="control">
+<label>Masa [kg]</label>
+<input id="energyMass" value="2" type="number" oninput="energyCalc()">
+</div>
+
+<div class="control">
+<label>Prędkość [m/s]</label>
+<input id="energyV" value="5" type="number" oninput="energyCalc()">
+</div>
+
+</div>
+
+<div id="energyResult" class="result"></div>
+
+</div>
+
+
+<div class="card">
+
+<h2>🌍 Energia potencjalna</h2>
+
+<div class="formula">
+
+<span class="symbol"
+onclick="info('Energia potencjalna','Eₚ','J','Energia wynikająca z położenia w polu grawitacyjnym.')">Eₚ</span>
+
+=
+
+<span class="symbol"
+onclick="info('Masa','m','kg','Masa ciała.')">m</span>
+
+·
+
+<span class="symbol"
+onclick="info('Przyspieszenie grawitacyjne','g','m/s²','Na Ziemi wynosi około 9,81 m/s².')">g</span>
+
+·
+
+<span class="symbol"
+onclick="info('Wysokość','h','m','Wysokość nad wybranym poziomem odniesienia.')">h</span>
+
+</div>
+
+<div class="controls">
+
+<div class="control">
+<label>Masa [kg]</label>
+<input id="potentialMass" value="1" type="number" oninput="potentialCalc()">
+</div>
+
+<div class="control">
+<label>Wysokość [m]</label>
+<input id="height" value="10" type="number" oninput="potentialCalc()">
+</div>
+
+</div>
+
+<div id="potentialResult" class="result"></div>
+
+<div class="scene gravityScene">
+<div id="ball" class="ball"></div>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- HYDRODYNAMIKA -->
+
+<section id="hydro" class="section">
+
+<div class="grid">
+
+<div class="card">
+
+<h2>🌊 Natężenie przepływu</h2>
+
+<p class="description">
+Pokazuje objętość cieczy przepływającą przez rurę w określonym czasie.
+</p>
+
+<div class="formula">
+
+<span class="symbol"
+onclick="info('Natężenie przepływu','Q','m³/s','Objętość cieczy przepływająca w jednostce czasu.')">Q</span>
+
+=
+
+<span class="symbol"
+onclick="info('Pole przekroju','A','m²','Pole przekroju poprzecznego rury.')">A</span>
+
+·
+
+<span class="symbol"
+onclick="info('Prędkość cieczy','v','m/s','Prędkość przepływającej cieczy.')">v</span>
+
+</div>
+
+<div class="controls">
+
+<div class="control">
+<label>Pole rury A [m²]</label>
+<input id="area" value="2" type="number" step=".1" oninput="flowCalc()">
+</div>
+
+<div class="control">
+<label>Prędkość wody v [m/s]</label>
+<input id="waterSpeed" value="3" type="number" step=".1" oninput="flowCalc()">
+</div>
+
+</div>
+
+<div id="flowResult" class="result"></div>
+
+<div class="scene pipeScene">
+
+<div class="pipe">
+<div class="water"></div>
+
+<div class="particle" style="top:15px"></div>
+<div class="particle" style="top:35px"></div>
+<div class="particle" style="top:50px"></div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- CIŚNIENIE -->
+
+<section id="cisnienie" class="section">
+
+<div class="grid">
+
+<div class="card">
+
+<h2>💧 Ciśnienie hydrostatyczne</h2>
+
+<p class="description">
+Im głębiej pod powierzchnią cieczy, tym większe ciśnienie.
+</p>
+
+<div class="formula">
+
+<span class="symbol"
+onclick="info('Ciśnienie','p','Pa','Siła przypadająca na jednostkę powierzchni.')">p</span>
+
+=
+
+<span class="symbol"
+onclick="info('Gęstość','ρ','kg/m³','Masa jednego metra sześciennego substancji.')">ρ</span>
+
+·
+
+<span class="symbol"
+onclick="info('Przyspieszenie grawitacyjne','g','m/s²','Na Ziemi około 9,81 m/s².')">g</span>
+
+·
+
+<span class="symbol"
+onclick="info('Głębokość','h','m','Odległość poniżej powierzchni cieczy.')">h</span>
+
+</div>
+
+<div class="controls">
+
+<div class="control">
+<label>Gęstość [kg/m³]</label>
+<input id="density" value="1000" type="number" oninput="pressureCalc()">
+</div>
+
+<div class="control">
+<label>Głębokość [m]</label>
+<input id="depth" value="5" type="number" oninput="pressureCalc()">
+</div>
+
+</div>
+
+<div id="pressureResult" class="result"></div>
+
+<div class="scene">
+
+<div class="tank">
+<div id="tankWater" class="tankWater"></div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+
+<!-- OKNO INFORMACYJNE -->
+
+<div id="modalBackground" class="modalBackground" onclick="closeModal(event)">
+
+<div class="modal">
+
+<button class="close" onclick="hideModal()">×</button>
+
+<h2 id="modalTitle"></h2>
+
+<h3 id="modalSymbol"></h3>
+
+<div id="modalUnit" class="unit"></div>
+
+<p id="modalDescription"></p>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* MENU */
+
+function showSection(id,button){
+
+    document.querySelectorAll(".section").forEach(section=>{
+        section.classList.remove("active");
+    });
+
+    document.getElementById(id).classList.add("active");
+
+    document.querySelectorAll("nav button").forEach(btn=>{
+        btn.classList.remove("active");
+    });
+
+    button.classList.add("active");
+}
+
+
+/* INFORMACJE */
+
+function info(title,symbol,unit,description){
+
+    document.getElementById("modalTitle").textContent=title;
+    document.getElementById("modalSymbol").textContent="Symbol: "+symbol;
+    document.getElementById("modalUnit").textContent="Jednostka: "+unit;
+    document.getElementById("modalDescription").textContent=description;
+
+    document.getElementById("modalBackground").style.display="flex";
+}
+
+function hideModal(){
+    document.getElementById("modalBackground").style.display="none";
+}
+
+function closeModal(event){
+
+    if(event.target.id==="modalBackground"){
+        hideModal();
+    }
+}
+
+
+/* DROGA */
+
+function updateMotion(){
+
+    let v=Number(document.getElementById("velocity").value);
+    let t=Number(document.getElementById("time").value);
+
+    let s=v*t;
+
+    document.getElementById("distanceResult").innerHTML=
+    "Droga: "+s.toFixed(2)+" m";
+}
+
+
+/* PRĘDKOŚĆ */
+
+function speedCalc(){
+
+    let s=Number(document.getElementById("speedS").value);
+    let t=Number(document.getElementById("speedT").value);
+
+    let v=t!==0?s/t:0;
+
+    document.getElementById("speedResult").innerHTML=
+    "Prędkość: "+v.toFixed(2)+" m/s";
+}
+
+
+/* SIŁA */
+
+function forceCalc(){
+
+    let m=Number(document.getElementById("mass").value);
+    let a=Number(document.getElementById("acceleration").value);
+
+    let F=m*a;
+
+    document.getElementById("forceResult").innerHTML=
+    "Siła: "+F.toFixed(2)+" N";
+
+    document.getElementById("forceArrow").style.width=
+    Math.min(180,40+Math.abs(F)*2)+"px";
+}
+
+
+/* ENERGIA */
+
+function energyCalc(){
+
+    let m=Number(document.getElementById("energyMass").value);
+    let v=Number(document.getElementById("energyV").value);
+
+    let E=.5*m*v*v;
+
+    document.getElementById("energyResult").innerHTML=
+    "Energia kinetyczna: "+E.toFixed(2)+" J";
+}
+
+
+/* POTENCJALNA */
+
+function potentialCalc(){
+
+    let m=Number(document.getElementById("potentialMass").value);
+    let h=Number(document.getElementById("height").value);
+
+    let E=m*9.81*h;
+
+    document.getElementById("potentialResult").innerHTML=
+    "Energia potencjalna: "+E.toFixed(2)+" J";
+
+    let ball=document.getElementById("ball");
+
+    let position=Math.min(125,Math.max(10,h*10));
+
+    ball.style.bottom=position+"px";
+}
+
+
+/* PRZEPŁYW */
+
+function flowCalc(){
+
+    let A=Number(document.getElementById("area").value);
+    let v=Number(document.getElementById("waterSpeed").value);
+
+    let Q=A*v;
+
+    document.getElementById("flowResult").innerHTML=
+    "Natężenie przepływu: "+Q.toFixed(2)+" m³/s";
+}
+
+
+/* CIŚNIENIE */
+
+function pressureCalc(){
+
+    let density=Number(document.getElementById("density").value);
+    let depth=Number(document.getElementById("depth").value);
+
+    let p=density*9.81*depth;
+
+    document.getElementById("pressureResult").innerHTML=
+    "Ciśnienie: "+p.toFixed(0)+" Pa";
+
+    let water=document.getElementById("tankWater");
+
+    water.style.height=
+    Math.min(100,Math.max(5,depth*8))+"%";
+}
+
+
+/* ANIMACJA SAMOCHODU */
+
+let carPosition=0;
+
+function animateCar(){
+
+    let v=Number(document.getElementById("velocity").value)||0;
+
+    carPosition+=v*.04;
+
+    if(carPosition>90){
+        carPosition=0;
+    }
+
+    document.getElementById("car").style.left=
+    carPosition+"%";
+
+    requestAnimationFrame(animateCar);
+}
+
+
+/* ANIMACJA WODY */
+
+let waterPosition=0;
+
+function animateWater(){
+
+    let speed=Number(document.getElementById("waterSpeed").value)||0;
+
+    waterPosition+=speed*.7;
+
+    let pipe=document.querySelector(".pipe");
+
+    if(pipe){
+
+        let width=pipe.clientWidth;
+
+        document.querySelectorAll(".particle").forEach((particle,index)=>{
+
+            let x=(waterPosition+index*100)%width;
+
+            particle.style.left=x+"px";
+
+        });
+
+    }
+
+    requestAnimationFrame(animateWater);
+}
+
+
+/* START */
+
+updateMotion();
+speedCalc();
+forceCalc();
+energyCalc();
+potentialCalc();
+flowCalc();
+pressureCalc();
+
+animateCar();
+animateWater();
+
+</script>
+
+</body>
+</html>
