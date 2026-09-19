@@ -1,1288 +1,355 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Kroniki Wiedzy</title>
-
-<style>
-*{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;overflow:hidden}
-body{
-    font-family:"Segoe UI",Arial,sans-serif;
-    background:#111;
-    color:#fff;
-}
-
-/* =========================
-   ŚWIAT
-========================= */
-
-#world{
-    position:fixed;
-    inset:0;
-    overflow:hidden;
-    transition:background 1.5s ease;
-}
-
-.world-stone{
-    background:
-        linear-gradient(#74b9d4 0 48%,#c89d62 48% 100%);
-}
-
-.world-ancient{
-    background:
-        linear-gradient(#69bce2 0 52%,#dfb866 52%);
-}
-
-.world-medieval{
-    background:
-        linear-gradient(#7898a8 0 52%,#6d874f 52%);
-}
-
-/* słońce */
-
-.sun{
-    position:absolute;
-    width:110px;
-    height:110px;
-    border-radius:50%;
-    background:#ffe16b;
-    right:9%;
-    top:8%;
-    box-shadow:0 0 80px #ffe16b99;
-}
-
-/* chmury */
-
-.cloud{
-    position:absolute;
-    width:180px;
-    height:55px;
-    background:#fff9;
-    border-radius:100px;
-    animation:cloudMove 30s linear infinite;
-}
-
-.cloud:before,
-.cloud:after{
-    content:"";
-    position:absolute;
-    border-radius:50%;
-    background:inherit;
-}
-
-.cloud:before{
-    width:75px;height:75px;
-    left:30px;top:-30px;
-}
-
-.cloud:after{
-    width:100px;height:100px;
-    right:20px;top:-45px;
-}
-
-@keyframes cloudMove{
-    from{transform:translateX(-300px)}
-    to{transform:translateX(calc(100vw + 300px))}
-}
-
-/* =========================
-   JASKINIA
-========================= */
-
-.cave{
-    position:absolute;
-    left:-5%;
-    bottom:-8%;
-    width:58%;
-    height:82%;
-    background:#575653;
-    border-radius:48% 48% 15% 10%;
-    box-shadow:
-        inset -30px 0 50px #252525,
-        inset 30px 10px 60px #777;
-}
-
-.caveInside{
-    position:absolute;
-    left:14%;
-    bottom:0;
-    width:65%;
-    height:70%;
-    background:#242424;
-    border-radius:50% 50% 0 0;
-}
-
-/* ogień */
-
-.fire{
-    position:absolute;
-    bottom:7%;
-    left:31%;
-    width:60px;
-    height:90px;
-    animation:fire .3s infinite alternate;
-}
-
-.flame{
-    position:absolute;
-    bottom:0;
-    width:55px;
-    height:80px;
-    border-radius:50% 50% 45% 45%;
-    background:#ff6a2a;
-    transform:rotate(45deg);
-}
-
-.flame2{
-    position:absolute;
-    bottom:5px;
-    left:13px;
-    width:34px;
-    height:55px;
-    background:#ffd84b;
-    border-radius:50%;
-}
-
-@keyframes fire{
-    from{transform:scale(1) rotate(-2deg)}
-    to{transform:scale(1.08) rotate(2deg)}
-}
-
-/* =========================
-   EKRANY
-========================= */
-
-.screen{
-    position:absolute;
-    inset:0;
-    opacity:0;
-    pointer-events:none;
-    transform:translateY(30px);
-    transition:
-        opacity .7s ease,
-        transform .7s cubic-bezier(.2,.8,.2,1);
-}
-
-.screen.active{
-    opacity:1;
-    pointer-events:auto;
-    transform:none;
-}
-
-/* =========================
-   START
-========================= */
-
-#start{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    background:
-        radial-gradient(circle at 50% 40%,#273459,#0b0e1b 65%);
-}
-
-.title{
-    font-size:clamp(50px,8vw,105px);
-    font-weight:900;
-    letter-spacing:-5px;
-    line-height:.85;
-}
-
-.startText{
-    margin-top:25px;
-    color:#bbc5df;
-    font-size:20px;
-}
-
-.bigButton{
-    border:0;
-    margin-top:40px;
-    padding:19px 42px;
-    border-radius:18px;
-    font-size:21px;
-    font-weight:900;
-    cursor:pointer;
-    background:#ffd54f;
-    color:#302300;
-    box-shadow:0 9px 0 #a87517;
-    transition:.2s;
-}
-
-.bigButton:hover{
-    transform:translateY(-5px) scale(1.04);
-    box-shadow:0 14px 0 #a87517;
-}
-
-.bigButton:active{
-    transform:translateY(5px);
-    box-shadow:0 4px 0 #a87517;
-}
-
-/* =========================
-   MAPA / EPOKA
-========================= */
-
-#era{
-    z-index:10;
-}
-
-.eraTop{
-    position:absolute;
-    left:50%;
-    top:25px;
-    transform:translateX(-50%);
-    background:#171717aa;
-    backdrop-filter:blur(12px);
-    padding:12px 25px;
-    border-radius:100px;
-    font-weight:800;
-    z-index:30;
-}
-
-.progress{
-    position:absolute;
-    top:25px;
-    right:25px;
-    z-index:30;
-    background:#111b;
-    padding:12px 18px;
-    border-radius:15px;
-}
-
-/* =========================
-   OPIS — UKŁAD Z RYSUNKU
-========================= */
-
-.story{
-    position:absolute;
-    inset:0;
-    display:grid;
-    grid-template-columns:55% 45%;
-}
-
-.storyPicture{
-    position:relative;
-    overflow:hidden;
-}
-
-.storyText{
-    display:flex;
-    align-items:center;
-    padding:7%;
-    background:
-        linear-gradient(90deg,#1110,#111b 15%,#111e);
-}
-
-.textBox{
-    max-width:600px;
-    animation:textEnter .8s ease;
-}
-
-.textBox h1{
-    font-size:clamp(35px,5vw,70px);
-    line-height:1;
-    margin:0 0 25px;
-}
-
-.textBox p{
-    font-size:20px;
-    line-height:1.6;
-    color:#e0e3e7;
-}
-
-@keyframes textEnter{
-    from{
-        opacity:0;
-        transform:translateX(60px);
-    }
-    to{
-        opacity:1;
-        transform:none;
-    }
-}
-
-/* =========================
-   CZŁOWIEK W JASKINI
-========================= */
-
-.person{
-    position:absolute;
-    width:170px;
-    height:330px;
-    left:37%;
-    bottom:12%;
-}
-
-.head{
-    position:absolute;
-    width:85px;
-    height:85px;
-    background:#d99664;
-    border-radius:50%;
-    left:42px;
-}
-
-.body{
-    position:absolute;
-    width:100px;
-    height:150px;
-    left:34px;
-    top:75px;
-    background:#7a4932;
-    border-radius:40px 40px 20px 20px;
-}
-
-.leg{
-    position:absolute;
-    width:30px;
-    height:115px;
-    background:#70402d;
-    top:210px;
-    border-radius:20px;
-}
-
-.leg1{left:45px;transform:rotate(5deg)}
-.leg2{left:95px;transform:rotate(-6deg)}
-
-.arm{
-    position:absolute;
-    width:100px;
-    height:25px;
-    background:#d99664;
-    top:110px;
-    left:105px;
-    border-radius:20px;
-    transform-origin:left center;
-    animation:paintArm 1.4s ease-in-out infinite alternate;
-}
-
-@keyframes paintArm{
-    from{transform:rotate(-20deg)}
-    to{transform:rotate(12deg)}
-}
-
-.painting{
-    position:absolute;
-    left:63%;
-    top:37%;
-    font-size:80px;
-    filter:sepia(1) saturate(4);
-    animation:paintingGlow 2s infinite alternate;
-}
-
-@keyframes paintingGlow{
-    from{opacity:.6}
-    to{opacity:1}
-}
-
-/* =========================
-   DOLNE PRZYCISKI
-========================= */
-
-.controls{
-    position:absolute;
-    bottom:25px;
-    right:30px;
-    display:flex;
-    gap:12px;
-    z-index:100;
-}
-
-.control{
-    border:0;
-    border-radius:15px;
-    padding:14px 22px;
-    background:#fff;
-    color:#222;
-    font-weight:900;
-    cursor:pointer;
-    transition:.2s;
-}
-
-.control:hover{
-    transform:scale(1.06);
-}
-
-.graphButton{
-    background:#7ce0d2;
-}
-
-/* =========================
-   ZADANIE
-========================= */
-
-#task{
-    background:#10152c;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-}
-
-.taskBox{
-    width:min(760px,90%);
-    background:#1b2244;
-    padding:45px;
-    border-radius:35px;
-    box-shadow:0 30px 80px #0008;
-    text-align:center;
-}
-
-.taskType{
-    color:#ffd95b;
-    font-weight:900;
-    letter-spacing:2px;
-}
-
-.taskQuestion{
-    font-size:30px;
-    font-weight:900;
-    margin:20px 0 30px;
-}
-
-.answers{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:15px;
-}
-
-.answer{
-    padding:18px;
-    border:0;
-    border-radius:17px;
-    background:#303b70;
-    color:white;
-    font-size:17px;
-    font-weight:700;
-    cursor:pointer;
-    transition:.2s;
-}
-
-.answer:hover{
-    transform:translateY(-4px);
-    background:#3e4c89;
-}
-
-.answer.correct{
-    background:#37b76c;
-}
-
-.answer.wrong{
-    background:#d84e5b;
-}
-
-/* =========================
-   GRAF
-========================= */
-
-#graph{
-    background:
-        radial-gradient(circle,#1c294b,#080d1d 70%);
-}
-
-.graphTitle{
-    position:absolute;
-    top:30px;
-    width:100%;
-    text-align:center;
-    z-index:10;
-}
-
-.graphTitle h1{
-    margin:0;
-    font-size:40px;
-}
-
-.graphTitle p{
-    color:#aab7d8;
-}
-
-#graphArea{
-    position:absolute;
-    inset:100px 0 0;
-}
-
-.connection{
-    position:absolute;
-    height:6px;
-    background:#67779d;
-    transform-origin:left center;
-    border-radius:10px;
-}
-
-.node{
-    position:absolute;
-    width:135px;
-    height:135px;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    padding:10px;
-    font-weight:900;
-    background:#e7a748;
-    box-shadow:
-        inset -15px -15px 25px #0002,
-        0 15px 40px #0008;
-    transform:scale(0);
-    animation:nodeAppear .6s forwards;
-}
-
-.node.locked{
-    background:#242b3d;
-    color:#75809a;
-    border:3px dashed #50596e;
-}
-
-@keyframes nodeAppear{
-    to{transform:scale(1)}
-}
-
-/* =========================
-   PRZEJŚCIE EPOKI
-========================= */
-
-#transition{
-    position:fixed;
-    inset:0;
-    z-index:1000;
-    pointer-events:none;
-    opacity:0;
-    overflow:hidden;
-}
-
-#transition.show{
-    opacity:1;
-}
-
-.darkCloud{
-    position:absolute;
-    width:500px;
-    height:220px;
-    border-radius:50%;
-    background:#171b25;
-    filter:blur(20px);
-    box-shadow:
-        100px 40px 0 #252936,
-        -100px 80px 0 #0d1017;
-}
-
-#transition.show .c1{
-    animation:storm1 2.8s ease-in-out forwards;
-}
-
-#transition.show .c2{
-    animation:storm2 2.8s ease-in-out forwards;
-}
-
-#transition.show .c3{
-    animation:storm3 2.8s ease-in-out forwards;
-}
-
-.c1{top:5%;left:-600px}
-.c2{top:35%;right:-600px}
-.c3{bottom:-100px;left:-600px}
-
-@keyframes storm1{
-    40%,65%{left:20%}
-    100%{left:120%}
-}
-
-@keyframes storm2{
-    40%,65%{right:15%}
-    100%{right:120%}
-}
-
-@keyframes storm3{
-    40%,65%{left:30%}
-    100%{left:130%}
-}
-
-.eraChangeText{
-    position:absolute;
-    inset:0;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:60px;
-    font-weight:900;
-    opacity:0;
-}
-
-#transition.show .eraChangeText{
-    animation:eraText 2.8s;
-}
-
-@keyframes eraText{
-    35%{opacity:0}
-    48%,62%{opacity:1}
-    75%{opacity:0}
-}
-
-/* =========================
-   POWIADOMIENIE
-========================= */
-
-.reward{
-    position:fixed;
-    left:50%;
-    top:25px;
-    transform:translate(-50%,-150px);
-    background:#ffd755;
-    color:#2d2300;
-    padding:16px 28px;
-    border-radius:18px;
-    font-weight:900;
-    z-index:2000;
-    box-shadow:0 15px 50px #0008;
-    transition:.5s cubic-bezier(.2,1.4,.4,1);
-}
-
-.reward.show{
-    transform:translate(-50%,0);
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media(max-width:800px){
-    .story{
-        grid-template-columns:1fr;
-    }
-
-    .storyText{
-        position:absolute;
-        bottom:0;
-        width:100%;
-        min-height:45%;
-        background:#111e;
-    }
-
-    .answers{
-        grid-template-columns:1fr;
-    }
-}
-</style>
-</head>
-
-<body>
-
-<div id="world" class="world-stone">
-
-    <div class="sun"></div>
-
-    <div class="cloud" style="top:12%;animation-delay:-8s"></div>
-    <div class="cloud" style="top:23%;animation-delay:-19s;transform:scale(.7)"></div>
-
-</div>
-
-<!-- ================= START ================= -->
-
-<section id="start" class="screen active">
-
-    <div>
-        <div class="title">
-            KRONIKI<br>WIEDZY
-        </div>
-
-        <div class="startText">
-            Historia nie jest listą dat.<br>
-            To sieć wydarzeń.
-        </div>
-
-        <button class="bigButton" onclick="begin()">
-            ROZPOCZNIJ PODRÓŻ
-        </button>
-    </div>
-
-</section>
-
-<!-- ================= EPOKA ================= -->
-
-<section id="era" class="screen">
-
-    <div class="eraTop" id="eraName">
-        EPOKA KAMIENIA
-    </div>
-
-    <div class="progress">
-        ✦ Elementy grafu:
-        <span id="points">1</span>/6
-    </div>
-
-    <div class="story">
-
-        <!-- LEWA STRONA -->
-
-        <div class="storyPicture">
-
-            <div class="cave">
-
-                <div class="caveInside"></div>
-
-                <div class="person">
-                    <div class="head"></div>
-                    <div class="body"></div>
-                    <div class="leg leg1"></div>
-                    <div class="leg leg2"></div>
-                    <div class="arm"></div>
-                </div>
-
-                <div class="painting">🦬</div>
-
-                <div class="fire">
-                    <div class="flame"></div>
-                    <div class="flame2"></div>
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- PRAWA STRONA -->
-
-        <div class="storyText">
-
-            <div class="textBox">
-
-                <h1 id="storyTitle">
-                    Pierwsi artyści
-                </h1>
-
-                <p id="storyDescription">
-                    Ludzie epoki kamienia pozostawiali na ścianach
-                    jaskiń malowidła przedstawiające między innymi
-                    zwierzęta.
-                    <br><br>
-                    Dzięki takim śladom możemy dziś dowiedzieć się
-                    więcej o życiu ludzi sprzed tysięcy lat.
-                </p>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="controls">
-
-        <button class="control graphButton" onclick="openGraph()">
-            ◉ GRAF
-        </button>
-
-        <button class="control" onclick="openTask()">
-            ZADANIE →
-        </button>
-
-    </div>
-
-</section>
-
-<!-- ================= TASK ================= -->
-
-<section id="task" class="screen">
-
-    <div class="taskBox">
-
-        <div class="taskType">
-            ODKRYCIE
-        </div>
-
-        <div class="taskQuestion">
-            Dlaczego malowidła jaskiniowe są ważne dla historyków?
-        </div>
-
-        <div class="answers">
-
-            <button class="answer"
-                onclick="answer(this,false)">
-                Pokazują dokładną temperaturę Ziemi
-            </button>
-
-            <button class="answer"
-                onclick="answer(this,true)">
-                Są źródłem informacji o dawnych ludziach
-            </button>
-
-            <button class="answer"
-                onclick="answer(this,false)">
-                Powstały jako współczesne dekoracje
-            </button>
-
-            <button class="answer"
-                onclick="answer(this,false)">
-                Są pierwszymi fotografiami
-            </button>
-
-        </div>
-
-    </div>
-
-</section>
-
-<!-- ================= GRAPH ================= -->
-
-<section id="graph" class="screen">
-
-    <div class="graphTitle">
-
-        <h1>TWÓJ GRAF HISTORII</h1>
-
-        <p>
-            Elementy zdobywasz podczas podróży.
-        </p>
-
-    </div>
-
-    <div id="graphArea"></div>
-
-    <div class="controls">
-
-        <button class="control" onclick="show('era')">
-            ← WRÓĆ
-        </button>
-
-    </div>
-
-</section>
-
-<!-- ================= TRANSITION ================= -->
-
-<div id="transition">
-
-    <div class="darkCloud c1"></div>
-    <div class="darkCloud c2"></div>
-    <div class="darkCloud c3"></div>
-
-    <div class="eraChangeText" id="eraChangeText">
-        NOWA EPOKA
-    </div>
-
-</div>
-
-<div id="reward" class="reward">
-    ✦ Zdobyto nowy element grafu!
-</div>
-
 <script>
-
-/* ===================================================
-   DANE
-=================================================== */
-
-let graphPoints = 1;
-let taskCompleted = false;
+let knowledgePoints = 0;
 let currentEra = 0;
 
+/* ================================
+   EPOKI
+================================ */
+
 const eras = [
+{
+    name: "EPOKA KAMIENIA",
+    years: "ok. 3,3 mln lat temu – różnie zależnie od regionu",
 
-    {
-        name:"EPOKA KAMIENIA",
-        title:"Pierwsi artyści",
-        description:
-        `Ludzie epoki kamienia pozostawiali na ścianach jaskiń
-        malowidła przedstawiające między innymi zwierzęta.
+    title: "Epoka kamienia",
+
+    description: `
+        <b>Epoka kamienia</b> to ogromny okres prehistorii, podczas którego
+        kamień był jednym z najważniejszych materiałów do produkcji narzędzi.
+        Nie była to jednak jedna krótka epoka.
         <br><br>
-        Dzięki takim śladom możemy dziś dowiedzieć się więcej
-        o życiu ludzi sprzed tysięcy lat.`,
-        world:"world-stone"
-    },
 
-    {
-        name:"STAROŻYTNOŚĆ",
-        title:"Narodziny wielkich cywilizacji",
-        description:
-        `W różnych częściach świata zaczęły rozwijać się
-        miasta, państwa oraz rozbudowane systemy pisma.
+        <b>🪨 Paleolit</b><br>
+        Najstarsza i zdecydowanie najdłuższa część epoki kamienia.
+        Ludzie żyli głównie jako łowcy i zbieracze. Przemieszczali się,
+        polowali, zbierali rośliny i wytwarzali narzędzia z kamienia,
+        kości oraz drewna.
         <br><br>
-        Pismo pozwoliło ludziom zapisywać prawa,
-        wydarzenia i wiedzę dla następnych pokoleń.`,
-        world:"world-ancient"
-    },
 
-    {
-        name:"ŚREDNIOWIECZE",
-        title:"Świat zamków i miast",
-        description:
-        `W średniowiecznej Europie rozwijały się miasta,
-        handel, rzemiosło i nowe ośrodki nauki.
+        W późniejszych częściach paleolitu pojawia się także bogata sztuka:
+        malowidła jaskiniowe, rzeźby i ozdoby.
         <br><br>
-        Powstawały zamki, mury miejskie oraz
-        monumentalne budowle.`,
-        world:"world-medieval"
-    }
 
+        <b>🏹 Mezolit</b><br>
+        Po zakończeniu ostatniego zlodowacenia klimat się ocieplał.
+        Ludzie nadal polowali i zbierali żywność, ale wykorzystywali
+        między innymi małe kamienne ostrza zwane mikrolitami.
+        <br><br>
+
+        <b>🌾 Neolit</b><br>
+        W wielu regionach nastąpiła ogromna zmiana: rozwijało się
+        rolnictwo i hodowla zwierząt. Coraz więcej ludzi prowadziło
+        osiadły tryb życia i powstawały stałe osady.
+        <br><br>
+
+        Rozwijały się również garncarstwo, budownictwo oraz
+        coraz bardziej wyspecjalizowane narzędzia.
+    `,
+
+    facts: [
+        "kamienne narzędzia",
+        "łowiectwo i zbieractwo",
+        "ogień",
+        "sztuka",
+        "rolnictwo",
+        "hodowla",
+        "stałe osady"
+    ]
+},
+
+{
+    name: "STAROŻYTNOŚĆ",
+    years: "od pierwszych cywilizacji do V wieku n.e.",
+
+    title: "Starożytność",
+
+    description: `
+        <b>Starożytność</b> obejmuje tysiące lat rozwoju wielu
+        różnych społeczeństw i cywilizacji.
+        <br><br>
+
+        🏙️ Powstawały i rozwijały się miasta oraz państwa.
+        W różnych częściach świata istniały między innymi cywilizacje
+        Mezopotamii, Egiptu, Grecji i Rzymu.
+        <br><br>
+
+        <b>✍️ Pismo</b><br>
+        Systemy pisma pozwalały zapisywać prawa, handel,
+        wydarzenia, wierzenia i wiedzę.
+        <br><br>
+
+        <b>⚖️ Państwo i prawo</b><br>
+        Rozwijały się administracja, systemy prawne,
+        podatki oraz zorganizowane armie.
+        <br><br>
+
+        <b>🏛️ Nauka i kultura</b><br>
+        Rozwijano matematykę, astronomię, filozofię,
+        architekturę, literaturę i sztukę.
+        <br><br>
+
+        Nie istniała jedna „cywilizacja starożytna”.
+        Poszczególne społeczeństwa bardzo różniły się
+        językiem, kulturą, religią i sposobem rządzenia.
+    `,
+
+    facts:[
+        "pierwsze miasta",
+        "pismo",
+        "państwa",
+        "prawo",
+        "handel",
+        "nauka",
+        "architektura"
+    ]
+},
+
+{
+    name: "ŚREDNIOWIECZE",
+    years: "około V–XV wieku",
+
+    title: "Średniowiecze",
+
+    description: `
+        <b>Średniowiecze</b> to okres trwający w Europie około tysiąca lat.
+        W tym czasie społeczeństwo, gospodarka i granice państw
+        wielokrotnie się zmieniały.
+        <br><br>
+
+        🏰 <b>Zamki i miasta</b><br>
+        Powstawały zamki, fortyfikacje i nowe miasta.
+        Miasta stawały się ważnymi centrami handlu i rzemiosła.
+        <br><br>
+
+        ⚔️ <b>Władza</b><br>
+        Istniały monarchie, księstwa i inne organizmy polityczne.
+        Duże znaczenie miały zależności między władcami,
+        możnymi i rycerstwem.
+        <br><br>
+
+        📚 <b>Wiedza</b><br>
+        Powstawały uniwersytety, kopiowano księgi,
+        rozwijała się filozofia, literatura i nauka.
+        <br><br>
+
+        ⛪ <b>Religia</b><br>
+        Religia odgrywała bardzo dużą rolę w kulturze,
+        polityce i codziennym życiu wielu społeczeństw.
+        <br><br>
+
+        Średniowiecze nie było wszędzie takie samo —
+        wyglądało inaczej w różnych częściach Europy
+        i świata.
+    `,
+
+    facts:[
+        "zamki",
+        "miasta",
+        "rycerstwo",
+        "handel",
+        "uniwersytety",
+        "rękopisy"
+    ]
+}
 ];
 
-const graphNodes = [
-    {
-        name:"Człowiek",
-        x:13,
-        y:46
-    },
-    {
-        name:"Ogień",
-        x:34,
-        y:25
-    },
-    {
-        name:"Malarstwo jaskiniowe",
-        x:37,
-        y:67
-    },
-    {
-        name:"Rolnictwo",
-        x:59,
-        y:30
-    },
-    {
-        name:"Pierwsze miasta",
-        x:65,
-        y:67
-    },
-    {
-        name:"Pismo",
-        x:83,
-        y:45
-    }
+
+/* ================================
+   PYTANIA
+================================ */
+
+const questions = [
+{
+    era:0,
+    question:"Która część epoki kamienia jest najstarsza?",
+    answers:[
+        "Neolit",
+        "Paleolit",
+        "Mezolit",
+        "Epoka żelaza"
+    ],
+    correct:1,
+    points:10
+},
+
+{
+    era:0,
+    question:"Która zmiana szczególnie charakteryzuje neolit?",
+    answers:[
+        "Rozwój rolnictwa i osiadłego życia",
+        "Powstanie Internetu",
+        "Budowa rzymskich dróg",
+        "Wynalezienie silnika parowego"
+    ],
+    correct:0,
+    points:15
+},
+
+{
+    era:0,
+    question:"Dlaczego granice epoki kamienia nie są wszędzie identyczne?",
+    answers:[
+        "Ponieważ archeolodzy nie używają dat",
+        "Ponieważ zmiany technologiczne zachodziły w różnych miejscach w różnym czasie",
+        "Ponieważ trwała dokładnie 1000 lat",
+        "Ponieważ istniała tylko w Europie"
+    ],
+    correct:1,
+    points:30
+},
+
+{
+    era:1,
+    question:"Dlaczego rozwój pisma był tak ważny?",
+    answers:[
+        "Pozwalał przechowywać i przekazywać informacje",
+        "Zastąpił rolnictwo",
+        "Uniemożliwił handel",
+        "Służył wyłącznie do ozdabiania budynków"
+    ],
+    correct:0,
+    points:15
+},
+
+{
+    era:2,
+    question:"Które miejsca stały się ważnymi ośrodkami nauki w późniejszym średniowieczu?",
+    answers:[
+        "Uniwersytety",
+        "Lotniska",
+        "Fabryki samochodów",
+        "Stacje kosmiczne"
+    ],
+    correct:0,
+    points:10
+}
 ];
 
-/* ===================================================
-   EKRANY
-=================================================== */
 
-function show(id){
+/* ================================
+   PUNKTY
+================================ */
 
-    document
-    .querySelectorAll(".screen")
-    .forEach(screen=>{
-        screen.classList.remove("active");
-    });
+function addPoints(amount){
 
-    document
-    .getElementById(id)
-    .classList.add("active");
+    knowledgePoints += amount;
+
+    document.getElementById("points").textContent =
+        knowledgePoints;
+
+    const reward =
+        document.getElementById("reward");
+
+    reward.innerHTML =
+        "✦ +" + amount + " PUNKTÓW WIEDZY";
+
+    reward.classList.add("show");
+
+    setTimeout(()=>{
+        reward.classList.remove("show");
+    },1800);
 }
 
-function begin(){
 
-    show("era");
+/* ================================
+   ODPOWIEDŹ
+================================ */
 
-}
+function answerQuestion(button, question, answerIndex){
 
-/* ===================================================
-   ZADANIE
-=================================================== */
+    const buttons =
+        document.querySelectorAll(".answer");
 
-function openTask(){
+    buttons.forEach(b => b.disabled = true);
 
-    show("task");
-
-}
-
-function answer(button,correct){
-
-    document
-    .querySelectorAll(".answer")
-    .forEach(x=>x.disabled=true);
-
-    if(correct){
+    if(answerIndex === question.correct){
 
         button.classList.add("correct");
 
-        if(!taskCompleted){
-
-            taskCompleted=true;
-
-            graphPoints++;
-
-            document.getElementById("points")
-                .textContent=graphPoints;
-
-            showReward();
-        }
-
-        setTimeout(()=>{
-
-            changeEra();
-
-        },1200);
+        addPoints(question.points);
 
     }else{
 
         button.classList.add("wrong");
 
-        setTimeout(()=>{
-
-            button.classList.remove("wrong");
-
-            document
-            .querySelectorAll(".answer")
-            .forEach(x=>x.disabled=false);
-
-        },700);
-
+        buttons[question.correct]
+            .classList.add("correct");
     }
-
-}
-
-/* ===================================================
-   NAGRODA
-=================================================== */
-
-function showReward(){
-
-    const reward =
-        document.getElementById("reward");
-
-    reward.classList.add("show");
 
     setTimeout(()=>{
-
-        reward.classList.remove("show");
-
-    },2200);
-
+        show("era");
+    },1700);
 }
 
-/* ===================================================
-   PRZEJŚCIE EPOKI
-=================================================== */
 
-function changeEra(){
+/* ================================
+   WYŚWIETLANIE CAŁEJ EPOKI
+================================ */
 
-    if(currentEra >= eras.length-1){
+function loadEra(){
 
-        show("era");
-        return;
+    const era = eras[currentEra];
 
-    }
+    document.getElementById("eraName").innerHTML =
+        era.name +
+        `<small style="
+            display:block;
+            font-size:12px;
+            opacity:.65;
+            margin-top:3px
+        ">${era.years}</small>`;
+
+    document.getElementById("storyTitle")
+        .textContent = era.title;
+
+    document.getElementById("storyDescription")
+        .innerHTML = era.description;
+}
+
+
+/* ================================
+   POPRZEDNIA / NASTĘPNA EPOKA
+================================ */
+
+function previousEra(){
+
+    if(currentEra <= 0) return;
+
+    currentEra--;
+
+    transitionToEra();
+}
+
+function nextEra(){
+
+    if(currentEra >= eras.length-1) return;
+
+    currentEra++;
+
+    transitionToEra();
+}
+
+
+/* ================================
+   ANIMOWANE PRZEJŚCIE
+================================ */
+
+function transitionToEra(){
 
     const transition =
         document.getElementById("transition");
 
+    document.getElementById("eraChangeText")
+        .textContent = eras[currentEra].name;
+
     transition.classList.add("show");
 
-    currentEra++;
-
-    const next=eras[currentEra];
-
-    document.getElementById("eraChangeText")
-        .textContent=next.name;
-
     setTimeout(()=>{
-
         loadEra();
-
-    },1400);
+    },1300);
 
     setTimeout(()=>{
-
         transition.classList.remove("show");
-
-        show("era");
-
     },2800);
-
 }
-
-/* ===================================================
-   WCZYTYWANIE EPOKI
-=================================================== */
-
-function loadEra(){
-
-    const era=eras[currentEra];
-
-    const world=
-        document.getElementById("world");
-
-    world.className=era.world;
-
-    document.getElementById("eraName")
-        .textContent=era.name;
-
-    document.getElementById("storyTitle")
-        .textContent=era.title;
-
-    document.getElementById("storyDescription")
-        .innerHTML=era.description;
-
-}
-
-/* ===================================================
-   GRAF
-=================================================== */
-
-function openGraph(){
-
-    show("graph");
-
-    drawGraph();
-
-}
-
-function drawGraph(){
-
-    const area =
-        document.getElementById("graphArea");
-
-    area.innerHTML="";
-
-    /* połączenia */
-
-    for(let i=0;i<graphNodes.length-1;i++){
-
-        const a=graphNodes[i];
-        const b=graphNodes[i+1];
-
-        createConnection(
-            area,
-            a.x,
-            a.y,
-            b.x,
-            b.y,
-            i
-        );
-
-    }
-
-    /* punkty */
-
-    graphNodes.forEach((node,index)=>{
-
-        const el=document.createElement("div");
-
-        el.className="node";
-
-        if(index>=graphPoints){
-            el.classList.add("locked");
-            el.innerHTML="🔒<br>???";
-        }
-        else{
-            el.textContent=node.name;
-        }
-
-        el.style.left=
-            `calc(${node.x}% - 67px)`;
-
-        el.style.top=
-            `calc(${node.y}% - 67px)`;
-
-        el.style.animationDelay=
-            index*.08+"s";
-
-        area.appendChild(el);
-
-    });
-
-}
-
-/* ===================================================
-   POŁĄCZENIA
-=================================================== */
-
-function createConnection(
-    parent,
-    x1,y1,
-    x2,y2,
-    index
-){
-
-    const line =
-        document.createElement("div");
-
-    line.className="connection";
-
-    if(index>=graphPoints-1){
-        line.style.opacity=".15";
-    }
-
-    const width =
-        window.innerWidth;
-
-    const height =
-        window.innerHeight-100;
-
-    const px1=width*x1/100;
-    const py1=height*y1/100;
-
-    const px2=width*x2/100;
-    const py2=height*y2/100;
-
-    const dx=px2-px1;
-    const dy=py2-py1;
-
-    const length=
-        Math.sqrt(dx*dx+dy*dy);
-
-    const angle=
-        Math.atan2(dy,dx)*180/Math.PI;
-
-    line.style.left=px1+"px";
-    line.style.top=py1+"px";
-
-    line.style.width=length+"px";
-
-    line.style.transform=
-        `rotate(${angle}deg)`;
-
-    parent.appendChild(line);
-
-}
-
-/* ===================================================
-   PARALLAX
-=================================================== */
-
-document.addEventListener(
-    "mousemove",
-    event=>{
-
-        if(
-            !document
-            .getElementById("era")
-            .classList.contains("active")
-        ) return;
-
-        const x=
-            (event.clientX/window.innerWidth-.5)*10;
-
-        const y=
-            (event.clientY/window.innerHeight-.5)*7;
-
-        document
-        .querySelector(".cave")
-        .style.transform=
-            `translate(${x}px,${y}px)`;
-
-    }
-);
-
-/* ===================================================
-   RESIZE GRAFU
-=================================================== */
-
-window.addEventListener(
-    "resize",
-    ()=>{
-
-        if(
-            document
-            .getElementById("graph")
-            .classList.contains("active")
-        ){
-            drawGraph();
-        }
-
-    }
-);
-
 </script>
-
-</body>
-</html>
