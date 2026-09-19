@@ -2,29 +2,25 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GeoChem — Nauka interaktywna</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GeoChem</title>
 
 <style>
-*{
-    box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 body{
     margin:0;
-    font-family:Arial, Helvetica, sans-serif;
-    background:#08111f;
+    background:#07101c;
     color:white;
+    font-family:Arial,sans-serif;
     overflow:hidden;
 }
 
-button{
-    font-family:inherit;
-}
+button{font-family:inherit;cursor:pointer}
 
-/* =========================
-   EKRAN STARTOWY
-========================= */
+/* =====================================================
+   MENU
+===================================================== */
 
 #home{
     position:fixed;
@@ -33,8 +29,8 @@ button{
     align-items:center;
     justify-content:center;
     background:
-        radial-gradient(circle at 20% 20%, #173b65, transparent 35%),
-        radial-gradient(circle at 80% 80%, #214c39, transparent 40%),
+        radial-gradient(circle at 20% 20%,#183b66,transparent 35%),
+        radial-gradient(circle at 80% 80%,#174d39,transparent 40%),
         #07101c;
 }
 
@@ -44,573 +40,587 @@ button{
 
 .logo{
     text-align:center;
-    font-size:55px;
+    font-size:58px;
     font-weight:900;
-    margin-bottom:12px;
+    margin-bottom:10px;
 }
 
 .subtitle{
     text-align:center;
-    opacity:.7;
-    font-size:18px;
-    margin-bottom:45px;
+    opacity:.65;
+    margin-bottom:40px;
 }
 
 .subject{
     width:100%;
-    height:120px;
-    margin:14px 0;
+    height:125px;
     border:0;
-    border-radius:24px;
+    border-radius:25px;
+    margin:12px 0;
     color:white;
     font-size:32px;
     font-weight:bold;
-    cursor:pointer;
-    transition:.25s;
-    position:relative;
-    overflow:hidden;
+    transition:.2s;
 }
 
 .subject:hover{
     transform:scale(1.025);
 }
 
-.chemButton{
-    background:linear-gradient(135deg,#6236ff,#b137ff);
-}
-
-.geoButton{
-    background:linear-gradient(135deg,#00a65a,#0078ff);
-}
-
 .subject small{
     display:block;
-    font-size:15px;
-    margin-top:7px;
+    margin-top:8px;
+    font-size:14px;
     opacity:.75;
 }
 
-/* =========================
-   OGÓLNE
-========================= */
+.geoButton{
+    background:linear-gradient(135deg,#009c55,#0078ff);
+}
+
+.chemButton{
+    background:linear-gradient(135deg,#6438ff,#ad32dc);
+}
+
+/* =====================================================
+   STRONY
+===================================================== */
 
 .page{
     position:fixed;
     inset:0;
     display:none;
-    background:#08111f;
 }
 
 .topbar{
     height:70px;
+    background:#101c2d;
+    border-bottom:1px solid #28384d;
     display:flex;
     align-items:center;
     gap:20px;
     padding:0 20px;
-    background:#101c2d;
-    border-bottom:1px solid #26374c;
+    position:relative;
+    z-index:100;
 }
 
 .back{
-    background:#ff3d4f;
     border:0;
-    border-radius:12px;
-    padding:12px 22px;
-    font-weight:bold;
+    background:#ff4050;
+    color:#111;
+    font-weight:900;
     font-size:16px;
-    cursor:pointer;
+    padding:13px 22px;
+    border-radius:12px;
 }
 
 .topTitle{
-    font-size:24px;
+    font-size:25px;
     font-weight:bold;
 }
 
-/* =========================
+/* =====================================================
    CHEMIA
-========================= */
+===================================================== */
 
 #chemistry{
     overflow:auto;
+    background:#08111f;
 }
 
 .chemContent{
     padding:25px;
+    padding-bottom:100px;
 }
 
-.sectionTitle{
-    font-size:30px;
-    font-weight:bold;
+.title{
+    font-size:31px;
+    font-weight:900;
 }
 
-.sectionDesc{
+.desc{
     opacity:.65;
     margin:8px 0 25px;
 }
 
-.periodic{
+.legend{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:20px;
+}
+
+.legend span{
+    padding:6px 10px;
+    border-radius:8px;
+    font-size:12px;
+}
+
+/* TABLICA */
+
+.tableScroll{
+    overflow-x:auto;
+    padding-bottom:15px;
+}
+
+#periodic{
     display:grid;
-    grid-template-columns:repeat(18, minmax(48px,1fr));
+    grid-template-columns:repeat(18,60px);
+    grid-auto-rows:72px;
     gap:5px;
-    min-width:1050px;
+    min-width:1165px;
 }
 
 .element{
-    height:68px;
-    border-radius:7px;
-    padding:5px;
+    border-radius:8px;
+    padding:4px;
     cursor:pointer;
-    transition:.18s;
-    border:1px solid rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.16);
+    transition:.15s;
     position:relative;
 }
 
 .element:hover{
-    transform:scale(1.12);
-    z-index:4;
-    box-shadow:0 0 20px rgba(255,255,255,.3);
+    transform:scale(1.15);
+    z-index:10;
+    box-shadow:0 8px 30px #000;
 }
 
-.number{
-    font-size:10px;
-    opacity:.75;
+.num{
+    font-size:9px;
+    opacity:.7;
 }
 
-.symbol{
+.sym{
     font-size:22px;
-    font-weight:bold;
     text-align:center;
+    font-weight:900;
 }
 
-.elementName{
+.ename{
+    text-align:center;
     font-size:8px;
-    text-align:center;
-    opacity:.8;
+    overflow:hidden;
 }
 
-.alkali{background:#b63b47;}
-.alkaline{background:#c87a35;}
-.transition{background:#ad476d;}
-.post{background:#5278a6;}
-.metalloid{background:#3b8c77;}
-.nonmetal{background:#3d9b55;}
-.halogen{background:#568a35;}
-.noble{background:#7045b8;}
-.lanthanide{background:#a64d92;}
-.actinide{background:#8d4977;}
+.alkali{background:#ad3946}
+.alkaline{background:#c06e30}
+.transition{background:#a83d68}
+.post{background:#4e7099}
+.metalloid{background:#34826e}
+.nonmetal{background:#358b4c}
+.halogen{background:#668d34}
+.noble{background:#6945a8}
+.lanthanide{background:#984786}
+.actinide{background:#824366}
+.unknown{background:#485363}
 
-/* =========================
-   MODAL PIERWIASTKA
-========================= */
+/* =====================================================
+   OKNO PIERWIASTKA
+===================================================== */
 
 #elementModal{
     position:fixed;
     inset:0;
-    background:rgba(0,0,0,.78);
-    z-index:20;
+    background:rgba(0,0,0,.82);
+    backdrop-filter:blur(7px);
+    z-index:1000;
     display:none;
     align-items:center;
     justify-content:center;
-    backdrop-filter:blur(8px);
 }
 
-.elementWindow{
-    width:min(1000px,94%);
-    height:min(700px,90%);
-    background:#101c2c;
+.modal{
+    width:min(1150px,95%);
+    height:min(760px,92%);
     border-radius:25px;
+    background:#101c2d;
     display:grid;
-    grid-template-columns:1fr 1fr;
+    grid-template-columns:440px 1fr;
     overflow:hidden;
-    box-shadow:0 30px 100px #000;
-}
-
-.elementInfo{
-    padding:35px;
-    overflow:auto;
-}
-
-.bigSymbol{
-    width:120px;
-    height:120px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    border-radius:20px;
-    background:#6039c7;
-    font-size:55px;
-    font-weight:bold;
-}
-
-.elementTitle{
-    font-size:38px;
-    font-weight:bold;
-    margin-top:20px;
-}
-
-.infoGrid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-    margin-top:25px;
-}
-
-.infoCard{
-    background:#17263a;
-    padding:15px;
-    border-radius:12px;
-}
-
-.infoCard small{
-    opacity:.55;
-}
-
-.infoCard div{
-    font-size:19px;
-    margin-top:5px;
-}
-
-.description{
-    margin-top:25px;
-    line-height:1.6;
-    opacity:.85;
-}
-
-.atomSide{
-    background:
-        radial-gradient(circle,#172a45,#07101d);
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
     position:relative;
 }
 
-.atomLabel{
+.close{
     position:absolute;
-    top:25px;
-    font-weight:bold;
+    right:18px;
+    top:18px;
+    width:45px;
+    height:45px;
+    border-radius:50%;
+    border:0;
+    background:#26374d;
+    color:white;
     font-size:20px;
+    z-index:30;
 }
 
-.atomHint{
+.info{
+    padding:30px;
+    overflow:auto;
+}
+
+.bigElement{
+    width:105px;
+    height:105px;
+    border-radius:18px;
+    background:#6440bd;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:48px;
+    font-weight:900;
+}
+
+#eName{
+    font-size:36px;
+    font-weight:900;
+    margin-top:18px;
+}
+
+#eEnglish{
+    opacity:.55;
+    margin-top:3px;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:9px;
+    margin-top:22px;
+}
+
+.card{
+    background:#17263a;
+    border-radius:11px;
+    padding:12px;
+}
+
+.card small{
+    opacity:.5;
+}
+
+.card strong{
+    display:block;
+    margin-top:4px;
+    font-size:18px;
+}
+
+#description{
+    margin-top:22px;
+    line-height:1.55;
+    opacity:.8;
+}
+
+/* =====================================================
+   ATOM 3D
+===================================================== */
+
+.atomArea{
+    background:
+        radial-gradient(circle at center,#173052,#07101d 65%);
+    position:relative;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    perspective:900px;
+    user-select:none;
+}
+
+.atomTitle{
+    position:absolute;
+    top:25px;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.atomHelp{
     position:absolute;
     bottom:20px;
     opacity:.55;
     font-size:13px;
 }
 
-#atom{
-    width:420px;
-    height:420px;
+#atom3d{
+    width:520px;
+    height:520px;
     position:relative;
     transform-style:preserve-3d;
+    transform:rotateX(-15deg) rotateY(20deg);
     cursor:grab;
 }
 
-.nucleus{
+#nucleus{
     position:absolute;
-    width:90px;
-    height:90px;
-    left:165px;
-    top:165px;
-    border-radius:50%;
-    background:radial-gradient(circle at 30% 30%,#ffcb4a,#ff4d4d);
-    box-shadow:0 0 40px #ff5c3d;
-    transform:translateZ(20px);
-}
-
-.orbit{
-    position:absolute;
-    left:60px;
-    top:190px;
-    width:300px;
-    height:40px;
-    border:2px solid rgba(100,190,255,.55);
-    border-radius:50%;
+    left:210px;
+    top:210px;
+    width:100px;
+    height:100px;
     transform-style:preserve-3d;
 }
 
-.o1{
-    transform:rotateZ(0deg) rotateX(65deg);
+.particle{
+    position:absolute;
+    width:25px;
+    height:25px;
+    border-radius:50%;
+    box-shadow:
+        inset -5px -5px 8px rgba(0,0,0,.4),
+        inset 4px 4px 7px rgba(255,255,255,.3);
 }
 
-.o2{
-    transform:rotateZ(60deg) rotateX(65deg);
-}
+.proton{background:#ff5252}
+.neutron{background:#b8c1ce}
 
-.o3{
-    transform:rotateZ(120deg) rotateX(65deg);
+.shell{
+    position:absolute;
+    left:50%;
+    top:50%;
+    border:2px solid rgba(91,190,255,.38);
+    border-radius:50%;
+    transform-style:preserve-3d;
+    pointer-events:none;
 }
 
 .electron{
-    width:18px;
-    height:18px;
-    border-radius:50%;
-    background:#4bc4ff;
-    box-shadow:0 0 15px #4bc4ff;
     position:absolute;
-    top:9px;
-    left:-9px;
-    animation:electronMove 3s linear infinite;
-}
-
-.o2 .electron{
-    animation-duration:4s;
-}
-
-.o3 .electron{
-    animation-duration:5s;
-}
-
-@keyframes electronMove{
-    0%{left:-9px;}
-    50%{left:291px;}
-    100%{left:-9px;}
-}
-
-.close{
-    position:absolute;
-    right:25px;
-    top:20px;
-    width:45px;
-    height:45px;
+    width:13px;
+    height:13px;
     border-radius:50%;
-    border:0;
-    background:#26374c;
-    color:white;
-    font-size:20px;
-    cursor:pointer;
-    z-index:30;
+    background:#3ed6ff;
+    box-shadow:0 0 12px #3ed6ff;
+    transform:translate(-50%,-50%);
 }
 
-/* =========================
-   GEOGRAFIA
-========================= */
+/* =====================================================
+   GEOGRAFIA / KOSMOS
+===================================================== */
 
 #geography{
-    background:#020711;
+    background:#02050b;
 }
 
-.geoToolbar{
-    position:absolute;
-    left:20px;
-    top:90px;
-    width:240px;
-    background:rgba(10,22,38,.9);
-    backdrop-filter:blur(10px);
-    padding:18px;
-    border-radius:16px;
-    z-index:8;
-}
-
-.geoToolbar h3{
-    margin:0 0 10px;
-}
-
-.geoToolbar p{
-    font-size:13px;
-    opacity:.6;
-    line-height:1.5;
-}
-
-#universeViewport{
+#spaceViewport{
     position:absolute;
     left:0;
     right:0;
-    bottom:0;
     top:70px;
+    bottom:0;
     overflow:hidden;
     cursor:grab;
+    background:
+        radial-gradient(circle at 30% 40%,#0a1830,#02050b 55%);
 }
 
-#universe{
+#space{
     position:absolute;
-    width:3000px;
-    height:2000px;
-    left:-700px;
-    top:-400px;
-
+    left:0;
+    top:0;
+    width:6500px;
+    height:100%;
+    min-height:650px;
     background:
-        radial-gradient(circle at 20% 20%,rgba(60,100,170,.2),transparent 25%),
-        radial-gradient(circle at 70% 50%,rgba(80,30,120,.2),transparent 30%),
-        #020711;
+        radial-gradient(circle at 2000px 300px,rgba(70,40,120,.15),transparent 400px),
+        radial-gradient(circle at 4500px 500px,rgba(30,80,150,.12),transparent 500px);
 }
 
-.star{
-    position:absolute;
-    width:2px;
-    height:2px;
-    background:white;
-    border-radius:50%;
-    opacity:.6;
-}
-
-.body{
-    position:absolute;
-    border-radius:50%;
-    cursor:pointer;
-    transition:.25s;
-}
-
-.body:hover{
-    filter:brightness(1.3);
-    transform:scale(1.08);
-}
-
-.sun{
-    width:220px;
-    height:220px;
-    left:1350px;
-    top:850px;
-    background:
-        radial-gradient(circle at 35% 35%,#fff6a0,#ffc529 35%,#ff8500 65%,#e74400);
-    box-shadow:
-        0 0 40px #ff9d00,
-        0 0 100px rgba(255,130,0,.7);
-}
-
-.earth{
-    width:120px;
-    height:120px;
-    left:1900px;
-    top:900px;
-    background:
-        radial-gradient(circle at 30% 40%,#50b05d 0 12%,transparent 13%),
-        radial-gradient(circle at 65% 60%,#55a84f 0 18%,transparent 19%),
-        radial-gradient(circle,#37a4e8,#09599b);
-    box-shadow:0 0 30px rgba(60,150,255,.5);
-}
-
-.moon{
-    width:42px;
-    height:42px;
-    left:2060px;
-    top:820px;
-    background:radial-gradient(circle at 30% 30%,#ddd,#777);
-}
-
-.mars{
-    width:80px;
-    height:80px;
-    left:2300px;
-    top:1050px;
-    background:radial-gradient(circle at 30% 30%,#ef8b55,#9d321f);
-}
-
-.jupiter{
-    width:190px;
-    height:190px;
-    left:700px;
-    top:1250px;
-    background:
-        repeating-linear-gradient(
-            0deg,
-            #b96e43 0 15px,
-            #e5c093 15px 30px,
-            #8d5239 30px 45px
-        );
-}
-
-.saturn{
-    width:150px;
-    height:150px;
-    left:500px;
-    top:500px;
-    background:radial-gradient(circle,#e8ce91,#a88a51);
-}
-
-.saturn:after{
+#space::before{
     content:"";
     position:absolute;
-    width:250px;
-    height:70px;
-    border:13px solid rgba(220,190,120,.75);
-    border-radius:50%;
-    left:-63px;
-    top:27px;
-    transform:rotate(-20deg);
+    inset:0;
+    background-image:
+        radial-gradient(white 1px,transparent 1px),
+        radial-gradient(#8abfff 1px,transparent 1px);
+    background-size:89px 83px,131px 137px;
+    background-position:0 0,35px 55px;
+    opacity:.32;
 }
 
-.nebula{
+.barrier{
     position:absolute;
-    width:500px;
-    height:300px;
-    left:2100px;
-    top:300px;
+    left:0;
+    top:0;
+    bottom:0;
+    width:8px;
+    background:rgba(255,255,255,.08);
+}
+
+.route{
+    position:absolute;
+    left:170px;
+    right:200px;
+    top:50%;
+    height:2px;
+    background:linear-gradient(90deg,
+        rgba(255,255,255,.03),
+        rgba(255,255,255,.13),
+        rgba(255,255,255,.03)
+    );
+}
+
+.spaceObject{
+    position:absolute;
+    top:50%;
+    transform:translate(-50%,-50%);
     border-radius:50%;
-    background:
-        radial-gradient(ellipse,
-        rgba(158,74,255,.5),
-        rgba(32,120,255,.25),
-        transparent 70%);
-    filter:blur(15px);
     cursor:pointer;
+    transition:filter .2s;
+    z-index:5;
 }
 
-.objectLabel{
+.spaceObject:hover{
+    filter:brightness(1.3);
+}
+
+.spaceObject.selected{
+    outline:3px solid white;
+    outline-offset:10px;
+}
+
+.spaceLabel{
     position:absolute;
-    top:105%;
+    top:calc(100% + 18px);
     left:50%;
     transform:translateX(-50%);
     white-space:nowrap;
+    background:rgba(5,10,20,.8);
+    padding:6px 10px;
+    border-radius:8px;
     font-size:13px;
-    background:rgba(0,0,0,.55);
-    padding:4px 8px;
-    border-radius:7px;
 }
 
-#geoInfo{
+/* CIAŁA */
+
+.sun{
+    width:250px;
+    height:250px;
+    left:220px;
+    background:radial-gradient(circle at 35% 35%,#fffbd1,#ffd52d 30%,#ff8b00 65%,#db3a00);
+    box-shadow:0 0 50px #ff9a00,0 0 140px rgba(255,100,0,.5);
+}
+
+.mercury{
+    left:650px;
+    width:42px;height:42px;
+    background:radial-gradient(circle at 35% 30%,#bbb,#555);
+}
+
+.venus{
+    left:1000px;
+    width:70px;height:70px;
+    background:radial-gradient(circle at 35% 30%,#ffe09a,#b66a25);
+}
+
+.earth{
+    left:1400px;
+    width:76px;height:76px;
+    background:
+        radial-gradient(circle at 35% 35%,#5dbd5e 0 13%,transparent 14%),
+        radial-gradient(circle at 65% 62%,#4aa34f 0 17%,transparent 18%),
+        radial-gradient(circle,#35a8ed,#07518e);
+}
+
+.mars{
+    left:1800px;
+    width:57px;height:57px;
+    background:radial-gradient(circle at 30% 30%,#e98855,#8f2e20);
+}
+
+.jupiter{
+    left:2500px;
+    width:175px;height:175px;
+    background:repeating-linear-gradient(
+        #d3a36f 0 15px,
+        #9d583c 15px 27px,
+        #e3c69b 27px 43px
+    );
+}
+
+.saturn{
+    left:3300px;
+    width:145px;height:145px;
+    background:radial-gradient(circle,#e5ca89,#a37e48);
+}
+
+.saturn::after{
+    content:"";
     position:absolute;
-    right:25px;
-    top:95px;
+    width:240px;
+    height:65px;
+    border:11px solid rgba(218,190,123,.7);
+    border-radius:50%;
+    left:-58px;
+    top:28px;
+    transform:rotate(-15deg);
+}
+
+.uranus{
+    left:4100px;
+    width:105px;height:105px;
+    background:radial-gradient(circle at 35% 30%,#b9f4f3,#4db5c2);
+}
+
+.neptune{
+    left:4850px;
+    width:100px;height:100px;
+    background:radial-gradient(circle at 35% 30%,#58a4ff,#173fb7);
+}
+
+.pluto{
+    left:5500px;
+    width:32px;height:32px;
+    background:radial-gradient(circle at 35% 30%,#d9c4ae,#756558);
+}
+
+/* PANEL */
+
+.spaceInfo{
+    position:absolute;
+    right:20px;
+    top:90px;
     width:330px;
-    background:rgba(10,22,38,.94);
+    padding:22px;
+    background:rgba(12,23,39,.94);
     backdrop-filter:blur(12px);
-    border-radius:20px;
-    padding:25px;
-    z-index:9;
-    display:none;
+    border-radius:18px;
+    z-index:50;
 }
 
-#geoInfo h2{
-    margin-top:0;
+.spaceInfo h2{margin:0 0 5px}
+
+.spaceInfo .type{
+    opacity:.5;
+    margin-bottom:15px;
 }
 
-#geoInfo p{
-    line-height:1.6;
-    opacity:.75;
+.spaceInfo p{
+    line-height:1.55;
+    opacity:.8;
 }
 
-.tag{
-    display:inline-block;
-    background:#1e3858;
-    padding:5px 9px;
-    border-radius:7px;
-    margin:3px;
-    font-size:12px;
+.controls{
+    position:absolute;
+    left:20px;
+    bottom:20px;
+    z-index:50;
+    background:rgba(10,20,35,.9);
+    padding:12px 16px;
+    border-radius:12px;
+    font-size:13px;
+    opacity:.8;
 }
 
-/* MOBILE */
-
-@media(max-width:750px){
-
-    .elementWindow{
+@media(max-width:850px){
+    .modal{
         grid-template-columns:1fr;
         overflow:auto;
     }
-
-    .atomSide{
-        min-height:450px;
+    .atomArea{
+        min-height:550px;
     }
-
-    .geoToolbar{
-        display:none;
-    }
-
-    #geoInfo{
-        width:90%;
-        right:5%;
+    .spaceInfo{
+        width:280px;
     }
 }
 </style>
@@ -618,956 +628,969 @@ button{
 
 <body>
 
-<!-- =========================
+<!-- ===================================================
      HOME
-========================= -->
+=================================================== -->
 
 <div id="home">
-
 <div class="homeBox">
 
-<div class="logo">🔬🌍 GeoChem</div>
+<div class="logo">🌍 GeoChem ⚗️</div>
+<div class="subtitle">Interaktywna nauka</div>
 
-<div class="subtitle">
-Interaktywna nauka geografii i chemii
-</div>
-
-<button class="subject geoButton" onclick="openGeo()">
+<button class="subject geoButton" onclick="openPage('geography')">
 🌍 GEOGRAFIA
-<small>Odkrywaj Ziemię, planety i inne ciała niebieskie</small>
+<small>Układ Słoneczny • planety • ciała niebieskie</small>
 </button>
 
-<button class="subject chemButton" onclick="openChem()">
-⚗️ CHEMIA
-<small>Tablica okresowa • pierwiastki • modele atomów</small>
+<button class="subject chemButton" onclick="openPage('chemistry')">
+⚛️ CHEMIA
+<small>118 pierwiastków • atomy • protony • neutrony • elektrony</small>
 </button>
 
 </div>
-
 </div>
 
-
-<!-- =========================
+<!-- ===================================================
      CHEMIA
-========================= -->
+=================================================== -->
 
 <div id="chemistry" class="page">
 
 <div class="topbar">
-
-<button class="back" onclick="home()">← POWRÓT</button>
-
-<div class="topTitle">
-⚗️ Chemia
-</div>
-
+<button class="back" onclick="goHome()">← POWRÓT</button>
+<div class="topTitle">⚛️ Chemia</div>
 </div>
 
 <div class="chemContent">
 
-<div class="sectionTitle">
-Tablica okresowa pierwiastków
+<div class="title">Tablica okresowa pierwiastków</div>
+
+<div class="desc">
+Kliknij dowolny z 118 pierwiastków, aby zbadać jego atom.
 </div>
 
-<div class="sectionDesc">
-Kliknij pierwiastek, aby zobaczyć informacje i model atomu.
+<div class="legend">
+<span class="alkali">metale alkaliczne</span>
+<span class="alkaline">metale ziem alkalicznych</span>
+<span class="transition">metale przejściowe</span>
+<span class="post">pozostałe metale</span>
+<span class="metalloid">półmetale</span>
+<span class="nonmetal">niemetale</span>
+<span class="halogen">halogeny</span>
+<span class="noble">gazy szlachetne</span>
+<span class="lanthanide">lantanowce</span>
+<span class="actinide">aktynowce</span>
 </div>
 
-<div id="periodic" class="periodic"></div>
-
+<div class="tableScroll">
+<div id="periodic"></div>
 </div>
 
 </div>
+</div>
 
-
-<!-- =========================
-     MODAL ATOMU
-========================= -->
+<!-- ===================================================
+     OKNO ATOMU
+=================================================== -->
 
 <div id="elementModal">
 
+<div class="modal">
+
 <button class="close" onclick="closeElement()">✕</button>
 
-<div class="elementWindow">
+<div class="info">
 
-<div class="elementInfo">
+<div class="bigElement" id="bigSymbol">C</div>
 
-<div id="bigSymbol" class="bigSymbol">
-H
-</div>
+<div id="eName">Węgiel</div>
+<div id="eEnglish">Carbon</div>
 
-<div id="elementTitle" class="elementTitle">
-Wodór
-</div>
+<div class="cards">
 
-<div id="elementLatin">
-Hydrogen
-</div>
-
-<div class="infoGrid">
-
-<div class="infoCard">
+<div class="card">
 <small>Liczba atomowa</small>
-<div id="atomicNumber">1</div>
+<strong id="atomicNumber"></strong>
 </div>
 
-<div class="infoCard">
+<div class="card">
 <small>Masa atomowa</small>
-<div id="atomicMass">1.008 u</div>
+<strong id="atomicMass"></strong>
 </div>
 
-<div class="infoCard">
+<div class="card">
 <small>Protony</small>
-<div id="protons">1</div>
+<strong id="protons"></strong>
 </div>
 
-<div class="infoCard">
+<div class="card">
+<small>Neutrony*</small>
+<strong id="neutrons"></strong>
+</div>
+
+<div class="card">
 <small>Elektrony</small>
-<div id="electrons">1</div>
+<strong id="electrons"></strong>
 </div>
 
-<div class="infoCard">
-<small>Stan skupienia</small>
-<div id="state">gaz</div>
+<div class="card">
+<small>Powłoki elektronowe</small>
+<strong id="shellConfig"></strong>
 </div>
 
-<div class="infoCard">
-<small>Typ</small>
-<div id="type">niemetal</div>
+<div class="card">
+<small>Grupa</small>
+<strong id="groupInfo"></strong>
+</div>
+
+<div class="card">
+<small>Okres</small>
+<strong id="periodInfo"></strong>
 </div>
 
 </div>
 
-<div id="elementDescription" class="description"></div>
+<div id="description"></div>
+
+<p style="font-size:11px;opacity:.45;margin-top:20px">
+* Liczba neutronów zależy od izotopu. Model wykorzystuje liczbę masową
+najbardziej reprezentatywnego / często spotykanego izotopu albo zaokrągloną
+wartość używaną w tym modelu edukacyjnym.
+</p>
 
 </div>
 
+<div class="atomArea">
 
-<div class="atomSide">
-
-<div class="atomLabel">
+<div class="atomTitle">
 Model atomu 3D
 </div>
 
-<div id="atom">
-
-<div class="nucleus"></div>
-
-<div class="orbit o1">
-<div class="electron"></div>
+<div id="atom3d">
+<div id="nucleus"></div>
+<div id="shellContainer"></div>
 </div>
 
-<div class="orbit o2">
-<div class="electron"></div>
-</div>
-
-<div class="orbit o3">
-<div class="electron"></div>
-</div>
-
-</div>
-
-<div class="atomHint">
-🖱️ Przeciągaj myszką, aby obracać model
+<div class="atomHelp">
+🖱️ Przytrzymaj i przeciągaj, aby obracać atom
 </div>
 
 </div>
 
 </div>
-
 </div>
 
-
-<!-- =========================
+<!-- ===================================================
      GEOGRAFIA
-========================= -->
+=================================================== -->
 
 <div id="geography" class="page">
 
 <div class="topbar">
+<button class="back" onclick="goHome()">← POWRÓT</button>
+<div class="topTitle">🌌 Układ Słoneczny</div>
+</div>
 
-<button class="back" onclick="home()">
-← POWRÓT
-</button>
+<div id="spaceViewport">
 
-<div class="topTitle">
-🌍 Geografia
+<div id="space">
+
+<div class="barrier"></div>
+<div class="route"></div>
+
+<div class="spaceObject sun" data-object="sun">
+<div class="spaceLabel">☀️ Słońce</div>
+</div>
+
+<div class="spaceObject mercury" data-object="mercury">
+<div class="spaceLabel">Merkury</div>
+</div>
+
+<div class="spaceObject venus" data-object="venus">
+<div class="spaceLabel">Wenus</div>
+</div>
+
+<div class="spaceObject earth" data-object="earth">
+<div class="spaceLabel">🌍 Ziemia</div>
+</div>
+
+<div class="spaceObject mars" data-object="mars">
+<div class="spaceLabel">Mars</div>
+</div>
+
+<div class="spaceObject jupiter" data-object="jupiter">
+<div class="spaceLabel">Jowisz</div>
+</div>
+
+<div class="spaceObject saturn" data-object="saturn">
+<div class="spaceLabel">Saturn</div>
+</div>
+
+<div class="spaceObject uranus" data-object="uranus">
+<div class="spaceLabel">Uran</div>
+</div>
+
+<div class="spaceObject neptune" data-object="neptune">
+<div class="spaceLabel">Neptun</div>
+</div>
+
+<div class="spaceObject pluto" data-object="pluto">
+<div class="spaceLabel">Pluton</div>
 </div>
 
 </div>
+</div>
 
+<div class="spaceInfo">
+<h2 id="spaceName">Układ Słoneczny</h2>
+<div class="type" id="spaceType">Przesuwaj →</div>
 
-<div class="geoToolbar">
-
-<h3>🌌 Odkrywaj świat</h3>
-
-<p>
-Przytrzymaj lewy przycisk myszy i przeciągaj ekran.
+<p id="spaceDescription">
+Słońce znajduje się na początku. Przytrzymaj lewy przycisk myszy
+i przeciągaj poziomo, aby podróżować coraz dalej od Słońca.
 </p>
-
-<p>
-Klikaj planety, gwiazdy, księżyce i inne obiekty, aby poznać informacje.
-</p>
-
 </div>
 
-
-<div id="geoInfo">
-
-<h2 id="geoTitle"></h2>
-
-<div id="geoTags"></div>
-
-<p id="geoDescription"></p>
-
-</div>
-
-
-<div id="universeViewport">
-
-<div id="universe">
-
-<div class="body sun"
-onclick="showGeo(
-'Słońce',
-'Gwiazda',
-'Średnica: około 1,39 mln km. Słońce jest gwiazdą znajdującą się w centrum Układu Słonecznego. Zawiera ponad 99% jego masy. Energia Słońca pochodzi z reakcji syntezy jądrowej.',
-['gwiazda','plazma','Układ Słoneczny']
-)">
-<div class="objectLabel">☀️ Słońce</div>
-</div>
-
-
-<div class="body earth"
-onclick="showGeo(
-'Ziemia',
-'Planeta skalista',
-'Ziemia jest trzecią planetą od Słońca i jedynym znanym miejscem we Wszechświecie, na którym istnieje życie. Około 71% jej powierzchni pokrywa woda.',
-['planeta','skalista','życie']
-)">
-<div class="objectLabel">🌍 Ziemia</div>
-</div>
-
-
-<div class="body moon"
-onclick="showGeo(
-'Księżyc',
-'Naturalny satelita',
-'Księżyc jest naturalnym satelitą Ziemi. Jego grawitacja ma duży wpływ na pływy oceaniczne na naszej planecie.',
-['księżyc','satelita']
-)">
-<div class="objectLabel">🌕 Księżyc</div>
-</div>
-
-
-<div class="body mars"
-onclick="showGeo(
-'Mars',
-'Planeta skalista',
-'Mars nazywany jest Czerwoną Planetą. Jego czerwony kolor pochodzi głównie od związków żelaza znajdujących się na powierzchni.',
-['planeta','skalista','Mars']
-)">
-<div class="objectLabel">🔴 Mars</div>
-</div>
-
-
-<div class="body jupiter"
-onclick="showGeo(
-'Jowisz',
-'Gazowy olbrzym',
-'Jowisz jest największą planetą Układu Słonecznego. Ma potężną atmosferę i słynną Wielką Czerwoną Plamę — ogromną burzę.',
-['gazowy olbrzym','największa planeta']
-)">
-<div class="objectLabel">🟤 Jowisz</div>
-</div>
-
-
-<div class="body saturn"
-onclick="showGeo(
-'Saturn',
-'Gazowy olbrzym',
-'Saturn słynie z ogromnego systemu pierścieni zbudowanych głównie z cząstek lodu i skał.',
-['gazowy olbrzym','pierścienie']
-)">
-<div class="objectLabel">🪐 Saturn</div>
-</div>
-
-
-<div class="nebula"
-onclick="showGeo(
-'Mgławica',
-'Obłok międzygwiazdowy',
-'Mgławice to ogromne obłoki gazu i pyłu znajdujące się w przestrzeni kosmicznej. Niektóre z nich są miejscami powstawania nowych gwiazd.',
-['gaz','pył','gwiazdy']
-)">
+<div class="controls">
+🖱️ przeciąganie = podróż &nbsp; • &nbsp; kliknięcie = informacje
 </div>
 
 </div>
-
-</div>
-
-</div>
-
 
 <script>
 
-/* ================================
+/* =====================================================
    NAWIGACJA
-================================ */
+===================================================== */
 
-function hideAll(){
-
+function openPage(id){
     document.getElementById("home").style.display="none";
     document.getElementById("chemistry").style.display="none";
     document.getElementById("geography").style.display="none";
 
+    document.getElementById(id).style.display="block";
 }
 
-function home(){
-
-    hideAll();
-
+function goHome(){
+    document.getElementById("chemistry").style.display="none";
+    document.getElementById("geography").style.display="none";
     document.getElementById("home").style.display="flex";
-
 }
 
-function openChem(){
+/* =====================================================
+   WSZYSTKIE 118 PIERWIASTKÓW
 
-    hideAll();
+   z = liczba atomowa
+   m = liczba masowa użyta do modelu neutronów
+===================================================== */
 
-    document.getElementById("chemistry").style.display="block";
+const rawElements = [
+["H","Wodór","Hydrogen",1,1,1,1,"nonmetal"],
+["He","Hel","Helium",2,4,18,1,"noble"],
 
-}
+["Li","Lit","Lithium",3,7,1,2,"alkali"],
+["Be","Beryl","Beryllium",4,9,2,2,"alkaline"],
+["B","Bor","Boron",5,11,13,2,"metalloid"],
+["C","Węgiel","Carbon",6,12,14,2,"nonmetal"],
+["N","Azot","Nitrogen",7,14,15,2,"nonmetal"],
+["O","Tlen","Oxygen",8,16,16,2,"nonmetal"],
+["F","Fluor","Fluorine",9,19,17,2,"halogen"],
+["Ne","Neon","Neon",10,20,18,2,"noble"],
 
-function openGeo(){
+["Na","Sód","Sodium",11,23,1,3,"alkali"],
+["Mg","Magnez","Magnesium",12,24,2,3,"alkaline"],
+["Al","Glin","Aluminium",13,27,13,3,"post"],
+["Si","Krzem","Silicon",14,28,14,3,"metalloid"],
+["P","Fosfor","Phosphorus",15,31,15,3,"nonmetal"],
+["S","Siarka","Sulfur",16,32,16,3,"nonmetal"],
+["Cl","Chlor","Chlorine",17,35,17,3,"halogen"],
+["Ar","Argon","Argon",18,40,18,3,"noble"],
 
-    hideAll();
+["K","Potas","Potassium",19,39,1,4,"alkali"],
+["Ca","Wapń","Calcium",20,40,2,4,"alkaline"],
+["Sc","Skand","Scandium",21,45,3,4,"transition"],
+["Ti","Tytan","Titanium",22,48,4,4,"transition"],
+["V","Wanad","Vanadium",23,51,5,4,"transition"],
+["Cr","Chrom","Chromium",24,52,6,4,"transition"],
+["Mn","Mangan","Manganese",25,55,7,4,"transition"],
+["Fe","Żelazo","Iron",26,56,8,4,"transition"],
+["Co","Kobalt","Cobalt",27,59,9,4,"transition"],
+["Ni","Nikiel","Nickel",28,58,10,4,"transition"],
+["Cu","Miedź","Copper",29,63,11,4,"transition"],
+["Zn","Cynk","Zinc",30,64,12,4,"transition"],
+["Ga","Gal","Gallium",31,69,13,4,"post"],
+["Ge","German","Germanium",32,74,14,4,"metalloid"],
+["As","Arsen","Arsenic",33,75,15,4,"metalloid"],
+["Se","Selen","Selenium",34,80,16,4,"nonmetal"],
+["Br","Brom","Bromine",35,79,17,4,"halogen"],
+["Kr","Krypton","Krypton",36,84,18,4,"noble"],
 
-    document.getElementById("geography").style.display="block";
+["Rb","Rubid","Rubidium",37,85,1,5,"alkali"],
+["Sr","Stront","Strontium",38,88,2,5,"alkaline"],
+["Y","Itr","Yttrium",39,89,3,5,"transition"],
+["Zr","Cyrkon","Zirconium",40,90,4,5,"transition"],
+["Nb","Niob","Niobium",41,93,5,5,"transition"],
+["Mo","Molibden","Molybdenum",42,98,6,5,"transition"],
+["Tc","Technet","Technetium",43,98,7,5,"transition"],
+["Ru","Ruten","Ruthenium",44,102,8,5,"transition"],
+["Rh","Rod","Rhodium",45,103,9,5,"transition"],
+["Pd","Pallad","Palladium",46,106,10,5,"transition"],
+["Ag","Srebro","Silver",47,107,11,5,"transition"],
+["Cd","Kadm","Cadmium",48,114,12,5,"transition"],
+["In","Ind","Indium",49,115,13,5,"post"],
+["Sn","Cyna","Tin",50,120,14,5,"post"],
+["Sb","Antymon","Antimony",51,121,15,5,"metalloid"],
+["Te","Tellur","Tellurium",52,130,16,5,"metalloid"],
+["I","Jod","Iodine",53,127,17,5,"halogen"],
+["Xe","Ksenon","Xenon",54,132,18,5,"noble"],
 
-}
+["Cs","Cez","Caesium",55,133,1,6,"alkali"],
+["Ba","Bar","Barium",56,138,2,6,"alkaline"],
 
+["La","Lantan","Lanthanum",57,139,3,6,"lanthanide"],
+["Ce","Cer","Cerium",58,140,3,6,"lanthanide"],
+["Pr","Prazeodym","Praseodymium",59,141,3,6,"lanthanide"],
+["Nd","Neodym","Neodymium",60,142,3,6,"lanthanide"],
+["Pm","Promet","Promethium",61,145,3,6,"lanthanide"],
+["Sm","Samar","Samarium",62,152,3,6,"lanthanide"],
+["Eu","Europ","Europium",63,153,3,6,"lanthanide"],
+["Gd","Gadolin","Gadolinium",64,158,3,6,"lanthanide"],
+["Tb","Terb","Terbium",65,159,3,6,"lanthanide"],
+["Dy","Dysproz","Dysprosium",66,164,3,6,"lanthanide"],
+["Ho","Holm","Holmium",67,165,3,6,"lanthanide"],
+["Er","Erb","Erbium",68,166,3,6,"lanthanide"],
+["Tm","Tul","Thulium",69,169,3,6,"lanthanide"],
+["Yb","Iterb","Ytterbium",70,174,3,6,"lanthanide"],
+["Lu","Lutet","Lutetium",71,175,3,6,"lanthanide"],
 
-/* ================================
-   PIERWIASTKI
-================================ */
+["Hf","Hafn","Hafnium",72,180,4,6,"transition"],
+["Ta","Tantal","Tantalum",73,181,5,6,"transition"],
+["W","Wolfram","Tungsten",74,184,6,6,"transition"],
+["Re","Ren","Rhenium",75,187,7,6,"transition"],
+["Os","Osm","Osmium",76,192,8,6,"transition"],
+["Ir","Iryd","Iridium",77,193,9,6,"transition"],
+["Pt","Platyna","Platinum",78,195,10,6,"transition"],
+["Au","Złoto","Gold",79,197,11,6,"transition"],
+["Hg","Rtęć","Mercury",80,202,12,6,"transition"],
+["Tl","Tal","Thallium",81,205,13,6,"post"],
+["Pb","Ołów","Lead",82,208,14,6,"post"],
+["Bi","Bizmut","Bismuth",83,209,15,6,"post"],
+["Po","Polon","Polonium",84,209,16,6,"post"],
+["At","Astat","Astatine",85,210,17,6,"halogen"],
+["Rn","Radon","Radon",86,222,18,6,"noble"],
 
-const elements = [
+["Fr","Frans","Francium",87,223,1,7,"alkali"],
+["Ra","Rad","Radium",88,226,2,7,"alkaline"],
 
-{
-n:1,
-symbol:"H",
-name:"Wodór",
-latin:"Hydrogen",
-mass:"1.008",
-group:1,
-period:1,
-type:"Niemetal",
-state:"Gaz",
-class:"nonmetal",
-description:"Najlżejszy i najczęściej występujący pierwiastek we Wszechświecie. Gwiazdy zawierają ogromne ilości wodoru."
-},
+["Ac","Aktyn","Actinium",89,227,3,7,"actinide"],
+["Th","Tor","Thorium",90,232,3,7,"actinide"],
+["Pa","Protaktyn","Protactinium",91,231,3,7,"actinide"],
+["U","Uran","Uranium",92,238,3,7,"actinide"],
+["Np","Neptun","Neptunium",93,237,3,7,"actinide"],
+["Pu","Pluton","Plutonium",94,244,3,7,"actinide"],
+["Am","Ameryk","Americium",95,243,3,7,"actinide"],
+["Cm","Kiur","Curium",96,247,3,7,"actinide"],
+["Bk","Berkel","Berkelium",97,247,3,7,"actinide"],
+["Cf","Kaliforn","Californium",98,251,3,7,"actinide"],
+["Es","Einstein","Einsteinium",99,252,3,7,"actinide"],
+["Fm","Ferm","Fermium",100,257,3,7,"actinide"],
+["Md","Mendelew","Mendelevium",101,258,3,7,"actinide"],
+["No","Nobel","Nobelium",102,259,3,7,"actinide"],
+["Lr","Lorens","Lawrencium",103,266,3,7,"actinide"],
 
-{
-n:2,
-symbol:"He",
-name:"Hel",
-latin:"Helium",
-mass:"4.0026",
-group:18,
-period:1,
-type:"Gaz szlachetny",
-state:"Gaz",
-class:"noble",
-description:"Bardzo lekki gaz szlachetny. Powstaje między innymi podczas reakcji zachodzących w gwiazdach."
-},
-
-{
-n:3,
-symbol:"Li",
-name:"Lit",
-latin:"Lithium",
-mass:"6.94",
-group:1,
-period:2,
-type:"Metal alkaliczny",
-state:"Ciało stałe",
-class:"alkali",
-description:"Lekki i reaktywny metal. Lit jest ważnym składnikiem wielu współczesnych akumulatorów."
-},
-
-{
-n:4,
-symbol:"Be",
-name:"Beryl",
-latin:"Beryllium",
-mass:"9.0122",
-group:2,
-period:2,
-type:"Metal ziem alkalicznych",
-state:"Ciało stałe",
-class:"alkaline",
-description:"Lekki, twardy metal wykorzystywany w specjalistycznych stopach."
-},
-
-{
-n:5,
-symbol:"B",
-name:"Bor",
-latin:"Boron",
-mass:"10.81",
-group:13,
-period:2,
-type:"Półmetal",
-state:"Ciało stałe",
-class:"metalloid",
-description:"Pierwiastek o właściwościach pośrednich między metalami i niemetalami."
-},
-
-{
-n:6,
-symbol:"C",
-name:"Węgiel",
-latin:"Carbon",
-mass:"12.011",
-group:14,
-period:2,
-type:"Niemetal",
-state:"Ciało stałe",
-class:"nonmetal",
-description:"Jeden z najważniejszych pierwiastków życia. Tworzy ogromną liczbę związków chemicznych."
-},
-
-{
-n:7,
-symbol:"N",
-name:"Azot",
-latin:"Nitrogen",
-mass:"14.007",
-group:15,
-period:2,
-type:"Niemetal",
-state:"Gaz",
-class:"nonmetal",
-description:"Stanowi około 78% ziemskiej atmosfery."
-},
-
-{
-n:8,
-symbol:"O",
-name:"Tlen",
-latin:"Oxygen",
-mass:"15.999",
-group:16,
-period:2,
-type:"Niemetal",
-state:"Gaz",
-class:"nonmetal",
-description:"Pierwiastek potrzebny do oddychania większości organizmów wykorzystujących oddychanie tlenowe."
-},
-
-{
-n:9,
-symbol:"F",
-name:"Fluor",
-latin:"Fluorine",
-mass:"18.998",
-group:17,
-period:2,
-type:"Halogen",
-state:"Gaz",
-class:"halogen",
-description:"Bardzo reaktywny pierwiastek należący do halogenów."
-},
-
-{
-n:10,
-symbol:"Ne",
-name:"Neon",
-latin:"Neon",
-mass:"20.180",
-group:18,
-period:2,
-type:"Gaz szlachetny",
-state:"Gaz",
-class:"noble",
-description:"Gaz szlachetny znany między innymi z zastosowania w lampach neonowych."
-},
-
-{
-n:11,
-symbol:"Na",
-name:"Sód",
-latin:"Natrium",
-mass:"22.990",
-group:1,
-period:3,
-type:"Metal alkaliczny",
-state:"Ciało stałe",
-class:"alkali",
-description:"Bardzo reaktywny metal. Jony sodu są ważne dla funkcjonowania organizmów."
-},
-
-{
-n:12,
-symbol:"Mg",
-name:"Magnez",
-latin:"Magnesium",
-mass:"24.305",
-group:2,
-period:3,
-type:"Metal ziem alkalicznych",
-state:"Ciało stałe",
-class:"alkaline",
-description:"Lekki metal występujący w wielu minerałach. Jest również ważnym pierwiastkiem biologicznym."
-},
-
-{
-n:13,
-symbol:"Al",
-name:"Glin",
-latin:"Aluminium",
-mass:"26.982",
-group:13,
-period:3,
-type:"Metal",
-state:"Ciało stałe",
-class:"post",
-description:"Lekki metal szeroko wykorzystywany w przemyśle i budownictwie."
-},
-
-{
-n:14,
-symbol:"Si",
-name:"Krzem",
-latin:"Silicon",
-mass:"28.085",
-group:14,
-period:3,
-type:"Półmetal",
-state:"Ciało stałe",
-class:"metalloid",
-description:"Bardzo ważny pierwiastek w elektronice. Krzem jest podstawą wielu półprzewodników."
-},
-
-{
-n:15,
-symbol:"P",
-name:"Fosfor",
-latin:"Phosphorus",
-mass:"30.974",
-group:15,
-period:3,
-type:"Niemetal",
-state:"Ciało stałe",
-class:"nonmetal",
-description:"Ważny składnik DNA, RNA, ATP oraz kości organizmów."
-},
-
-{
-n:16,
-symbol:"S",
-name:"Siarka",
-latin:"Sulfur",
-mass:"32.06",
-group:16,
-period:3,
-type:"Niemetal",
-state:"Ciało stałe",
-class:"nonmetal",
-description:"Żółty niemetal występujący w wielu minerałach i związkach chemicznych."
-},
-
-{
-n:17,
-symbol:"Cl",
-name:"Chlor",
-latin:"Chlorine",
-mass:"35.45",
-group:17,
-period:3,
-type:"Halogen",
-state:"Gaz",
-class:"halogen",
-description:"Reaktywny halogen. Jony chlorkowe występują między innymi w soli kuchennej."
-},
-
-{
-n:18,
-symbol:"Ar",
-name:"Argon",
-latin:"Argon",
-mass:"39.948",
-group:18,
-period:3,
-type:"Gaz szlachetny",
-state:"Gaz",
-class:"noble",
-description:"Gaz szlachetny stanowiący około 0,93% atmosfery Ziemi."
-},
-
-{
-n:19,
-symbol:"K",
-name:"Potas",
-latin:"Kalium",
-mass:"39.098",
-group:1,
-period:4,
-type:"Metal alkaliczny",
-state:"Ciało stałe",
-class:"alkali",
-description:"Reaktywny metal oraz ważny pierwiastek dla organizmów żywych."
-},
-
-{
-n:20,
-symbol:"Ca",
-name:"Wapń",
-latin:"Calcium",
-mass:"40.078",
-group:2,
-period:4,
-type:"Metal ziem alkalicznych",
-state:"Ciało stałe",
-class:"alkaline",
-description:"Ważny składnik kości i zębów. Jony wapnia uczestniczą również w pracy mięśni."
-},
-
-{
-n:26,
-symbol:"Fe",
-name:"Żelazo",
-latin:"Ferrum",
-mass:"55.845",
-group:8,
-period:4,
-type:"Metal przejściowy",
-state:"Ciało stałe",
-class:"transition",
-description:"Jeden z najważniejszych metali. Żelazo jest głównym składnikiem stali i występuje również w hemoglobinie."
-},
-
-{
-n:29,
-symbol:"Cu",
-name:"Miedź",
-latin:"Cuprum",
-mass:"63.546",
-group:11,
-period:4,
-type:"Metal przejściowy",
-state:"Ciało stałe",
-class:"transition",
-description:"Metal bardzo dobrze przewodzący prąd elektryczny."
-},
-
-{
-n:47,
-symbol:"Ag",
-name:"Srebro",
-latin:"Argentum",
-mass:"107.868",
-group:11,
-period:5,
-type:"Metal przejściowy",
-state:"Ciało stałe",
-class:"transition",
-description:"Metal o bardzo wysokim przewodnictwie elektrycznym."
-},
-
-{
-n:79,
-symbol:"Au",
-name:"Złoto",
-latin:"Aurum",
-mass:"196.967",
-group:11,
-period:6,
-type:"Metal przejściowy",
-state:"Ciało stałe",
-class:"transition",
-description:"Ciężki, mało reaktywny metal ceniony od tysięcy lat."
-}
-
+["Rf","Rutherford","Rutherfordium",104,267,4,7,"transition"],
+["Db","Dubn","Dubnium",105,268,5,7,"transition"],
+["Sg","Seaborg","Seaborgium",106,269,6,7,"transition"],
+["Bh","Bohr","Bohrium",107,270,7,7,"transition"],
+["Hs","Has","Hassium",108,269,8,7,"transition"],
+["Mt","Meitner","Meitnerium",109,278,9,7,"unknown"],
+["Ds","Darmsztadt","Darmstadtium",110,281,10,7,"unknown"],
+["Rg","Roentgen","Roentgenium",111,282,11,7,"unknown"],
+["Cn","Kopernik","Copernicium",112,285,12,7,"post"],
+["Nh","Nihon","Nihonium",113,286,13,7,"post"],
+["Fl","Flerow","Flerovium",114,289,14,7,"post"],
+["Mc","Moskow","Moscovium",115,290,15,7,"post"],
+["Lv","Liwermor","Livermorium",116,293,16,7,"post"],
+["Ts","Tenes","Tennessine",117,294,17,7,"halogen"],
+["Og","Oganeson","Oganesson",118,294,18,7,"noble"]
 ];
 
+/* =====================================================
+   POWŁOKI ELEKTRONOWE
+===================================================== */
 
-/* ================================
-   TWORZENIE TABLICY
-================================ */
+const shellData = [
+[1],
+[2],
+[2,1],
+[2,2],
+[2,3],
+[2,4],
+[2,5],
+[2,6],
+[2,7],
+[2,8],
+[2,8,1],
+[2,8,2],
+[2,8,3],
+[2,8,4],
+[2,8,5],
+[2,8,6],
+[2,8,7],
+[2,8,8],
+[2,8,8,1],
+[2,8,8,2]
+];
 
-const periodic =
-document.getElementById("periodic");
+/*
+Dla cięższych atomów rozdzielamy elektrony na powłoki
+na podstawie standardowego maksymalnego rozkładu.
+*/
 
-elements.forEach(e=>{
+function electronShells(z){
 
-    const div =
-    document.createElement("div");
+    if(z <= shellData.length)
+        return shellData[z-1];
 
-    div.className =
-    "element "+e.class;
+    const capacities=[2,8,18,32,32,18,8];
 
-    div.style.gridColumn=e.group;
-    div.style.gridRow=e.period;
+    let remaining=z;
+    let shells=[];
+
+    for(let cap of capacities){
+
+        if(remaining<=0) break;
+
+        let amount=Math.min(cap,remaining);
+
+        shells.push(amount);
+        remaining-=amount;
+    }
+
+    return shells;
+}
+
+/* =====================================================
+   POZYCJE TABLICY
+===================================================== */
+
+const normalPositions={};
+
+function setRange(start,end,period,startGroup){
+
+    let group=startGroup;
+
+    for(let z=start;z<=end;z++){
+        normalPositions[z]={row:period,col:group};
+        group++;
+    }
+}
+
+normalPositions[1]={row:1,col:1};
+normalPositions[2]={row:1,col:18};
+
+setRange(3,4,2,1);
+setRange(5,10,2,13);
+
+setRange(11,12,3,1);
+setRange(13,18,3,13);
+
+setRange(19,36,4,1);
+setRange(37,54,5,1);
+
+normalPositions[55]={row:6,col:1};
+normalPositions[56]={row:6,col:2};
+
+for(let z=72;z<=86;z++)
+    normalPositions[z]={row:6,col:z-68};
+
+normalPositions[87]={row:7,col:1};
+normalPositions[88]={row:7,col:2};
+
+for(let z=104;z<=118;z++)
+    normalPositions[z]={row:7,col:z-100};
+
+/* =====================================================
+   GENEROWANIE TABLICY
+===================================================== */
+
+const periodic=document.getElementById("periodic");
+
+rawElements.forEach((e)=>{
+
+    const [
+        symbol,
+        name,
+        english,
+        z,
+        mass,
+        group,
+        period,
+        type
+    ]=e;
+
+    let row;
+    let col;
+
+    if(z>=57 && z<=71){
+        row=9;
+        col=z-54;
+    }
+    else if(z>=89 && z<=103){
+        row=10;
+        col=z-86;
+    }
+    else{
+        row=normalPositions[z].row;
+        col=normalPositions[z].col;
+    }
+
+    const div=document.createElement("div");
+
+    div.className="element "+type;
+
+    div.style.gridRow=row;
+    div.style.gridColumn=col;
 
     div.innerHTML=`
-
-    <div class="number">
-    ${e.n}
-    </div>
-
-    <div class="symbol">
-    ${e.symbol}
-    </div>
-
-    <div class="elementName">
-    ${e.name}
-    </div>
-
+        <div class="num">${z}</div>
+        <div class="sym">${symbol}</div>
+        <div class="ename">${name}</div>
     `;
 
-    div.onclick=()=>openElement(e);
+    div.onclick=()=>showElement(e);
 
     periodic.appendChild(div);
-
 });
 
+/* =====================================================
+   OPIS PIERWIASTKA
+===================================================== */
 
-/* ================================
-   OKNO PIERWIASTKA
-================================ */
+function categoryName(type){
 
-function openElement(e){
+    const names={
+        alkali:"metal alkaliczny",
+        alkaline:"metal ziem alkalicznych",
+        transition:"metal przejściowy",
+        post:"metal",
+        metalloid:"półmetal",
+        nonmetal:"niemetal",
+        halogen:"halogen",
+        noble:"gaz szlachetny",
+        lanthanide:"lantanowiec",
+        actinide:"aktynowiec",
+        unknown:"pierwiastek superciężki"
+    };
 
-    document.getElementById("elementModal")
-    .style.display="flex";
+    return names[type] || "pierwiastek";
+}
 
-    document.getElementById("bigSymbol")
-    .innerText=e.symbol;
+/* =====================================================
+   OTWIERANIE PIERWIASTKA
+===================================================== */
 
-    document.getElementById("elementTitle")
-    .innerText=e.name;
+function showElement(e){
 
-    document.getElementById("elementLatin")
-    .innerText=e.latin;
+    const [
+        symbol,
+        name,
+        english,
+        z,
+        mass,
+        group,
+        period,
+        type
+    ]=e;
 
-    document.getElementById("atomicNumber")
-    .innerText=e.n;
+    const neutronCount=mass-z;
 
-    document.getElementById("atomicMass")
-    .innerText=e.mass+" u";
+    document.getElementById("elementModal").style.display="flex";
 
-    document.getElementById("protons")
-    .innerText=e.n;
+    bigSymbol.textContent=symbol;
+    eName.textContent=name;
+    eEnglish.textContent=english;
 
-    document.getElementById("electrons")
-    .innerText=e.n;
+    atomicNumber.textContent=z;
+    atomicMass.textContent=mass+" u";
 
-    document.getElementById("state")
-    .innerText=e.state;
+    protons.textContent=z;
+    neutrons.textContent=neutronCount;
+    electrons.textContent=z;
 
-    document.getElementById("type")
-    .innerText=e.type;
+    groupInfo.textContent=group;
+    periodInfo.textContent=period;
 
-    document.getElementById("elementDescription")
-    .innerText=e.description;
+    const shells=electronShells(z);
 
+    shellConfig.textContent=shells.join(" – ");
+
+    description.innerHTML=`
+        <b>${name}</b> (${symbol}) ma liczbę atomową
+        <b>${z}</b>. Oznacza to, że jego jądro zawiera
+        <b>${z} protonów</b>.
+
+        <br><br>
+
+        Neutralny atom ma również <b>${z} elektronów</b>.
+        W pokazanym modelu jądro zawiera około
+        <b>${neutronCount} neutronów</b>.
+
+        <br><br>
+
+        Pierwiastek należy do kategorii:
+        <b>${categoryName(type)}</b>.
+    `;
+
+    buildAtom(z,neutronCount,shells);
 }
 
 function closeElement(){
-
-    document.getElementById("elementModal")
-    .style.display="none";
-
+    document.getElementById("elementModal").style.display="none";
 }
 
+/* =====================================================
+   PRAWDZIWY PRZESTRZENNY MODEL ATOMU
+===================================================== */
 
-/* ================================
+const nucleus=document.getElementById("nucleus");
+const shellContainer=document.getElementById("shellContainer");
+const atom3d=document.getElementById("atom3d");
+
+function buildAtom(protonCount,neutronCount,shells){
+
+    nucleus.innerHTML="";
+    shellContainer.innerHTML="";
+
+    /*
+    Przy bardzo ciężkich atomach pokazujemy wszystkie nukleony,
+    ale zmniejszamy je, żeby jądro się mieściło.
+    */
+
+    const total=protonCount+neutronCount;
+
+    const particleSize=
+        total>200 ? 10 :
+        total>100 ? 13 :
+        total>40 ? 17 :
+        22;
+
+    const radius=
+        total>150 ? 55 :
+        total>70 ? 48 :
+        total>20 ? 38 :
+        28;
+
+    for(let i=0;i<total;i++){
+
+        const p=document.createElement("div");
+
+        p.className=
+            "particle "+(i<protonCount ? "proton":"neutron");
+
+        p.style.width=particleSize+"px";
+        p.style.height=particleSize+"px";
+
+        /*
+        Losowa pozycja wewnątrz kuli.
+        */
+
+        const theta=Math.random()*Math.PI*2;
+        const phi=Math.acos(2*Math.random()-1);
+
+        const r=Math.cbrt(Math.random())*radius;
+
+        const x=Math.sin(phi)*Math.cos(theta)*r;
+        const y=Math.sin(phi)*Math.sin(theta)*r;
+        const z=Math.cos(phi)*r;
+
+        p.style.left=(50+x-particleSize/2)+"px";
+        p.style.top=(50+y-particleSize/2)+"px";
+
+        p.style.transform=`translateZ(${z}px)`;
+
+        nucleus.appendChild(p);
+    }
+
+    /* POWŁOKI */
+
+    shells.forEach((electronCount,index)=>{
+
+        const radius=85+index*30;
+
+        const shell=document.createElement("div");
+
+        shell.className="shell";
+
+        shell.style.width=radius*2+"px";
+        shell.style.height=radius*2+"px";
+
+        shell.style.marginLeft=-radius+"px";
+        shell.style.marginTop=-radius+"px";
+
+        /*
+        Każda powłoka jest pod innym kątem,
+        dzięki czemu atom jest wyraźnie przestrzenny.
+        */
+
+        const tiltX=60+(index%3)*12;
+        const tiltZ=index*28;
+
+        shell.style.transform=
+            `rotateX(${tiltX}deg) rotateZ(${tiltZ}deg)`;
+
+        for(let i=0;i<electronCount;i++){
+
+            const electron=document.createElement("div");
+
+            electron.className="electron";
+
+            const angle=
+                (Math.PI*2/electronCount)*i;
+
+            const x=
+                radius+Math.cos(angle)*radius;
+
+            const y=
+                radius+Math.sin(angle)*radius;
+
+            electron.style.left=x+"px";
+            electron.style.top=y+"px";
+
+            shell.appendChild(electron);
+        }
+
+        shellContainer.appendChild(shell);
+    });
+}
+
+/* =====================================================
    OBRACANIE ATOMU
-================================ */
-
-const atom =
-document.getElementById("atom");
+===================================================== */
 
 let atomDragging=false;
 
-let previousX=0;
-let previousY=0;
+let atomStartX=0;
+let atomStartY=0;
 
-let rotationX=15;
-let rotationY=0;
+let rotX=-15;
+let rotY=20;
 
-atom.addEventListener("mousedown",e=>{
+atom3d.addEventListener("mousedown",e=>{
 
     atomDragging=true;
 
-    previousX=e.clientX;
-    previousY=e.clientY;
+    atomStartX=e.clientX;
+    atomStartY=e.clientY;
 
+    atom3d.style.cursor="grabbing";
 });
 
 window.addEventListener("mouseup",()=>{
 
     atomDragging=false;
-
+    atom3d.style.cursor="grab";
 });
 
 window.addEventListener("mousemove",e=>{
 
     if(!atomDragging) return;
 
-    const dx=e.clientX-previousX;
-    const dy=e.clientY-previousY;
+    rotY+=(e.clientX-atomStartX)*.5;
+    rotX-=(e.clientY-atomStartY)*.5;
 
-    rotationY+=dx*.5;
-    rotationX-=dy*.5;
+    atom3d.style.transform=
+        `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
 
-    atom.style.transform=
-    `rotateX(${rotationX}deg)
-     rotateY(${rotationY}deg)`;
+    atomStartX=e.clientX;
+    atomStartY=e.clientY;
+});
 
-    previousX=e.clientX;
-    previousY=e.clientY;
+/* =====================================================
+   KOSMOS
+===================================================== */
+
+const spaceData={
+
+sun:{
+name:"☀️ Słońce",
+type:"Gwiazda",
+description:
+"Słońce jest gwiazdą w centrum Układu Słonecznego. Prawie cała masa Układu Słonecznego znajduje się właśnie w Słońcu. Energia powstaje w jego wnętrzu dzięki syntezie jądrowej."
+},
+
+mercury:{
+name:"Merkury",
+type:"Planeta skalista",
+description:
+"Merkury jest najbliższą Słońcu i najmniejszą planetą Układu Słonecznego. Nie posiada dużego naturalnego satelity."
+},
+
+venus:{
+name:"Wenus",
+type:"Planeta skalista",
+description:
+"Wenus ma bardzo gęstą atmosferę bogatą w dwutlenek węgla. Silny efekt cieplarniany sprawia, że jej powierzchnia jest niezwykle gorąca."
+},
+
+earth:{
+name:"🌍 Ziemia",
+type:"Planeta skalista",
+description:
+"Ziemia jest trzecią planetą od Słońca. Ma ciekłą wodę na powierzchni i jest jedynym znanym miejscem we Wszechświecie, na którym istnieje życie."
+},
+
+mars:{
+name:"Mars",
+type:"Planeta skalista",
+description:
+"Mars jest czwartą planetą od Słońca. Tlenki żelaza znajdujące się na jego powierzchni nadają mu charakterystyczny czerwony kolor."
+},
+
+jupiter:{
+name:"Jowisz",
+type:"Gazowy olbrzym",
+description:
+"Jowisz jest największą planetą Układu Słonecznego. W jego atmosferze znajduje się Wielka Czerwona Plama — ogromny układ burzowy."
+},
+
+saturn:{
+name:"Saturn",
+type:"Gazowy olbrzym",
+description:
+"Saturn jest szczególnie znany ze swojego rozbudowanego systemu pierścieni złożonych głównie z lodu, pyłu i fragmentów skał."
+},
+
+uranus:{
+name:"Uran",
+type:"Lodowy olbrzym",
+description:
+"Uran jest siódmą planetą od Słońca. Jego oś obrotu jest bardzo silnie nachylona, dlatego planeta obraca się niemal 'na boku'."
+},
+
+neptune:{
+name:"Neptun",
+type:"Lodowy olbrzym",
+description:
+"Neptun jest ósmą planetą od Słońca. W jego atmosferze występują niezwykle szybkie wiatry."
+},
+
+pluto:{
+name:"Pluton",
+type:"Planeta karłowata",
+description:
+"Pluton znajduje się za orbitą Neptuna i jest planetą karłowatą należącą do obiektów transneptunowych."
+}
+
+};
+
+document.querySelectorAll(".spaceObject").forEach(object=>{
+
+    object.addEventListener("click",()=>{
+
+        document.querySelectorAll(".spaceObject")
+        .forEach(x=>x.classList.remove("selected"));
+
+        object.classList.add("selected");
+
+        const data=
+            spaceData[object.dataset.object];
+
+        spaceName.textContent=data.name;
+        spaceType.textContent=data.type;
+        spaceDescription.textContent=data.description;
+    });
 
 });
 
+/* =====================================================
+   POZIOME PRZESUWANIE KOSMOSU
+===================================================== */
 
-/* ================================
-   GEOGRAFIA — GWIAZDY
-================================ */
+const viewport=document.getElementById("spaceViewport");
+const space=document.getElementById("space");
 
-const universe =
-document.getElementById("universe");
+let draggingSpace=false;
+let dragStart=0;
 
-for(let i=0;i<400;i++){
+let spaceX=0;
 
-    const star =
-    document.createElement("div");
+function minimumX(){
 
-    star.className="star";
-
-    star.style.left=
-    Math.random()*3000+"px";
-
-    star.style.top=
-    Math.random()*2000+"px";
-
-    const size =
-    Math.random()*2+1;
-
-    star.style.width=size+"px";
-    star.style.height=size+"px";
-
-    universe.appendChild(star);
-
+    return Math.min(
+        0,
+        viewport.clientWidth-space.offsetWidth
+    );
 }
-
-
-/* ================================
-   PRZESUWANIE ŚWIATA
-================================ */
-
-const viewport =
-document.getElementById("universeViewport");
-
-let dragging=false;
-
-let startX;
-let startY;
-
-let worldX=-700;
-let worldY=-400;
 
 viewport.addEventListener("mousedown",e=>{
 
-    if(e.target.closest(".body")) return;
+    if(e.target.closest(".spaceObject"))
+        return;
 
-    dragging=true;
+    draggingSpace=true;
 
-    startX=e.clientX-worldX;
-    startY=e.clientY-worldY;
+    dragStart=e.clientX-spaceX;
 
     viewport.style.cursor="grabbing";
-
 });
 
 window.addEventListener("mouseup",()=>{
 
-    dragging=false;
+    draggingSpace=false;
 
     viewport.style.cursor="grab";
-
 });
 
 window.addEventListener("mousemove",e=>{
 
-    if(!dragging) return;
+    if(!draggingSpace) return;
 
-    worldX=e.clientX-startX;
-    worldY=e.clientY-startY;
+    let newX=e.clientX-dragStart;
 
-    universe.style.left=
-    worldX+"px";
+    /*
+    BARIERA ZA SŁOŃCEM
 
-    universe.style.top=
-    worldY+"px";
+    spaceX nigdy nie może być większe od 0.
+    Dzięki temu nie można przesunąć świata
+    dalej w lewo niż początek.
+    */
 
+    newX=Math.min(0,newX);
+
+    newX=Math.max(minimumX(),newX);
+
+    spaceX=newX;
+
+    space.style.left=spaceX+"px";
 });
 
+/* =====================================================
+   KÓŁKO MYSZY = PODRÓŻ POZIOMA
+===================================================== */
 
-/* ================================
-   INFORMACJE GEOGRAFICZNE
-================================ */
+viewport.addEventListener("wheel",e=>{
 
-function showGeo(name,type,description,tags){
+    e.preventDefault();
 
-    const info=
-    document.getElementById("geoInfo");
+    spaceX-=e.deltaY;
 
-    info.style.display="block";
+    spaceX=Math.min(0,spaceX);
+    spaceX=Math.max(minimumX(),spaceX);
 
-    document.getElementById("geoTitle")
-    .innerText=name;
+    space.style.left=spaceX+"px";
 
-    document.getElementById("geoDescription")
-    .innerText=description;
+},{passive:false});
 
-    const tagBox=
-    document.getElementById("geoTags");
-
-    tagBox.innerHTML="";
-
-    tags.forEach(tag=>{
-
-        const span=
-        document.createElement("span");
-
-        span.className="tag";
-
-        span.innerText=tag;
-
-        tagBox.appendChild(span);
-
-    });
-
-}
-
-
-/* ================================
+/* =====================================================
    ESC
-================================ */
+===================================================== */
 
 window.addEventListener("keydown",e=>{
 
-    if(e.key==="Escape"){
-
+    if(e.key==="Escape")
         closeElement();
-
-        document.getElementById("geoInfo")
-        .style.display="none";
-
-    }
 
 });
 
