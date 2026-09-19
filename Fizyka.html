@@ -3,487 +3,314 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Fizyka Fun</title>
 
 <style>
-
-*{
-    box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 body{
     margin:0;
     font-family:"Trebuchet MS",Arial,sans-serif;
-    background:#dff4ff;
-    color:#28415c;
+    color:#263c55;
     min-height:100vh;
     overflow-x:hidden;
+    background:#cfefff;
 }
 
-/* ============================= */
-/* TŁO */
-/* ============================= */
+/* =====================================================
+   TŁO
+===================================================== */
 
-.sky{
+.background{
     position:fixed;
     inset:0;
     z-index:-10;
-
-    background:
-        linear-gradient(
-            #87d7ff 0%,
-            #dff6ff 70%,
-            #85d86c 70%,
-            #69c653 100%
-        );
+    background:linear-gradient(
+        #82d5ff 0%,
+        #d9f5ff 69%,
+        #78cf61 69%,
+        #58b94a 100%
+    );
 }
 
 .sun{
     position:absolute;
-    right:7%;
-    top:60px;
-
     width:120px;
     height:120px;
-
     border-radius:50%;
-
-    background:#ffe46b;
-
-    box-shadow:
-        0 0 60px rgba(255,239,125,.8);
-
-    animation:sunFloat 4s ease-in-out infinite alternate;
+    right:8%;
+    top:70px;
+    background:#ffe76d;
+    box-shadow:0 0 60px #fff0a3;
+    animation:sunMove 5s ease-in-out infinite alternate;
 }
 
-@keyframes sunFloat{
-    from{transform:translateY(0)}
-    to{transform:translateY(10px)}
+@keyframes sunMove{
+    to{transform:translateY(12px)}
 }
-
-/* CHMURY */
 
 .cloud{
     position:absolute;
-    font-size:90px;
-
+    font-size:85px;
     animation:cloudMove linear infinite;
 }
 
 .cloud1{
     top:80px;
     left:-200px;
-    animation-duration:35s;
+    animation-duration:40s;
 }
 
 .cloud2{
     top:230px;
-    left:-250px;
-    animation-duration:50s;
-    animation-delay:-15s;
-}
-
-.cloud3{
-    top:370px;
-    left:-250px;
-    font-size:60px;
-    animation-duration:45s;
-    animation-delay:-30s;
+    left:-300px;
+    animation-duration:55s;
+    animation-delay:-20s;
 }
 
 @keyframes cloudMove{
-
-    from{
-        transform:translateX(-200px);
-    }
-
-    to{
-        transform:translateX(calc(100vw + 400px));
-    }
-
+    from{transform:translateX(-200px)}
+    to{transform:translateX(calc(100vw + 500px))}
 }
 
-/* TRAWKA */
-
-.grass{
+.grassLines{
     position:absolute;
     bottom:0;
-
+    height:31%;
     width:100%;
-    height:30%;
-
-    background:
-        repeating-linear-gradient(
-            82deg,
-            transparent 0px,
-            transparent 20px,
-            rgba(37,130,43,.16) 21px,
-            rgba(37,130,43,.16) 24px
-        );
+    background:repeating-linear-gradient(
+        82deg,
+        transparent 0,
+        transparent 18px,
+        rgba(35,120,40,.18) 19px,
+        rgba(35,120,40,.18) 22px
+    );
 }
 
-/* ============================= */
-/* GÓRNY PASEK */
-/* ============================= */
+/* =====================================================
+   HEADER
+===================================================== */
 
 header{
-
-    height:75px;
-
+    height:88px;
+    background:rgba(255,255,255,.9);
+    backdrop-filter:blur(12px);
     display:flex;
     align-items:center;
-
-    padding:0 30px;
-
-    background:rgba(255,255,255,.88);
-
-    backdrop-filter:blur(10px);
-
-    box-shadow:
-        0 5px 25px rgba(30,70,110,.10);
-
+    padding:0 24px;
     position:relative;
     z-index:100;
+    box-shadow:0 5px 25px rgba(30,70,110,.12);
 }
 
 .logo{
-
-    font-size:26px;
+    font-size:27px;
     font-weight:bold;
-
+    margin:auto;
 }
 
 .logo span{
-    color:#667cff;
+    color:#627cff;
 }
 
+/* WIELKI POWRÓT */
+
 .backButton{
+    position:absolute;
+    left:18px;
+    top:14px;
 
     display:none;
 
-    margin-left:auto;
+    height:60px;
+    min-width:160px;
 
-    border:none;
+    border:4px solid #a90000;
+    border-radius:18px;
 
-    background:#edf2ff;
+    background:#ff3333;
 
-    color:#4c67bd;
+    color:#000;
 
-    padding:11px 18px;
-
-    border-radius:20px;
-
-    font-size:15px;
-    font-weight:bold;
+    font-size:21px;
+    font-weight:900;
 
     cursor:pointer;
 
-    transition:.2s;
+    box-shadow:
+        0 7px 0 #a80000,
+        0 10px 18px rgba(100,0,0,.25);
+
+    transition:.15s;
 }
 
 .backButton:hover{
-
-    transform:translateX(-5px);
-
-    background:#dfe7ff;
-
+    background:#ff5151;
+    transform:translateY(-2px);
+    box-shadow:
+        0 9px 0 #a80000,
+        0 13px 20px rgba(100,0,0,.25);
 }
 
-/* ============================= */
-/* STRONY */
-/* ============================= */
+.backButton:active{
+    transform:translateY(5px);
+    box-shadow:
+        0 2px 0 #a80000;
+}
+
+/* =====================================================
+   STRONY
+===================================================== */
 
 .page{
-
     display:none;
-
     max-width:1050px;
-
     margin:auto;
-
-    padding:55px 25px 220px;
-
-    animation:pageAppear .45s ease;
-
+    padding:55px 25px 230px;
+    animation:pageIn .4s ease;
 }
 
 .page.active{
     display:block;
 }
 
-@keyframes pageAppear{
-
+@keyframes pageIn{
     from{
         opacity:0;
-        transform:translateY(20px);
+        transform:translateY(20px) scale(.98);
     }
-
     to{
         opacity:1;
-        transform:translateY(0);
+        transform:none;
     }
-
 }
 
-/* ============================= */
-/* START */
-/* ============================= */
+/* =====================================================
+   START
+===================================================== */
 
 .homeTitle{
-
     text-align:center;
-
-    margin-top:25px;
     margin-bottom:40px;
-
 }
 
 .homeTitle h1{
-
     font-size:50px;
-
-    margin:0;
-
-    text-shadow:
-        0 3px white;
-
+    margin:15px 0 8px;
+    text-shadow:0 3px white;
 }
 
-.homeTitle p{
-
+.homeTitle p,
+.sectionTitle p{
+    background:rgba(255,255,255,.78);
     display:inline-block;
-
-    background:rgba(255,255,255,.75);
-
     padding:10px 20px;
-
     border-radius:30px;
-
-    font-size:18px;
-
 }
-
-/* ============================= */
-/* DUŻE PRZYCISKI */
-/* ============================= */
 
 .subjects{
-
+    max-width:850px;
+    margin:auto;
     display:flex;
     flex-direction:column;
-
     gap:20px;
-
-    max-width:850px;
-
-    margin:auto;
-
 }
 
 .subjectButton{
-
     width:100%;
-
-    height:125px;
-
-    border:none;
-
+    min-height:125px;
+    border:0;
     border-radius:32px;
-
     background:white;
-
-    box-shadow:
-        0 12px 30px rgba(30,70,110,.15);
-
-    cursor:pointer;
-
+    padding:20px 30px;
     display:flex;
-
     align-items:center;
-
-    padding:20px 35px;
-
     text-align:left;
-
-    transition:
-        transform .25s,
-        box-shadow .25s;
-
+    cursor:pointer;
+    box-shadow:0 12px 30px rgba(30,70,110,.15);
+    transition:.22s;
 }
 
 .subjectButton:hover{
-
-    transform:
-        translateY(-7px)
-        scale(1.015);
-
-    box-shadow:
-        0 18px 40px rgba(30,70,110,.22);
-
+    transform:translateY(-7px) scale(1.015);
+    box-shadow:0 18px 40px rgba(30,70,110,.22);
 }
 
 .subjectIcon{
-
-    width:80px;
-    height:80px;
-
+    width:82px;
+    height:82px;
+    border-radius:25px;
     display:flex;
-    align-items:center;
     justify-content:center;
-
-    border-radius:24px;
-
-    font-size:43px;
-
-    margin-right:25px;
-
+    align-items:center;
+    font-size:42px;
+    margin-right:24px;
 }
 
-.kinematicsIcon{
-    background:#dff3ff;
-}
-
-.dynamicsIcon{
-    background:#ffe6d4;
-}
-
-.energyIcon{
-    background:#fff3b9;
-}
+.blue{background:#dff4ff}
+.orange{background:#ffe5cf}
+.yellow{background:#fff2ae}
 
 .subjectText h2{
-
-    margin:0 0 7px;
-
-    font-size:27px;
-
+    margin:0 0 6px;
+    font-size:28px;
 }
 
 .subjectText p{
-
     margin:0;
-
     color:#718096;
-
-    font-size:15px;
-
 }
 
 .arrowRight{
-
     margin-left:auto;
-
-    font-size:32px;
-
-    color:#a7b3c6;
-
-    transition:.2s;
-
+    font-size:40px;
+    color:#a6b0bf;
 }
 
-.subjectButton:hover .arrowRight{
-
-    transform:translateX(8px);
-
-    color:#637cff;
-
-}
-
-/* ============================= */
-/* TYTUŁ DZIAŁU */
-/* ============================= */
+/* =====================================================
+   MENU DZIAŁÓW
+===================================================== */
 
 .sectionTitle{
-
     text-align:center;
-
     margin-bottom:35px;
-
 }
 
 .sectionTitle h1{
-
     font-size:43px;
-
     margin:0;
-
-    text-shadow:
-        0 3px white;
-
+    text-shadow:0 3px white;
 }
-
-.sectionTitle p{
-
-    display:inline-block;
-
-    background:rgba(255,255,255,.75);
-
-    padding:8px 17px;
-
-    border-radius:20px;
-
-}
-
-/* ============================= */
-/* LISTA WZORÓW */
-/* ============================= */
 
 .topicList{
-
+    max-width:830px;
+    margin:auto;
     display:flex;
     flex-direction:column;
-
     gap:15px;
-
-    max-width:800px;
-
-    margin:auto;
-
 }
 
 .topic{
-
-    background:rgba(255,255,255,.94);
-
-    border:none;
-
+    width:100%;
+    border:0;
+    background:rgba(255,255,255,.96);
     border-radius:23px;
-
-    padding:20px 25px;
-
+    padding:20px 24px;
     display:flex;
-
     align-items:center;
-
     cursor:pointer;
-
-    box-shadow:
-        0 8px 22px rgba(30,60,100,.12);
-
-    transition:.22s;
-
     text-align:left;
-
+    box-shadow:0 8px 22px rgba(30,60,100,.12);
+    transition:.2s;
 }
 
 .topic:hover{
-
-    transform:
-        translateX(8px)
-        scale(1.01);
-
-    box-shadow:
-        0 12px 28px rgba(30,60,100,.18);
-
+    transform:translateX(9px) scale(1.01);
 }
 
 .topicEmoji{
-
-    font-size:36px;
-
+    font-size:37px;
     margin-right:20px;
-
 }
 
 .topicInfo{
@@ -491,476 +318,529 @@ header{
 }
 
 .topicInfo h3{
-
-    margin:0 0 5px;
-
-    font-size:20px;
-
+    margin:0 0 4px;
+    font-size:21px;
 }
 
 .topicInfo p{
-
     margin:0;
-
-    color:#7a8799;
-
+    color:#77859a;
 }
 
 .topicFormula{
-
-    font-size:24px;
-
-    font-weight:bold;
-
-    color:#5774dd;
-
     background:#edf2ff;
-
-    padding:10px 17px;
-
-    border-radius:15px;
-
+    color:#5771d2;
+    padding:10px 15px;
+    border-radius:14px;
+    font-size:22px;
+    font-weight:bold;
 }
 
-/* ============================= */
-/* KALKULATOR */
-/* ============================= */
+/* =====================================================
+   KALKULATOR
+===================================================== */
 
 .calculator{
-
-    max-width:750px;
-
+    max-width:790px;
     margin:auto;
-
     background:rgba(255,255,255,.96);
-
     border-radius:32px;
-
     padding:30px;
-
-    box-shadow:
-        0 18px 45px rgba(30,60,100,.17);
-
+    box-shadow:0 18px 45px rgba(30,60,100,.17);
 }
 
 .calculatorTitle{
-
     text-align:center;
-
 }
 
 .calculatorTitle h1{
-
-    margin-bottom:5px;
-
+    margin:0 0 7px;
 }
 
 .calculatorTitle p{
-
-    color:#718096;
-
+    color:#708096;
 }
 
-/* WZÓR */
-
 .formula{
-
     margin:25px 0;
-
     padding:22px;
-
     border-radius:22px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #edf5ff,
-            #f5edff
-        );
-
     text-align:center;
-
     font-size:38px;
-
     font-weight:bold;
-
+    background:linear-gradient(135deg,#edf5ff,#f4edff);
 }
 
 .symbol{
-
     display:inline-block;
-
-    color:#5c78e5;
-
+    color:#5874df;
     cursor:pointer;
-
+    padding:3px 7px;
     border-radius:10px;
-
-    padding:2px 6px;
-
     transition:.2s;
-
 }
 
 .symbol:hover{
-
+    transform:scale(1.25) rotate(-4deg);
     background:#dce6ff;
-
-    transform:
-        scale(1.25)
-        rotate(-4deg);
-
 }
 
-/* INPUTY */
-
 .inputs{
-
     display:grid;
-
-    grid-template-columns:
-        1fr 1fr;
-
+    grid-template-columns:1fr 1fr;
     gap:14px;
-
 }
 
 .inputBox{
-
     background:#f4f7fb;
-
     padding:13px;
-
     border-radius:16px;
-
 }
 
 .inputBox label{
-
     display:block;
-
     margin-bottom:7px;
-
+    color:#66758a;
     font-size:14px;
-
-    color:#66768d;
-
 }
 
 .inputBox input{
-
     width:100%;
-
     padding:11px;
-
+    border:2px solid #dce3ec;
     border-radius:11px;
-
-    border:
-        2px solid #dce3ec;
-
     font-size:17px;
-
     outline:none;
-
 }
 
 .inputBox input:focus{
-
-    border-color:#7694ff;
-
-    box-shadow:
-        0 0 0 4px #e4eaff;
-
+    border-color:#7593ff;
+    box-shadow:0 0 0 4px #e5eaff;
 }
 
 .result{
-
     margin-top:16px;
-
     background:#e7fff1;
-
-    color:#14804b;
-
+    color:#137c49;
     padding:15px;
-
     border-radius:16px;
-
     font-size:20px;
-
     font-weight:bold;
-
     text-align:center;
-
 }
 
-/* ============================= */
-/* SAMOLOT */
-/* ============================= */
+/* =====================================================
+   WSPÓLNA SCENA FIZYCZNA
+===================================================== */
 
-.planeScene{
-
-    height:200px;
-
-    margin-top:25px;
-
-    border-radius:23px;
-
-    overflow:hidden;
-
+.physicsScene{
+    height:260px;
     position:relative;
-
-    background:
-        linear-gradient(
-            #89d9ff,
-            #d9f6ff
-        );
-
+    margin-top:25px;
+    border-radius:24px;
+    overflow:hidden;
+    background:linear-gradient(#82d5ff,#dcf6ff);
+    border:3px solid #d8e7ef;
 }
 
-.sceneCloud{
-
+.sceneGround{
     position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    height:65px;
+    background:#70c95c;
+}
 
-    font-size:45px;
+.sceneLabel{
+    position:absolute;
+    top:12px;
+    left:14px;
+    background:rgba(255,255,255,.8);
+    padding:7px 12px;
+    border-radius:12px;
+    font-weight:bold;
+    z-index:10;
+}
 
+/* =====================================================
+   MODEL SAMOLOTU - ZROBIONY W CSS
+===================================================== */
+
+.planeModel{
+    position:absolute;
+    width:100px;
+    height:50px;
+    left:0;
+    top:115px;
+}
+
+.planeBody{
+    position:absolute;
+    width:82px;
+    height:22px;
+    left:5px;
+    top:14px;
+    background:#f4f7fb;
+    border:3px solid #435b72;
+    border-radius:50% 55% 45% 50%;
+}
+
+.planeNose{
+    position:absolute;
+    width:25px;
+    height:18px;
+    right:-1px;
+    top:16px;
+    background:#e84f5f;
+    border-radius:0 100% 100% 0;
+}
+
+.planeWing{
+    position:absolute;
+    width:48px;
+    height:14px;
+    background:#5f83df;
+    border:3px solid #435b72;
+    border-radius:50%;
+    left:31px;
+}
+
+.planeWing.top{
+    top:5px;
+    transform:rotate(-12deg);
+}
+
+.planeWing.bottom{
+    top:31px;
+    transform:rotate(12deg);
+}
+
+.planeTail{
+    position:absolute;
+    width:25px;
+    height:28px;
+    left:4px;
+    top:0;
+    background:#5f83df;
+    border:3px solid #435b72;
+    clip-path:polygon(0 100%,100% 100%,25% 0);
+}
+
+/* =====================================================
+   MODEL PRZYSPIESZENIA
+===================================================== */
+
+.accelBall{
+    position:absolute;
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    background:radial-gradient(circle at 30% 25%,#ffb4a8,#ef4e43);
+    border:3px solid #a72f29;
+    left:30px;
+    bottom:72px;
+}
+
+.speedTrail{
+    position:absolute;
+    height:5px;
+    width:0;
+    left:15px;
+    bottom:94px;
+    background:#fff;
+    border-radius:20px;
     opacity:.8;
-
 }
 
-.sceneCloud.one{
+/* =====================================================
+   MODEL I ZASADY NEWTONA
+===================================================== */
 
-    left:10%;
-    top:25px;
-
-}
-
-.sceneCloud.two{
-
-    right:12%;
-    top:80px;
-
-}
-
-.airplane{
-
+.iceGround{
     position:absolute;
-
-    left:-70px;
-
-    top:90px;
-
-    font-size:50px;
-
-    filter:
-        drop-shadow(
-            0 5px 3px rgba(0,0,0,.15)
-        );
-
+    bottom:0;
+    width:100%;
+    height:75px;
+    background:linear-gradient(#dffaff,#aee9f5);
+    border-top:4px solid white;
 }
 
-/* ============================= */
-/* MODAL */
-/* ============================= */
+.newtonPuck{
+    position:absolute;
+    width:65px;
+    height:30px;
+    border-radius:50%;
+    background:#e34e55;
+    border:4px solid #8c2931;
+    bottom:62px;
+    left:25px;
+}
+
+/* =====================================================
+   MODEL II ZASADY
+===================================================== */
+
+.forceBox{
+    position:absolute;
+    width:70px;
+    height:70px;
+    bottom:65px;
+    left:100px;
+    background:#c99054;
+    border:4px solid #7d542e;
+    border-radius:8px;
+}
+
+.forceArrow{
+    position:absolute;
+    left:25px;
+    bottom:93px;
+    height:12px;
+    width:70px;
+    background:#ff3f3f;
+    border-radius:10px;
+}
+
+.forceArrow:after{
+    content:"";
+    position:absolute;
+    right:-18px;
+    top:-9px;
+    border-left:22px solid #ff3f3f;
+    border-top:15px solid transparent;
+    border-bottom:15px solid transparent;
+}
+
+/* =====================================================
+   MODEL III ZASADY
+===================================================== */
+
+.skater{
+    position:absolute;
+    bottom:70px;
+    width:60px;
+    height:100px;
+}
+
+.skater.one{
+    left:42%;
+}
+
+.skater.two{
+    right:42%;
+}
+
+.head{
+    width:30px;
+    height:30px;
+    border-radius:50%;
+    background:#f2bd8e;
+    border:3px solid #744b35;
+    margin:auto;
+}
+
+.body{
+    width:38px;
+    height:50px;
+    background:#5d83e5;
+    border-radius:10px;
+    margin:auto;
+}
+
+.skater.two .body{
+    background:#ed6c6c;
+}
+
+.skate{
+    width:60px;
+    height:8px;
+    background:#36475a;
+    border-radius:10px;
+}
+
+.pushArrowLeft,
+.pushArrowRight{
+    position:absolute;
+    bottom:120px;
+    font-size:45px;
+    font-weight:bold;
+    color:#f04444;
+}
+
+.pushArrowLeft{
+    left:30%;
+}
+
+.pushArrowRight{
+    right:30%;
+}
+
+/* =====================================================
+   ENERGIA KINETYCZNA
+===================================================== */
+
+.energyBall{
+    position:absolute;
+    width:55px;
+    height:55px;
+    border-radius:50%;
+    background:radial-gradient(circle at 30% 25%,#ffec83,#f09b20);
+    border:4px solid #ad6913;
+    bottom:72px;
+    left:30px;
+}
+
+/* =====================================================
+   ENERGIA POTENCJALNA
+===================================================== */
+
+.tower{
+    position:absolute;
+    bottom:65px;
+    left:48%;
+    width:85px;
+    height:150px;
+    background:#c7ced8;
+    border:4px solid #6b7787;
+}
+
+.platform{
+    position:absolute;
+    width:130px;
+    height:15px;
+    left:-25px;
+    top:-10px;
+    background:#65717e;
+}
+
+.potentialBall{
+    position:absolute;
+    width:45px;
+    height:45px;
+    border-radius:50%;
+    background:#ef5555;
+    border:3px solid #9d3030;
+    left:20px;
+    bottom:100px;
+}
+
+/* =====================================================
+   MODAL
+===================================================== */
 
 .modalBackground{
-
     position:fixed;
-
     inset:0;
-
-    background:
-        rgba(34,50,80,.32);
-
-    backdrop-filter:
-        blur(6px);
-
     display:none;
-
     justify-content:center;
     align-items:center;
-
-    padding:20px;
-
+    background:rgba(30,45,70,.34);
+    backdrop-filter:blur(7px);
     z-index:1000;
-
+    padding:20px;
 }
 
 .modalBackground.show{
-
     display:flex;
-
-    animation:
-        backgroundAppear .25s ease;
-
+    animation:fadeIn .2s ease;
 }
 
-@keyframes backgroundAppear{
-
+@keyframes fadeIn{
     from{opacity:0}
     to{opacity:1}
-
 }
 
 .modal{
-
     width:430px;
-
     max-width:100%;
-
     background:white;
-
     border-radius:30px;
-
     padding:30px;
-
     position:relative;
-
-    box-shadow:
-        0 25px 80px rgba(20,40,80,.25);
-
-    animation:
-        modalBounce .5s
-        cubic-bezier(.2,1.4,.4,1);
-
+    box-shadow:0 25px 80px rgba(20,40,80,.25);
+    animation:modalPop .45s cubic-bezier(.2,1.4,.4,1);
 }
 
-@keyframes modalBounce{
-
+@keyframes modalPop{
     0%{
         opacity:0;
-
-        transform:
-            translateY(50px)
-            scale(.7)
-            rotate(-3deg);
+        transform:scale(.5) translateY(70px) rotate(-5deg);
     }
-
     70%{
-
-        transform:
-            translateY(-8px)
-            scale(1.04)
-            rotate(1deg);
-
+        transform:scale(1.06) translateY(-8px) rotate(1deg);
     }
-
     100%{
-
         opacity:1;
-
-        transform:
-            translateY(0)
-            scale(1)
-            rotate(0);
-
+        transform:none;
     }
-
 }
 
 .modalIcon{
-
     width:75px;
     height:75px;
-
     border-radius:24px;
-
     background:#e8efff;
-
     display:flex;
     align-items:center;
     justify-content:center;
-
-    font-size:40px;
-
-    animation:
-        iconBounce 1.5s ease-in-out infinite;
-
+    font-size:38px;
+    animation:modalIcon 1.5s ease-in-out infinite;
 }
 
-@keyframes iconBounce{
-
-    0%,100%{
-        transform:translateY(0);
-    }
-
-    50%{
-        transform:translateY(-7px);
-    }
-
+@keyframes modalIcon{
+    50%{transform:translateY(-7px) rotate(4deg)}
 }
 
 .closeModal{
-
     position:absolute;
-
     right:18px;
     top:18px;
-
-    width:38px;
-    height:38px;
-
-    border:none;
-
+    width:40px;
+    height:40px;
+    border:0;
     border-radius:50%;
-
-    background:#edf1f6;
-
-    font-size:20px;
-
+    font-size:21px;
     cursor:pointer;
-
-    transition:.2s;
-
-}
-
-.closeModal:hover{
-
-    transform:rotate(90deg);
-
-    background:#ffdede;
-
 }
 
 .unit{
-
     display:inline-block;
-
     background:#edf2ff;
-
-    color:#5872d0;
-
+    color:#5570cf;
     padding:7px 12px;
-
     border-radius:10px;
-
     font-weight:bold;
-
 }
 
 .modal p{
-
     color:#607087;
-
     line-height:1.6;
-
 }
 
-/* TELEFON */
+/* =====================================================
+   MOBILE
+===================================================== */
 
-@media(max-width:650px){
+@media(max-width:700px){
+
+    header{
+        height:150px;
+        align-items:flex-end;
+        padding-bottom:18px;
+    }
+
+    .backButton{
+        top:12px;
+        left:12px;
+    }
+
+    .logo{
+        margin:auto;
+    }
 
     .homeTitle h1{
-        font-size:37px;
-    }
-
-    .subjectButton{
-        height:110px;
-        padding:15px;
-    }
-
-    .subjectIcon{
-        width:65px;
-        height:65px;
+        font-size:38px;
     }
 
     .inputs{
@@ -968,1439 +848,1182 @@ header{
     }
 
     .topicFormula{
-        font-size:18px;
+        font-size:16px;
     }
-
 }
-
 </style>
 </head>
 
 <body>
 
-
-<!-- TŁO -->
-
-<div class="sky">
-
-<div class="sun"></div>
-
-<div class="cloud cloud1">☁️</div>
-<div class="cloud cloud2">☁️</div>
-<div class="cloud cloud3">☁️</div>
-
-<div class="grass"></div>
-
+<div class="background">
+    <div class="sun"></div>
+    <div class="cloud cloud1">☁️</div>
+    <div class="cloud cloud2">☁️</div>
+    <div class="grassLines"></div>
 </div>
 
-
-<!-- HEADER -->
-
 <header>
+
+<button id="backButton" class="backButton" onclick="goBack()">
+← POWRÓT
+</button>
 
 <div class="logo">
 🌈 Fizyka<span>Fun</span>
 </div>
 
-<button
-id="backButton"
-class="backButton"
-onclick="goBack()">
-
-← Wróć
-
-</button>
-
 </header>
 
+<!-- ===================================================
+     START
+=================================================== -->
 
-<!-- ========================================== -->
-<!-- START -->
-<!-- ========================================== -->
-
-<section
-id="home"
-class="page active">
+<section id="home" class="page active">
 
 <div class="homeTitle">
-
-<h1>⚛️ Odkrywaj fizykę!</h1>
-
-<p>
-Wybierz dział, który chcesz poznać 👇
-</p>
-
+    <h1>⚛️ Odkrywaj fizykę!</h1>
+    <p>Wybierz dział 👇</p>
 </div>
-
 
 <div class="subjects">
 
+<button class="subjectButton" onclick="openPage('kinematicsMenu')">
 
-<button
-class="subjectButton"
-onclick="openPage('kinematicsMenu')">
-
-<div class="subjectIcon kinematicsIcon">
-✈️
-</div>
+<div class="subjectIcon blue">✈️</div>
 
 <div class="subjectText">
-
 <h2>Kinematyka</h2>
-
-<p>
-Ruch, droga, prędkość i czas
-</p>
-
+<p>Ruch, droga, prędkość, czas i przyspieszenie</p>
 </div>
 
-<div class="arrowRight">
-›
-</div>
+<div class="arrowRight">›</div>
 
 </button>
 
 
-<button
-class="subjectButton"
-onclick="openPage('dynamicsMenu')">
+<button class="subjectButton" onclick="openPage('dynamicsMenu')">
 
-<div class="subjectIcon dynamicsIcon">
-📦
-</div>
+<div class="subjectIcon orange">📦</div>
 
 <div class="subjectText">
-
 <h2>Dynamika</h2>
-
-<p>
-Siły, masa i prawa Newtona
-</p>
-
+<p>Siły i trzy zasady dynamiki Newtona</p>
 </div>
 
-<div class="arrowRight">
-›
-</div>
+<div class="arrowRight">›</div>
 
 </button>
 
 
-<button
-class="subjectButton"
-onclick="openPage('energyMenu')">
+<button class="subjectButton" onclick="openPage('energyMenu')">
 
-<div class="subjectIcon energyIcon">
-⚡
-</div>
+<div class="subjectIcon yellow">⚡</div>
 
 <div class="subjectText">
-
 <h2>Energia</h2>
-
-<p>
-Ruch, wysokość, praca i moc
-</p>
-
+<p>Energia kinetyczna i potencjalna</p>
 </div>
 
-<div class="arrowRight">
-›
-</div>
+<div class="arrowRight">›</div>
 
 </button>
 
-
 </div>
-
 </section>
 
+<!-- ===================================================
+     KINEMATYKA MENU
+=================================================== -->
 
-<!-- ========================================== -->
-<!-- KINEMATYKA MENU -->
-<!-- ========================================== -->
-
-<section
-id="kinematicsMenu"
-class="page">
+<section id="kinematicsMenu" class="page">
 
 <div class="sectionTitle">
-
 <h1>✈️ Kinematyka</h1>
-
-<p>
-Wybierz wzór lub prawo
-</p>
-
+<p>Wybierz wzór</p>
 </div>
-
 
 <div class="topicList">
 
-
-<button
-class="topic"
-onclick="openPage('distanceCalculator')">
-
-<div class="topicEmoji">
-✈️
-</div>
-
+<button class="topic" onclick="openPage('distanceCalculator')">
+<div class="topicEmoji">🛣️</div>
 <div class="topicInfo">
-
 <h3>Droga</h3>
-
-<p>
-Jak daleko poleci samolot?
-</p>
-
+<p>Jak daleko poruszy się obiekt?</p>
 </div>
-
-<div class="topicFormula">
-s = v · t
-</div>
-
+<div class="topicFormula">s = v · t</div>
 </button>
 
-
-<button
-class="topic"
-onclick="openPage('speedCalculator')">
-
-<div class="topicEmoji">
-💨
-</div>
-
+<button class="topic" onclick="openPage('speedCalculator')">
+<div class="topicEmoji">💨</div>
 <div class="topicInfo">
-
 <h3>Prędkość</h3>
-
-<p>
-Jak szybko porusza się obiekt?
-</p>
-
+<p>Jak szybko porusza się obiekt?</p>
 </div>
-
-<div class="topicFormula">
-v = s / t
-</div>
-
+<div class="topicFormula">v = s / t</div>
 </button>
 
-
-<button class="topic">
-
-<div class="topicEmoji">
-⏱️
-</div>
-
+<button class="topic" onclick="openPage('timeCalculator')">
+<div class="topicEmoji">⏱️</div>
 <div class="topicInfo">
-
 <h3>Czas</h3>
-
-<p>
-Jak długo trwa ruch?
-</p>
-
+<p>Jak długo trwa ruch?</p>
 </div>
-
-<div class="topicFormula">
-t = s / v
-</div>
-
+<div class="topicFormula">t = s / v</div>
 </button>
 
-
-<button class="topic">
-
-<div class="topicEmoji">
-🚀
-</div>
-
+<button class="topic" onclick="openPage('accelerationCalculator')">
+<div class="topicEmoji">🚀</div>
 <div class="topicInfo">
-
 <h3>Przyspieszenie</h3>
-
-<p>
-Jak szybko zmienia się prędkość?
-</p>
-
+<p>Jak szybko zmienia się prędkość?</p>
 </div>
-
-<div class="topicFormula">
-a = Δv / Δt
-</div>
-
+<div class="topicFormula">a = Δv / Δt</div>
 </button>
 
-
 </div>
-
 </section>
 
+<!-- ===================================================
+     DYNAMIKA MENU
+=================================================== -->
 
-<!-- ========================================== -->
-<!-- DYNAMIKA MENU -->
-<!-- ========================================== -->
-
-<section
-id="dynamicsMenu"
-class="page">
+<section id="dynamicsMenu" class="page">
 
 <div class="sectionTitle">
-
 <h1>📦 Dynamika</h1>
-
-<p>
-Wybierz prawo lub wzór
-</p>
-
+<p>Trzy zasady dynamiki Newtona</p>
 </div>
-
 
 <div class="topicList">
 
-
-<button
-class="topic"
-onclick="openPage('forceCalculator')">
-
-<div class="topicEmoji">
-💪
-</div>
-
+<button class="topic" onclick="openPage('newton1')">
+<div class="topicEmoji">🧊</div>
 <div class="topicInfo">
-
-<h3>II zasada Newtona</h3>
-
-<p>
-Siła powoduje przyspieszenie ciała
-</p>
-
+<h3>I zasada dynamiki Newtona</h3>
+<p>Zasada bezwładności</p>
 </div>
-
-<div class="topicFormula">
-F = m · a
-</div>
-
+<div class="topicFormula">ΣF = 0</div>
 </button>
 
-
-<button class="topic">
-
-<div class="topicEmoji">
-🛑
-</div>
-
+<button class="topic" onclick="openPage('newton2')">
+<div class="topicEmoji">💪</div>
 <div class="topicInfo">
-
-<h3>I zasada Newtona</h3>
-
-<p>
-Zasada bezwładności
-</p>
-
+<h3>II zasada dynamiki Newtona</h3>
+<p>Związek siły, masy i przyspieszenia</p>
 </div>
-
-<div class="topicFormula">
-ΣF = 0
-</div>
-
+<div class="topicFormula">F = m · a</div>
 </button>
 
-
-<button class="topic">
-
-<div class="topicEmoji">
-↔️
-</div>
-
+<button class="topic" onclick="openPage('newton3')">
+<div class="topicEmoji">↔️</div>
 <div class="topicInfo">
-
-<h3>III zasada Newtona</h3>
-
-<p>
-Akcja i reakcja
-</p>
-
+<h3>III zasada dynamiki Newtona</h3>
+<p>Akcja i reakcja</p>
 </div>
-
-<div class="topicFormula">
-F₁₂ = −F₂₁
-</div>
-
+<div class="topicFormula">F₁₂ = −F₂₁</div>
 </button>
 
-
 </div>
-
 </section>
 
+<!-- ===================================================
+     ENERGIA MENU
+=================================================== -->
 
-<!-- ========================================== -->
-<!-- ENERGIA MENU -->
-<!-- ========================================== -->
-
-<section
-id="energyMenu"
-class="page">
+<section id="energyMenu" class="page">
 
 <div class="sectionTitle">
-
 <h1>⚡ Energia</h1>
-
-<p>
-Wybierz rodzaj energii lub wzór
-</p>
-
+<p>Wybierz wzór</p>
 </div>
-
 
 <div class="topicList">
 
-
-<button
-class="topic"
-onclick="openPage('kineticCalculator')">
-
-<div class="topicEmoji">
-⚽
-</div>
-
+<button class="topic" onclick="openPage('kineticCalculator')">
+<div class="topicEmoji">⚽</div>
 <div class="topicInfo">
-
 <h3>Energia kinetyczna</h3>
-
-<p>
-Energia poruszającego się obiektu
-</p>
-
+<p>Energia ruchu</p>
 </div>
-
-<div class="topicFormula">
-Eₖ = ½mv²
-</div>
-
+<div class="topicFormula">Eₖ = ½mv²</div>
 </button>
 
-
-<button
-class="topic"
-onclick="openPage('potentialCalculator')">
-
-<div class="topicEmoji">
-🏔️
-</div>
-
+<button class="topic" onclick="openPage('potentialCalculator')">
+<div class="topicEmoji">🏔️</div>
 <div class="topicInfo">
-
 <h3>Energia potencjalna</h3>
-
-<p>
-Energia związana z wysokością
-</p>
-
+<p>Energia związana z wysokością</p>
 </div>
-
-<div class="topicFormula">
-Eₚ = mgh
-</div>
-
+<div class="topicFormula">Eₚ = mgh</div>
 </button>
 
-
 </div>
-
 </section>
 
+<!-- ===================================================
+     DROGA
+=================================================== -->
 
-<!-- ========================================== -->
-<!-- KALKULATOR DROGI -->
-<!-- ========================================== -->
-
-<section
-id="distanceCalculator"
-class="page">
+<section id="distanceCalculator" class="page">
 
 <div class="calculator">
 
 <div class="calculatorTitle">
-
-<h1>✈️ Droga</h1>
-
-<p>
-Zmieniaj prędkość i czas i obserwuj samolot!
-</p>
-
+<h1>🛣️ Droga</h1>
+<p>Zmieniaj prędkość i czas. Samolot pokaże ruch.</p>
 </div>
-
 
 <div class="formula">
 
-<span
-class="symbol"
-onclick="showInfo(
-'Droga',
-'s',
-'m',
-'🛣️',
-'Droga to odległość pokonana przez obiekt.'
-)">
-s
-</span>
+<span class="symbol"
+onclick="showInfo('Droga','s','m','🛣️','Droga to odległość pokonana przez poruszający się obiekt.')">s</span>
 
 =
 
-<span
-class="symbol"
-onclick="showInfo(
-'Prędkość',
-'v',
-'m/s',
-'💨',
-'Prędkość mówi, jak szybko porusza się obiekt.'
-)">
-v
-</span>
+<span class="symbol"
+onclick="showInfo('Prędkość','v','m/s','💨','Prędkość mówi, jaką drogę obiekt pokonuje w określonym czasie.')">v</span>
 
 ·
 
-<span
-class="symbol"
-onclick="showInfo(
-'Czas',
-'t',
-'s',
-'⏱️',
-'Czas mówi, jak długo trwa ruch.'
-)">
-t
-</span>
+<span class="symbol"
+onclick="showInfo('Czas','t','s','⏱️','Czas mówi, jak długo trwa ruch.')">t</span>
 
 </div>
-
 
 <div class="inputs">
 
 <div class="inputBox">
-
-<label>
-💨 Prędkość v [m/s]
-</label>
-
-<input
-id="velocity"
-type="number"
-value="10"
-min="0"
-oninput="calculateDistance()">
-
+<label>Prędkość v [m/s]</label>
+<input id="distanceV" type="number" value="10" min="0" oninput="calculateDistance()">
 </div>
-
 
 <div class="inputBox">
-
-<label>
-⏱️ Czas t [s]
-</label>
-
-<input
-id="time"
-type="number"
-value="5"
-min="0"
-oninput="calculateDistance()">
-
+<label>Czas t [s]</label>
+<input id="distanceT" type="number" value="5" min="0" oninput="calculateDistance()">
 </div>
 
 </div>
 
+<div id="distanceResult" class="result"></div>
 
-<div
-id="distanceResult"
-class="result">
-</div>
+<div class="physicsScene">
 
+<div class="sceneLabel">Model ruchu ✈️</div>
 
-<div class="planeScene">
-
-<div class="sceneCloud one">
-☁️
-</div>
-
-<div class="sceneCloud two">
-☁️
-</div>
-
-<div
-id="airplane"
-class="airplane">
-✈️
+<div id="distancePlane" class="planeModel">
+<div class="planeBody"></div>
+<div class="planeNose"></div>
+<div class="planeWing top"></div>
+<div class="planeWing bottom"></div>
+<div class="planeTail"></div>
 </div>
 
 </div>
 
-
 </div>
-
 </section>
 
+<!-- ===================================================
+     PRĘDKOŚĆ
+=================================================== -->
 
-<!-- ========================================== -->
-<!-- PRĘDKOŚĆ -->
-<!-- ========================================== -->
-
-<section
-id="speedCalculator"
-class="page">
+<section id="speedCalculator" class="page">
 
 <div class="calculator">
 
 <div class="calculatorTitle">
-
 <h1>💨 Prędkość</h1>
-
-<p>
-Oblicz prędkość obiektu.
-</p>
-
+<p>Oblicz prędkość samolotu.</p>
 </div>
-
 
 <div class="formula">
 
-<span
-class="symbol"
-onclick="showInfo(
-'Prędkość',
-'v',
-'m/s',
-'💨',
-'Prędkość mówi, jak szybko porusza się obiekt.'
-)">
-v
-</span>
+<span class="symbol"
+onclick="showInfo('Prędkość','v','m/s','💨','Prędkość opisuje szybkość ruchu.')">v</span>
 
 =
 
-<span
-class="symbol"
-onclick="showInfo(
-'Droga',
-'s',
-'m',
-'🛣️',
-'Droga to odległość pokonana przez obiekt.'
-)">
-s
-</span>
+<span class="symbol"
+onclick="showInfo('Droga','s','m','🛣️','Droga to pokonana odległość.')">s</span>
 
 ÷
 
-<span
-class="symbol"
-onclick="showInfo(
-'Czas',
-'t',
-'s',
-'⏱️',
-'Czas trwania ruchu.'
-)">
-t
-</span>
+<span class="symbol"
+onclick="showInfo('Czas','t','s','⏱️','Czas trwania ruchu.')">t</span>
 
 </div>
-
 
 <div class="inputs">
 
 <div class="inputBox">
-
 <label>Droga s [m]</label>
-
-<input
-id="speedDistance"
-type="number"
-value="100"
-oninput="calculateSpeed()">
-
+<input id="speedS" value="100" type="number" oninput="calculateSpeed()">
 </div>
 
-
 <div class="inputBox">
-
 <label>Czas t [s]</label>
-
-<input
-id="speedTime"
-type="number"
-value="10"
-oninput="calculateSpeed()">
-
+<input id="speedT" value="10" type="number" oninput="calculateSpeed()">
 </div>
 
 </div>
 
+<div id="speedResult" class="result"></div>
 
-<div
-id="speedResult"
-class="result">
+<div class="physicsScene">
+<div class="sceneLabel">Model prędkości ✈️</div>
+
+<div id="speedPlane" class="planeModel">
+<div class="planeBody"></div>
+<div class="planeNose"></div>
+<div class="planeWing top"></div>
+<div class="planeWing bottom"></div>
+<div class="planeTail"></div>
 </div>
 
 </div>
 
+</div>
 </section>
 
+<!-- ===================================================
+     CZAS
+=================================================== -->
 
-<!-- ========================================== -->
-<!-- SIŁA -->
-<!-- ========================================== -->
-
-<section
-id="forceCalculator"
-class="page">
+<section id="timeCalculator" class="page">
 
 <div class="calculator">
 
 <div class="calculatorTitle">
-
-<h1>💪 II zasada Newtona</h1>
-
-<p>
-Sprawdź, jak masa i przyspieszenie wpływają na siłę.
-</p>
-
+<h1>⏱️ Czas</h1>
+<p>Sprawdź, ile czasu zajmie pokonanie drogi.</p>
 </div>
-
 
 <div class="formula">
 
-<span
-class="symbol"
-onclick="showInfo(
-'Siła',
-'F',
-'N',
-'💪',
-'Siła opisuje oddziaływanie mogące zmienić ruch ciała.'
-)">
-F
-</span>
+<span class="symbol"
+onclick="showInfo('Czas','t','s','⏱️','Czas określa długość trwania ruchu.')">t</span>
 
 =
 
-<span
-class="symbol"
-onclick="showInfo(
-'Masa',
-'m',
-'kg',
-'📦',
-'Masa opisuje bezwładność ciała.'
-)">
-m
-</span>
+<span class="symbol"
+onclick="showInfo('Droga','s','m','🛣️','Droga to odległość pokonana przez obiekt.')">s</span>
 
-·
+÷
 
-<span
-class="symbol"
-onclick="showInfo(
-'Przyspieszenie',
-'a',
-'m/s²',
-'🚀',
-'Przyspieszenie opisuje zmianę prędkości w czasie.'
-)">
-a
-</span>
+<span class="symbol"
+onclick="showInfo('Prędkość','v','m/s','💨','Prędkość mówi, jak szybko porusza się obiekt.')">v</span>
 
 </div>
-
 
 <div class="inputs">
 
 <div class="inputBox">
+<label>Droga s [m]</label>
+<input id="timeS" value="500" type="number" oninput="calculateTime()">
+</div>
 
+<div class="inputBox">
+<label>Prędkość v [m/s]</label>
+<input id="timeV" value="20" type="number" oninput="calculateTime()">
+</div>
+
+</div>
+
+<div id="timeResult" class="result"></div>
+
+<div class="physicsScene">
+
+<div class="sceneLabel" id="clockLabel">
+⏱️ 0,0 s
+</div>
+
+<div id="timePlane" class="planeModel">
+<div class="planeBody"></div>
+<div class="planeNose"></div>
+<div class="planeWing top"></div>
+<div class="planeWing bottom"></div>
+<div class="planeTail"></div>
+</div>
+
+</div>
+
+</div>
+</section>
+
+<!-- ===================================================
+     PRZYSPIESZENIE
+=================================================== -->
+
+<section id="accelerationCalculator" class="page">
+
+<div class="calculator">
+
+<div class="calculatorTitle">
+<h1>🚀 Przyspieszenie</h1>
+<p>Zobacz, jak szybko zmienia się prędkość.</p>
+</div>
+
+<div class="formula">
+
+<span class="symbol"
+onclick="showInfo('Przyspieszenie','a','m/s²','🚀','Przyspieszenie opisuje zmianę prędkości w czasie.')">a</span>
+
+=
+
+<span class="symbol"
+onclick="showInfo('Zmiana prędkości','Δv','m/s','💨','Δv oznacza różnicę między prędkością końcową i początkową.')">Δv</span>
+
+÷
+
+<span class="symbol"
+onclick="showInfo('Zmiana czasu','Δt','s','⏱️','Δt to czas, w którym nastąpiła zmiana prędkości.')">Δt</span>
+
+</div>
+
+<div class="inputs">
+
+<div class="inputBox">
+<label>Prędkość początkowa v₀ [m/s]</label>
+<input id="initialV" value="0" type="number" oninput="calculateAcceleration()">
+</div>
+
+<div class="inputBox">
+<label>Prędkość końcowa v [m/s]</label>
+<input id="finalV" value="20" type="number" oninput="calculateAcceleration()">
+</div>
+
+<div class="inputBox">
+<label>Czas Δt [s]</label>
+<input id="accelTime" value="5" type="number" oninput="calculateAcceleration()">
+</div>
+
+</div>
+
+<div id="accelerationResult" class="result"></div>
+
+<div class="physicsScene">
+
+<div class="sceneLabel">
+Obiekt coraz bardziej się rozpędza
+</div>
+
+<div id="speedTrail" class="speedTrail"></div>
+<div id="accelBall" class="accelBall"></div>
+
+<div class="sceneGround"></div>
+
+</div>
+
+</div>
+</section>
+
+<!-- ===================================================
+     I NEWTON
+=================================================== -->
+
+<section id="newton1" class="page">
+
+<div class="calculator">
+
+<div class="calculatorTitle">
+<h1>🧊 I zasada dynamiki Newtona</h1>
+<p>Zasada bezwładności</p>
+</div>
+
+<div class="formula">
+
+<span class="symbol"
+onclick="showInfo('Wypadkowa siła','ΣF','N','⚖️','ΣF oznacza sumę wszystkich sił działających na ciało.')">ΣF</span>
+
+= 0
+
+</div>
+
+<p style="line-height:1.7">
+Jeżeli siły działające na ciało się równoważą, ciało pozostaje
+w spoczynku albo porusza się ruchem jednostajnym prostoliniowym.
+</p>
+
+<div class="physicsScene">
+
+<div class="sceneLabel">
+🧊 Prawie brak tarcia
+</div>
+
+<div id="newtonPuck" class="newtonPuck"></div>
+
+<div class="iceGround"></div>
+
+</div>
+
+<div class="result">
+Krążek porusza się ze stałą prędkością →
+</div>
+
+</div>
+</section>
+
+<!-- ===================================================
+     II NEWTON
+=================================================== -->
+
+<section id="newton2" class="page">
+
+<div class="calculator">
+
+<div class="calculatorTitle">
+<h1>💪 II zasada dynamiki Newtona</h1>
+<p>Siła, masa i przyspieszenie.</p>
+</div>
+
+<div class="formula">
+
+<span class="symbol"
+onclick="showInfo('Siła','F','N','💪','Siła może powodować przyspieszenie ciała.')">F</span>
+
+=
+
+<span class="symbol"
+onclick="showInfo('Masa','m','kg','📦','Masa jest miarą bezwładności ciała.')">m</span>
+
+·
+
+<span class="symbol"
+onclick="showInfo('Przyspieszenie','a','m/s²','🚀','Przyspieszenie opisuje zmianę prędkości.')">a</span>
+
+</div>
+
+<div class="inputs">
+
+<div class="inputBox">
 <label>Masa m [kg]</label>
-
-<input
-id="mass"
-type="number"
-value="10"
-oninput="calculateForce()">
-
+<input id="forceM" value="10" type="number" oninput="calculateForce()">
 </div>
 
-
 <div class="inputBox">
-
 <label>Przyspieszenie a [m/s²]</label>
-
-<input
-id="acceleration"
-type="number"
-value="2"
-oninput="calculateForce()">
-
+<input id="forceA" value="2" type="number" oninput="calculateForce()">
 </div>
 
 </div>
 
+<div id="forceResult" class="result"></div>
 
-<div
-id="forceResult"
-class="result">
+<div class="physicsScene">
+
+<div class="sceneLabel">
+Siła pcha skrzynię →
+</div>
+
+<div id="forceArrow" class="forceArrow"></div>
+<div id="forceBox" class="forceBox"></div>
+
+<div class="sceneGround"></div>
+
 </div>
 
 </div>
-
 </section>
 
+<!-- ===================================================
+     III NEWTON
+=================================================== -->
 
-<!-- ========================================== -->
-<!-- ENERGIA KINETYCZNA -->
-<!-- ========================================== -->
-
-<section
-id="kineticCalculator"
-class="page">
+<section id="newton3" class="page">
 
 <div class="calculator">
 
 <div class="calculatorTitle">
-
-<h1>⚽ Energia kinetyczna</h1>
-
-<p>
-Zobacz, ile energii ma poruszający się obiekt.
-</p>
-
+<h1>↔️ III zasada dynamiki Newtona</h1>
+<p>Jeżeli ciało A działa na B, ciało B działa na A siłą o tej samej wartości i przeciwnym zwrocie.</p>
 </div>
-
 
 <div class="formula">
 
-<span
-class="symbol"
-onclick="showInfo(
-'Energia kinetyczna',
-'Eₖ',
-'J',
-'⚡',
-'Energia kinetyczna jest energią związaną z ruchem.'
-)">
-Eₖ
-</span>
+<span class="symbol"
+onclick="showInfo('Siła A na B','Fₐᵦ','N','➡️','Siła, którą ciało A działa na ciało B.')">Fₐᵦ</span>
 
 =
 
-½
+−
 
-<span
-class="symbol"
-onclick="showInfo(
-'Masa',
-'m',
-'kg',
-'📦',
-'Masa obiektu.'
-)">
-m
-</span>
-
-<span
-class="symbol"
-onclick="showInfo(
-'Prędkość',
-'v',
-'m/s',
-'💨',
-'Prędkość obiektu.'
-)">
-v
-</span>²
+<span class="symbol"
+onclick="showInfo('Siła B na A','Fᵦₐ','N','⬅️','Siła, którą ciało B działa na ciało A.')">Fᵦₐ</span>
 
 </div>
-
 
 <div class="inputs">
 
 <div class="inputBox">
-
-<label>Masa [kg]</label>
-
-<input
-id="kineticMass"
-type="number"
-value="2"
-oninput="calculateKinetic()">
+<label>Siła nacisku [N]</label>
+<input id="reactionForce" value="30" type="number" min="0" oninput="updateReaction()">
+</div>
 
 </div>
 
+<div id="reactionResult" class="result"></div>
+
+<div class="physicsScene">
+
+<div class="sceneLabel">
+Dwie osoby na rolkach odpychają się
+</div>
+
+<div id="arrowLeft" class="pushArrowLeft">←</div>
+<div id="arrowRight" class="pushArrowRight">→</div>
+
+<div id="skater1" class="skater one">
+<div class="head"></div>
+<div class="body"></div>
+<div class="skate"></div>
+</div>
+
+<div id="skater2" class="skater two">
+<div class="head"></div>
+<div class="body"></div>
+<div class="skate"></div>
+</div>
+
+<div class="iceGround"></div>
+
+</div>
+
+</div>
+</section>
+
+<!-- ===================================================
+     ENERGIA KINETYCZNA
+=================================================== -->
+
+<section id="kineticCalculator" class="page">
+
+<div class="calculator">
+
+<div class="calculatorTitle">
+<h1>⚡ Energia kinetyczna</h1>
+<p>Energia poruszającego się obiektu.</p>
+</div>
+
+<div class="formula">
+
+<span class="symbol"
+onclick="showInfo('Energia kinetyczna','Eₖ','J','⚡','Energia kinetyczna jest energią związaną z ruchem.')">Eₖ</span>
+
+= ½
+
+<span class="symbol"
+onclick="showInfo('Masa','m','kg','📦','Masa obiektu.')">m</span>
+
+<span class="symbol"
+onclick="showInfo('Prędkość','v','m/s','💨','Prędkość obiektu.')">v</span>²
+
+</div>
+
+<div class="inputs">
 
 <div class="inputBox">
+<label>Masa [kg]</label>
+<input id="kineticM" value="2" type="number" oninput="calculateKinetic()">
+</div>
 
+<div class="inputBox">
 <label>Prędkość [m/s]</label>
-
-<input
-id="kineticVelocity"
-type="number"
-value="5"
-oninput="calculateKinetic()">
-
+<input id="kineticV" value="5" type="number" oninput="calculateKinetic()">
 </div>
 
 </div>
 
+<div id="kineticResult" class="result"></div>
 
-<div
-id="kineticResult"
-class="result">
+<div class="physicsScene">
+
+<div class="sceneLabel">
+Energia ruchu
+</div>
+
+<div id="energyBall" class="energyBall"></div>
+
+<div class="sceneGround"></div>
+
 </div>
 
 </div>
-
 </section>
 
+<!-- ===================================================
+     ENERGIA POTENCJALNA
+=================================================== -->
 
-<!-- ========================================== -->
-<!-- ENERGIA POTENCJALNA -->
-<!-- ========================================== -->
-
-<section
-id="potentialCalculator"
-class="page">
+<section id="potentialCalculator" class="page">
 
 <div class="calculator">
 
 <div class="calculatorTitle">
-
 <h1>🏔️ Energia potencjalna</h1>
-
-<p>
-Sprawdź wpływ wysokości na energię.
-</p>
-
+<p>Podnosząc obiekt, zwiększasz jego energię potencjalną.</p>
 </div>
-
 
 <div class="formula">
 
-<span
-class="symbol"
-onclick="showInfo(
-'Energia potencjalna',
-'Eₚ',
-'J',
-'🏔️',
-'Energia potencjalna grawitacyjna zależy od położenia ciała.'
-)">
-Eₚ
-</span>
+<span class="symbol"
+onclick="showInfo('Energia potencjalna','Eₚ','J','🏔️','Energia potencjalna grawitacyjna zależy od wysokości.')">Eₚ</span>
 
 =
 
-<span
-class="symbol"
-onclick="showInfo(
-'Masa',
-'m',
-'kg',
-'📦',
-'Masa obiektu.'
-)">
-m
-</span>
+<span class="symbol"
+onclick="showInfo('Masa','m','kg','📦','Masa ciała.')">m</span>
 
 ·
 
-<span
-class="symbol"
-onclick="showInfo(
-'Przyspieszenie grawitacyjne',
-'g',
-'m/s²',
-'🌍',
-'Na powierzchni Ziemi g wynosi około 9,81 m/s².'
-)">
-g
-</span>
+<span class="symbol"
+onclick="showInfo('Przyspieszenie grawitacyjne','g','m/s²','🌍','Na Ziemi g wynosi około 9,81 m/s².')">g</span>
 
 ·
 
-<span
-class="symbol"
-onclick="showInfo(
-'Wysokość',
-'h',
-'m',
-'📏',
-'Wysokość nad wybranym poziomem odniesienia.'
-)">
-h
-</span>
+<span class="symbol"
+onclick="showInfo('Wysokość','h','m','📏','Wysokość względem poziomu odniesienia.')">h</span>
 
 </div>
-
 
 <div class="inputs">
 
 <div class="inputBox">
-
 <label>Masa [kg]</label>
-
-<input
-id="potentialMass"
-type="number"
-value="2"
-oninput="calculatePotential()">
-
+<input id="potentialM" value="2" type="number" oninput="calculatePotential()">
 </div>
-
 
 <div class="inputBox">
-
 <label>Wysokość [m]</label>
-
-<input
-id="height"
-type="number"
-value="10"
-oninput="calculatePotential()">
-
+<input id="potentialH" value="10" type="number" oninput="calculatePotential()">
 </div>
 
 </div>
 
+<div id="potentialResult" class="result"></div>
 
-<div
-id="potentialResult"
-class="result">
+<div class="physicsScene">
+
+<div class="sceneLabel">
+Zmieniaj wysokość
+</div>
+
+<div class="tower">
+<div class="platform"></div>
+</div>
+
+<div id="potentialBall" class="potentialBall"></div>
+
+<div class="sceneGround"></div>
+
 </div>
 
 </div>
-
 </section>
 
+<!-- ===================================================
+     MODAL
+=================================================== -->
 
-<!-- ========================================== -->
-<!-- OKIENKO INFORMACYJNE -->
-<!-- ========================================== -->
-
-<div
-id="modalBackground"
-class="modalBackground"
-onclick="modalBackgroundClick(event)">
+<div id="modalBackground" class="modalBackground" onclick="modalClick(event)">
 
 <div class="modal">
 
-<button
-class="closeModal"
-onclick="closeInfo()">
-×
-</button>
+<button class="closeModal" onclick="closeInfo()">×</button>
 
-<div
-id="modalIcon"
-class="modalIcon">
-💨
-</div>
+<div id="modalIcon" class="modalIcon">⚛️</div>
 
-<h2 id="modalTitle">
-Prędkość
-</h2>
+<h2 id="modalTitle"></h2>
 
-<h3 id="modalSymbol">
-Symbol: v
-</h3>
+<h3 id="modalSymbol"></h3>
 
-<div
-id="modalUnit"
-class="unit">
-Jednostka: m/s
-</div>
+<div id="modalUnit" class="unit"></div>
 
 <p id="modalDescription"></p>
 
 </div>
-
 </div>
-
 
 <script>
 
-/* ===================================== */
-/* NAWIGACJA */
-/* ===================================== */
+/* =====================================================
+   NAWIGACJA
+===================================================== */
 
 let historyStack=[];
 
 function openPage(id){
 
-    const current=
-        document.querySelector(".page.active");
+    const current=document.querySelector(".page.active");
 
     if(current){
         historyStack.push(current.id);
     }
 
-    document
-        .querySelectorAll(".page")
-        .forEach(page=>{
-            page.classList.remove("active");
-        });
+    document.querySelectorAll(".page").forEach(page=>{
+        page.classList.remove("active");
+    });
 
-    document
-        .getElementById(id)
-        .classList.add("active");
+    document.getElementById(id).classList.add("active");
 
-    document
-        .getElementById("backButton")
-        .style.display=
-        id==="home"
-        ? "none"
-        : "block";
+    document.getElementById("backButton").style.display=
+        id==="home" ? "none" : "block";
 
     window.scrollTo({
         top:0,
         behavior:"smooth"
     });
-
 }
-
 
 function goBack(){
 
     if(historyStack.length===0){
-
-        showHome();
-
+        returnHome();
         return;
-
     }
 
-    const previous=
-        historyStack.pop();
+    const previous=historyStack.pop();
 
-    document
-        .querySelectorAll(".page")
-        .forEach(page=>{
-            page.classList.remove("active");
-        });
+    document.querySelectorAll(".page").forEach(page=>{
+        page.classList.remove("active");
+    });
 
-    document
-        .getElementById(previous)
-        .classList.add("active");
-
+    document.getElementById(previous).classList.add("active");
 
     if(previous==="home"){
-
-        document
-            .getElementById("backButton")
-            .style.display="none";
-
+        document.getElementById("backButton").style.display="none";
     }
 
     window.scrollTo({
         top:0,
         behavior:"smooth"
     });
-
 }
 
-
-function showHome(){
+function returnHome(){
 
     historyStack=[];
 
-    document
-        .querySelectorAll(".page")
-        .forEach(page=>{
-            page.classList.remove("active");
-        });
+    document.querySelectorAll(".page").forEach(page=>{
+        page.classList.remove("active");
+    });
 
-    document
-        .getElementById("home")
-        .classList.add("active");
-
+    document.getElementById("home").classList.add("active");
+    document.getElementById("backButton").style.display="none";
 }
 
+/* =====================================================
+   MODAL
+===================================================== */
 
-/* ===================================== */
-/* OKIENKA */
-/* ===================================== */
+function showInfo(title,symbol,unit,icon,description){
 
-function showInfo(
-    title,
-    symbol,
-    unit,
-    icon,
-    description
-){
+    document.getElementById("modalTitle").textContent=title;
+    document.getElementById("modalSymbol").textContent="Symbol: "+symbol;
+    document.getElementById("modalUnit").textContent="Jednostka: "+unit;
+    document.getElementById("modalIcon").textContent=icon;
+    document.getElementById("modalDescription").textContent=description;
 
-    document
-        .getElementById("modalTitle")
-        .textContent=
-        title;
-
-    document
-        .getElementById("modalSymbol")
-        .textContent=
-        "Symbol: "+symbol;
-
-    document
-        .getElementById("modalUnit")
-        .textContent=
-        "Jednostka: "+unit;
-
-    document
-        .getElementById("modalIcon")
-        .textContent=
-        icon;
-
-    document
-        .getElementById("modalDescription")
-        .textContent=
-        description;
-
-    document
-        .getElementById("modalBackground")
-        .classList.add("show");
-
+    document.getElementById("modalBackground").classList.add("show");
 }
-
 
 function closeInfo(){
-
-    document
-        .getElementById("modalBackground")
-        .classList.remove("show");
-
+    document.getElementById("modalBackground").classList.remove("show");
 }
 
+function modalClick(e){
 
-function modalBackgroundClick(event){
-
-    if(
-        event.target.id===
-        "modalBackground"
-    ){
+    if(e.target.id==="modalBackground"){
         closeInfo();
     }
-
 }
 
-
-/* ===================================== */
-/* OBLICZENIA */
-/* ===================================== */
+/* =====================================================
+   OBLICZENIA
+===================================================== */
 
 function calculateDistance(){
 
-    const v=
-        Number(
-            document.getElementById("velocity").value
-        );
-
-    const t=
-        Number(
-            document.getElementById("time").value
-        );
+    const v=Number(document.getElementById("distanceV").value);
+    const t=Number(document.getElementById("distanceT").value);
 
     const s=v*t;
 
-    document
-        .getElementById("distanceResult")
-        .innerHTML=
-        "✈️ Samolot pokona <b>"+
-        s.toFixed(2)+
-        " m</b>";
-
+    document.getElementById("distanceResult").innerHTML=
+        "s = <b>"+s.toFixed(2)+" m</b>";
 }
-
 
 function calculateSpeed(){
 
-    const s=
-        Number(
-            document.getElementById("speedDistance").value
-        );
+    const s=Number(document.getElementById("speedS").value);
+    const t=Number(document.getElementById("speedT").value);
 
-    const t=
-        Number(
-            document.getElementById("speedTime").value
-        );
+    const v=t===0 ? 0 : s/t;
 
-    const v=
-        t===0
-        ? 0
-        : s/t;
-
-    document
-        .getElementById("speedResult")
-        .innerHTML=
-        "💨 v = <b>"+
-        v.toFixed(2)+
-        " m/s</b>";
-
+    document.getElementById("speedResult").innerHTML=
+        "v = <b>"+v.toFixed(2)+" m/s</b>";
 }
 
+function calculateTime(){
+
+    const s=Number(document.getElementById("timeS").value);
+    const v=Number(document.getElementById("timeV").value);
+
+    const t=v===0 ? 0 : s/v;
+
+    document.getElementById("timeResult").innerHTML=
+        "t = <b>"+t.toFixed(2)+" s</b>";
+}
+
+function calculateAcceleration(){
+
+    const v0=Number(document.getElementById("initialV").value);
+    const v=Number(document.getElementById("finalV").value);
+    const t=Number(document.getElementById("accelTime").value);
+
+    const a=t===0 ? 0 : (v-v0)/t;
+
+    document.getElementById("accelerationResult").innerHTML=
+        "a = <b>"+a.toFixed(2)+" m/s²</b>";
+}
 
 function calculateForce(){
 
-    const m=
-        Number(
-            document.getElementById("mass").value
-        );
-
-    const a=
-        Number(
-            document.getElementById("acceleration").value
-        );
+    const m=Number(document.getElementById("forceM").value);
+    const a=Number(document.getElementById("forceA").value);
 
     const F=m*a;
 
-    document
-        .getElementById("forceResult")
-        .innerHTML=
-        "💪 F = <b>"+
-        F.toFixed(2)+
-        " N</b>";
+    document.getElementById("forceResult").innerHTML=
+        "F = <b>"+F.toFixed(2)+" N</b>";
 
+    document.getElementById("forceArrow").style.width=
+        Math.min(170,50+Math.abs(F))+"px";
 }
 
+function updateReaction(){
+
+    const F=Number(document.getElementById("reactionForce").value);
+
+    document.getElementById("reactionResult").innerHTML=
+        "Osoba A działa siłą <b>"+F.toFixed(1)+" N →</b> &nbsp; " +
+        "Osoba B działa siłą <b>← "+F.toFixed(1)+" N</b>";
+
+    const size=Math.min(1.7,.7+F/70);
+
+    document.getElementById("arrowLeft").style.transform=
+        "scale("+size+")";
+
+    document.getElementById("arrowRight").style.transform=
+        "scale("+size+")";
+}
 
 function calculateKinetic(){
 
-    const m=
-        Number(
-            document.getElementById("kineticMass").value
-        );
+    const m=Number(document.getElementById("kineticM").value);
+    const v=Number(document.getElementById("kineticV").value);
 
-    const v=
-        Number(
-            document.getElementById("kineticVelocity").value
-        );
+    const E=.5*m*v*v;
 
-    const E=
-        0.5*m*v*v;
-
-    document
-        .getElementById("kineticResult")
-        .innerHTML=
-        "⚡ Eₖ = <b>"+
-        E.toFixed(2)+
-        " J</b>";
-
+    document.getElementById("kineticResult").innerHTML=
+        "Eₖ = <b>"+E.toFixed(2)+" J</b>";
 }
-
 
 function calculatePotential(){
 
-    const m=
-        Number(
-            document.getElementById("potentialMass").value
-        );
+    const m=Number(document.getElementById("potentialM").value);
+    const h=Number(document.getElementById("potentialH").value);
 
-    const h=
-        Number(
-            document.getElementById("height").value
-        );
+    const E=m*9.81*h;
 
-    const E=
-        m*9.81*h;
+    document.getElementById("potentialResult").innerHTML=
+        "Eₚ = <b>"+E.toFixed(2)+" J</b>";
 
-    document
-        .getElementById("potentialResult")
-        .innerHTML=
-        "🏔️ Eₚ = <b>"+
-        E.toFixed(2)+
-        " J</b>";
+    const ball=document.getElementById("potentialBall");
 
+    const y=Math.min(190,65+Math.max(0,h)*8);
+
+    ball.style.bottom=y+"px";
 }
 
+/* =====================================================
+   ANIMACJE FIZYCZNE
+===================================================== */
 
-/* ===================================== */
-/* SAMOLOT */
-/* ===================================== */
+let distancePlaneX=-15;
+let speedPlaneX=-15;
+let timePlaneX=-15;
+let accelX=5;
+let puckX=5;
+let energyX=5;
 
-let planeX=-10;
+let lastTime=performance.now();
 
-function animatePlane(){
+function animate(now){
 
-    const plane=
-        document.getElementById("airplane");
+    const dt=Math.min((now-lastTime)/1000,.05);
+    lastTime=now;
 
-    const velocityInput=
-        document.getElementById("velocity");
+    /* DROGA */
 
-    if(plane && velocityInput){
+    const distancePlane=document.getElementById("distancePlane");
 
-        const velocity=
-            Math.max(
-                0,
-                Number(velocityInput.value)||0
-            );
+    if(distancePlane){
+
+        const v=Math.max(
+            0,
+            Number(document.getElementById("distanceV").value)||0
+        );
 
         /*
-        WAŻNE:
-
-        Poprzednio prędkość była znacznie większa.
-
-        Tutaj dzielimy ruch przez 10.
-
-        Czyli np.:
-
-        v = 1  -> bardzo wolno
-        v = 10 -> 10x szybciej
-        v = 50 -> 50x szybciej
-
-        ale CAŁA skala jest 10x wolniejsza
-        niż wcześniej.
+        Skala wizualna jest celowo wolna.
+        10 m/s nie oznacza 10% ekranu na sekundę.
         */
 
-        planeX += velocity * 0.0035;
+        distancePlaneX += v * 0.035 * dt;
 
-        if(planeX > 105){
-            planeX=-12;
+        if(distancePlaneX>105){
+            distancePlaneX=-15;
         }
 
-        plane.style.left=
-            planeX+"%";
+        distancePlane.style.left=distancePlaneX+"%";
 
-
-        /*
-        lekki ruch góra/dół,
-        żeby samolot wyglądał żywiej
-        */
-
-        const wave=
-            Math.sin(Date.now()/700)*8;
-
-        plane.style.transform=
-            "translateY("+wave+"px)";
-
+        distancePlane.style.transform=
+            "translateY("+
+            Math.sin(now/650)*6+
+            "px)";
     }
 
-    requestAnimationFrame(
-        animatePlane
-    );
+    /* PRĘDKOŚĆ */
 
+    const speedPlane=document.getElementById("speedPlane");
+
+    if(speedPlane){
+
+        const s=Number(document.getElementById("speedS").value)||0;
+        const t=Number(document.getElementById("speedT").value)||0;
+
+        const v=t>0 ? Math.max(0,s/t) : 0;
+
+        speedPlaneX += v*.035*dt;
+
+        if(speedPlaneX>105){
+            speedPlaneX=-15;
+        }
+
+        speedPlane.style.left=speedPlaneX+"%";
+
+        speedPlane.style.transform=
+            "translateY("+Math.sin(now/700)*5+"px)";
+    }
+
+    /* CZAS */
+
+    const timePlane=document.getElementById("timePlane");
+
+    if(timePlane){
+
+        const v=Math.max(
+            0,
+            Number(document.getElementById("timeV").value)||0
+        );
+
+        timePlaneX += v*.035*dt;
+
+        if(timePlaneX>105){
+            timePlaneX=-15;
+        }
+
+        timePlane.style.left=timePlaneX+"%";
+
+        const t=Number(document.getElementById("timeS").value)/
+                Math.max(.0001,v);
+
+        document.getElementById("clockLabel").textContent=
+            "⏱️ Obliczony czas: "+
+            (v===0 ? "∞" : t.toFixed(1))+
+            " s";
+    }
+
+    /* PRZYSPIESZENIE */
+
+    const accelBall=document.getElementById("accelBall");
+
+    if(accelBall){
+
+        const v0=Number(document.getElementById("initialV").value)||0;
+        const vf=Number(document.getElementById("finalV").value)||0;
+        const t=Number(document.getElementById("accelTime").value)||1;
+
+        const a=(vf-v0)/t;
+
+        accelX += Math.max(0,2+a*2)*dt;
+
+        if(accelX>92){
+            accelX=4;
+        }
+
+        accelBall.style.left=accelX+"%";
+
+        document.getElementById("speedTrail").style.width=
+            Math.min(150,Math.max(10,Math.abs(a)*15))+"px";
+    }
+
+    /* I NEWTON */
+
+    const puck=document.getElementById("newtonPuck");
+
+    if(puck){
+
+        puckX += 5*dt;
+
+        if(puckX>95){
+            puckX=-8;
+        }
+
+        puck.style.left=puckX+"%";
+    }
+
+    /* ENERGIA KINETYCZNA */
+
+    const energyBall=document.getElementById("energyBall");
+
+    if(energyBall){
+
+        const v=Math.max(
+            0,
+            Number(document.getElementById("kineticV").value)||0
+        );
+
+        energyX += v*.08*dt;
+
+        if(energyX>95){
+            energyX=-7;
+        }
+
+        energyBall.style.left=energyX+"%";
+
+        energyBall.style.transform=
+            "rotate("+(energyX*12)+"deg)";
+    }
+
+    requestAnimationFrame(animate);
 }
 
-
-/* ===================================== */
-/* START */
-/* ===================================== */
+/* =====================================================
+   START
+===================================================== */
 
 calculateDistance();
 calculateSpeed();
+calculateTime();
+calculateAcceleration();
 calculateForce();
+updateReaction();
 calculateKinetic();
 calculatePotential();
 
-animatePlane();
+requestAnimationFrame(animate);
 
 </script>
 
