@@ -3,992 +3,974 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fizyka 🌈</title>
+
+<title>Fizyka Fun</title>
 
 <style>
-* {
-    box-sizing: border-box;
+
+*{
+    box-sizing:border-box;
 }
 
-body {
-    margin: 0;
-    font-family: "Trebuchet MS", Arial, sans-serif;
-    background: #eef8ff;
-    color: #26354a;
-    overflow-x: hidden;
+body{
+    margin:0;
+    font-family:"Trebuchet MS",Arial,sans-serif;
+    background:#dff4ff;
+    color:#28415c;
+    min-height:100vh;
+    overflow-x:hidden;
+}
+
+/* ============================= */
+/* TŁO */
+/* ============================= */
+
+.sky{
+    position:fixed;
+    inset:0;
+    z-index:-10;
+
+    background:
+        linear-gradient(
+            #87d7ff 0%,
+            #dff6ff 70%,
+            #85d86c 70%,
+            #69c653 100%
+        );
+}
+
+.sun{
+    position:absolute;
+    right:7%;
+    top:60px;
+
+    width:120px;
+    height:120px;
+
+    border-radius:50%;
+
+    background:#ffe46b;
+
+    box-shadow:
+        0 0 60px rgba(255,239,125,.8);
+
+    animation:sunFloat 4s ease-in-out infinite alternate;
+}
+
+@keyframes sunFloat{
+    from{transform:translateY(0)}
+    to{transform:translateY(10px)}
+}
+
+/* CHMURY */
+
+.cloud{
+    position:absolute;
+    font-size:90px;
+
+    animation:cloudMove linear infinite;
+}
+
+.cloud1{
+    top:80px;
+    left:-200px;
+    animation-duration:35s;
+}
+
+.cloud2{
+    top:230px;
+    left:-250px;
+    animation-duration:50s;
+    animation-delay:-15s;
+}
+
+.cloud3{
+    top:370px;
+    left:-250px;
+    font-size:60px;
+    animation-duration:45s;
+    animation-delay:-30s;
+}
+
+@keyframes cloudMove{
+
+    from{
+        transform:translateX(-200px);
+    }
+
+    to{
+        transform:translateX(calc(100vw + 400px));
+    }
+
+}
+
+/* TRAWKA */
+
+.grass{
+    position:absolute;
+    bottom:0;
+
+    width:100%;
+    height:30%;
+
+    background:
+        repeating-linear-gradient(
+            82deg,
+            transparent 0px,
+            transparent 20px,
+            rgba(37,130,43,.16) 21px,
+            rgba(37,130,43,.16) 24px
+        );
 }
 
 /* ============================= */
 /* GÓRNY PASEK */
 /* ============================= */
 
-header {
-    background: rgba(255,255,255,0.92);
-    backdrop-filter: blur(12px);
+header{
 
-    padding: 16px 25px;
+    height:75px;
 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display:flex;
+    align-items:center;
 
-    position: sticky;
-    top: 0;
+    padding:0 30px;
 
-    z-index: 100;
+    background:rgba(255,255,255,.88);
 
-    box-shadow: 0 4px 20px rgba(50,90,130,.10);
-}
-
-.logo {
-    font-size: 25px;
-    font-weight: bold;
-}
-
-.logo span {
-    color: #5588ff;
-}
-
-/* MENU */
-
-.menu {
-    display: flex;
-    gap: 12px;
-}
-
-.menu button {
-    border: none;
-
-    padding: 12px 20px;
-
-    border-radius: 30px;
-
-    font-size: 15px;
-    font-weight: bold;
-
-    cursor: pointer;
-
-    color: #41546d;
-
-    background: #edf4ff;
-
-    transition:
-        transform .25s,
-        box-shadow .25s,
-        background .25s;
-}
-
-.menu button:hover {
-    transform: translateY(-4px) scale(1.04);
-
-    box-shadow: 0 7px 15px rgba(50,80,150,.15);
-}
-
-.menu button.active {
-    color: white;
-
-    background:
-        linear-gradient(135deg,#5f8fff,#7f6cff);
+    backdrop-filter:blur(10px);
 
     box-shadow:
-        0 6px 15px rgba(80,100,230,.25);
+        0 5px 25px rgba(30,70,110,.10);
+
+    position:relative;
+    z-index:100;
+}
+
+.logo{
+
+    font-size:26px;
+    font-weight:bold;
+
+}
+
+.logo span{
+    color:#667cff;
+}
+
+.backButton{
+
+    display:none;
+
+    margin-left:auto;
+
+    border:none;
+
+    background:#edf2ff;
+
+    color:#4c67bd;
+
+    padding:11px 18px;
+
+    border-radius:20px;
+
+    font-size:15px;
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.backButton:hover{
+
+    transform:translateX(-5px);
+
+    background:#dfe7ff;
+
 }
 
 /* ============================= */
-/* SEKCJE */
+/* STRONY */
 /* ============================= */
 
-.world {
-    display: none;
-    min-height: calc(100vh - 75px);
+.page{
 
-    position: relative;
+    display:none;
 
-    overflow: hidden;
+    max-width:1050px;
 
-    animation: appear .5s ease;
+    margin:auto;
+
+    padding:55px 25px 220px;
+
+    animation:pageAppear .45s ease;
+
 }
 
-.world.active {
-    display: block;
+.page.active{
+    display:block;
 }
 
-@keyframes appear {
+@keyframes pageAppear{
 
-    from {
-        opacity: 0;
-        transform: translateY(15px);
+    from{
+        opacity:0;
+        transform:translateY(20px);
     }
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* ============================= */
-/* KINEMATYKA - ŚWIAT */
-/* ============================= */
-
-#kinematyka {
-    background:
-        linear-gradient(
-            #8ed8ff 0%,
-            #c9efff 58%,
-            #79d469 58%,
-            #62c456 100%
-        );
-}
-
-/* SŁOŃCE */
-
-.sun {
-    position: absolute;
-
-    width: 110px;
-    height: 110px;
-
-    border-radius: 50%;
-
-    background: #ffe566;
-
-    top: 55px;
-    right: 8%;
-
-    box-shadow:
-        0 0 50px #fff4a8;
-
-    animation: sunFloat 4s ease-in-out infinite alternate;
-}
-
-@keyframes sunFloat {
-
-    from {
-        transform: translateY(0);
+    to{
+        opacity:1;
+        transform:translateY(0);
     }
 
-    to {
-        transform: translateY(10px);
-    }
-}
-
-/* CHMURY */
-
-.cloud {
-    position: absolute;
-
-    font-size: 75px;
-
-    opacity: .92;
-
-    animation: cloudMove linear infinite;
-}
-
-.cloud1 {
-    top: 70px;
-    left: -150px;
-    animation-duration: 24s;
-}
-
-.cloud2 {
-    top: 180px;
-    left: -200px;
-    animation-duration: 35s;
-    animation-delay: -12s;
-}
-
-@keyframes cloudMove {
-
-    from {
-        transform: translateX(-150px);
-    }
-
-    to {
-        transform: translateX(calc(100vw + 300px));
-    }
-}
-
-/* SAMOLOT */
-
-.plane {
-    position: absolute;
-
-    font-size: 55px;
-
-    top: 130px;
-    left: -100px;
-
-    animation: planeFly 14s linear infinite;
-
-    filter: drop-shadow(0 5px 3px rgba(0,0,0,.15));
-}
-
-@keyframes planeFly {
-
-    0% {
-        transform: translateX(-150px) translateY(0) rotate(4deg);
-    }
-
-    50% {
-        transform:
-            translateX(calc(50vw + 100px))
-            translateY(-30px)
-            rotate(-2deg);
-    }
-
-    100% {
-        transform:
-            translateX(calc(100vw + 300px))
-            translateY(10px)
-            rotate(4deg);
-    }
-}
-
-/* WIATR */
-
-.wind {
-    position: absolute;
-
-    color: rgba(255,255,255,.75);
-
-    font-size: 40px;
-
-    animation: windMove 6s linear infinite;
-}
-
-.wind1 {
-    top: 260px;
-    left: -100px;
-}
-
-.wind2 {
-    top: 330px;
-    left: -200px;
-    animation-delay: -3s;
-}
-
-@keyframes windMove {
-
-    from {
-        transform: translateX(0);
-    }
-
-    to {
-        transform: translateX(calc(100vw + 300px));
-    }
-}
-
-/* TRAWA */
-
-.grass {
-    position: absolute;
-
-    bottom: 0;
-
-    width: 100%;
-    height: 150px;
-
-    pointer-events: none;
-
-    background:
-        repeating-linear-gradient(
-            80deg,
-            transparent 0px,
-            transparent 16px,
-            rgba(40,130,50,.25) 17px,
-            rgba(40,130,50,.25) 19px
-        );
 }
 
 /* ============================= */
-/* DYNAMIKA */
+/* START */
 /* ============================= */
 
-#dynamika {
+.homeTitle{
 
-    background:
-        linear-gradient(
-            #a5ddff 0%,
-            #e1f5ff 58%,
-            #e0c18a 58%,
-            #d1a96a 100%
-        );
+    text-align:center;
+
+    margin-top:25px;
+    margin-bottom:40px;
+
 }
 
-.movingBox {
+.homeTitle h1{
 
-    position: absolute;
+    font-size:50px;
 
-    bottom: 40px;
-    left: 5%;
-
-    font-size: 70px;
-
-    animation: boxMove 6s ease-in-out infinite alternate;
-}
-
-@keyframes boxMove {
-
-    from {
-        transform: translateX(0);
-    }
-
-    to {
-        transform: translateX(300px);
-    }
-}
-
-.forceArrow {
-
-    position: absolute;
-
-    bottom: 100px;
-    left: 140px;
-
-    font-size: 70px;
-
-    color: #ff5757;
-
-    animation: arrowPulse .8s infinite alternate;
-}
-
-@keyframes arrowPulse {
-
-    from {
-        transform: scaleX(.8);
-    }
-
-    to {
-        transform: scaleX(1.2);
-    }
-}
-
-/* ============================= */
-/* ENERGIA */
-/* ============================= */
-
-#energia {
-
-    background:
-        linear-gradient(
-            #98dcff 0%,
-            #d9f4ff 58%,
-            #83d273 58%,
-            #64bd55 100%
-        );
-}
-
-.energyBall {
-
-    position: absolute;
-
-    right: 12%;
-
-    bottom: 120px;
-
-    font-size: 65px;
-
-    animation: bounceBall 1.5s ease-in-out infinite;
-}
-
-@keyframes bounceBall {
-
-    0%,100% {
-        transform: translateY(0) rotate(0);
-    }
-
-    50% {
-        transform: translateY(-180px) rotate(180deg);
-    }
-}
-
-/* ============================= */
-/* TREŚĆ */
-/* ============================= */
-
-.content {
-
-    position: relative;
-
-    z-index: 10;
-
-    max-width: 1100px;
-
-    margin: auto;
-
-    padding:
-        70px 25px
-        230px;
-}
-
-.titleBox {
-
-    text-align: center;
-
-    margin-bottom: 35px;
-
-    animation: titleAppear .7s ease;
-}
-
-@keyframes titleAppear {
-
-    from {
-        transform: scale(.8);
-        opacity: 0;
-    }
-
-    to {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-.titleBox h1 {
-
-    font-size: 46px;
-
-    margin: 0;
-
-    color: #24405f;
+    margin:0;
 
     text-shadow:
         0 3px white;
+
 }
 
-.titleBox p {
+.homeTitle p{
 
-    font-size: 18px;
+    display:inline-block;
 
-    background:
-        rgba(255,255,255,.7);
+    background:rgba(255,255,255,.75);
 
-    display: inline-block;
+    padding:10px 20px;
 
-    padding: 9px 18px;
+    border-radius:30px;
 
-    border-radius: 25px;
+    font-size:18px;
+
 }
 
 /* ============================= */
-/* KARTY */
+/* DUŻE PRZYCISKI */
 /* ============================= */
 
-.cards {
+.subjects{
 
-    display: grid;
+    display:flex;
+    flex-direction:column;
 
-    grid-template-columns:
-        repeat(auto-fit,minmax(300px,1fr));
+    gap:20px;
 
-    gap: 22px;
+    max-width:850px;
+
+    margin:auto;
+
 }
 
-.card {
+.subjectButton{
 
-    background:
-        rgba(255,255,255,.94);
+    width:100%;
 
-    border-radius: 28px;
+    height:125px;
 
-    padding: 24px;
+    border:none;
+
+    border-radius:32px;
+
+    background:white;
 
     box-shadow:
-        0 12px 30px rgba(50,80,110,.15);
+        0 12px 30px rgba(30,70,110,.15);
 
-    border:
-        3px solid rgba(255,255,255,.8);
+    cursor:pointer;
+
+    display:flex;
+
+    align-items:center;
+
+    padding:20px 35px;
+
+    text-align:left;
 
     transition:
         transform .25s,
         box-shadow .25s;
+
 }
 
-.card:hover {
+.subjectButton:hover{
 
     transform:
-        translateY(-7px);
+        translateY(-7px)
+        scale(1.015);
 
     box-shadow:
-        0 18px 35px rgba(40,70,120,.20);
+        0 18px 40px rgba(30,70,110,.22);
+
 }
 
-.card h2 {
+.subjectIcon{
 
-    margin-top: 0;
+    width:80px;
+    height:80px;
 
-    font-size: 23px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:24px;
+
+    font-size:43px;
+
+    margin-right:25px;
+
+}
+
+.kinematicsIcon{
+    background:#dff3ff;
+}
+
+.dynamicsIcon{
+    background:#ffe6d4;
+}
+
+.energyIcon{
+    background:#fff3b9;
+}
+
+.subjectText h2{
+
+    margin:0 0 7px;
+
+    font-size:27px;
+
+}
+
+.subjectText p{
+
+    margin:0;
+
+    color:#718096;
+
+    font-size:15px;
+
+}
+
+.arrowRight{
+
+    margin-left:auto;
+
+    font-size:32px;
+
+    color:#a7b3c6;
+
+    transition:.2s;
+
+}
+
+.subjectButton:hover .arrowRight{
+
+    transform:translateX(8px);
+
+    color:#637cff;
+
 }
 
 /* ============================= */
+/* TYTUŁ DZIAŁU */
+/* ============================= */
+
+.sectionTitle{
+
+    text-align:center;
+
+    margin-bottom:35px;
+
+}
+
+.sectionTitle h1{
+
+    font-size:43px;
+
+    margin:0;
+
+    text-shadow:
+        0 3px white;
+
+}
+
+.sectionTitle p{
+
+    display:inline-block;
+
+    background:rgba(255,255,255,.75);
+
+    padding:8px 17px;
+
+    border-radius:20px;
+
+}
+
+/* ============================= */
+/* LISTA WZORÓW */
+/* ============================= */
+
+.topicList{
+
+    display:flex;
+    flex-direction:column;
+
+    gap:15px;
+
+    max-width:800px;
+
+    margin:auto;
+
+}
+
+.topic{
+
+    background:rgba(255,255,255,.94);
+
+    border:none;
+
+    border-radius:23px;
+
+    padding:20px 25px;
+
+    display:flex;
+
+    align-items:center;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 8px 22px rgba(30,60,100,.12);
+
+    transition:.22s;
+
+    text-align:left;
+
+}
+
+.topic:hover{
+
+    transform:
+        translateX(8px)
+        scale(1.01);
+
+    box-shadow:
+        0 12px 28px rgba(30,60,100,.18);
+
+}
+
+.topicEmoji{
+
+    font-size:36px;
+
+    margin-right:20px;
+
+}
+
+.topicInfo{
+    flex:1;
+}
+
+.topicInfo h3{
+
+    margin:0 0 5px;
+
+    font-size:20px;
+
+}
+
+.topicInfo p{
+
+    margin:0;
+
+    color:#7a8799;
+
+}
+
+.topicFormula{
+
+    font-size:24px;
+
+    font-weight:bold;
+
+    color:#5774dd;
+
+    background:#edf2ff;
+
+    padding:10px 17px;
+
+    border-radius:15px;
+
+}
+
+/* ============================= */
+/* KALKULATOR */
+/* ============================= */
+
+.calculator{
+
+    max-width:750px;
+
+    margin:auto;
+
+    background:rgba(255,255,255,.96);
+
+    border-radius:32px;
+
+    padding:30px;
+
+    box-shadow:
+        0 18px 45px rgba(30,60,100,.17);
+
+}
+
+.calculatorTitle{
+
+    text-align:center;
+
+}
+
+.calculatorTitle h1{
+
+    margin-bottom:5px;
+
+}
+
+.calculatorTitle p{
+
+    color:#718096;
+
+}
+
 /* WZÓR */
-/* ============================= */
 
-.formula {
+.formula{
+
+    margin:25px 0;
+
+    padding:22px;
+
+    border-radius:22px;
 
     background:
         linear-gradient(
             135deg,
-            #edf4ff,
-            #f7f1ff
+            #edf5ff,
+            #f5edff
         );
 
-    border-radius: 20px;
+    text-align:center;
 
-    padding: 18px;
+    font-size:38px;
 
-    margin: 17px 0;
+    font-weight:bold;
 
-    text-align: center;
-
-    font-size: 31px;
-
-    font-weight: bold;
-
-    box-shadow:
-        inset 0 2px 8px rgba(80,100,150,.08);
 }
 
-.symbol {
+.symbol{
 
-    display: inline-block;
+    display:inline-block;
 
-    color: #5577e8;
+    color:#5c78e5;
 
-    cursor: pointer;
+    cursor:pointer;
 
-    padding: 2px 5px;
+    border-radius:10px;
 
-    border-radius: 8px;
+    padding:2px 6px;
 
-    transition:
-        transform .2s,
-        background .2s;
+    transition:.2s;
+
 }
 
-.symbol:hover {
+.symbol:hover{
+
+    background:#dce6ff;
 
     transform:
         scale(1.25)
         rotate(-4deg);
 
-    background:
-        #dfe7ff;
 }
 
-/* ============================= */
-/* INPUT */
-/* ============================= */
+/* INPUTY */
 
-.inputs {
+.inputs{
 
-    display: flex;
+    display:grid;
 
-    gap: 10px;
+    grid-template-columns:
+        1fr 1fr;
 
-    flex-wrap: wrap;
+    gap:14px;
+
 }
 
-.inputBox {
+.inputBox{
 
-    flex: 1;
+    background:#f4f7fb;
 
-    min-width: 120px;
+    padding:13px;
 
-    background:
-        #f5f8fc;
+    border-radius:16px;
 
-    border-radius: 15px;
-
-    padding: 11px;
 }
 
-.inputBox label {
+.inputBox label{
 
-    font-size: 13px;
+    display:block;
 
-    color: #637187;
+    margin-bottom:7px;
 
-    display: block;
+    font-size:14px;
 
-    margin-bottom: 6px;
+    color:#66768d;
+
 }
 
-.inputBox input {
+.inputBox input{
 
-    width: 100%;
+    width:100%;
+
+    padding:11px;
+
+    border-radius:11px;
 
     border:
-        2px solid #dde5ef;
+        2px solid #dce3ec;
 
-    border-radius: 10px;
+    font-size:17px;
 
-    padding: 10px;
+    outline:none;
 
-    font-size: 17px;
-
-    outline: none;
-
-    transition: .2s;
 }
 
-.inputBox input:focus {
+.inputBox input:focus{
 
-    border-color:
-        #7397ff;
+    border-color:#7694ff;
 
     box-shadow:
-        0 0 0 4px #e5ecff;
+        0 0 0 4px #e4eaff;
+
 }
 
-.result {
+.result{
 
-    margin-top: 13px;
+    margin-top:16px;
 
-    background:
-        #e9fff2;
+    background:#e7fff1;
 
-    border-radius:
-        14px;
+    color:#14804b;
 
-    padding:
-        12px;
+    padding:15px;
 
-    color:
-        #15814c;
+    border-radius:16px;
 
-    font-size:
-        18px;
+    font-size:20px;
 
-    font-weight:
-        bold;
+    font-weight:bold;
 
-    text-align:
-        center;
+    text-align:center;
 
-    transition:
-        transform .2s;
 }
 
 /* ============================= */
-/* MINI SCENA SAMOCHODU */
+/* SAMOLOT */
 /* ============================= */
 
-.motionScene {
+.planeScene{
 
-    position:
-        relative;
+    height:200px;
 
-    height:
-        110px;
+    margin-top:25px;
 
-    margin-top:
-        18px;
+    border-radius:23px;
 
-    overflow:
-        hidden;
+    overflow:hidden;
 
-    border-radius:
-        18px;
+    position:relative;
 
     background:
         linear-gradient(
-            #b9e8ff 0 55%,
-            #555d68 55%
+            #89d9ff,
+            #d9f6ff
         );
+
 }
 
-.motionRoad {
+.sceneCloud{
 
-    position:
-        absolute;
+    position:absolute;
 
-    bottom:
-        25px;
+    font-size:45px;
 
-    width:
-        100%;
+    opacity:.8;
 
-    border-top:
-        4px dashed white;
 }
 
-.car {
+.sceneCloud.one{
 
-    position:
-        absolute;
+    left:10%;
+    top:25px;
 
-    bottom:
-        38px;
+}
 
-    font-size:
-        43px;
+.sceneCloud.two{
+
+    right:12%;
+    top:80px;
+
+}
+
+.airplane{
+
+    position:absolute;
+
+    left:-70px;
+
+    top:90px;
+
+    font-size:50px;
+
+    filter:
+        drop-shadow(
+            0 5px 3px rgba(0,0,0,.15)
+        );
+
 }
 
 /* ============================= */
 /* MODAL */
 /* ============================= */
 
-.modalBackground {
+.modalBackground{
 
-    display:
-        none;
+    position:fixed;
 
-    position:
-        fixed;
-
-    inset:
-        0;
+    inset:0;
 
     background:
-        rgba(35,50,80,.30);
+        rgba(34,50,80,.32);
 
     backdrop-filter:
         blur(6px);
 
-    z-index:
-        1000;
+    display:none;
 
-    justify-content:
-        center;
+    justify-content:center;
+    align-items:center;
 
-    align-items:
-        center;
+    padding:20px;
 
-    padding:
-        20px;
+    z-index:1000;
+
 }
 
-.modalBackground.show {
+.modalBackground.show{
 
-    display:
-        flex;
+    display:flex;
 
     animation:
-        fadeModal .25s ease;
+        backgroundAppear .25s ease;
+
 }
 
-@keyframes fadeModal {
+@keyframes backgroundAppear{
 
-    from {
-        opacity: 0;
-    }
+    from{opacity:0}
+    to{opacity:1}
 
-    to {
-        opacity: 1;
-    }
 }
 
-.modal {
+.modal{
 
-    width:
-        430px;
+    width:430px;
 
-    max-width:
-        100%;
+    max-width:100%;
 
-    background:
-        white;
+    background:white;
 
-    border-radius:
-        30px;
+    border-radius:30px;
 
-    padding:
-        30px;
+    padding:30px;
 
-    position:
-        relative;
+    position:relative;
 
     box-shadow:
-        0 25px 80px rgba(30,50,90,.25);
+        0 25px 80px rgba(20,40,80,.25);
 
     animation:
-        modalPop .45s
+        modalBounce .5s
         cubic-bezier(.2,1.4,.4,1);
+
 }
 
-@keyframes modalPop {
+@keyframes modalBounce{
 
-    0% {
+    0%{
+        opacity:0;
+
         transform:
-            scale(.5)
-            rotate(-4deg);
-
-        opacity:
-            0;
+            translateY(50px)
+            scale(.7)
+            rotate(-3deg);
     }
 
-    70% {
+    70%{
+
         transform:
-            scale(1.05)
+            translateY(-8px)
+            scale(1.04)
             rotate(1deg);
+
     }
 
-    100% {
+    100%{
+
+        opacity:1;
+
         transform:
+            translateY(0)
             scale(1)
             rotate(0);
+
     }
+
 }
 
-.close {
+.modalIcon{
 
-    position:
-        absolute;
+    width:75px;
+    height:75px;
 
-    right:
-        17px;
+    border-radius:24px;
 
-    top:
-        17px;
+    background:#e8efff;
 
-    border:
-        none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 
-    width:
-        38px;
-
-    height:
-        38px;
-
-    border-radius:
-        50%;
-
-    background:
-        #edf1f7;
-
-    cursor:
-        pointer;
-
-    font-size:
-        20px;
-
-    transition:
-        .2s;
-}
-
-.close:hover {
-
-    transform:
-        rotate(90deg)
-        scale(1.1);
-
-    background:
-        #ffdede;
-}
-
-.modalIcon {
-
-    width:
-        70px;
-
-    height:
-        70px;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    border-radius:
-        22px;
-
-    background:
-        #e8efff;
-
-    font-size:
-        35px;
+    font-size:40px;
 
     animation:
-        iconFloat 2s ease-in-out infinite;
+        iconBounce 1.5s ease-in-out infinite;
+
 }
 
-@keyframes iconFloat {
+@keyframes iconBounce{
 
-    0%,100% {
-        transform:
-            translateY(0);
+    0%,100%{
+        transform:translateY(0);
     }
 
-    50% {
-        transform:
-            translateY(-7px);
+    50%{
+        transform:translateY(-7px);
     }
+
 }
 
-.modal h2 {
+.closeModal{
 
-    font-size:
-        27px;
+    position:absolute;
 
-    margin-bottom:
-        5px;
+    right:18px;
+    top:18px;
+
+    width:38px;
+    height:38px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:#edf1f6;
+
+    font-size:20px;
+
+    cursor:pointer;
+
+    transition:.2s;
+
 }
 
-.symbolName {
+.closeModal:hover{
 
-    color:
-        #71809a;
+    transform:rotate(90deg);
 
-    font-weight:
-        bold;
+    background:#ffdede;
+
 }
 
-.unit {
+.unit{
 
-    display:
-        inline-block;
+    display:inline-block;
 
-    background:
-        #e8f0ff;
+    background:#edf2ff;
 
-    color:
-        #5070cf;
+    color:#5872d0;
 
-    padding:
-        7px 12px;
+    padding:7px 12px;
 
-    border-radius:
-        12px;
+    border-radius:10px;
 
-    margin-top:
-        5px;
+    font-weight:bold;
+
 }
 
-.modalDescription {
+.modal p{
 
-    line-height:
-        1.6;
+    color:#607087;
 
-    color:
-        #56657a;
+    line-height:1.6;
+
 }
 
-/* ============================= */
-/* RESPONSIVE */
-/* ============================= */
+/* TELEFON */
 
-@media(max-width:700px) {
+@media(max-width:650px){
 
-    header {
-        display: block;
+    .homeTitle h1{
+        font-size:37px;
     }
 
-    .menu {
-        margin-top: 12px;
-        overflow-x: auto;
+    .subjectButton{
+        height:110px;
+        padding:15px;
     }
 
-    .menu button {
-        white-space: nowrap;
+    .subjectIcon{
+        width:65px;
+        height:65px;
     }
 
-    .titleBox h1 {
-        font-size: 35px;
+    .inputs{
+        grid-template-columns:1fr;
     }
+
+    .topicFormula{
+        font-size:18px;
+    }
+
 }
 
 </style>
@@ -996,92 +978,473 @@ header {
 
 <body>
 
+
+<!-- TŁO -->
+
+<div class="sky">
+
+<div class="sun"></div>
+
+<div class="cloud cloud1">☁️</div>
+<div class="cloud cloud2">☁️</div>
+<div class="cloud cloud3">☁️</div>
+
+<div class="grass"></div>
+
+</div>
+
+
+<!-- HEADER -->
+
 <header>
 
 <div class="logo">
 🌈 Fizyka<span>Fun</span>
 </div>
 
-<div class="menu">
-
 <button
-class="active"
-onclick="changeWorld('kinematyka',this)">
-🚗 Kinematyka
-</button>
+id="backButton"
+class="backButton"
+onclick="goBack()">
 
-<button
-onclick="changeWorld('dynamika',this)">
-📦 Dynamika
-</button>
+← Wróć
 
-<button
-onclick="changeWorld('energia',this)">
-⚡ Energia
 </button>
-
-</div>
 
 </header>
 
 
-<!-- ================================================= -->
-<!-- KINEMATYKA -->
-<!-- ================================================= -->
+<!-- ========================================== -->
+<!-- START -->
+<!-- ========================================== -->
 
 <section
-id="kinematyka"
-class="world active">
+id="home"
+class="page active">
 
-<div class="sun"></div>
+<div class="homeTitle">
 
-<div class="cloud cloud1">☁️</div>
-<div class="cloud cloud2">☁️</div>
-
-<div class="plane">✈️</div>
-
-<div class="wind wind1">〰️ 〰️ 〰️</div>
-<div class="wind wind2">〰️ 〰️</div>
-
-<div class="grass"></div>
-
-
-<div class="content">
-
-<div class="titleBox">
-
-<h1>🚗 Kinematyka</h1>
+<h1>⚛️ Odkrywaj fizykę!</h1>
 
 <p>
-Zobacz, jak poruszają się obiekty!
+Wybierz dział, który chcesz poznać 👇
 </p>
 
 </div>
 
 
-<div class="cards">
+<div class="subjects">
 
 
-<!-- DROGA -->
+<button
+class="subjectButton"
+onclick="openPage('kinematicsMenu')">
 
-<div class="card">
+<div class="subjectIcon kinematicsIcon">
+✈️
+</div>
 
-<h2>🛣️ Droga</h2>
+<div class="subjectText">
+
+<h2>Kinematyka</h2>
 
 <p>
-Sprawdź, jak daleko zajedzie samochód.
+Ruch, droga, prędkość i czas
 </p>
+
+</div>
+
+<div class="arrowRight">
+›
+</div>
+
+</button>
+
+
+<button
+class="subjectButton"
+onclick="openPage('dynamicsMenu')">
+
+<div class="subjectIcon dynamicsIcon">
+📦
+</div>
+
+<div class="subjectText">
+
+<h2>Dynamika</h2>
+
+<p>
+Siły, masa i prawa Newtona
+</p>
+
+</div>
+
+<div class="arrowRight">
+›
+</div>
+
+</button>
+
+
+<button
+class="subjectButton"
+onclick="openPage('energyMenu')">
+
+<div class="subjectIcon energyIcon">
+⚡
+</div>
+
+<div class="subjectText">
+
+<h2>Energia</h2>
+
+<p>
+Ruch, wysokość, praca i moc
+</p>
+
+</div>
+
+<div class="arrowRight">
+›
+</div>
+
+</button>
+
+
+</div>
+
+</section>
+
+
+<!-- ========================================== -->
+<!-- KINEMATYKA MENU -->
+<!-- ========================================== -->
+
+<section
+id="kinematicsMenu"
+class="page">
+
+<div class="sectionTitle">
+
+<h1>✈️ Kinematyka</h1>
+
+<p>
+Wybierz wzór lub prawo
+</p>
+
+</div>
+
+
+<div class="topicList">
+
+
+<button
+class="topic"
+onclick="openPage('distanceCalculator')">
+
+<div class="topicEmoji">
+✈️
+</div>
+
+<div class="topicInfo">
+
+<h3>Droga</h3>
+
+<p>
+Jak daleko poleci samolot?
+</p>
+
+</div>
+
+<div class="topicFormula">
+s = v · t
+</div>
+
+</button>
+
+
+<button
+class="topic"
+onclick="openPage('speedCalculator')">
+
+<div class="topicEmoji">
+💨
+</div>
+
+<div class="topicInfo">
+
+<h3>Prędkość</h3>
+
+<p>
+Jak szybko porusza się obiekt?
+</p>
+
+</div>
+
+<div class="topicFormula">
+v = s / t
+</div>
+
+</button>
+
+
+<button class="topic">
+
+<div class="topicEmoji">
+⏱️
+</div>
+
+<div class="topicInfo">
+
+<h3>Czas</h3>
+
+<p>
+Jak długo trwa ruch?
+</p>
+
+</div>
+
+<div class="topicFormula">
+t = s / v
+</div>
+
+</button>
+
+
+<button class="topic">
+
+<div class="topicEmoji">
+🚀
+</div>
+
+<div class="topicInfo">
+
+<h3>Przyspieszenie</h3>
+
+<p>
+Jak szybko zmienia się prędkość?
+</p>
+
+</div>
+
+<div class="topicFormula">
+a = Δv / Δt
+</div>
+
+</button>
+
+
+</div>
+
+</section>
+
+
+<!-- ========================================== -->
+<!-- DYNAMIKA MENU -->
+<!-- ========================================== -->
+
+<section
+id="dynamicsMenu"
+class="page">
+
+<div class="sectionTitle">
+
+<h1>📦 Dynamika</h1>
+
+<p>
+Wybierz prawo lub wzór
+</p>
+
+</div>
+
+
+<div class="topicList">
+
+
+<button
+class="topic"
+onclick="openPage('forceCalculator')">
+
+<div class="topicEmoji">
+💪
+</div>
+
+<div class="topicInfo">
+
+<h3>II zasada Newtona</h3>
+
+<p>
+Siła powoduje przyspieszenie ciała
+</p>
+
+</div>
+
+<div class="topicFormula">
+F = m · a
+</div>
+
+</button>
+
+
+<button class="topic">
+
+<div class="topicEmoji">
+🛑
+</div>
+
+<div class="topicInfo">
+
+<h3>I zasada Newtona</h3>
+
+<p>
+Zasada bezwładności
+</p>
+
+</div>
+
+<div class="topicFormula">
+ΣF = 0
+</div>
+
+</button>
+
+
+<button class="topic">
+
+<div class="topicEmoji">
+↔️
+</div>
+
+<div class="topicInfo">
+
+<h3>III zasada Newtona</h3>
+
+<p>
+Akcja i reakcja
+</p>
+
+</div>
+
+<div class="topicFormula">
+F₁₂ = −F₂₁
+</div>
+
+</button>
+
+
+</div>
+
+</section>
+
+
+<!-- ========================================== -->
+<!-- ENERGIA MENU -->
+<!-- ========================================== -->
+
+<section
+id="energyMenu"
+class="page">
+
+<div class="sectionTitle">
+
+<h1>⚡ Energia</h1>
+
+<p>
+Wybierz rodzaj energii lub wzór
+</p>
+
+</div>
+
+
+<div class="topicList">
+
+
+<button
+class="topic"
+onclick="openPage('kineticCalculator')">
+
+<div class="topicEmoji">
+⚽
+</div>
+
+<div class="topicInfo">
+
+<h3>Energia kinetyczna</h3>
+
+<p>
+Energia poruszającego się obiektu
+</p>
+
+</div>
+
+<div class="topicFormula">
+Eₖ = ½mv²
+</div>
+
+</button>
+
+
+<button
+class="topic"
+onclick="openPage('potentialCalculator')">
+
+<div class="topicEmoji">
+🏔️
+</div>
+
+<div class="topicInfo">
+
+<h3>Energia potencjalna</h3>
+
+<p>
+Energia związana z wysokością
+</p>
+
+</div>
+
+<div class="topicFormula">
+Eₚ = mgh
+</div>
+
+</button>
+
+
+</div>
+
+</section>
+
+
+<!-- ========================================== -->
+<!-- KALKULATOR DROGI -->
+<!-- ========================================== -->
+
+<section
+id="distanceCalculator"
+class="page">
+
+<div class="calculator">
+
+<div class="calculatorTitle">
+
+<h1>✈️ Droga</h1>
+
+<p>
+Zmieniaj prędkość i czas i obserwuj samolot!
+</p>
+
+</div>
+
 
 <div class="formula">
 
 <span
 class="symbol"
-onclick="openInfo(
+onclick="showInfo(
 'Droga',
 's',
 'm',
 '🛣️',
-'Droga mówi nam, jaką odległość pokonał obiekt. Na przykład samochód może przejechać 100 metrów.'
+'Droga to odległość pokonana przez obiekt.'
 )">
 s
 </span>
@@ -1090,12 +1453,12 @@ s
 
 <span
 class="symbol"
-onclick="openInfo(
+onclick="showInfo(
 'Prędkość',
 'v',
 'm/s',
-'🚗',
-'Prędkość mówi nam, jak szybko porusza się obiekt. 10 m/s oznacza, że w każdej sekundzie pokonuje 10 metrów.'
+'💨',
+'Prędkość mówi, jak szybko porusza się obiekt.'
 )">
 v
 </span>
@@ -1104,12 +1467,12 @@ v
 
 <span
 class="symbol"
-onclick="openInfo(
+onclick="showInfo(
 'Czas',
 't',
 's',
 '⏱️',
-'Czas mówi nam, jak długo trwa ruch.'
+'Czas mówi, jak długo trwa ruch.'
 )">
 t
 </span>
@@ -1122,13 +1485,14 @@ t
 <div class="inputBox">
 
 <label>
-🚗 Prędkość v [m/s]
+💨 Prędkość v [m/s]
 </label>
 
 <input
 id="velocity"
 type="number"
 value="10"
+min="0"
 oninput="calculateDistance()">
 
 </div>
@@ -1144,6 +1508,7 @@ oninput="calculateDistance()">
 id="time"
 type="number"
 value="5"
+min="0"
 oninput="calculateDistance()">
 
 </div>
@@ -1157,41 +1522,61 @@ class="result">
 </div>
 
 
-<div class="motionScene">
+<div class="planeScene">
 
-<div class="motionRoad"></div>
+<div class="sceneCloud one">
+☁️
+</div>
+
+<div class="sceneCloud two">
+☁️
+</div>
 
 <div
-id="car"
-class="car">
-🚗
+id="airplane"
+class="airplane">
+✈️
 </div>
 
 </div>
 
+
 </div>
 
+</section>
 
+
+<!-- ========================================== -->
 <!-- PRĘDKOŚĆ -->
+<!-- ========================================== -->
 
-<div class="card">
+<section
+id="speedCalculator"
+class="page">
 
-<h2>💨 Prędkość</h2>
+<div class="calculator">
+
+<div class="calculatorTitle">
+
+<h1>💨 Prędkość</h1>
 
 <p>
-Jak szybko trzeba jechać, aby pokonać daną drogę?
+Oblicz prędkość obiektu.
 </p>
+
+</div>
+
 
 <div class="formula">
 
 <span
 class="symbol"
-onclick="openInfo(
+onclick="showInfo(
 'Prędkość',
 'v',
 'm/s',
 '💨',
-'Prędkość opisuje szybkość ruchu obiektu.'
+'Prędkość mówi, jak szybko porusza się obiekt.'
 )">
 v
 </span>
@@ -1200,7 +1585,7 @@ v
 
 <span
 class="symbol"
-onclick="openInfo(
+onclick="showInfo(
 'Droga',
 's',
 'm',
@@ -1214,12 +1599,12 @@ s
 
 <span
 class="symbol"
-onclick="openInfo(
+onclick="showInfo(
 'Czas',
 't',
 's',
 '⏱️',
-'Czas mówi, jak długo trwał ruch.'
+'Czas trwania ruchu.'
 )">
 t
 </span>
@@ -1231,9 +1616,7 @@ t
 
 <div class="inputBox">
 
-<label>
-Droga [m]
-</label>
+<label>Droga s [m]</label>
 
 <input
 id="speedDistance"
@@ -1243,11 +1626,10 @@ oninput="calculateSpeed()">
 
 </div>
 
+
 <div class="inputBox">
 
-<label>
-Czas [s]
-</label>
+<label>Czas t [s]</label>
 
 <input
 id="speedTime"
@@ -1259,6 +1641,7 @@ oninput="calculateSpeed()">
 
 </div>
 
+
 <div
 id="speedResult"
 class="result">
@@ -1266,71 +1649,40 @@ class="result">
 
 </div>
 
-
-</div>
-
-</div>
-
 </section>
 
 
-<!-- ================================================= -->
-<!-- DYNAMIKA -->
-<!-- ================================================= -->
+<!-- ========================================== -->
+<!-- SIŁA -->
+<!-- ========================================== -->
 
 <section
-id="dynamika"
-class="world">
+id="forceCalculator"
+class="page">
 
-<div class="sun"></div>
+<div class="calculator">
 
-<div class="cloud cloud1">☁️</div>
+<div class="calculatorTitle">
 
-<div class="movingBox">
-📦
-</div>
-
-<div class="forceArrow">
-➜
-</div>
-
-
-<div class="content">
-
-<div class="titleBox">
-
-<h1>📦 Dynamika</h1>
+<h1>💪 II zasada Newtona</h1>
 
 <p>
-Dlaczego rzeczy zaczynają się poruszać?
+Sprawdź, jak masa i przyspieszenie wpływają na siłę.
 </p>
 
 </div>
-
-
-<div class="cards">
-
-<div class="card">
-
-<h2>
-💪 II zasada Newtona
-</h2>
-
-<p>
-Zwiększ siłę i zobacz, co dzieje się z przyspieszeniem!
-</p>
 
 
 <div class="formula">
 
 <span
 class="symbol"
-onclick="openInfo(
+onclick="showInfo(
 'Siła',
 'F',
 'N',
 '💪',
-'Siła to oddziaływanie, które może zmienić ruch obiektu. Na przykład możesz popchnąć pudełko.'
+'Siła opisuje oddziaływanie mogące zmienić ruch ciała.'
 )">
 F
 </span>
@@ -1339,12 +1691,12 @@ F
 
 <span
 class="symbol"
-onclick="openInfo(
+onclick="showInfo(
 'Masa',
 'm',
 'kg',
 '📦',
-'Masa mówi między innymi o bezwładności ciała. Cięższy obiekt trudniej rozpędzić przy tej samej sile.'
+'Masa opisuje bezwładność ciała.'
 )">
 m
 </span>
@@ -1353,12 +1705,12 @@ m
 
 <span
 class="symbol"
-onclick="openInfo(
+onclick="showInfo(
 'Przyspieszenie',
 'a',
 'm/s²',
 '🚀',
-'Przyspieszenie mówi, jak szybko zmienia się prędkość.'
+'Przyspieszenie opisuje zmianę prędkości w czasie.'
 )">
 a
 </span>
@@ -1370,9 +1722,7 @@ a
 
 <div class="inputBox">
 
-<label>
-📦 Masa [kg]
-</label>
+<label>Masa m [kg]</label>
 
 <input
 id="mass"
@@ -1385,9 +1735,7 @@ oninput="calculateForce()">
 
 <div class="inputBox">
 
-<label>
-🚀 Przyspieszenie [m/s²]
-</label>
+<label>Przyspieszenie a [m/s²]</label>
 
 <input
 id="acceleration"
@@ -1407,69 +1755,40 @@ class="result">
 
 </div>
 
-
-</div>
-
-</div>
-
 </section>
 
 
-<!-- ================================================= -->
-<!-- ENERGIA -->
-<!-- ================================================= -->
+<!-- ========================================== -->
+<!-- ENERGIA KINETYCZNA -->
+<!-- ========================================== -->
 
 <section
-id="energia"
-class="world">
+id="kineticCalculator"
+class="page">
 
-<div class="sun"></div>
+<div class="calculator">
 
-<div class="cloud cloud1">☁️</div>
+<div class="calculatorTitle">
 
-<div class="energyBall">
-⚽
-</div>
-
-
-<div class="content">
-
-<div class="titleBox">
-
-<h1>
-⚡ Energia
-</h1>
+<h1>⚽ Energia kinetyczna</h1>
 
 <p>
-Energia pozwala obiektom wykonywać pracę i zmieniać ruch!
+Zobacz, ile energii ma poruszający się obiekt.
 </p>
 
 </div>
-
-
-<div class="cards">
-
-<div class="card">
-
-<h2>
-🏎️ Energia kinetyczna
-</h2>
-
-<p>
-Poruszający się obiekt ma energię kinetyczną.
-</p>
 
 
 <div class="formula">
 
 <span
 class="symbol"
-onclick="openInfo(
+onclick="showInfo(
 'Energia kinetyczna',
 'Eₖ',
 'J',
 '⚡',
-'Energia kinetyczna to energia związana z ruchem. Im szybciej porusza się obiekt, tym większą ma energię kinetyczną.'
+'Energia kinetyczna jest energią związaną z ruchem.'
 )">
 Eₖ
 </span>
@@ -1480,24 +1799,24 @@ Eₖ
 
 <span
 class="symbol"
-onclick="openInfo(
+onclick="showInfo(
 'Masa',
 'm',
 'kg',
 '📦',
-'Masa opisuje między innymi bezwładność obiektu.'
+'Masa obiektu.'
 )">
 m
 </span>
 
 <span
 class="symbol"
-onclick="openInfo(
+onclick="showInfo(
 'Prędkość',
 'v',
 'm/s',
-'🏎️',
-'Prędkość mówi, jak szybko porusza się obiekt.'
+'💨',
+'Prędkość obiektu.'
 )">
 v
 </span>²
@@ -1509,30 +1828,26 @@ v
 
 <div class="inputBox">
 
-<label>
-Masa [kg]
-</label>
+<label>Masa [kg]</label>
 
 <input
-id="energyMass"
+id="kineticMass"
 type="number"
 value="2"
-oninput="calculateEnergy()">
+oninput="calculateKinetic()">
 
 </div>
 
 
 <div class="inputBox">
 
-<label>
-Prędkość [m/s]
-</label>
+<label>Prędkość [m/s]</label>
 
 <input
-id="energyVelocity"
+id="kineticVelocity"
 type="number"
 value="5"
-oninput="calculateEnergy()">
+oninput="calculateKinetic()">
 
 </div>
 
@@ -1540,36 +1855,46 @@ oninput="calculateEnergy()">
 
 
 <div
-id="energyResult"
+id="kineticResult"
 class="result">
 </div>
 
 </div>
 
+</section>
 
-<!-- POTENCJALNA -->
 
-<div class="card">
+<!-- ========================================== -->
+<!-- ENERGIA POTENCJALNA -->
+<!-- ========================================== -->
 
-<h2>
-🏔️ Energia potencjalna
-</h2>
+<section
+id="potentialCalculator"
+class="page">
+
+<div class="calculator">
+
+<div class="calculatorTitle">
+
+<h1>🏔️ Energia potencjalna</h1>
 
 <p>
-Podnieś obiekt wyżej, a zwiększysz jego energię potencjalną.
+Sprawdź wpływ wysokości na energię.
 </p>
+
+</div>
 
 
 <div class="formula">
 
 <span
 class="symbol"
-onclick="openInfo(
+onclick="showInfo(
 'Energia potencjalna',
 'Eₚ',
 'J',
 '🏔️',
-'Energia potencjalna grawitacyjna zależy od położenia obiektu w polu grawitacyjnym.'
+'Energia potencjalna grawitacyjna zależy od położenia ciała.'
 )">
 Eₚ
 </span>
@@ -1578,7 +1903,7 @@ Eₚ
 
 <span
 class="symbol"
-onclick="openInfo(
+onclick="showInfo(
 'Masa',
 'm',
 'kg',
@@ -1592,12 +1917,12 @@ m
 
 <span
 class="symbol"
-onclick="openInfo(
+onclick="showInfo(
 'Przyspieszenie grawitacyjne',
 'g',
 'm/s²',
 '🌍',
-'Przyspieszenie grawitacyjne przy powierzchni Ziemi wynosi około 9,81 m/s².'
+'Na powierzchni Ziemi g wynosi około 9,81 m/s².'
 )">
 g
 </span>
@@ -1606,12 +1931,12 @@ g
 
 <span
 class="symbol"
-onclick="openInfo(
+onclick="showInfo(
 'Wysokość',
 'h',
 'm',
 '📏',
-'Wysokość obiektu nad wybranym poziomem odniesienia.'
+'Wysokość nad wybranym poziomem odniesienia.'
 )">
 h
 </span>
@@ -1623,9 +1948,7 @@ h
 
 <div class="inputBox">
 
-<label>
-Masa [kg]
-</label>
+<label>Masa [kg]</label>
 
 <input
 id="potentialMass"
@@ -1638,9 +1961,7 @@ oninput="calculatePotential()">
 
 <div class="inputBox">
 
-<label>
-Wysokość [m]
-</label>
+<label>Wysokość [m]</label>
 
 <input
 id="height"
@@ -1660,27 +1981,22 @@ class="result">
 
 </div>
 
-
-</div>
-
-</div>
-
 </section>
 
 
-<!-- ================================================= -->
-<!-- MODAL -->
-<!-- ================================================= -->
+<!-- ========================================== -->
+<!-- OKIENKO INFORMACYJNE -->
+<!-- ========================================== -->
 
 <div
 id="modalBackground"
 class="modalBackground"
-onclick="backgroundClose(event)">
+onclick="modalBackgroundClick(event)">
 
 <div class="modal">
 
 <button
-class="close"
+class="closeModal"
 onclick="closeInfo()">
 ×
 </button>
@@ -1688,20 +2004,16 @@ onclick="closeInfo()">
 <div
 id="modalIcon"
 class="modalIcon">
-🚗
+💨
 </div>
 
 <h2 id="modalTitle">
 Prędkość
 </h2>
 
-<div
-id="modalSymbol"
-class="symbolName">
+<h3 id="modalSymbol">
 Symbol: v
-</div>
-
-<br>
+</h3>
 
 <div
 id="modalUnit"
@@ -1709,10 +2021,7 @@ class="unit">
 Jednostka: m/s
 </div>
 
-<p
-id="modalDescription"
-class="modalDescription">
-</p>
+<p id="modalDescription"></p>
 
 </div>
 
@@ -1721,38 +2030,108 @@ class="modalDescription">
 
 <script>
 
-/* ============================== */
-/* MENU */
-/* ============================== */
+/* ===================================== */
+/* NAWIGACJA */
+/* ===================================== */
 
-function changeWorld(id,button){
+let historyStack=[];
+
+function openPage(id){
+
+    const current=
+        document.querySelector(".page.active");
+
+    if(current){
+        historyStack.push(current.id);
+    }
 
     document
-    .querySelectorAll(".world")
-    .forEach(world=>{
-        world.classList.remove("active");
+        .querySelectorAll(".page")
+        .forEach(page=>{
+            page.classList.remove("active");
+        });
+
+    document
+        .getElementById(id)
+        .classList.add("active");
+
+    document
+        .getElementById("backButton")
+        .style.display=
+        id==="home"
+        ? "none"
+        : "block";
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
     });
 
-    document
-    .getElementById(id)
-    .classList.add("active");
-
-
-    document
-    .querySelectorAll(".menu button")
-    .forEach(btn=>{
-        btn.classList.remove("active");
-    });
-
-    button.classList.add("active");
 }
 
 
-/* ============================== */
-/* OKIENKO */
-/* ============================== */
+function goBack(){
 
-function openInfo(
+    if(historyStack.length===0){
+
+        showHome();
+
+        return;
+
+    }
+
+    const previous=
+        historyStack.pop();
+
+    document
+        .querySelectorAll(".page")
+        .forEach(page=>{
+            page.classList.remove("active");
+        });
+
+    document
+        .getElementById(previous)
+        .classList.add("active");
+
+
+    if(previous==="home"){
+
+        document
+            .getElementById("backButton")
+            .style.display="none";
+
+    }
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+
+function showHome(){
+
+    historyStack=[];
+
+    document
+        .querySelectorAll(".page")
+        .forEach(page=>{
+            page.classList.remove("active");
+        });
+
+    document
+        .getElementById("home")
+        .classList.add("active");
+
+}
+
+
+/* ===================================== */
+/* OKIENKA */
+/* ===================================== */
+
+function showInfo(
     title,
     symbol,
     unit,
@@ -1761,53 +2140,47 @@ function openInfo(
 ){
 
     document
-    .getElementById("modalTitle")
-    .textContent=title;
+        .getElementById("modalTitle")
+        .textContent=
+        title;
 
     document
-    .getElementById("modalSymbol")
-    .textContent="Symbol: "+symbol;
+        .getElementById("modalSymbol")
+        .textContent=
+        "Symbol: "+symbol;
 
     document
-    .getElementById("modalUnit")
-    .textContent="Jednostka: "+unit;
+        .getElementById("modalUnit")
+        .textContent=
+        "Jednostka: "+unit;
 
     document
-    .getElementById("modalIcon")
-    .textContent=icon;
+        .getElementById("modalIcon")
+        .textContent=
+        icon;
 
     document
-    .getElementById("modalDescription")
-    .textContent=description;
+        .getElementById("modalDescription")
+        .textContent=
+        description;
 
     document
-    .getElementById("modalBackground")
-    .classList.add("show");
+        .getElementById("modalBackground")
+        .classList.add("show");
+
 }
 
 
 function closeInfo(){
 
-    const background=
-    document.getElementById("modalBackground");
+    document
+        .getElementById("modalBackground")
+        .classList.remove("show");
 
-    const modal=
-    background.querySelector(".modal");
-
-    modal.style.animation=
-    "modalClose .2s ease forwards";
-
-    setTimeout(()=>{
-
-        background.classList.remove("show");
-
-        modal.style.animation="";
-
-    },180);
 }
 
 
-function backgroundClose(event){
+function modalBackgroundClick(event){
 
     if(
         event.target.id===
@@ -1815,199 +2188,221 @@ function backgroundClose(event){
     ){
         closeInfo();
     }
+
 }
 
 
-/* ============================== */
+/* ===================================== */
 /* OBLICZENIA */
-/* ============================== */
+/* ===================================== */
 
 function calculateDistance(){
 
-    let v=
-    Number(
-        document.getElementById("velocity").value
-    );
+    const v=
+        Number(
+            document.getElementById("velocity").value
+        );
 
-    let t=
-    Number(
-        document.getElementById("time").value
-    );
+    const t=
+        Number(
+            document.getElementById("time").value
+        );
 
-    let s=v*t;
+    const s=v*t;
 
     document
-    .getElementById("distanceResult")
-    .innerHTML=
-    "🛣️ s = <b>"+
-    s.toFixed(2)+
-    " m</b>";
+        .getElementById("distanceResult")
+        .innerHTML=
+        "✈️ Samolot pokona <b>"+
+        s.toFixed(2)+
+        " m</b>";
+
 }
 
 
 function calculateSpeed(){
 
-    let s=
-    Number(
-        document.getElementById("speedDistance").value
-    );
+    const s=
+        Number(
+            document.getElementById("speedDistance").value
+        );
 
-    let t=
-    Number(
-        document.getElementById("speedTime").value
-    );
+    const t=
+        Number(
+            document.getElementById("speedTime").value
+        );
 
-    let v=
-    t===0
-    ? 0
-    : s/t;
+    const v=
+        t===0
+        ? 0
+        : s/t;
 
     document
-    .getElementById("speedResult")
-    .innerHTML=
-    "💨 v = <b>"+
-    v.toFixed(2)+
-    " m/s</b>";
+        .getElementById("speedResult")
+        .innerHTML=
+        "💨 v = <b>"+
+        v.toFixed(2)+
+        " m/s</b>";
+
 }
 
 
 function calculateForce(){
 
-    let m=
-    Number(
-        document.getElementById("mass").value
-    );
+    const m=
+        Number(
+            document.getElementById("mass").value
+        );
 
-    let a=
-    Number(
-        document.getElementById("acceleration").value
-    );
+    const a=
+        Number(
+            document.getElementById("acceleration").value
+        );
 
-    let F=m*a;
+    const F=m*a;
 
     document
-    .getElementById("forceResult")
-    .innerHTML=
-    "💪 F = <b>"+
-    F.toFixed(2)+
-    " N</b>";
+        .getElementById("forceResult")
+        .innerHTML=
+        "💪 F = <b>"+
+        F.toFixed(2)+
+        " N</b>";
+
 }
 
 
-function calculateEnergy(){
+function calculateKinetic(){
 
-    let m=
-    Number(
-        document.getElementById("energyMass").value
-    );
+    const m=
+        Number(
+            document.getElementById("kineticMass").value
+        );
 
-    let v=
-    Number(
-        document.getElementById("energyVelocity").value
-    );
+    const v=
+        Number(
+            document.getElementById("kineticVelocity").value
+        );
 
-    let E=
-    0.5*m*v*v;
+    const E=
+        0.5*m*v*v;
 
     document
-    .getElementById("energyResult")
-    .innerHTML=
-    "⚡ Eₖ = <b>"+
-    E.toFixed(2)+
-    " J</b>";
+        .getElementById("kineticResult")
+        .innerHTML=
+        "⚡ Eₖ = <b>"+
+        E.toFixed(2)+
+        " J</b>";
+
 }
 
 
 function calculatePotential(){
 
-    let m=
-    Number(
-        document.getElementById("potentialMass").value
-    );
+    const m=
+        Number(
+            document.getElementById("potentialMass").value
+        );
 
-    let h=
-    Number(
-        document.getElementById("height").value
-    );
+    const h=
+        Number(
+            document.getElementById("height").value
+        );
 
-    let E=
-    m*9.81*h;
+    const E=
+        m*9.81*h;
 
     document
-    .getElementById("potentialResult")
-    .innerHTML=
-    "🏔️ Eₚ = <b>"+
-    E.toFixed(2)+
-    " J</b>";
+        .getElementById("potentialResult")
+        .innerHTML=
+        "🏔️ Eₚ = <b>"+
+        E.toFixed(2)+
+        " J</b>";
+
 }
 
 
-/* ============================== */
-/* SAMOCHÓD */
-/* ============================== */
+/* ===================================== */
+/* SAMOLOT */
+/* ===================================== */
 
-let carX=0;
+let planeX=-10;
 
-function animateCar(){
+function animatePlane(){
 
-    const car=
-    document.getElementById("car");
+    const plane=
+        document.getElementById("airplane");
 
-    const velocity=
-    Number(
-        document.getElementById("velocity").value
-    ) || 0;
+    const velocityInput=
+        document.getElementById("velocity");
 
-    carX+=
-    Math.max(
-        0,
-        velocity
-    )*0.035;
+    if(plane && velocityInput){
 
-    if(carX>90){
-        carX=-12;
+        const velocity=
+            Math.max(
+                0,
+                Number(velocityInput.value)||0
+            );
+
+        /*
+        WAŻNE:
+
+        Poprzednio prędkość była znacznie większa.
+
+        Tutaj dzielimy ruch przez 10.
+
+        Czyli np.:
+
+        v = 1  -> bardzo wolno
+        v = 10 -> 10x szybciej
+        v = 50 -> 50x szybciej
+
+        ale CAŁA skala jest 10x wolniejsza
+        niż wcześniej.
+        */
+
+        planeX += velocity * 0.0035;
+
+        if(planeX > 105){
+            planeX=-12;
+        }
+
+        plane.style.left=
+            planeX+"%";
+
+
+        /*
+        lekki ruch góra/dół,
+        żeby samolot wyglądał żywiej
+        */
+
+        const wave=
+            Math.sin(Date.now()/700)*8;
+
+        plane.style.transform=
+            "translateY("+wave+"px)";
+
     }
 
-    car.style.left=
-    carX+"%";
-
     requestAnimationFrame(
-        animateCar
+        animatePlane
     );
+
 }
 
 
-/* ============================== */
+/* ===================================== */
 /* START */
-/* ============================== */
+/* ===================================== */
 
 calculateDistance();
 calculateSpeed();
 calculateForce();
-calculateEnergy();
+calculateKinetic();
 calculatePotential();
 
-animateCar();
+animatePlane();
 
 </script>
-
-
-<style>
-
-@keyframes modalClose {
-
-    from {
-        transform:scale(1);
-        opacity:1;
-    }
-
-    to {
-        transform:scale(.75);
-        opacity:0;
-    }
-}
-
-</style>
 
 </body>
 </html>
