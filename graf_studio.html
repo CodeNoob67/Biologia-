@@ -102,6 +102,10 @@
   }
   .node:active{cursor:grabbing}
   .node.selected{outline:4px solid rgba(0,201,212,.25);border-color:var(--accent)}
+  .node.multi-selected{outline:4px solid rgba(0,201,212,.38);outline-offset:2px;border-color:var(--accent)}
+  .selectionBox{position:absolute;z-index:25;border:2px dashed #00c9d4;background:rgba(0,201,212,.12);pointer-events:none;display:none}
+  #stage.select-mode{cursor:crosshair}
+  #stage.select-mode .node{cursor:pointer}
   .node.connect-source{box-shadow:0 0 0 7px rgba(0,201,212,.18),0 8px 22px rgba(0,0,0,.27)}
   .nodeLabel{
     position:absolute;left:50%;top:calc(100% + 8px);transform:translateX(-50%);
@@ -225,6 +229,7 @@
     <div class="brand">Graph <span>Studio</span></div>
     <button id="addNodeBtn" class="toolTab">＋ Koła</button>
     <button id="connectBtn" class="toolTab">↗ Połączenia</button>
+    <button id="selectBtn" class="toolTab">▧ Zaznacz</button>
     <div class="colorToolWrap">
       <button id="paintBtn" class="toolTab">🎨 Kolory</button>
       <div id="paintMenu" class="paintMenu">
@@ -260,6 +265,7 @@
   <div class="main">
     <div class="stageWrap">
       <div id="gameHint" class="gameHint">Klikaj puste pole, aby zdobywać entropię. Kliknij dostępne koło, aby je odblokować.</div>
+      <div id="selectionBox" class="selectionBox"></div>
       <div id="stage">
         <div id="world">
           <svg id="svg"></svg>
@@ -427,6 +433,13 @@
   let paintTarget = 'color'; // color = środek, border = ramka
   let paintColor = '#00c9d4';
   let orderMode = false;
+  let selectMode = false;
+  let multiSelected = new Set();
+  let selectingArea = false;
+  let selectionStart = null;
+  let groupDragging = false;
+  let groupDragStart = null;
+  let groupStartPositions = new Map();
   let gameMode = false;
   let entropy = 0;
   let gameUnlocked = new Set();
@@ -483,7 +496,7 @@
     nodes=d.nodes||[]; edges=d.edges||[]; idCounter=d.idCounter||1;
     scale=d.view?.scale??1; panX=d.view?.panX??0; panY=d.view?.panY??0;
     appearance={bg:d.appearance?.bg||'#0b0f16',pattern:d.appearance?.pattern||'grid',gridSize:d.appearance?.gridSize||32};
-    selected=null;connectMode=false;connectSource=null;stage.classList.remove('connect-focus');$('#connectBtn').classList.remove('active');
+    selected=null;connectMode=false;connectSource=null;selectMode=false;clearMultiSelection();stage.classList.remove('connect-focus','select-mode');$('#connectBtn').classList.remove('active');$('#selectBtn').classList.remove('active');
     applyAppearance();applyView();render();persistProject(false);restoringHistory=false;updateHistoryButtons();
   }
   function undo(){
@@ -518,6 +531,38 @@
   function nodeById(id){return nodes.find(n=>n.id===id)}
   function edgeById(id){return edges.find(e=>e.id===id)}
 
+  function clearMultiSelection(){
+    multiSelected.clear();
+  }
+  function setSelectMode(on){
+    if(gameMode) return;
+    selectMode=on;
+    selectingArea=false; groupDragging=false; selectionStart=null;
+    $('#selectionBox').style.display='none';
+    $('#selectBtn').classList.toggle('active',selectMode);
+    stage.classList.toggle('select-mode',selectMode);
+    if(selectMode){
+      connectMode=false; connectSource=null; paintMode=false; orderMode=false; selected=null;
+      $('#connectBtn').classList.remove('active'); stage.classList.remove('connect-focus');
+      $('#paintBtn').classList.remove('active'); $('#paintMenu').classList.remove('open');
+      $('#orderBtn').classList.remove('active');
+    }else clearMultiSelection();
+    render();
+  }
+  function selectionRectFromPoints(a,b){
+    return {left:Math.min(a.x,b.x),top:Math.min(a.y,b.y),right:Math.max(a.x,b.x),bottom:Math.max(a.y,b.y)};
+  }
+  function updateSelectionBox(clientX,clientY){
+    if(!selectionStart)return;
+    const r=stage.getBoundingClientRect();
+    const x=Math.max(0,Math.min(stage.clientWidth,clientX-r.left));
+    const y=Math.max(0,Math.min(stage.clientHeight,clientY-r.top));
+    const left=Math.min(selectionStart.sx,x), top=Math.min(selectionStart.sy,y);
+    const w=Math.abs(x-selectionStart.sx), h=Math.abs(y-selectionStart.sy);
+    const box=$('#selectionBox');
+    box.style.left=left+'px'; box.style.top=top+'px'; box.style.width=w+'px'; box.style.height=h+'px'; box.style.display='block';
+  }
+
   function nodeLevel(n){ return Math.max(1,Math.round(Number(n.unlockLevel)||1)); }
   function nodeCost(n){ return Math.max(0,Math.round(Number(n.unlockCost)||0)); }
   function isGameVisible(n){
@@ -548,9 +593,9 @@
   function toggleGameMode(){
     gameMode=!gameMode;
     if(gameMode){
-      orderMode=false; connectMode=false; paintMode=false; connectSource=null; selected=null;
+      orderMode=false; connectMode=false; paintMode=false; connectSource=null; selected=null; selectMode=false; clearMultiSelection();
       document.body.classList.add('game-mode');
-      $('#orderBtn').classList.remove('active'); $('#connectBtn').classList.remove('active'); $('#paintBtn').classList.remove('active'); $('#paintMenu').classList.remove('open'); stage.classList.remove('connect-focus');
+      $('#orderBtn').classList.remove('active'); $('#connectBtn').classList.remove('active'); $('#selectBtn').classList.remove('active'); $('#paintBtn').classList.remove('active'); $('#paintMenu').classList.remove('open'); stage.classList.remove('connect-focus'); stage.classList.remove('select-mode');
       resetGame();
     }else{ document.body.classList.remove('game-mode'); updateGameHud(); render(); }
   }
@@ -576,8 +621,9 @@
     nodes.forEach(n=>{
       if(gameMode && !isGameVisible(n)) return;
       const el=document.createElement('div');
+      el.dataset.id=n.id;
       const affordable = entropy >= nodeCost(n);
-      el.className='node'+(!gameMode&&selected?.type==='node'&&selected.id===n.id?' selected':'')+(connectSource===n.id?' connect-source':'')+(n.image?' hasImage':'')+(gameMode?(gameUnlocked.has(n.id)?' gameNodeUnlocked':(' gameNodeLocked '+(affordable?'canBuy':'cantBuy'))):'');
+      el.className='node'+(!gameMode&&selected?.type==='node'&&selected.id===n.id?' selected':'')+(!gameMode&&multiSelected.has(n.id)?' multi-selected':'')+(connectSource===n.id?' connect-source':'')+(n.image?' hasImage':'')+(gameMode?(gameUnlocked.has(n.id)?' gameNodeUnlocked':(' gameNodeLocked '+(affordable?'canBuy':'cantBuy'))):'');
       el.dataset.id=n.id;
       Object.assign(el.style,{
         left:n.x+'px', top:n.y+'px', width:n.size+'px', height:n.size+'px',
@@ -622,6 +668,16 @@
           }
           return;
         }
+        if(selectMode){
+          if(!multiSelected.has(n.id)){
+            clearMultiSelection(); multiSelected.add(n.id); render();
+          }
+          groupDragging=true;
+          groupDragStart=worldPoint(ev.clientX,ev.clientY);
+          groupStartPositions=new Map([...multiSelected].map(id=>{const q=nodeById(id);return [id,{x:q.x,y:q.y}]}));
+          el.setPointerCapture(ev.pointerId);
+          return;
+        }
         if(paintMode){
           n[paintTarget]=paintColor;
           selected={type:'node',id:n.id};
@@ -664,6 +720,14 @@
         el.setPointerCapture(ev.pointerId);
       });
       el.addEventListener('pointermove',ev=>{
+        if(selectMode && groupDragging && groupDragStart){
+          const p=worldPoint(ev.clientX,ev.clientY);
+          const mx=p.x-groupDragStart.x, my=p.y-groupDragStart.y;
+          groupStartPositions.forEach((start,id)=>{const q=nodeById(id);if(q){q.x=Math.round(start.x+mx);q.y=Math.round(start.y+my);}});
+          renderEdgesOnly();
+          multiSelected.forEach(id=>{const q=nodeById(id), dom=nodesLayer.querySelector('[data-id="'+id+'"]');if(q&&dom){dom.style.left=q.x+'px';dom.style.top=q.y+'px';}});
+          return;
+        }
         if(!dragging)return;
         const p=worldPoint(ev.clientX,ev.clientY);
         n.x=Math.round(p.x-dx); n.y=Math.round(p.y-dy);
@@ -672,6 +736,7 @@
         el.style.left=n.x+'px'; el.style.top=n.y+'px';
       });
       el.addEventListener('pointerup',()=>{
+        if(selectMode && groupDragging){ groupDragging=false; groupDragStart=null; groupStartPositions=new Map(); pushHistory(); autoSave(); return; }
         if(dragging){ pushHistory(); autoSave(); }
         dragging=false;
       });
@@ -716,8 +781,11 @@
     addNode(p.x-45,p.y-45);
   };
 
+  $('#selectBtn').onclick=()=>setSelectMode(!selectMode);
+
   $('#connectBtn').onclick=()=>{
     connectMode=!connectMode; connectSource=null;
+    if(connectMode && selectMode){selectMode=false;clearMultiSelection();$('#selectBtn').classList.remove('active');stage.classList.remove('select-mode');}
     if(connectMode && paintMode){paintMode=false;$('#paintBtn').classList.remove('active');$('#paintMenu').classList.remove('open');}
     $('#connectBtn').classList.toggle('active',connectMode);
     stage.classList.toggle('connect-focus',connectMode);
@@ -728,7 +796,7 @@
   $('#orderBtn').onclick=()=>{
     if(gameMode)return;
     orderMode=!orderMode;
-    if(orderMode){connectMode=false;connectSource=null;paintMode=false;$('#connectBtn').classList.remove('active');stage.classList.remove('connect-focus');$('#paintBtn').classList.remove('active');$('#paintMenu').classList.remove('open');}
+    if(orderMode){connectMode=false;connectSource=null;paintMode=false;selectMode=false;clearMultiSelection();$('#selectBtn').classList.remove('active');stage.classList.remove('select-mode');$('#connectBtn').classList.remove('active');stage.classList.remove('connect-focus');$('#paintBtn').classList.remove('active');$('#paintMenu').classList.remove('open');}
     $('#orderBtn').classList.toggle('active',orderMode); render();
   };
   $('#gameBtn').onclick=toggleGameMode;
@@ -758,7 +826,9 @@
     paintMode=!paintMode;
     $('#paintBtn').classList.toggle('active',paintMode);
     $('#paintMenu').classList.toggle('open',paintMode);
-    if(paintMode && connectMode){connectMode=false;connectSource=null;$('#connectBtn').classList.remove('active');stage.classList.remove('connect-focus');render();}
+    if(paintMode && connectMode){connectMode=false;connectSource=null;$('#connectBtn').classList.remove('active');stage.classList.remove('connect-focus');}
+    if(paintMode && selectMode){selectMode=false;clearMultiSelection();$('#selectBtn').classList.remove('active');stage.classList.remove('select-mode');}
+    render();
   };
   $('#paintMenu').onclick=e=>e.stopPropagation();
   $('#paintFill').onclick=()=>setPaintTarget('color');
@@ -768,6 +838,12 @@
 
   function removeSelected(){
     if(gameMode)return;
+    if(selectMode && multiSelected.size){
+      const ids=new Set(multiSelected);
+      nodes=nodes.filter(n=>!ids.has(n.id));
+      edges=edges.filter(e=>!ids.has(e.a)&&!ids.has(e.b));
+      clearMultiSelection(); render(); pushHistory(); autoSave(); return;
+    }
     if(!selected)return;
     if(selected.type==='node'){
       nodes=nodes.filter(n=>n.id!==selected.id);
@@ -784,6 +860,7 @@
       $('#connectBtn').classList.remove('active');
       paintMode=false; $('#paintBtn').classList.remove('active'); $('#paintMenu').classList.remove('open');
       orderMode=false; $('#orderBtn').classList.remove('active');
+      selectMode=false; clearMultiSelection(); $('#selectBtn').classList.remove('active'); stage.classList.remove('select-mode'); $('#selectionBox').style.display='none';
       selected=null;render();
     }
   });
@@ -795,18 +872,35 @@
     if(e.button!==0)return;
     if(e.target.closest('.node')||e.target.tagName==='line')return;
     if(gameMode){ entropy+=1; updateGameHud(); animateEntropyGain(e.clientX,e.clientY,1); render(); return; }
+    if(selectMode){
+      clearMultiSelection(); selected=null; render();
+      const r=stage.getBoundingClientRect();
+      selectionStart={sx:e.clientX-r.left,sy:e.clientY-r.top,world:worldPoint(e.clientX,e.clientY)};
+      selectingArea=true; updateSelectionBox(e.clientX,e.clientY);
+      stage.setPointerCapture(e.pointerId); return;
+    }
     if(connectMode)return;
     selected=null;render();
     panning=true;panMoved=false;lastX=e.clientX;lastY=e.clientY;
     stage.classList.add('panning');stage.setPointerCapture(e.pointerId);
   });
   stage.addEventListener('pointermove',e=>{
+    if(selectMode && selectingArea){ updateSelectionBox(e.clientX,e.clientY); return; }
     if(!panning)return;
     const dx=e.clientX-lastX,dy=e.clientY-lastY;
     if(Math.abs(dx)+Math.abs(dy)>1)panMoved=true;
     panX+=dx;panY+=dy;lastX=e.clientX;lastY=e.clientY;applyView();
   });
   stage.addEventListener('pointerup',e=>{
+    if(selectMode && selectingArea){
+      selectingArea=false;
+      const end=worldPoint(e.clientX,e.clientY), rect=selectionRectFromPoints(selectionStart.world,end);
+      nodes.forEach(n=>{
+        const cx=n.x+n.size/2, cy=n.y+n.size/2;
+        if(cx>=rect.left&&cx<=rect.right&&cy>=rect.top&&cy<=rect.bottom) multiSelected.add(n.id);
+      });
+      selectionStart=null; $('#selectionBox').style.display='none'; render(); return;
+    }
     if(!panning)return; panning=false; stage.classList.remove('panning');
     autoSave();
   });
