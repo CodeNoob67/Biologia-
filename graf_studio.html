@@ -104,6 +104,9 @@
   .node.selected{outline:4px solid rgba(0,201,212,.25);border-color:var(--accent)}
   .node.multi-selected{outline:4px solid rgba(0,201,212,.38);outline-offset:2px;border-color:var(--accent)}
   .selectionBox{position:absolute;z-index:25;border:2px dashed #00c9d4;background:rgba(0,201,212,.12);pointer-events:none;display:none}
+  .selectionLasso{position:absolute;inset:0;z-index:25;pointer-events:none;display:none;width:100%;height:100%}
+  .selectionLasso path{fill:rgba(0,201,212,.12);stroke:#00c9d4;stroke-width:2;stroke-dasharray:7 5;vector-effect:non-scaling-stroke}
+  .shapeToggle{min-width:30px!important;padding:0 5px!important}
   #stage.select-mode{cursor:crosshair}
   #stage.select-mode .node{cursor:pointer}
   .node.connect-source{box-shadow:0 0 0 7px rgba(0,201,212,.18),0 8px 22px rgba(0,0,0,.27)}
@@ -230,6 +233,7 @@
     <button id="addNodeBtn" class="toolTab">＋ Koła</button>
     <button id="connectBtn" class="toolTab">↗ Połączenia</button>
     <button id="selectBtn" class="toolTab">▧ Zaznacz</button>
+    <button id="selectShapeBtn" class="toolTab shapeToggle" title="Kształt zaznaczenia: prostokąt">▭</button>
     <div class="colorToolWrap">
       <button id="paintBtn" class="toolTab">🎨 Kolory</button>
       <div id="paintMenu" class="paintMenu">
@@ -266,6 +270,7 @@
     <div class="stageWrap">
       <div id="gameHint" class="gameHint">Klikaj puste pole, aby zdobywać entropię. Kliknij dostępne koło, aby je odblokować.</div>
       <div id="selectionBox" class="selectionBox"></div>
+      <svg id="selectionLasso" class="selectionLasso" aria-hidden="true"><path id="selectionLassoPath"></path></svg>
       <div id="stage">
         <div id="world">
           <svg id="svg"></svg>
@@ -437,6 +442,10 @@
   let multiSelected = new Set();
   let selectingArea = false;
   let selectionStart = null;
+  let selectionShape = 'rect'; // rect | lasso
+  let lassoScreenPoints = [];
+  let lassoWorldPoints = [];
+  let copiedSelection = null;
   let groupDragging = false;
   let groupDragStart = null;
   let groupStartPositions = new Map();
@@ -534,12 +543,66 @@
   function clearMultiSelection(){
     multiSelected.clear();
   }
+  function updateSelectAction(){
+    const btn=$('#selectBtn');
+    if(multiSelected.size){ btn.textContent='⧉ Kopiuj'; btn.title='Skopiuj zaznaczone elementy'; }
+    else if(copiedSelection){ btn.textContent='📋 Wklej'; btn.title='Wklej skopiowane elementy do tego arkusza'; }
+    else { btn.textContent='▧ Zaznacz'; btn.title='Włącz lub wyłącz zaznaczanie'; }
+    btn.classList.toggle('active',selectMode && !multiSelected.size);
+  }
+  function updateShapeButton(){
+    const b=$('#selectShapeBtn');
+    b.textContent=selectionShape==='rect'?'▭':'✎';
+    b.title=selectionShape==='rect'?'Kształt zaznaczenia: prostokąt — kliknij, aby wybrać dowolny kształt':'Kształt zaznaczenia: dowolny — kliknij, aby wybrać prostokąt';
+  }
+  function pointInPolygon(x,y,poly){
+    let inside=false;
+    for(let i=0,j=poly.length-1;i<poly.length;j=i++){
+      const xi=poly[i].x, yi=poly[i].y, xj=poly[j].x, yj=poly[j].y;
+      const hit=((yi>y)!==(yj>y)) && (x < (xj-xi)*(y-yi)/((yj-yi)||1e-9)+xi);
+      if(hit) inside=!inside;
+    }
+    return inside;
+  }
+  function copyMultiSelection(){
+    if(!multiSelected.size)return;
+    const ids=new Set(multiSelected);
+    const pickedNodes=nodes.filter(n=>ids.has(n.id)).map(n=>JSON.parse(JSON.stringify(n)));
+    const pickedEdges=edges.filter(e=>ids.has(e.a)&&ids.has(e.b)).map(e=>JSON.parse(JSON.stringify(e)));
+    if(!pickedNodes.length)return;
+    copiedSelection={nodes:pickedNodes,edges:pickedEdges};
+    clearMultiSelection(); selectMode=false; selected=null;
+    stage.classList.remove('select-mode'); $('#selectionBox').style.display='none'; $('#selectionLasso').style.display='none';
+    render(); updateSelectAction();
+  }
+  function pasteCopiedSelection(){
+    if(!copiedSelection?.nodes?.length || gameMode)return;
+    const src=copiedSelection.nodes;
+    const minX=Math.min(...src.map(n=>n.x)), minY=Math.min(...src.map(n=>n.y));
+    const maxX=Math.max(...src.map(n=>n.x+n.size)), maxY=Math.max(...src.map(n=>n.y+n.size));
+    const r=stage.getBoundingClientRect();
+    const center=worldPoint(r.left+stage.clientWidth/2,r.top+stage.clientHeight/2);
+    const offX=center.x-(minX+maxX)/2, offY=center.y-(minY+maxY)/2;
+    const idMap=new Map();
+    const newIds=[];
+    src.forEach(n=>{
+      const c=JSON.parse(JSON.stringify(n));
+      const old=c.id; c.id=uid('n'); c.x=Math.round(c.x+offX); c.y=Math.round(c.y+offY);
+      idMap.set(old,c.id); newIds.push(c.id); nodes.push(c);
+    });
+    copiedSelection.edges.forEach(e=>{
+      if(!idMap.has(e.a)||!idMap.has(e.b))return;
+      const c=JSON.parse(JSON.stringify(e)); c.id=uid('e'); c.a=idMap.get(e.a); c.b=idMap.get(e.b); edges.push(c);
+    });
+    multiSelected=new Set(newIds); selectMode=true; selected=null; stage.classList.add('select-mode');
+    render(); pushHistory(); autoSave(); updateSelectAction();
+  }
   function setSelectMode(on){
     if(gameMode) return;
     selectMode=on;
     selectingArea=false; groupDragging=false; selectionStart=null;
     $('#selectionBox').style.display='none';
-    $('#selectBtn').classList.toggle('active',selectMode);
+    $('#selectionLasso').style.display='none'; lassoScreenPoints=[]; lassoWorldPoints=[];
     stage.classList.toggle('select-mode',selectMode);
     if(selectMode){
       connectMode=false; connectSource=null; paintMode=false; orderMode=false; selected=null;
@@ -547,7 +610,7 @@
       $('#paintBtn').classList.remove('active'); $('#paintMenu').classList.remove('open');
       $('#orderBtn').classList.remove('active');
     }else clearMultiSelection();
-    render();
+    render(); updateSelectAction();
   }
   function selectionRectFromPoints(a,b){
     return {left:Math.min(a.x,b.x),top:Math.min(a.y,b.y),right:Math.max(a.x,b.x),bottom:Math.max(a.y,b.y)};
@@ -561,6 +624,17 @@
     const w=Math.abs(x-selectionStart.sx), h=Math.abs(y-selectionStart.sy);
     const box=$('#selectionBox');
     box.style.left=left+'px'; box.style.top=top+'px'; box.style.width=w+'px'; box.style.height=h+'px'; box.style.display='block';
+  }
+  function updateLasso(clientX,clientY){
+    const r=stage.getBoundingClientRect();
+    const sx=Math.max(0,Math.min(stage.clientWidth,clientX-r.left));
+    const sy=Math.max(0,Math.min(stage.clientHeight,clientY-r.top));
+    const last=lassoScreenPoints[lassoScreenPoints.length-1];
+    if(last && Math.hypot(sx-last.x,sy-last.y)<4)return;
+    lassoScreenPoints.push({x:sx,y:sy});
+    lassoWorldPoints.push(worldPoint(clientX,clientY));
+    const d=lassoScreenPoints.map((p,i)=>(i?'L':'M')+p.x+' '+p.y).join(' ') + (lassoScreenPoints.length>2?' Z':'');
+    $('#selectionLassoPath').setAttribute('d',d); $('#selectionLasso').style.display='block';
   }
 
   function nodeLevel(n){ return Math.max(1,Math.round(Number(n.unlockLevel)||1)); }
@@ -578,6 +652,7 @@
     $('#entropyValue').textContent=Math.floor(entropy);
     $('#gameHud').classList.toggle('show',gameMode);
     $('#gameHint').classList.toggle('show',gameMode);
+    $('#selectShapeBtn').disabled=gameMode;
     $('#gameBtn').classList.toggle('active',gameMode);
   }
   function animateEntropyGain(clientX,clientY,amount=1){
@@ -670,7 +745,7 @@
         }
         if(selectMode){
           if(!multiSelected.has(n.id)){
-            clearMultiSelection(); multiSelected.add(n.id); render();
+            clearMultiSelection(); multiSelected.add(n.id); render(); updateSelectAction();
           }
           groupDragging=true;
           groupDragStart=worldPoint(ev.clientX,ev.clientY);
@@ -781,7 +856,17 @@
     addNode(p.x-45,p.y-45);
   };
 
-  $('#selectBtn').onclick=()=>setSelectMode(!selectMode);
+  $('#selectBtn').onclick=()=>{
+    if(gameMode)return;
+    if(multiSelected.size){copyMultiSelection();return;}
+    if(copiedSelection){pasteCopiedSelection();return;}
+    setSelectMode(!selectMode);
+  };
+  $('#selectShapeBtn').onclick=()=>{
+    if(gameMode)return;
+    selectionShape=selectionShape==='rect'?'lasso':'rect'; updateShapeButton();
+    if(!selectMode && !multiSelected.size && !copiedSelection)setSelectMode(true);
+  };
 
   $('#connectBtn').onclick=()=>{
     connectMode=!connectMode; connectSource=null;
@@ -842,7 +927,7 @@
       const ids=new Set(multiSelected);
       nodes=nodes.filter(n=>!ids.has(n.id));
       edges=edges.filter(e=>!ids.has(e.a)&&!ids.has(e.b));
-      clearMultiSelection(); render(); pushHistory(); autoSave(); return;
+      clearMultiSelection(); render(); pushHistory(); autoSave(); updateSelectAction(); return;
     }
     if(!selected)return;
     if(selected.type==='node'){
@@ -860,8 +945,8 @@
       $('#connectBtn').classList.remove('active');
       paintMode=false; $('#paintBtn').classList.remove('active'); $('#paintMenu').classList.remove('open');
       orderMode=false; $('#orderBtn').classList.remove('active');
-      selectMode=false; clearMultiSelection(); $('#selectBtn').classList.remove('active'); stage.classList.remove('select-mode'); $('#selectionBox').style.display='none';
-      selected=null;render();
+      selectMode=false; clearMultiSelection(); stage.classList.remove('select-mode'); $('#selectionBox').style.display='none'; $('#selectionLasso').style.display='none';
+      selected=null;render();updateSelectAction();
     }
   });
 
@@ -876,7 +961,9 @@
       clearMultiSelection(); selected=null; render();
       const r=stage.getBoundingClientRect();
       selectionStart={sx:e.clientX-r.left,sy:e.clientY-r.top,world:worldPoint(e.clientX,e.clientY)};
-      selectingArea=true; updateSelectionBox(e.clientX,e.clientY);
+      selectingArea=true;
+      if(selectionShape==='rect') updateSelectionBox(e.clientX,e.clientY);
+      else { lassoScreenPoints=[]; lassoWorldPoints=[]; updateLasso(e.clientX,e.clientY); }
       stage.setPointerCapture(e.pointerId); return;
     }
     if(connectMode)return;
@@ -885,7 +972,7 @@
     stage.classList.add('panning');stage.setPointerCapture(e.pointerId);
   });
   stage.addEventListener('pointermove',e=>{
-    if(selectMode && selectingArea){ updateSelectionBox(e.clientX,e.clientY); return; }
+    if(selectMode && selectingArea){ if(selectionShape==='rect') updateSelectionBox(e.clientX,e.clientY); else updateLasso(e.clientX,e.clientY); return; }
     if(!panning)return;
     const dx=e.clientX-lastX,dy=e.clientY-lastY;
     if(Math.abs(dx)+Math.abs(dy)>1)panMoved=true;
@@ -894,12 +981,21 @@
   stage.addEventListener('pointerup',e=>{
     if(selectMode && selectingArea){
       selectingArea=false;
-      const end=worldPoint(e.clientX,e.clientY), rect=selectionRectFromPoints(selectionStart.world,end);
-      nodes.forEach(n=>{
-        const cx=n.x+n.size/2, cy=n.y+n.size/2;
-        if(cx>=rect.left&&cx<=rect.right&&cy>=rect.top&&cy<=rect.bottom) multiSelected.add(n.id);
-      });
-      selectionStart=null; $('#selectionBox').style.display='none'; render(); return;
+      if(selectionShape==='rect'){
+        const end=worldPoint(e.clientX,e.clientY), rect=selectionRectFromPoints(selectionStart.world,end);
+        nodes.forEach(n=>{
+          const cx=n.x+n.size/2, cy=n.y+n.size/2;
+          if(cx>=rect.left&&cx<=rect.right&&cy>=rect.top&&cy<=rect.bottom) multiSelected.add(n.id);
+        });
+      }else{
+        updateLasso(e.clientX,e.clientY);
+        if(lassoWorldPoints.length>=3) nodes.forEach(n=>{
+          const cx=n.x+n.size/2, cy=n.y+n.size/2;
+          if(pointInPolygon(cx,cy,lassoWorldPoints)) multiSelected.add(n.id);
+        });
+      }
+      selectionStart=null; $('#selectionBox').style.display='none'; $('#selectionLasso').style.display='none';
+      lassoScreenPoints=[]; lassoWorldPoints=[]; render(); updateSelectAction(); return;
     }
     if(!panning)return; panning=false; stage.classList.remove('panning');
     autoSave();
@@ -997,7 +1093,7 @@
     nodes=d.nodes||[];edges=d.edges||[];idCounter=d.idCounter||1;
     scale=d.view?.scale||1;panX=d.view?.panX||0;panY=d.view?.panY||0;
     appearance={bg:d.appearance?.bg||'#0b0f16',pattern:d.appearance?.pattern||'grid',gridSize:d.appearance?.gridSize||32};
-    selected=null;connectMode=false;connectSource=null;stage.classList.remove('connect-focus');applyAppearance();applyView();render();
+    selected=null;connectMode=false;connectSource=null;selectMode=false;clearMultiSelection();stage.classList.remove('connect-focus','select-mode');applyAppearance();applyView();render();updateSelectAction();
     undoStack=[snapshot()];redoStack=[];updateHistoryButtons();
   }
   function openProject(id){
@@ -1008,7 +1104,7 @@
   function newBlankProject(){
     persistProject(false);
     nodes=[];edges=[];idCounter=1;scale=1;panX=0;panY=0;appearance={bg:'#0b0f16',pattern:'grid',gridSize:32};
-    selected=null; render(); applyAppearance(); applyView();
+    selected=null; selectMode=false; clearMultiSelection(); render(); applyAppearance(); applyView(); updateSelectAction();
     createProject('Nowy projekt',project()); undoStack=[snapshot()];redoStack=[];updateHistoryButtons();
   }
   function saveAs(){
@@ -1332,6 +1428,8 @@
   if(!undoStack.length) undoStack=[snapshot()];
   updateHistoryButtons();
   updateGameHud();
+  updateShapeButton();
+  updateSelectAction();
   window.addEventListener('beforeunload',()=>persistProject(false));
 })();
 </script>
