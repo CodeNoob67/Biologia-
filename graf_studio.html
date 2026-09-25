@@ -594,7 +594,13 @@
       if(!idMap.has(e.a)||!idMap.has(e.b))return;
       const c=JSON.parse(JSON.stringify(e)); c.id=uid('e'); c.a=idMap.get(e.a); c.b=idMap.get(e.b); edges.push(c);
     });
-    multiSelected=new Set(newIds); selectMode=true; selected=null; stage.classList.add('select-mode');
+    // Po jednokrotnym wklejeniu wracamy od razu do zwykłego przycisku „Zaznacz”.
+    // Schowek zostaje wyczyszczony, więc kolejne wklejenie wymaga ponownego kopiowania.
+    multiSelected.clear();
+    copiedSelection=null;
+    selectMode=false;
+    selected=null;
+    stage.classList.remove('select-mode');
     render(); pushHistory(); autoSave(); updateSelectAction();
   }
   function setSelectMode(on){
