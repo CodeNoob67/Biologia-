@@ -518,7 +518,7 @@
     const raw=redoStack.pop();undoStack.push(raw);restoreSnapshot(raw);
   }
 
-  function addNode(x=450,y=300,name='Nowy element'){
+  function addNode(x=450,y=300,name=''){
     const n = {
       id:uid('n'), x,y,size:90,name,
       color:'#202a39', border:'#66758a', borderWidth:3, image:null, icon:'', iconSize:lastEmojiSize,
