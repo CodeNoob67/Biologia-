@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SizeGuesser</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f4f4f4;
+        color: #111;
+        overflow-x: hidden;
+    }
+
+    header {
+        height: 70px;
+        background: white;
+        border-bottom: 2px solid #ddd;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 30px;
+    }
+
+    h1 {
+        margin: 0;
+        font-size: 28px;
+    }
+
+    #stats {
+        display: flex;
+        gap: 25px;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    #game {
+        min-height: calc(100vh - 70px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 30px;
+    }
+
+    #question {
+        font-size: 25px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    #hint {
+        color: #666;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    #arena {
+        width: min(1100px, 95vw);
+        height: 430px;
+        background: white;
+        border-radius: 20px;
+        border: 2px solid #ddd;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    }
+
+    .object-container {
+        position: absolute;
+        bottom: 45px;
+        width: 50%;
+        height: 330px;
+
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+    }
+
+    #referenceContainer {
+        left: 0;
+    }
+
+    #guessContainer {
+        right: 0;
+    }
+
+    .object {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        font-size: 80px;
+        transform-origin: bottom center;
+
+        transition: transform 0.15s;
+        user-select: none;
+    }
+
+    #referenceObject {
+        filter:
+            sepia(1)
+            saturate(10)
+            hue-rotate(320deg);
+    }
+
+    #guessObject {
+        filter: grayscale(1) brightness(0);
+    }
+
+    .label {
+        position: absolute;
+        bottom: 10px;
+        width: 100%;
+        text-align: center;
+        font-weight: bold;
+        font-size: 18px;
+    }
+
+    #controls {
+        margin-top: 25px;
+        width: min(700px, 90vw);
+        text-align: center;
+    }
+
+    #slider {
+        width: 100%;
+        cursor: pointer;
+    }
+
+    #scaleDisplay {
+        font-size: 22px;
+        font-weight: bold;
+        margin: 10px 0 20px;
+    }
+
+    button {
+        border: 0;
+        padding: 14px 28px;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 10px;
+        cursor: pointer;
+        margin: 5px;
+    }
+
+    #submit {
+        background: #111;
+        color: white;
+    }
+
+    #next {
+        background: #e53935;
+        color: white;
+        display: none;
+    }
+
+    #result {
+        height: 70px;
+        margin-top: 15px;
+        font-size: 20px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    #correctMarker {
+        position: absolute;
+        border: 3px dashed #1cbb5d;
+        display: none;
+        pointer-events: none;
+        transform-origin: bottom center;
+        bottom: 45px;
+        right: 0;
+        width: 50%;
+        height: 330px;
+        align-items: flex-end;
+        justify-content: center;
+    }
+
+    #correctGhost {
+        font-size: 80px;
+        opacity: 0.25;
+        filter:
+            sepia(1)
+            saturate(10)
+            hue-rotate(70deg);
+        transform-origin: bottom center;
+    }
+
+    .divider {
+        position: absolute;
+        left: 50%;
+        top: 30px;
+        bottom: 30px;
+        border-left: 2px dashed #ddd;
+    }
+
+    @media (max-width: 650px) {
+        #arena {
+            height: 360px;
+        }
+
+        .object-container,
+        #correctMarker {
+            height: 270px;
+        }
+
+        .object,
+        #correctGhost {
+            font-size: 55px;
+        }
+
+        header {
+            padding: 0 15px;
+        }
+
+        h1 {
+            font-size: 21px;
+        }
+
+        #stats {
+            font-size: 14px;
+            gap: 10px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>SizeGuesser</h1>
+
+    <div id="stats">
+        <div>Runda: <span id="round">1</span></div>
+        <div>Punkty: <span id="score">0</span></div>
+    </div>
+</header>
+
+<div id="game">
+
+    <div id="question"></div>
+    <div id="hint">
+        Dopasuj rozmiar czarnego obiektu do jego prawdziwego rozmiaru względem czerwonego.
+    </div>
+
+    <div id="arena">
+
+        <div class="divider"></div>
+
+        <div id="referenceContainer" class="object-container">
+            <div id="referenceObject" class="object"></div>
+            <div id="referenceLabel" class="label"></div>
+        </div>
+
+        <div id="guessContainer" class="object-container">
+            <div id="guessObject" class="object"></div>
+            <div id="guessLabel" class="label"></div>
+        </div>
+
+        <div id="correctMarker">
+            <div id="correctGhost"></div>
+        </div>
+
+    </div>
+
+    <div id="controls">
+
+        <input
+            id="slider"
+            type="range"
+            min="10"
+            max="500"
+            value="100"
+        >
+
+        <div id="scaleDisplay">100%</div>
+
+        <button id="submit">
+            ZATWIERDŹ
+        </button>
+
+        <button id="next">
+            NASTĘPNA RUNDA →
+        </button>
+
+        <div id="result"></div>
+
+    </div>
+
+</div>
+
+<script>
+
+/*
+    Każdy obiekt ma:
+    name = nazwa
+    emoji = grafika
+    size = prawdziwy typowy rozmiar w metrach
+
+    Możesz dodawać tutaj dowolną liczbę obiektów.
+*/
+
+const objects = [
+
+    {
+        name: "Pies",
+        emoji: "🐕",
+        size: 1.0
+    },
+
+    {
+        name: "Narwal",
+        emoji: "🐋",
+        size: 4.5
+    },
+
+    {
+        name: "Kot",
+        emoji: "🐈",
+        size: 0.46
+    },
+
+    {
+        name: "Słoń",
+        emoji: "🐘",
+        size: 6.2
+    },
+
+    {
+        name: "Mysz",
+        emoji: "🐁",
+        size: 0.09
+    },
+
+    {
+        name: "Krokodyl",
+        emoji: "🐊",
+        size: 4.2
+    },
+
+    {
+        name: "Rekin",
+        emoji: "🦈",
+        size: 4.5
+    },
+
+    {
+        name: "Wieloryb",
+        emoji: "🐋",
+        size: 25
+    },
+
+    {
+        name: "Delfin",
+        emoji: "🐬",
+        size: 2.5
+    },
+
+    {
+        name: "Żyrafa",
+        emoji: "🦒",
+        size: 5.2
+    },
+
+    {
+        name: "Koń",
+        emoji: "🐎",
+        size: 2.4
+    },
+
+    {
+        name: "Królik",
+        emoji: "🐇",
+        size: 0.4
+    },
+
+    {
+        name: "Pingwin",
+        emoji: "🐧",
+        size: 1.1
+    },
+
+    {
+        name: "Żółw",
+        emoji: "🐢",
+        size: 0.7
+    },
+
+    {
+        name: "Tygrys",
+        emoji: "🐅",
+        size: 2.9
+    },
+
+    {
+        name: "Goryl",
+        emoji: "🦍",
+        size: 1.7
+    },
+
+    {
+        name: "Nosorożec",
+        emoji: "🦏",
+        size: 3.7
+    },
+
+    {
+        name: "Hipopotam",
+        emoji: "🦛",
+        size: 4.0
+    },
+
+    {
+        name: "Lis",
+        emoji: "🦊",
+        size: 0.9
+    },
+
+    {
+        name: "Niedźwiedź",
+        emoji: "🐻",
+        size: 2.2
+    }
+
+];
+
+
+let round = 1;
+let score = 0;
+
+let reference;
+let target;
+
+let answered = false;
+
+
+/* ELEMENTY HTML */
+
+const referenceObject =
+    document.getElementById("referenceObject");
+
+const guessObject =
+    document.getElementById("guessObject");
+
+const referenceLabel =
+    document.getElementById("referenceLabel");
+
+const guessLabel =
+    document.getElementById("guessLabel");
+
+const question =
+    document.getElementById("question");
+
+const slider =
+    document.getElementById("slider");
+
+const scaleDisplay =
+    document.getElementById("scaleDisplay");
+
+const submitButton =
+    document.getElementById("submit");
+
+const nextButton =
+    document.getElementById("next");
+
+const result =
+    document.getElementById("result");
+
+const roundDisplay =
+    document.getElementById("round");
+
+const scoreDisplay =
+    document.getElementById("score");
+
+const correctMarker =
+    document.getElementById("correctMarker");
+
+const correctGhost =
+    document.getElementById("correctGhost");
+
+
+/* LOSOWANIE */
+
+function randomObject() {
+
+    return objects[
+        Math.floor(Math.random() * objects.length)
+    ];
+
+}
+
+
+function newRound() {
+
+    answered = false;
+
+    result.innerHTML = "";
+
+    correctMarker.style.display = "none";
+
+    submitButton.style.display = "inline-block";
+    nextButton.style.display = "none";
+
+    slider.disabled = false;
+
+
+    /*
+        Losujemy dwa różne obiekty.
+    */
+
+    reference = randomObject();
+
+    do {
+
+        target = randomObject();
+
+    } while (target === reference);
+
+
+    referenceObject.textContent =
+        reference.emoji;
+
+    guessObject.textContent =
+        target.emoji;
+
+    correctGhost.textContent =
+        target.emoji;
+
+
+    referenceLabel.textContent =
+        reference.name;
+
+    guessLabel.textContent =
+        target.name;
+
+
+    question.textContent =
+        "Jak duży jest " +
+        target.name +
+        " w porównaniu do: " +
+        reference.name +
+        "?";
+
+
+    /*
+        Czerwony obiekt zawsze ma skalę 1.
+    */
+
+    referenceObject.style.transform =
+        "scale(1)";
+
+
+    /*
+        Zaczynamy od losowej skali,
+        żeby każda runda wyglądała inaczej.
+    */
+
+    slider.value =
+        Math.floor(
+            40 + Math.random() * 160
+        );
+
+    updateGuess();
+
+
+    roundDisplay.textContent =
+        round;
+
+    scoreDisplay.textContent =
+        score;
+
+}
+
+
+/* ZMIANA ROZMIARU */
+
+function updateGuess() {
+
+    const value =
+        Number(slider.value);
+
+    scaleDisplay.textContent =
+        value + "%";
+
+
+    /*
+        100% = rozmiar czerwonego obiektu.
+    */
+
+    const scale =
+        value / 100;
+
+    guessObject.style.transform =
+        "scale(" + scale + ")";
+
+}
+
+
+slider.addEventListener(
+    "input",
+    updateGuess
+);
+
+
+/* SPRAWDZENIE */
+
+submitButton.addEventListener(
+    "click",
+    checkAnswer
+);
+
+
+function checkAnswer() {
+
+    if (answered) return;
+
+    answered = true;
+
+    slider.disabled = true;
+
+
+    /*
+        Prawdziwy stosunek rozmiarów.
+    */
+
+    const correctRatio =
+        target.size /
+        reference.size;
+
+
+    /*
+        Odpowiedź gracza.
+    */
+
+    const playerRatio =
+        Number(slider.value) /
+        100;
+
+
+    /*
+        Błąd procentowy.
+    */
+
+    const error =
+        Math.abs(
+            playerRatio - correctRatio
+        ) /
+        correctRatio *
+        100;
+
+
+    /*
+        Punkty.
+
+        Idealna odpowiedź = 1000 pkt.
+        Im większy błąd, tym mniej punktów.
+    */
+
+    let points =
+        Math.round(
+            1000 - error * 15
+        );
+
+    if (points < 0)
+        points = 0;
+
+
+    score += points;
+
+    scoreDisplay.textContent =
+        score;
+
+
+    /*
+        Pokazujemy prawidłowy rozmiar
+        jako zielony "duch".
+    */
+
+    correctMarker.style.display =
+        "flex";
+
+    correctGhost.style.transform =
+        "scale(" + correctRatio + ")";
+
+
+    /*
+        Komunikat.
+    */
+
+    let message = "";
+
+
+    if (error < 3) {
+
+        message =
+            "🎯 IDEALNIE!";
+
+    }
+
+    else if (error < 8) {
+
+        message =
+            "🔥 Bardzo blisko!";
+
+    }
+
+    else if (error < 20) {
+
+        message =
+            "👍 Nieźle!";
+
+    }
+
+    else if (error < 50) {
+
+        message =
+            "🙂 Całkiem blisko.";
+
+    }
+
+    else {
+
+        message =
+            "❌ Sporo różnicy.";
+
+    }
+
+
+    result.innerHTML =
+
+        message +
+
+        "<br>" +
+
+        "Twój błąd: " +
+        error.toFixed(1) +
+        "%" +
+
+        "<br>" +
+
+        "+" +
+        points +
+        " punktów" +
+
+        "<br>" +
+
+        target.name +
+        " ma około " +
+        target.size +
+        " m, a " +
+        reference.name +
+        " około " +
+        reference.size +
+        " m.";
+
+
+    submitButton.style.display =
+        "none";
+
+    nextButton.style.display =
+        "inline-block";
+
+}
+
+
+/* NASTĘPNA RUNDA */
+
+nextButton.addEventListener(
+    "click",
+    function () {
+
+        round++;
+
+        newRound();
+
+    }
+);
+
+
+/* START */
+
+newRound();
+
+</script>
+
+</body>
+</html>
