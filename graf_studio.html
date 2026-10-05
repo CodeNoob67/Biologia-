@@ -189,7 +189,14 @@
   .sheetClose:hover{background:#4b1d2a;color:#fff}
 #aiFab,#aiPanel{display:none!important}
   .colorToolWrap{position:relative}
-  .paintMenu{position:absolute;top:44px;left:0;width:330px;padding:12px;background:#111925;border:1px solid #2b384c;border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.48);display:none;z-index:90}
+  .paintMenu{position:fixed;top:58px;left:155px;width:350px;padding:12px;background:#111925;border:1px solid #2b384c;border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.48);display:none;z-index:90}
+  .paintSectionTitle{font-size:11px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.6px;margin:10px 0 6px}
+  .savedPaintRow{display:flex;align-items:center;gap:7px}
+  .savedPaintPalette{display:grid;grid-template-columns:repeat(8,1fr);gap:5px;flex:1;min-height:30px}
+  .savedPaintSwatch{position:relative;aspect-ratio:1;border-radius:6px;border:2px solid rgba(255,255,255,.25);cursor:pointer;padding:0}
+  .savedPaintSwatch:hover{transform:scale(1.10);border-color:white}
+  .savePaintBtn{height:31px;white-space:nowrap}
+  .paintApplyInfo{margin-top:9px;padding:8px 9px;border-radius:8px;background:#0d131d;color:#9fb0c7;font-size:11px;line-height:1.35}
   .paintMenu.open{display:block}
   .paintTarget{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px}
   .paintTarget button{height:34px;border:1px solid var(--line);border-radius:8px;background:#182130;color:var(--text);cursor:pointer}
@@ -241,11 +248,23 @@
           <button id="paintFill" class="active">● Środek</button>
           <button id="paintBorder">◯ Ramka</button>
         </div>
+
+        <div class="paintSectionTitle">Paleta</div>
         <div id="paintPalette" class="paintPalette"></div>
+
         <div class="rgbPickerRow">
-          <input id="paintRgb" type="color" value="#00c9d4" title="Koło RGB — wybierz dowolny kolor">
-          <div><b>Koło RGB</b><div id="paintValue" class="paintValue">#00C9D4</div></div>
+          <input id="paintRgb" type="color" value="#00c9d4" title="Wybierz dowolny kolor">
+          <div style="flex:1"><b>Dowolny kolor</b><div id="paintValue" class="paintValue">#00C9D4</div></div>
+          <button id="savePaintColor" class="btn savePaintBtn" type="button">＋ Zapisz kolor</button>
         </div>
+
+        <div class="paintSectionTitle">Zapisane kolory</div>
+        <div class="savedPaintRow">
+          <div id="savedPaintPalette" class="savedPaintPalette"></div>
+          <button id="clearSavedPaint" class="btn" type="button" title="Usuń wszystkie zapisane kolory">⌫</button>
+        </div>
+
+        <div id="paintApplyInfo" class="paintApplyInfo">Wybierz kolor, a potem kliknij koło. Możesz też zaznaczyć wiele kół narzędziem „Zaznacz” i zmienić kolor wszystkich naraz.</div>
       </div>
     </div>
     <button id="deleteBtn" class="toolTab danger">⌫ Usuń</button>
@@ -437,6 +456,10 @@
   let paintMode = false;
   let paintTarget = 'color'; // color = środek, border = ramka
   let paintColor = '#00c9d4';
+  const SAVED_PAINT_KEY='graphStudioSavedPaintColors';
+  let savedPaintColors=[];
+  try{ savedPaintColors=JSON.parse(localStorage.getItem(SAVED_PAINT_KEY)||'[]'); }
+  catch{ savedPaintColors=[]; }
   let orderMode = false;
   let selectMode = false;
   let multiSelected = new Set();
@@ -893,39 +916,167 @@
   $('#gameBtn').onclick=toggleGameMode;
   $('#resetGameBtn').onclick=resetGame;
 
-  // ===== KOLORY — tryb działa aż do ręcznego wyłączenia =====
+  // ===== KOLORY — paleta u góry + kolorowanie wielokrotnego zaznaczenia =====
   const PAINT_COLORS=['#000000','#404040','#808080','#C0C0C0','#FFFFFF','#7F0000','#FF0000','#FF7F00','#FFFF00','#7FFF00','#00FF00','#00FF7F','#00FFFF','#007FFF','#0000FF','#7F00FF','#FF00FF','#FF007F','#7F3F00','#A0522D','#D2691E','#F4A460','#FFD700','#FFFACD','#006400','#228B22','#32CD32','#98FB98','#008080','#20B2AA','#87CEEB','#1E90FF','#000080','#4B0082','#800080','#C71585','#FFC0CB','#F5F5DC','#D5D5D5','#00C9D4'];
+
   function setPaintTarget(target){
     paintTarget=target;
     $('#paintFill').classList.toggle('active',target==='color');
     $('#paintBorder').classList.toggle('active',target==='border');
+    updatePaintInfo();
   }
-  function setPaintColor(c){
-    paintColor=c.toUpperCase();
+
+  function normalizePaintColor(c){
+    return String(c||'#00C9D4').toUpperCase();
+  }
+
+  function setPaintColor(c,applyToSelection=true){
+    paintColor=normalizePaintColor(c);
     $('#paintRgb').value=paintColor;
     $('#paintValue').textContent=paintColor;
+
+    // Jeżeli użytkownik ma wiele kół zaznaczonych narzędziem „Zaznacz”,
+    // wybrany kolor od razu trafia do wszystkich zaznaczonych kół.
+    if(applyToSelection && multiSelected.size){
+      let changed=false;
+      multiSelected.forEach(id=>{
+        const n=nodeById(id);
+        if(n){ n[paintTarget]=paintColor; changed=true; }
+      });
+      if(changed){
+        render();
+        pushHistory();
+        autoSave();
+        updateSelectAction();
+      }
+    }else if(applyToSelection && selected?.type==='node'){
+      const n=nodeById(selected.id);
+      if(n){
+        n[paintTarget]=paintColor;
+        render();
+        pushHistory();
+        autoSave();
+      }
+    }
+    updatePaintInfo();
   }
+
+  function updatePaintInfo(){
+    const info=$('#paintApplyInfo');
+    if(!info)return;
+    const what=paintTarget==='color'?'środka':'ramki';
+    if(multiSelected.size){
+      info.textContent='Zaznaczono '+multiSelected.size+' kół. Wybranie koloru zmieni kolor '+what+' wszystkich naraz.';
+    }else if(selected?.type==='node'){
+      info.textContent='Wybranie koloru zmieni kolor '+what+' aktualnie zaznaczonego koła.';
+    }else{
+      info.textContent='Wybierz kolor, a potem kliknij koło. Możesz też użyć „Zaznacz”, zaznaczyć wiele kół i zmienić kolor wszystkich naraz.';
+    }
+  }
+
   function buildPaintPalette(){
     const box=$('#paintPalette'); box.innerHTML='';
     PAINT_COLORS.forEach(c=>{
-      const b=document.createElement('button'); b.className='paintSwatch'; b.style.background=c; b.title=c;
-      b.onclick=e=>{e.stopPropagation();setPaintColor(c)}; box.appendChild(b);
+      const b=document.createElement('button');
+      b.className='paintSwatch';
+      b.style.background=c;
+      b.title=c;
+      b.onclick=e=>{e.stopPropagation();setPaintColor(c,true)};
+      box.appendChild(b);
     });
   }
+
+  function savePaintColors(){
+    localStorage.setItem(SAVED_PAINT_KEY,JSON.stringify(savedPaintColors));
+  }
+
+  function buildSavedPaintPalette(){
+    const box=$('#savedPaintPalette');
+    if(!box)return;
+    box.innerHTML='';
+    if(!savedPaintColors.length){
+      const empty=document.createElement('div');
+      empty.style.cssText='grid-column:1/-1;color:#718198;font-size:11px;padding:7px 2px';
+      empty.textContent='Brak zapisanych kolorów';
+      box.appendChild(empty);
+      return;
+    }
+    savedPaintColors.forEach(c=>{
+      const b=document.createElement('button');
+      b.className='savedPaintSwatch';
+      b.style.background=c;
+      b.title=c+' — kliknij, aby użyć; PPM usuwa';
+      b.onclick=e=>{e.stopPropagation();setPaintColor(c,true)};
+      b.oncontextmenu=e=>{
+        e.preventDefault(); e.stopPropagation();
+        savedPaintColors=savedPaintColors.filter(x=>x!==c);
+        savePaintColors(); buildSavedPaintPalette();
+      };
+      box.appendChild(b);
+    });
+  }
+
   $('#paintBtn').onclick=e=>{
     e.stopPropagation();
+    // Otwarcie kolorów NIE usuwa zaznaczenia wielokrotnego.
     paintMode=!paintMode;
     $('#paintBtn').classList.toggle('active',paintMode);
     $('#paintMenu').classList.toggle('open',paintMode);
-    if(paintMode && connectMode){connectMode=false;connectSource=null;$('#connectBtn').classList.remove('active');stage.classList.remove('connect-focus');}
-    if(paintMode && selectMode){selectMode=false;clearMultiSelection();$('#selectBtn').classList.remove('active');stage.classList.remove('select-mode');}
+
+    if(paintMode && connectMode){
+      connectMode=false; connectSource=null;
+      $('#connectBtn').classList.remove('active');
+      stage.classList.remove('connect-focus');
+    }
+
+    // Gdy istnieje wielokrotne zaznaczenie, zostawiamy je aktywne.
+    // Wyłączamy tylko rysowanie nowego obszaru zaznaczenia.
+    if(paintMode && selectMode && !multiSelected.size){
+      selectMode=false;
+      $('#selectBtn').classList.remove('active');
+      stage.classList.remove('select-mode');
+    }
+    updatePaintInfo();
     render();
   };
+
   $('#paintMenu').onclick=e=>e.stopPropagation();
   $('#paintFill').onclick=()=>setPaintTarget('color');
   $('#paintBorder').onclick=()=>setPaintTarget('border');
-  $('#paintRgb').addEventListener('input',e=>setPaintColor(e.target.value));
-  buildPaintPalette(); setPaintTarget('color'); setPaintColor(paintColor);
+
+  $('#paintRgb').addEventListener('input',e=>{
+    // Podczas przesuwania wyboru koloru tylko aktualizujemy podgląd,
+    // żeby nie tworzyć dziesiątek wpisów Undo.
+    paintColor=normalizePaintColor(e.target.value);
+    $('#paintValue').textContent=paintColor;
+  });
+  $('#paintRgb').addEventListener('change',e=>setPaintColor(e.target.value,true));
+
+  $('#savePaintColor').onclick=e=>{
+    e.stopPropagation();
+    const c=normalizePaintColor(paintColor);
+    if(!savedPaintColors.includes(c)){
+      savedPaintColors.unshift(c);
+      if(savedPaintColors.length>24) savedPaintColors=savedPaintColors.slice(0,24);
+      savePaintColors();
+      buildSavedPaintPalette();
+    }
+  };
+
+  $('#clearSavedPaint').onclick=e=>{
+    e.stopPropagation();
+    if(!savedPaintColors.length)return;
+    if(confirm('Usunąć wszystkie zapisane kolory?')){
+      savedPaintColors=[];
+      savePaintColors();
+      buildSavedPaintPalette();
+    }
+  };
+
+  buildPaintPalette();
+  buildSavedPaintPalette();
+  setPaintTarget('color');
+  setPaintColor(paintColor,false);
 
   function removeSelected(){
     if(gameMode)return;
@@ -1001,7 +1152,7 @@
         });
       }
       selectionStart=null; $('#selectionBox').style.display='none'; $('#selectionLasso').style.display='none';
-      lassoScreenPoints=[]; lassoWorldPoints=[]; render(); updateSelectAction(); return;
+      lassoScreenPoints=[]; lassoWorldPoints=[]; render(); updateSelectAction(); updatePaintInfo(); return;
     }
     if(!panning)return; panning=false; stage.classList.remove('panning');
     autoSave();
