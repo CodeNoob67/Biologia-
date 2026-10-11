@@ -1,7 +1,7 @@
-<!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Power Clash Arena 4</title><style>
+<!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Power Clash Arena 5</title><style>
 *{box-sizing:border-box}body{margin:0;background:#090f20;color:#edf4ff;font-family:Arial,sans-serif;overflow:hidden}canvas{display:block;width:100vw;height:100vh;cursor:crosshair}.overlay{position:fixed;inset:0;background:#070d1ae8;display:flex;align-items:center;justify-content:center;z-index:5}.hidden{display:none!important}.menu{background:linear-gradient(145deg,#273e75,#152039);border:1px solid #526b98;border-radius:22px;padding:30px;text-align:center;max-width:590px;width:92%;box-shadow:0 18px 60px #0009}h1{color:#8be6ff;margin:0 0 8px}button{background:#526bf3;color:white;border:0;border-radius:10px;padding:11px 15px;font-weight:800;cursor:pointer}button:hover:not(:disabled){filter:brightness(1.2)}button:disabled{opacity:.45;cursor:default}.gold{color:#ffdf70}#shop{position:fixed;top:15px;left:15px;width:235px;background:#15223bea;border:1px solid #3d5377;border-radius:15px;padding:12px;max-height:76vh;overflow:auto}#shop h3,#roster h3{margin:0 0 9px}.item{display:flex;align-items:center;gap:7px;padding:8px;background:#253450;border-radius:9px;margin:6px 0}.item span{font-size:24px}.item small{display:block;color:#aebfdd}.item .detail{flex:1;font-size:13px}.item button{padding:7px;font-size:11px}#roster{position:fixed;right:15px;top:15px;width:235px;background:#15223bea;border:1px solid #3d5377;border-radius:15px;padding:12px;max-height:76vh;overflow:auto}#top{position:fixed;left:50%;top:12px;transform:translateX(-50%);text-align:center;background:#15223bdc;border-radius:14px;padding:9px 16px;pointer-events:none}#bottom{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;background:#15223be8;border-radius:14px;padding:10px}#notice{position:fixed;top:23%;left:50%;transform:translateX(-50%);font-weight:900;font-size:30px;text-shadow:0 3px 12px #000;text-align:center;pointer-events:none}.muted{color:#b5c4df;font-size:12px}#super{background:#9b47dc}@media(max-width:800px){#shop,#roster{width:160px;font-size:12px}#top{top:8px;font-size:12px}#bottom{bottom:5px}.item{flex-wrap:wrap}}
 #shop,#roster,#top,#bottom{display:none}body.playing #roster,body.playing #top,body.playing #bottom{display:block}body.playing #bottom{display:flex}body.shopping #shop{display:block;z-index:12;left:50%;top:50%;transform:translate(-50%,-50%);width:min(440px,92vw);max-height:75vh}body.shopping #shopList{display:grid;grid-template-columns:1fr 1fr;gap:5px}body.shopping #shop .item{flex-wrap:wrap}.menu button{margin:5px;min-width:140px}.menu .big{font-size:19px;padding:15px 24px}#shopClose{width:100%;margin-top:12px;background:#3a4765}#shopOverlay{display:none;position:fixed;inset:0;background:#030714d9;z-index:10}body.shopping #shopOverlay{display:block}body.shopping #menu{display:none}#shop{z-index:11}
-</style></head><body><canvas id="game"></canvas><div id="shopOverlay"></div><div id="shop"><h3>🛒 Sklep postaci</h3><div class="gold">🎟️ Bilety: <b id="tickets">0</b></div><p class="muted">Wygrana: 1–5 biletów</p><div id="shopList"></div><button id="shopClose" onclick="closeShop()">← Wróć do menu</button></div><div id="roster"><h3>👥 Postacie</h3><div id="rosterList"></div></div><div id="top"><b>⚔️ POWER CLASH</b><div id="score" class="muted">WASD: ruch • mysz: celowanie • klik: atak • spacja: super</div></div><div id="bottom"><button onclick="showMenu()">☰ Menu</button><button onclick="startGame()">▶ Walka</button><button id="super" onclick="useSuper()">✨ SUPER</button></div><div id="notice"></div><div id="menu" class="overlay"><div class="menu"><h1>⚔️ POWER CLASH</h1><h2>ARENA 4.0</h2><div style="font-size:68px;margin:16px">☄️ 🪐 🌿 ⚓</div><p>Okrągła arena • pojedynki 1v1 • animowane moce</p><p class="gold">🎟️ <span id="menuTickets">0</span> biletów</p><p id="menuSelected">Wybrana postać: Comet</p><button class="big" onclick="startGame()">▶ GRAJ</button><button class="big" onclick="openShop()">🛒 SKLEP</button><p class="muted">Kup postacie za bilety w sklepie. Wybierz wojownika przed walką w panelu po prawej.</p><p class="muted">WASD — ruch • Mysz — celowanie • Klik — atak • Spacja — super</p></div></div>
+</style></head><body><canvas id="game"></canvas><div id="shopOverlay"></div><div id="shop"><h3>🛒 Sklep postaci</h3><div class="gold">🎟️ Bilety: <b id="tickets">0</b></div><p class="muted">Wygrana: 1–5 biletów</p><div id="shopList"></div><button id="shopClose" onclick="closeShop()">← Wróć do menu</button></div><div id="roster"><h3>👥 Postacie</h3><div id="rosterList"></div></div><div id="top"><b>⚔️ POWER CLASH</b><div id="score" class="muted">WASD: ruch • mysz: celowanie • klik: atak • spacja: super</div></div><div id="bottom"><button onclick="showMenu()">☰ Menu</button><button onclick="startGame()">▶ Walka</button><button id="super" onclick="useSuper()">✨ SUPER</button></div><div id="notice"></div><div id="menu" class="overlay"><div class="menu"><h1>⚔️ POWER CLASH</h1><h2>ARENA 5.0</h2><div style="font-size:68px;margin:16px">☄️ 🪐 🌿 ⚓</div><p>Okrągła arena • pojedynki 1v1 • animowane moce</p><p class="gold">🎟️ <span id="menuTickets">0</span> biletów</p><p id="menuSelected">Wybrana postać: Comet</p><button class="big" onclick="startGame()">▶ GRAJ</button><button class="big" onclick="openShop()">🛒 SKLEP</button><p class="muted">Kup postacie za bilety w sklepie. Wybierz wojownika przed walką w panelu po prawej.</p><p class="muted">WASD — ruch • Mysz — celowanie • Klik — atak • Spacja — super</p></div></div>
 <script>
 const canvas=document.getElementById('game'),ctx=canvas.getContext('2d');let W,H,cx,cy,R;function resize(){W=canvas.width=innerWidth;H=canvas.height=innerHeight;cx=W/2;cy=H/2;R=Math.min(W*.31,H*.38,320)}addEventListener('resize',resize);resize();
 const chars=[{id:'comet',name:'Comet',emoji:'☄️',rarity:'Astro',price:0,color:'#ff9848',hp:130,speed:3.1},{id:'orbit',name:'Orbit',emoji:'🪐',rarity:'Astro',price:12,color:'#ab8aff',hp:150,speed:3.1},{id:'thorn',name:'Thorn',emoji:'🌿',rarity:'Power',price:9,color:'#62e5a1',hp:150,speed:3.2},{id:'anchor',name:'Anchor',emoji:'⚓',rarity:'Power',price:15,color:'#65caff',hp:185,speed:2.75},
@@ -11,9 +11,9 @@ const chars=[{id:'comet',name:'Comet',emoji:'☄️',rarity:'Astro',price:0,colo
 {id:'nova',name:'Nova',emoji:'🌟',rarity:'Astro',price:22,color:'#ff79db',hp:145,speed:3.4}];
 const KEY='power-clash-arena-2-save';let save;try{save=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!save||!Array.isArray(save.owned))save={tickets:0,owned:['comet'],selected:'comet',wins:0};if(!save.owned.includes('comet'))save.owned.push('comet');if(!save.owned.includes(save.selected))save.selected='comet';save.tickets=Math.max(0,Number(save.tickets)||0);const get=id=>chars.find(c=>c.id===id),$=id=>document.getElementById(id);function persist(){localStorage.setItem(KEY,JSON.stringify(save));renderPanels()}
 function renderPanels(){$('tickets').textContent=save.tickets;$('menuTickets').textContent=save.tickets;$('menuSelected').textContent='Wybrana postać: '+get(save.selected).name;for(const [listId,isShop] of [['shopList',true],['rosterList',false]]){const el=$(listId);el.innerHTML='';chars.forEach(c=>{let owned=save.owned.includes(c.id),div=document.createElement('div');div.className='item';let buttonLabel=isShop?(owned?'Kupiona':c.price+' 🎟️'):(owned?(save.selected===c.id?'✓ Wybrana':'Wybierz'):'🔒');div.innerHTML=`<span>${c.emoji}</span><div class="detail"><b>${c.name}</b><small>${c.rarity}</small></div>`;let btn=document.createElement('button');btn.textContent=buttonLabel;btn.disabled=isShop?(owned||save.tickets<c.price):(!owned||save.selected===c.id);btn.onclick=()=>{if(isShop){if(save.tickets<c.price||save.owned.includes(c.id))return;save.tickets-=c.price;save.owned.push(c.id)}else{save.selected=c.id}persist()};div.append(btn);el.append(div)})}}
-let player=null,bot=null,bullets=[],particles=[],meteors=[],active=false,paused=false,keys={},mouse={x:0,y:0,down:false},frame=0,last=0,shake=0,superCD=0,noticeTimer=0,teleportAim=false,chains=[];const rand=(a,b)=>a+Math.random()*(b-a),distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y),clamp=(x,a,b)=>Math.max(a,Math.min(b,x));function createFighter(c,x,y){return {...c,x,y,r:22,hp:c.hp,maxHp:c.hp,angle:0,attackCD:0,stun:0,invuln:0,thornBuff:0,thornTick:0,orbiters:[0,1,2].map((_,i)=>({angle:i*Math.PI*2/3,respawn:0,launch:0})),anchorShield:0,burn:0,burnTick:0,slow:0,freeze:0,blackHole:0,spikeTick:0,orbitAnim:0}}
+let player=null,bot=null,bullets=[],particles=[],meteors=[],active=false,paused=false,keys={},mouse={x:0,y:0,down:false},frame=0,last=0,shake=0,superCD=0,noticeTimer=0,teleportAim=false,chains=[],teleportFX=[];const rand=(a,b)=>a+Math.random()*(b-a),distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y),clamp=(x,a,b)=>Math.max(a,Math.min(b,x));function createFighter(c,x,y){return {...c,x,y,r:22,hp:c.hp,maxHp:c.hp,angle:0,attackCD:0,stun:0,invuln:0,thornBuff:0,thornTick:0,orbiters:[0,1,2].map((_,i)=>({angle:i*Math.PI*2/3,respawn:0,launch:0})),anchorShield:0,burn:0,burnTick:0,slow:0,freeze:0,blackHole:0,spikeTick:0,orbitAnim:0}}
 function message(s,seconds=2){$('notice').textContent=s;noticeTimer=seconds*60}function showMenu(){paused=true;keys={};mouse.down=false;document.body.classList.remove('playing','shopping');$('menu').classList.remove('hidden')}function openShop(){paused=true;document.body.classList.remove('playing');document.body.classList.add('shopping');renderPanels()}function closeShop(){document.body.classList.remove('shopping');showMenu()}
-function startGame(){const c=get(save.selected),enemies=chars.filter(a=>a.id!==c.id),enemy=enemies[Math.floor(Math.random()*enemies.length)];player=createFighter(c,cx-R*.48,cy);bot=createFighter(enemy,cx+R*.48,cy);bullets=[];particles=[];meteors=[];chains=[];teleportAim=false;frame=0;active=true;paused=false;superCD=0;document.body.classList.remove('shopping');document.body.classList.add('playing');$('menu').classList.add('hidden');message('⚔️ WALKA!',1.4)}
+function startGame(){const c=get(save.selected),enemies=chars.filter(a=>a.id!==c.id),enemy=enemies[Math.floor(Math.random()*enemies.length)];player=createFighter(c,cx-R*.48,cy);bot=createFighter(enemy,cx+R*.48,cy);bullets=[];particles=[];meteors=[];chains=[];teleportFX=[];teleportAim=false;frame=0;active=true;paused=false;superCD=0;document.body.classList.remove('shopping');document.body.classList.add('playing');$('menu').classList.add('hidden');message('⚔️ WALKA!',1.4)}
 function inside(f){let dx=f.x-cx,dy=f.y-cy,d=Math.hypot(dx,dy);if(d>R-f.r-6){f.x=cx+dx/d*(R-f.r-6);f.y=cy+dy/d*(R-f.r-6)}}
 function burst(x,y,color,n=15){for(let i=0;i<n;i++){let a=rand(0,Math.PI*2),v=rand(1,5);particles.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:rand(12,35),color,r:rand(2,5)})}}
 function hurt(f,dmg){if(!active||f.invuln>0)return;f.hp=Math.max(0,f.hp-dmg);burst(f.x,f.y,f.color,9);shake=5;if(f.hp<=0){active=false;mouse.down=false;if(f===bot){let reward=Math.floor(rand(1,6));save.tickets+=reward;save.wins++;persist();message('🏆 WYGRANA! +'+reward+' 🎟️',99)}else message('💀 PRZEGRANA!',99)}}
@@ -49,7 +49,9 @@ let travel=Math.min(d,R*1.6);f.x+=dx/d*travel;f.y+=dy/d*travel;inside(f);
 let actual=Math.hypot(f.x-ox,f.y-oy),radius=105;
 let target=f===player?bot:player;
 if(distance(f,target)<radius+target.r)hurt(target,Math.round(65*(1-.65*Math.min(1,actual/(R*1.6)))));
-burst(ox,oy,'#fff59b',25);burst(f.x,f.y,'#ffe64c',80);
+burst(ox,oy,'#fff59b',35);burst(f.x,f.y,'#ffe64c',80);
+teleportFX.push({type:'departure',x:ox,y:oy,life:42,max:42},{type:'arrival',x:f.x,y:f.y,life:48,max:48},{type:'trail',x:ox,y:oy,x2:f.x,y2:f.y,life:26,max:26});
+for(let i=0;i<18;i++){let k=i/18;particles.push({x:ox+(f.x-ox)*k,y:oy+(f.y-oy)*k,vx:rand(-1,1),vy:rand(-1,1),life:rand(15,38),color:i%2?'#ffffff':'#ffe65d',r:rand(2,5)})}
 meteors.push({type:'shock',x:f.x,y:f.y,progress:0,r:radius});
 }
 function special(f,target){
@@ -143,6 +145,12 @@ ctx.beginPath();ctx.moveTo(0,-size*.4);ctx.lineTo(0,size*.7);ctx.moveTo(-size*.4
 ctx.moveTo(-size*.8,size*.2);ctx.quadraticCurveTo(-size*.8,size*.9,0,size*.8);ctx.quadraticCurveTo(size*.8,size*.9,size*.8,size*.2);
 ctx.moveTo(-size*.8,size*.2);ctx.lineTo(-size*.95,size*.47);ctx.moveTo(size*.8,size*.2);ctx.lineTo(size*.95,size*.47);ctx.stroke();ctx.restore();
 }
+function statusTint(f){
+if(f.freeze>0)return '#9deaff';
+if(f.burn>0)return '#ff6036';
+if(f.slow>0)return '#819cb2';
+return null;
+}
 function drawFighter(f){
 if(!f)return;
 ctx.save();ctx.translate(f.x,f.y);
@@ -175,10 +183,27 @@ if(f.id==='nova'&&f.blackHole>0){
  ctx.shadowBlur=15;ctx.shadowColor=f.color;ctx.fillStyle=f.color;
  ctx.beginPath();ctx.arc(0,0,f.r,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
  ctx.lineWidth=3;ctx.strokeStyle='white';ctx.stroke();
- ctx.font='25px Arial';ctx.textAlign='center';ctx.fillText(f.emoji,0,8);
+ ctx.font='25px Arial';ctx.textAlign='center';
+const tint=statusTint(f);
+if(tint){
+ const iconCanvas=document.createElement('canvas');iconCanvas.width=58;iconCanvas.height=58;
+ const ic=iconCanvas.getContext('2d');ic.font='29px Arial';ic.textAlign='center';ic.fillText(f.emoji,29,39);
+ ic.globalCompositeOperation='source-atop';ic.fillStyle=tint;ic.globalAlpha=.86;ic.fillRect(0,0,58,58);
+ ctx.drawImage(iconCanvas,-29,-29);
+ ctx.strokeStyle=tint;ctx.lineWidth=3;ctx.beginPath();ctx.arc(0,0,27+Math.sin(frame*.15)*2,0,Math.PI*2);ctx.stroke();
+}else ctx.fillText(f.emoji,0,8);
 }
-if(f.burn>0){ctx.font='21px Arial';ctx.textAlign='center';ctx.fillText('🔥',0,-25)}
-if(f.freeze>0){ctx.strokeStyle='#b8faff';ctx.lineWidth=5;ctx.beginPath();ctx.arc(0,0,30,0,Math.PI*2);ctx.stroke();ctx.font='24px Arial';ctx.textAlign='center';ctx.fillText('❄️',0,-30)}
+if(f.burn>0){
+ for(let i=0;i<5;i++){let a=i*Math.PI*2/5+frame*.025;let xx=Math.cos(a)*18,yy=Math.sin(a)*18;
+ ctx.fillStyle=i%2?'#ff3f20':'#ffb12b';ctx.globalAlpha=.6+.3*Math.sin(frame*.16+i);
+ ctx.beginPath();ctx.ellipse(xx,yy-16-Math.sin(frame*.13+i)*7,4,9,0,0,Math.PI*2);ctx.fill();
+ }ctx.globalAlpha=1;
+ ctx.font='21px Arial';ctx.textAlign='center';ctx.fillText('🔥',0,-28)
+}
+if(f.slow>0&&f.freeze<=0){ctx.strokeStyle='#9ebbcaaa';ctx.lineWidth=3;ctx.setLineDash([5,7]);ctx.beginPath();ctx.arc(0,0,34,0,Math.PI*2);ctx.stroke();ctx.setLineDash([])}
+if(f.freeze>0){ctx.fillStyle='#b0efff44';ctx.strokeStyle='#c8f8ff';ctx.lineWidth=3;
+ ctx.beginPath();for(let i=0;i<6;i++){let a=i*Math.PI/3+Math.PI/6,rr=33+Math.sin(frame*.08+i)*2;if(i===0)ctx.moveTo(Math.cos(a)*rr,Math.sin(a)*rr);else ctx.lineTo(Math.cos(a)*rr,Math.sin(a)*rr)}ctx.closePath();ctx.fill();ctx.stroke();
+ ctx.font='24px Arial';ctx.textAlign='center';ctx.fillText('❄️',0,-34)}
 ctx.restore();
 ctx.textAlign='center';ctx.font='bold 13px Arial';ctx.fillStyle='white';ctx.fillText(f.name,f.x,f.y-48);
 ctx.fillStyle='#111827';ctx.fillRect(f.x-35,f.y-41,70,8);
@@ -209,6 +234,21 @@ for(const m of meteors){
  }else if(m.type==='blackhole'){
   ctx.strokeStyle='#a76bff88';ctx.lineWidth=5;for(let j=0;j<3;j++){ctx.beginPath();ctx.arc(m.x,m.y,40+j*35+Math.sin(frame*.08+j)*5,0,Math.PI*2);ctx.stroke()}
  }
+}
+for(let i=teleportFX.length-1;i>=0;i--){
+ const fx=teleportFX[i];fx.life-=1;if(fx.life<=0){teleportFX.splice(i,1);continue}const k=1-fx.life/fx.max;
+ ctx.save();ctx.globalAlpha=Math.max(0,1-k);
+ if(fx.type==='trail'){
+  ctx.strokeStyle='#fff3a0';ctx.lineWidth=14*(1-k);ctx.shadowBlur=25;ctx.shadowColor='#ffea62';
+  ctx.setLineDash([14,10]);ctx.lineDashOffset=-frame*2;
+  ctx.beginPath();ctx.moveTo(fx.x,fx.y);ctx.lineTo(fx.x2,fx.y2);ctx.stroke();ctx.setLineDash([]);
+ }else{
+  ctx.strokeStyle=fx.type==='arrival'?'#fff8bb':'#a6eaff';ctx.lineWidth=7*(1-k)+1;
+  ctx.shadowBlur=28;ctx.shadowColor=ctx.strokeStyle;
+  for(let j=0;j<3;j++){ctx.beginPath();ctx.arc(fx.x,fx.y,(k*62+j*13)*(fx.type==='arrival'?1:-.7)+ (fx.type==='arrival'?0:55),0,Math.PI*2);ctx.stroke()}
+  for(let j=0;j<9;j++){let a=j*Math.PI*2/9+frame*.045;let r=14+k*72;ctx.fillStyle='#fff8b0';ctx.beginPath();ctx.arc(fx.x+Math.cos(a)*r,fx.y+Math.sin(a)*r,3.5*(1-k),0,Math.PI*2);ctx.fill()}
+ }
+ ctx.restore();
 }
 for(const c of chains){ctx.strokeStyle='#8ae9ff';ctx.lineWidth=4;ctx.setLineDash([9,6]);ctx.beginPath();ctx.moveTo(c.x,c.y);ctx.lineTo(c.target.x,c.target.y);ctx.stroke();ctx.setLineDash([])}
 for(const b of bullets){
