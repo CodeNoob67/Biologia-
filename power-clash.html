@@ -3,377 +3,358 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Power Clash</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Power Clash Arena</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#0c1020;color:white;font-family:Arial,sans-serif}
-header{background:#171d35;padding:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;border-bottom:2px solid #343d68}
-h1{margin:0;color:#8edbff}
-button{background:#5865f2;border:0;color:white;padding:12px 18px;border-radius:10px;cursor:pointer;font-weight:bold}
+body{margin:0;background:#090e1d;color:white;font-family:Arial;overflow:hidden}
+canvas{display:block;width:100vw;height:100vh;cursor:crosshair}
+#hud{position:absolute;top:15px;left:15px;background:#151e35e8;padding:15px;border-radius:15px;border:1px solid #364568;pointer-events:none}
+#hud h2{margin:0 0 8px;color:#8de4ff}
+#panel{position:absolute;right:15px;top:15px;width:250px;background:#151e35f2;border:1px solid #46577b;border-radius:15px;padding:14px;max-height:90vh;overflow:auto}
+#panel h3{margin:0 0 10px}
+button{background:#5369ee;border:0;border-radius:8px;padding:9px 12px;color:white;font-weight:bold;cursor:pointer}
 button:hover{filter:brightness(1.2)}
-button:disabled{opacity:.4;cursor:not-allowed}
-nav{display:flex;gap:10px;justify-content:center;padding:15px;flex-wrap:wrap}
-main{max-width:1100px;margin:auto;padding:15px}
-section{display:none}
-section.active{display:block}
-.panel{background:#171d35;border:1px solid #303b62;border-radius:16px;padding:20px;margin-bottom:15px}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:15px}
-.card{text-align:center;background:#222b49;border:2px solid #465173;border-radius:15px;padding:20px}
-.card.selected{border-color:#ffe66b}
-.avatar{font-size:65px;margin:12px}
-.tag{display:inline-block;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:bold}
-.common{background:#687388}
-.rare{background:#237fd4}
-.epic{background:#8e3bca}
-.power{background:#d04b56}
-.astro{background:#bd8a19}
-.legendary{background:#f07b2c}
-.stats{color:#c4cee7;font-size:14px;line-height:1.8}
-.arena{display:grid;grid-template-columns:1fr 1fr;gap:20px;text-align:center}
-.fighter{background:#202a49;border-radius:15px;padding:20px}
-.fighter .avatar{font-size:95px}
-.hpbar{background:#3c425b;height:22px;border-radius:20px;overflow:hidden;margin:12px 0}
-.hpfill{height:100%;background:#42d67a;transition:width .4s}
-.controls{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:20px}
-.log{height:155px;overflow:auto;background:#10172c;padding:12px;border-radius:10px;color:#bcd0f5}
-.center{text-align:center}
-#battleStatus{color:#ffe66b}
-@media(max-width:600px){.arena{gap:8px}.fighter{padding:10px}.fighter .avatar{font-size:60px}}
+button:disabled{opacity:.45;cursor:default}
+.char{display:flex;align-items:center;gap:9px;padding:9px;margin:7px 0;background:#26324e;border-radius:9px}
+.char .emoji{font-size:28px}
+.char .info{flex:1;font-size:12px}
+.char .info b{font-size:14px}
+.char button{padding:6px;font-size:11px}
+#bottom{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:12px;align-items:center;background:#151e35e8;padding:12px;border-radius:15px}
+#bottom button{padding:13px 18px}
+#special{background:#b34ce3}
+#message{position:absolute;top:22%;left:50%;transform:translateX(-50%);font-size:34px;font-weight:bold;text-shadow:0 3px 12px black;pointer-events:none;text-align:center}
+.small{font-size:12px;color:#aebcda}
+@media(max-width:700px){#panel{width:190px;font-size:12px}#hud{font-size:12px}#bottom{bottom:5px}}
 </style>
 </head>
 <body>
 
-<header>
-<h1>⚔️ POWER CLASH</h1>
-<div>🪙 <span id="coins">0</span> monet | 🏆 <span id="wins">0</span> zwycięstw</div>
-</header>
+<canvas id="game"></canvas>
 
-<nav>
-<button onclick="page('home')">🏠 Start</button>
-<button onclick="page('collection')">👥 Postacie</button>
-<button onclick="page('shop')">🎁 Skrzynki</button>
-<button onclick="page('battle')">⚔️ Walka</button>
-</nav>
+<div id="hud">
+<h2>⚔️ POWER CLASH</h2>
+<div id="stats">Wybierz postać</div>
+<div class="small">WASD – ruch | Mysz – celowanie</div>
+<div class="small">Klik – atak | Spacja – supermoc</div>
+</div>
 
-<main>
-<section id="home" class="active">
-<div class="panel center">
-<h2>Witaj w Power Clash!</h2>
-<p>Odblokowuj wojowników, odkrywaj ich moce i walcz z botami 1v1.</p>
-<div style="font-size:90px">☄️ 🪐 🌿 ⚓</div>
-<p>Wybierz wojownika, a następnie rozpocznij pojedynek!</p>
-<button onclick="page('collection')">Wybierz postać</button>
-<button onclick="page('battle')">Rozpocznij walkę</button>
+<div id="panel">
+<h3>👥 Postacie</h3>
+<p class="small">Panel testowy: dodawaj postacie za darmo.</p>
+<div id="list"></div>
+<button onclick="unlockAll()">🔓 Odblokuj wszystkie</button>
 </div>
-<div class="panel">
-<h3>Rzadkości postaci</h3>
-<p>⚪ Common → 🔵 Rare → 🟣 Epic → 🔴 Power → 🟡 Astro → 🟠 Legendary</p>
-<p>Im wyższa rzadkość, tym trudniej zdobyć postać. Każda ma własną moc specjalną.</p>
-</div>
-</section>
 
-<section id="collection">
-<h2>Twoja kolekcja</h2>
-<p>Wybierz odblokowaną postać do walki.</p>
-<div id="characters" class="cards"></div>
-</section>
-
-<section id="shop">
-<div class="panel center">
-<h2>🎁 Skrzynia wojowników</h2>
-<div style="font-size:100px">🎁</div>
-<p>Koszt: 100 monet</p>
-<button onclick="openChest()">Otwórz skrzynię</button>
-<h3 id="chestResult"></h3>
-<p>Common 40% | Rare 25% | Epic 16% | Power 11% | Astro 6% | Legendary 2%</p>
-<p>Duplikat daje 50 monet.</p>
+<div id="bottom">
+<button onclick="startGame()">▶ WALKA 1V1</button>
+<button id="special" onclick="useSuper()">✨ SUPER</button>
 </div>
-</section>
-
-<section id="battle">
-<div class="panel center">
-<h2>⚔️ Arena 1v1</h2>
-<h3 id="battleStatus">Gotowy do walki?</h3>
-<div class="arena">
-<div class="fighter">
-<h3>TY</h3>
-<div id="playerAvatar" class="avatar">⚔️</div>
-<h3 id="playerName">Gracz</h3>
-<div class="hpbar"><div id="playerHP" class="hpfill"></div></div>
-<p id="playerHealth"></p>
-</div>
-<div class="fighter">
-<h3>BOT</h3>
-<div id="botAvatar" class="avatar">🤖</div>
-<h3 id="botName">Bot</h3>
-<div class="hpbar"><div id="botHP" class="hpfill"></div></div>
-<p id="botHealth"></p>
-</div>
-</div>
-<div class="controls">
-<button onclick="startBattle()">▶ Nowa walka</button>
-<button id="attackBtn" onclick="playerMove('attack')">⚔️ Atak</button>
-<button id="specialBtn" onclick="playerMove('special')">✨ Moc specjalna</button>
-<button id="defendBtn" onclick="playerMove('defend')">🛡️ Obrona</button>
-</div>
-<p id="cooldown" class="center"></p>
-<div id="battleLog" class="log">Rozpocznij walkę!</div>
-</div>
-</section>
-</main>
+<div id="message">Wybierz postać i rozpocznij walkę!</div>
 
 <script>
-const roster=[
-{id:"spark",name:"Spark",emoji:"⚡",rarity:"Common",hp:105,atk:15,power:"Iskra",type:"damage",value:26},
-{id:"rock",name:"Rocky",emoji:"🪨",rarity:"Common",hp:135,atk:11,power:"Kamienna tarcza",type:"shield",value:25},
-{id:"frost",name:"Frost",emoji:"❄️",rarity:"Rare",hp:110,atk:17,power:"Lodowy pocisk",type:"damage",value:34},
-{id:"blaze",name:"Blaze",emoji:"🔥",rarity:"Epic",hp:115,atk:20,power:"Ognista eksplozja",type:"damage",value:42},
-{id:"thorn",name:"Thorn",emoji:"🌿",rarity:"Power",hp:135,atk:18,power:"Kolczaste pnącza",type:"thorns",value:35},
-{id:"anchor",name:"Anchor",emoji:"⚓",rarity:"Power",hp:160,atk:15,power:"Uderzenie kotwicy",type:"stun",value:36},
-{id:"comet",name:"Comet",emoji:"☄️",rarity:"Astro",hp:130,atk:24,power:"Deszcz meteorów",type:"damage",value:55},
-{id:"orbit",name:"Orbit",emoji:"🪐",rarity:"Astro",hp:150,atk:20,power:"Orbitalna regeneracja",type:"heal",value:48},
-{id:"void",name:"Void",emoji:"🌌",rarity:"Legendary",hp:175,atk:27,power:"Czarna dziura",type:"drain",value:58}
+const canvas=document.getElementById("game");
+const ctx=canvas.getContext("2d");
+let W,H,cx,cy,R;
+function resize(){
+W=canvas.width=innerWidth;
+H=canvas.height=innerHeight;
+cx=W/2;cy=H/2;
+R=Math.min(W*.37,H*.39,330);
+}
+window.addEventListener("resize",resize);
+resize();
+
+const chars=[
+{id:"comet",name:"Comet",emoji:"☄️",rarity:"ASTRO",color:"#ff914d",hp:130,speed:3.3,damage:16,super:"Meteor"},
+{id:"orbit",name:"Orbit",emoji:"🪐",rarity:"ASTRO",color:"#a87dff",hp:150,speed:3,damage:13,super:"Grawitacja"},
+{id:"thorn",name:"Thorn",emoji:"🌿",rarity:"POWER",color:"#51df82",hp:145,speed:3.2,damage:15,super:"Kolce"},
+{id:"anchor",name:"Anchor",emoji:"⚓",rarity:"POWER",color:"#5dc9f5",hp:180,speed:2.7,damage:19,super:"Kotwica"}
 ];
 
-const chances=[
-["Common",40],["Rare",25],["Epic",16],
-["Power",11],["Astro",6],["Legendary",2]
-];
+let owned=["comet"],selected="comet";
+let player=null,bot=null,bullets=[],particles=[],zones=[];
+let running=false,keys={},mouse={x:0,y:0,down:false};
+let last=0,superReady=true,superTimer=0,botStun=0;
+let shake=0,gameTime=0;
 
-const key="powerClashSaveV1";
-let save;
-try{save=JSON.parse(localStorage.getItem(key))}catch(e){}
-if(!save||!Array.isArray(save.owned)){
-save={coins:200,wins:0,owned:["spark"],selected:"spark"};
-}
-save.owned=save.owned.filter(id=>roster.some(c=>c.id===id));
-if(!save.owned.length)save.owned=["spark"];
-if(!save.owned.includes(save.selected))save.selected=save.owned[0];
+const rand=(a,b)=>a+Math.random()*(b-a);
+const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const get=id=>chars.find(c=>c.id===id);
 
-let player,bot,active=false,busy=false,turn=0;
-let specialCD=0,playerShield=0,botShield=0,botStunned=false;
-
-function store(){
-localStorage.setItem(key,JSON.stringify(save));
-document.getElementById("coins").textContent=save.coins;
-document.getElementById("wins").textContent=save.wins;
-}
-
-function page(id){
-document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
-document.getElementById(id).classList.add("active");
-if(id==="collection")renderCollection();
-if(id==="battle")renderBattle();
-}
-
-function getChar(id){return roster.find(c=>c.id===id)}
-
-function renderCollection(){
-const area=document.getElementById("characters");
-area.innerHTML="";
-roster.forEach(c=>{
-const owned=save.owned.includes(c.id);
-const chosen=save.selected===c.id;
-const div=document.createElement("div");
-div.className="card"+(chosen?" selected":"");
+function renderList(){
+const list=document.getElementById("list");
+list.innerHTML="";
+chars.forEach(c=>{
+let unlocked=owned.includes(c.id);
+let div=document.createElement("div");
+div.className="char";
 div.innerHTML=`
-<span class="tag ${c.rarity.toLowerCase()}">${c.rarity}</span>
-<div class="avatar">${owned?c.emoji:"🔒"}</div>
-<h3>${c.name}</h3>
-<div class="stats">❤️ ${c.hp} HP | ⚔️ ${c.atk} ATK<br>✨ ${c.power}</div>
-<p>${owned?"Odblokowana":"Zablokowana"}</p>
-<button ${owned&&!chosen?"":"disabled"}>${chosen?"Wybrana":"Wybierz"}</button>`;
+<span class="emoji">${c.emoji}</span>
+<div class="info"><b>${c.name}</b><br>
+<span style="color:${c.rarity==="ASTRO"?"#ffd76b":"#ff8a9b"}">${c.rarity}</span></div>
+<button>${unlocked?(selected===c.id?"✓":"Wybierz"):"Dodaj +"}</button>`;
 div.querySelector("button").onclick=()=>{
-save.selected=c.id;store();renderCollection();
+if(!unlocked)owned.push(c.id);
+selected=c.id;
+renderList();
+if(!running)document.getElementById("message").textContent="Wybrano: "+c.name;
 };
-area.appendChild(div);
+list.appendChild(div);
 });
 }
+function unlockAll(){owned=chars.map(c=>c.id);renderList()}
+renderList();
 
-function openChest(){
-if(save.coins<100){alert("Masz za mało monet!");return}
-save.coins-=100;
-let roll=Math.random()*100,rarity="Common";
-for(const [r,chance] of chances){
-roll-=chance;
-if(roll<0){rarity=r;break}
-}
-const pool=roster.filter(c=>c.rarity===rarity);
-const found=pool[Math.floor(Math.random()*pool.length)];
-const result=document.getElementById("chestResult");
-if(save.owned.includes(found.id)){
-save.coins+=50;
-result.textContent="Duplikat: "+found.emoji+" "+found.name+"! +50 monet";
-}else{
-save.owned.push(found.id);
-result.textContent="Odblokowano: "+found.emoji+" "+found.name+" ("+found.rarity+")!";
-}
-store();
+function makeFighter(c,x,y){
+return {...c,x,y,maxHp:c.hp,hp:c.hp,r:22,cooldown:0,angle:0};
 }
 
-function startBattle(){
-const c=getChar(save.selected);
-const enemies=roster.filter(x=>x.id!==c.id);
-const b=enemies[Math.floor(Math.random()*enemies.length)];
-player={...c,current:c.hp};
-bot={...b,current:b.hp};
-active=true;busy=false;turn=0;specialCD=0;
-playerShield=0;botShield=0;botStunned=false;
-document.getElementById("battleLog").innerHTML="";
-document.getElementById("battleStatus").textContent="Walka trwa!";
-log("Przeciwnik: "+b.name+"!");
-renderBattle();
+function startGame(){
+let c=get(selected);
+let pool=chars.filter(a=>a.id!==selected);
+let enemy=pool[Math.floor(Math.random()*pool.length)];
+player=makeFighter(c,cx-R*.5,cy);
+bot=makeFighter(enemy,cx+R*.5,cy);
+bullets=[];particles=[];zones=[];
+running=true;superReady=true;superTimer=0;botStun=0;gameTime=0;
+document.getElementById("message").textContent="";
 }
 
-function log(msg){
-const el=document.getElementById("battleLog");
-const p=document.createElement("div");
-p.textContent="• "+msg;
-el.appendChild(p);
-el.scrollTop=el.scrollHeight;
+function stayInside(f){
+let dx=f.x-cx,dy=f.y-cy;
+let d=Math.hypot(dx,dy);
+if(d>R-f.r-8){
+f.x=cx+dx/d*(R-f.r-8);
+f.y=cy+dy/d*(R-f.r-8);
+}
 }
 
-function damage(target,amount,who){
-let shield=who==="player"?playerShield:botShield;
-let blocked=Math.min(shield,amount);
-amount-=blocked;
-if(who==="player")playerShield-=blocked;
-else botShield-=blocked;
-target.current=Math.max(0,target.current-amount);
-return amount;
+function shoot(f,target,isBot=false,damageMultiplier=1){
+if(f.cooldown>0)return;
+let angle=Math.atan2(target.y-f.y,target.x-f.x);
+f.angle=angle;
+let speed=8;
+bullets.push({
+x:f.x+Math.cos(angle)*26,
+y:f.y+Math.sin(angle)*26,
+vx:Math.cos(angle)*speed,
+vy:Math.sin(angle)*speed,
+r:8,life:85,
+damage:f.damage*damageMultiplier,
+owner:isBot?"bot":"player",
+color:f.color
+});
+f.cooldown=isBot?48:22;
+burst(f.x+Math.cos(angle)*25,f.y+Math.sin(angle)*25,f.color,5);
 }
 
-function useSpecial(c,target,isPlayer){
-let text="";
-let attacker=isPlayer?player:bot;
-let targetSide=isPlayer?"bot":"player";
-switch(c.type){
-case "damage":
-let dealt=damage(target,c.value,targetSide);
-text=c.name+" używa "+c.power+"! -"+dealt+" HP";
-break;
-case "shield":
-if(isPlayer)playerShield+=c.value;
-else botShield+=c.value;
-text=c.name+" tworzy tarczę o sile "+c.value+"!";
-break;
-case "heal":
-let healed=Math.min(c.value,attacker.hp-attacker.current);
-attacker.current+=healed;
-text=c.name+" odzyskuje "+healed+" HP!";
-break;
-case "thorns":
-let hit=damage(target,c.value,targetSide);
-let heal=Math.min(15,attacker.hp-attacker.current);
-attacker.current+=heal;
-text=c.name+" atakuje kolcami! -"+hit+" HP, +"+heal+" HP!";
-break;
-case "stun":
-let stunHit=damage(target,c.value,targetSide);
-if(isPlayer)botStunned=true;
-text=c.name+" uderza kotwicą! -"+stunHit+" HP!";
-if(!isPlayer)text+=" Przeciwnik zostaje oszołomiony!";
-break;
-case "drain":
-let drained=damage(target,c.value,targetSide);
-attacker.current=Math.min(attacker.hp,attacker.current+Math.floor(drained/2));
-text=c.name+" pochłania energię! -"+drained+" HP!";
-break;
+function burst(x,y,color,n=15){
+for(let i=0;i<n;i++){
+let a=rand(0,Math.PI*2),s=rand(1,5);
+particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,
+life:rand(15,35),max:35,color,r:rand(2,6)});
 }
-return text;
 }
 
-function playerMove(move){
-if(!active||busy)return;
-busy=true;
-turn++;
-if(specialCD>0)specialCD--;
-
-if(move==="attack"){
-let amount=damage(bot,player.atk+Math.floor(Math.random()*9),"bot");
-log(player.name+" atakuje! -"+amount+" HP");
-}else if(move==="defend"){
-playerShield+=20;
-log(player.name+" otrzymuje tarczę +20!");
-}else if(move==="special"){
-if(specialCD>0){busy=false;return}
-log(useSpecial(player,bot,true));
-specialCD=3;
-}
-renderBattle();
-if(checkEnd())return;
-
-setTimeout(()=>{
-if(!active)return;
-if(botStunned){
-log(bot.name+" traci turę przez oszołomienie!");
-botStunned=false;
-}else{
-let choice=Math.random();
-if(bot.current<bot.hp*.4&&bot.type==="heal"&&choice<.6){
-log(useSpecial(bot,player,false));
-}else if(choice<.3){
-log(useSpecial(bot,player,false));
-}else{
-let amount=damage(player,bot.atk+Math.floor(Math.random()*8),"player");
-log(bot.name+" atakuje! -"+amount+" HP");
+function hit(f,dmg){
+if(!running)return;
+f.hp=Math.max(0,f.hp-dmg);
+burst(f.x,f.y,f.color,18);
+shake=8;
+if(f.hp<=0){
+running=false;
+document.getElementById("message").textContent=
+f===bot?"🏆 ZWYCIĘSTWO!":"💀 PRZEGRANA!";
 }
 }
-renderBattle();
-if(!checkEnd())busy=false;
-renderBattle();
-},650);
+
+function useSuper(){
+if(!running||!superReady)return;
+superReady=false;superTimer=360;
+let c=player;
+if(c.id==="comet"){
+zones.push({type:"meteor",x:bot.x,y:bot.y,t:50,r:65,color:"#ff8a32"});
+}else if(c.id==="orbit"){
+zones.push({type:"gravity",x:c.x,y:c.y,t:160,r:110,color:"#a87dff"});
+}else if(c.id==="thorn"){
+for(let i=0;i<12;i++){
+let a=i*Math.PI/6;
+bullets.push({x:c.x,y:c.y,vx:Math.cos(a)*6,vy:Math.sin(a)*6,
+r:9,life:50,damage:18,owner:"player",color:"#4cff87"});
+}
+}else if(c.id==="anchor"){
+let a=Math.atan2(mouse.y-c.y,mouse.x-c.x);
+bullets.push({x:c.x,y:c.y,vx:Math.cos(a)*10,vy:Math.sin(a)*10,
+r:19,life:55,damage:45,owner:"player",color:"#78dfff",stun:true});
+}
+burst(c.x,c.y,c.color,35);
 }
 
-function checkEnd(){
-if(player.current>0&&bot.current>0)return false;
-active=false;busy=false;
-if(player.current<=0&&bot.current<=0){
-document.getElementById("battleStatus").textContent="Remis!";
-log("Obaj wojownicy zostali pokonani.");
-}else if(bot.current<=0){
-save.wins++;
-save.coins+=75;
-store();
-document.getElementById("battleStatus").textContent="🏆 ZWYCIĘSTWO!";
-log("Wygrałeś! Zdobywasz 75 monet!");
-}else{
-save.coins+=20;
-store();
-document.getElementById("battleStatus").textContent="💀 PORAŻKA";
-log("Przegrałeś. Otrzymujesz 20 monet.");
+function update(dt){
+if(!running)return;
+gameTime+=dt;
+player.cooldown=Math.max(0,player.cooldown-dt);
+bot.cooldown=Math.max(0,bot.cooldown-dt);
+if(!superReady){
+superTimer-=dt;
+if(superTimer<=0)superReady=true;
 }
-renderBattle();
-return true;
-}
+let dx=(keys.d?1:0)-(keys.a?1:0);
+let dy=(keys.s?1:0)-(keys.w?1:0);
+let len=Math.hypot(dx,dy)||1;
+player.x+=dx/len*player.speed*dt;
+player.y+=dy/len*player.speed*dt;
+stayInside(player);
+player.angle=Math.atan2(mouse.y-player.y,mouse.x-player.x);
+if(mouse.down)shoot(player,mouse);
 
-function renderBattle(){
-const c=player||getChar(save.selected);
-const b=bot;
-document.getElementById("playerAvatar").textContent=c.emoji;
-document.getElementById("playerName").textContent=c.name;
-document.getElementById("playerHealth").textContent=
-(player?player.current:c.hp)+" / "+c.hp+" HP 🛡️"+playerShield;
-document.getElementById("playerHP").style.width=
-100*(player?player.current:c.hp)/c.hp+"%";
-
-document.getElementById("botAvatar").textContent=b?b.emoji:"🤖";
-document.getElementById("botName").textContent=b?b.name:"Losowy bot";
-document.getElementById("botHealth").textContent=b?b.current+" / "+b.hp+" HP 🛡️"+botShield:"";
-document.getElementById("botHP").style.width=b?100*b.current/b.hp+"%":"100%";
-
-document.getElementById("attackBtn").disabled=!active||busy;
-document.getElementById("specialBtn").disabled=!active||busy||specialCD>0;
-document.getElementById("defendBtn").disabled=!active||busy;
-document.getElementById("specialBtn").textContent="✨ "+c.power;
-document.getElementById("cooldown").textContent=
-specialCD>0?"Moc specjalna: "+specialCD+" tury odnowienia":"Moc specjalna gotowa!";
+if(botStun>0)botStun-=dt;
+else{
+let d=dist(bot,player);
+let a=Math.atan2(player.y-bot.y,player.x-bot.x);
+bot.angle=a;
+let direction=d>180?1:d<115?-1:0;
+bot.x+=Math.cos(a)*bot.speed*.7*direction*dt;
+bot.y+=Math.sin(a)*bot.speed*.7*direction*dt;
+bot.x+=Math.cos(a+Math.PI/2)*Math.sin(gameTime/35)*.65*dt;
+bot.y+=Math.sin(a+Math.PI/2)*Math.sin(gameTime/35)*.65*dt;
+stayInside(bot);
+if(d<370)shoot(bot,player,true);
 }
 
-store();
-renderCollection();
-renderBattle();
+for(let i=bullets.length-1;i>=0;i--){
+let b=bullets[i];
+b.x+=b.vx*dt;b.y+=b.vy*dt;b.life-=dt;
+let target=b.owner==="player"?bot:player;
+if(dist(b,target)<target.r+b.r){
+hit(target,b.damage);
+if(b.stun&&target===bot)botStun=95;
+bullets.splice(i,1);
+continue;
+}
+if(b.life<=0||Math.hypot(b.x-cx,b.y-cy)>R){
+bullets.splice(i,1);
+}
+}
+
+for(let i=zones.length-1;i>=0;i--){
+let z=zones[i];z.t-=dt;
+if(z.type==="meteor"&&z.t<=0){
+if(dist(z,bot)<z.r+bot.r)hit(bot,65);
+burst(z.x,z.y,z.color,70);
+zones.splice(i,1);continue;
+}
+if(z.type==="gravity"){
+z.x=player.x;z.y=player.y;
+if(dist(z,bot)<z.r){
+let a=Math.atan2(z.y-bot.y,z.x-bot.x);
+bot.x+=Math.cos(a)*1.8*dt;
+bot.y+=Math.sin(a)*1.8*dt;
+if(Math.floor(z.t)%20===0)hit(bot,.3*dt);
+}
+}
+if(z.t<=0)zones.splice(i,1);
+}
+}
+
+function draw(){
+ctx.clearRect(0,0,W,H);
+ctx.fillStyle="#0b1225";ctx.fillRect(0,0,W,H);
+ctx.save();
+if(shake>0){ctx.translate(rand(-shake,shake),rand(-shake,shake));shake*=.85;if(shake<.3)shake=0;}
+
+ctx.beginPath();ctx.arc(cx,cy,R+10,0,Math.PI*2);
+ctx.fillStyle="#38496d";ctx.fill();
+ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);
+ctx.fillStyle="#263d45";ctx.fill();
+ctx.strokeStyle="#65c9b3";ctx.lineWidth=5;ctx.stroke();
+
+ctx.save();
+ctx.beginPath();ctx.arc(cx,cy,R-4,0,Math.PI*2);ctx.clip();
+ctx.strokeStyle="#ffffff10";ctx.lineWidth=2;
+for(let x=cx-R;x<cx+R;x+=45){
+ctx.beginPath();ctx.moveTo(x,cy-R);ctx.lineTo(x,cy+R);ctx.stroke();
+}
+for(let y=cy-R;y<cy+R;y+=45){
+ctx.beginPath();ctx.moveTo(cx-R,y);ctx.lineTo(cx+R,y);ctx.stroke();
+}
+ctx.restore();
+
+zones.forEach(z=>{
+ctx.beginPath();ctx.arc(z.x,z.y,z.r,0,Math.PI*2);
+ctx.fillStyle=z.type==="meteor"?"#ff602933":"#ad75ff33";
+ctx.fill();ctx.strokeStyle=z.color;ctx.lineWidth=3;ctx.stroke();
+if(z.type==="meteor"){
+ctx.font="36px Arial";ctx.textAlign="center";ctx.fillText("☄️",z.x,z.y+12);
+}
+});
+
+bullets.forEach(b=>{
+ctx.shadowBlur=20;ctx.shadowColor=b.color;
+ctx.fillStyle=b.color;ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,Math.PI*2);ctx.fill();
+ctx.shadowBlur=0;
+});
+
+function fighter(f){
+if(!f)return;
+ctx.save();ctx.translate(f.x,f.y);
+ctx.shadowBlur=18;ctx.shadowColor=f.color;
+ctx.fillStyle=f.color;
+ctx.beginPath();ctx.arc(0,0,f.r,0,Math.PI*2);ctx.fill();
+ctx.shadowBlur=0;
+ctx.strokeStyle="white";ctx.lineWidth=3;ctx.stroke();
+ctx.rotate(f.angle);
+ctx.fillStyle="#e5edff";ctx.fillRect(12,-6,23,12);
+ctx.restore();
+ctx.textAlign="center";ctx.font="25px Arial";
+ctx.fillText(f.emoji,f.x,f.y+8);
+ctx.font="bold 13px Arial";ctx.fillStyle="white";
+ctx.fillText(f.name,f.x,f.y-40);
+ctx.fillStyle="#131725";ctx.fillRect(f.x-32,f.y-34,64,8);
+ctx.fillStyle=f===player?"#51ee8a":"#ff526d";
+ctx.fillRect(f.x-32,f.y-34,64*(f.hp/f.maxHp),8);
+}
+fighter(player);fighter(bot);
+
+for(let i=particles.length-1;i>=0;i--){
+let p=particles[i];
+p.x+=p.vx;p.y+=p.vy;p.life--;
+ctx.globalAlpha=Math.max(0,p.life/p.max);
+ctx.fillStyle=p.color;
+ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+ctx.globalAlpha=1;
+if(p.life<=0)particles.splice(i,1);
+}
+ctx.restore();
+
+document.getElementById("stats").textContent=
+player?"❤️ "+Math.ceil(player.hp)+" HP | 🤖 "+Math.ceil(bot.hp)+" HP":"Wybierz postać";
+document.getElementById("special").textContent=
+superReady?"✨ SUPER": "⏳ "+Math.ceil(superTimer/60)+"s";
+document.getElementById("special").disabled=!running||!superReady;
+}
+
+function loop(t){
+let dt=Math.min((t-last)/16.67||1,2);
+last=t;
+update(dt);
+draw();
+requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+window.addEventListener("keydown",e=>{
+keys[e.key.toLowerCase()]=true;
+if(e.code==="Space"){e.preventDefault();useSuper()}
+});
+window.addEventListener("keyup",e=>keys[e.key.toLowerCase()]=false);
+canvas.addEventListener("mousemove",e=>{mouse.x=e.clientX;mouse.y=e.clientY});
+canvas.addEventListener("mousedown",()=>mouse.down=true);
+window.addEventListener("mouseup",()=>mouse.down=false);
+canvas.addEventListener("contextmenu",e=>e.preventDefault());
 </script>
 </body>
 </html>
