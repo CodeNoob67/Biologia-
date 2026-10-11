@@ -1,0 +1,379 @@
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Power Clash</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0c1020;color:white;font-family:Arial,sans-serif}
+header{background:#171d35;padding:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;border-bottom:2px solid #343d68}
+h1{margin:0;color:#8edbff}
+button{background:#5865f2;border:0;color:white;padding:12px 18px;border-radius:10px;cursor:pointer;font-weight:bold}
+button:hover{filter:brightness(1.2)}
+button:disabled{opacity:.4;cursor:not-allowed}
+nav{display:flex;gap:10px;justify-content:center;padding:15px;flex-wrap:wrap}
+main{max-width:1100px;margin:auto;padding:15px}
+section{display:none}
+section.active{display:block}
+.panel{background:#171d35;border:1px solid #303b62;border-radius:16px;padding:20px;margin-bottom:15px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:15px}
+.card{text-align:center;background:#222b49;border:2px solid #465173;border-radius:15px;padding:20px}
+.card.selected{border-color:#ffe66b}
+.avatar{font-size:65px;margin:12px}
+.tag{display:inline-block;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:bold}
+.common{background:#687388}
+.rare{background:#237fd4}
+.epic{background:#8e3bca}
+.power{background:#d04b56}
+.astro{background:#bd8a19}
+.legendary{background:#f07b2c}
+.stats{color:#c4cee7;font-size:14px;line-height:1.8}
+.arena{display:grid;grid-template-columns:1fr 1fr;gap:20px;text-align:center}
+.fighter{background:#202a49;border-radius:15px;padding:20px}
+.fighter .avatar{font-size:95px}
+.hpbar{background:#3c425b;height:22px;border-radius:20px;overflow:hidden;margin:12px 0}
+.hpfill{height:100%;background:#42d67a;transition:width .4s}
+.controls{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:20px}
+.log{height:155px;overflow:auto;background:#10172c;padding:12px;border-radius:10px;color:#bcd0f5}
+.center{text-align:center}
+#battleStatus{color:#ffe66b}
+@media(max-width:600px){.arena{gap:8px}.fighter{padding:10px}.fighter .avatar{font-size:60px}}
+</style>
+</head>
+<body>
+
+<header>
+<h1>⚔️ POWER CLASH</h1>
+<div>🪙 <span id="coins">0</span> monet | 🏆 <span id="wins">0</span> zwycięstw</div>
+</header>
+
+<nav>
+<button onclick="page('home')">🏠 Start</button>
+<button onclick="page('collection')">👥 Postacie</button>
+<button onclick="page('shop')">🎁 Skrzynki</button>
+<button onclick="page('battle')">⚔️ Walka</button>
+</nav>
+
+<main>
+<section id="home" class="active">
+<div class="panel center">
+<h2>Witaj w Power Clash!</h2>
+<p>Odblokowuj wojowników, odkrywaj ich moce i walcz z botami 1v1.</p>
+<div style="font-size:90px">☄️ 🪐 🌿 ⚓</div>
+<p>Wybierz wojownika, a następnie rozpocznij pojedynek!</p>
+<button onclick="page('collection')">Wybierz postać</button>
+<button onclick="page('battle')">Rozpocznij walkę</button>
+</div>
+<div class="panel">
+<h3>Rzadkości postaci</h3>
+<p>⚪ Common → 🔵 Rare → 🟣 Epic → 🔴 Power → 🟡 Astro → 🟠 Legendary</p>
+<p>Im wyższa rzadkość, tym trudniej zdobyć postać. Każda ma własną moc specjalną.</p>
+</div>
+</section>
+
+<section id="collection">
+<h2>Twoja kolekcja</h2>
+<p>Wybierz odblokowaną postać do walki.</p>
+<div id="characters" class="cards"></div>
+</section>
+
+<section id="shop">
+<div class="panel center">
+<h2>🎁 Skrzynia wojowników</h2>
+<div style="font-size:100px">🎁</div>
+<p>Koszt: 100 monet</p>
+<button onclick="openChest()">Otwórz skrzynię</button>
+<h3 id="chestResult"></h3>
+<p>Common 40% | Rare 25% | Epic 16% | Power 11% | Astro 6% | Legendary 2%</p>
+<p>Duplikat daje 50 monet.</p>
+</div>
+</section>
+
+<section id="battle">
+<div class="panel center">
+<h2>⚔️ Arena 1v1</h2>
+<h3 id="battleStatus">Gotowy do walki?</h3>
+<div class="arena">
+<div class="fighter">
+<h3>TY</h3>
+<div id="playerAvatar" class="avatar">⚔️</div>
+<h3 id="playerName">Gracz</h3>
+<div class="hpbar"><div id="playerHP" class="hpfill"></div></div>
+<p id="playerHealth"></p>
+</div>
+<div class="fighter">
+<h3>BOT</h3>
+<div id="botAvatar" class="avatar">🤖</div>
+<h3 id="botName">Bot</h3>
+<div class="hpbar"><div id="botHP" class="hpfill"></div></div>
+<p id="botHealth"></p>
+</div>
+</div>
+<div class="controls">
+<button onclick="startBattle()">▶ Nowa walka</button>
+<button id="attackBtn" onclick="playerMove('attack')">⚔️ Atak</button>
+<button id="specialBtn" onclick="playerMove('special')">✨ Moc specjalna</button>
+<button id="defendBtn" onclick="playerMove('defend')">🛡️ Obrona</button>
+</div>
+<p id="cooldown" class="center"></p>
+<div id="battleLog" class="log">Rozpocznij walkę!</div>
+</div>
+</section>
+</main>
+
+<script>
+const roster=[
+{id:"spark",name:"Spark",emoji:"⚡",rarity:"Common",hp:105,atk:15,power:"Iskra",type:"damage",value:26},
+{id:"rock",name:"Rocky",emoji:"🪨",rarity:"Common",hp:135,atk:11,power:"Kamienna tarcza",type:"shield",value:25},
+{id:"frost",name:"Frost",emoji:"❄️",rarity:"Rare",hp:110,atk:17,power:"Lodowy pocisk",type:"damage",value:34},
+{id:"blaze",name:"Blaze",emoji:"🔥",rarity:"Epic",hp:115,atk:20,power:"Ognista eksplozja",type:"damage",value:42},
+{id:"thorn",name:"Thorn",emoji:"🌿",rarity:"Power",hp:135,atk:18,power:"Kolczaste pnącza",type:"thorns",value:35},
+{id:"anchor",name:"Anchor",emoji:"⚓",rarity:"Power",hp:160,atk:15,power:"Uderzenie kotwicy",type:"stun",value:36},
+{id:"comet",name:"Comet",emoji:"☄️",rarity:"Astro",hp:130,atk:24,power:"Deszcz meteorów",type:"damage",value:55},
+{id:"orbit",name:"Orbit",emoji:"🪐",rarity:"Astro",hp:150,atk:20,power:"Orbitalna regeneracja",type:"heal",value:48},
+{id:"void",name:"Void",emoji:"🌌",rarity:"Legendary",hp:175,atk:27,power:"Czarna dziura",type:"drain",value:58}
+];
+
+const chances=[
+["Common",40],["Rare",25],["Epic",16],
+["Power",11],["Astro",6],["Legendary",2]
+];
+
+const key="powerClashSaveV1";
+let save;
+try{save=JSON.parse(localStorage.getItem(key))}catch(e){}
+if(!save||!Array.isArray(save.owned)){
+save={coins:200,wins:0,owned:["spark"],selected:"spark"};
+}
+save.owned=save.owned.filter(id=>roster.some(c=>c.id===id));
+if(!save.owned.length)save.owned=["spark"];
+if(!save.owned.includes(save.selected))save.selected=save.owned[0];
+
+let player,bot,active=false,busy=false,turn=0;
+let specialCD=0,playerShield=0,botShield=0,botStunned=false;
+
+function store(){
+localStorage.setItem(key,JSON.stringify(save));
+document.getElementById("coins").textContent=save.coins;
+document.getElementById("wins").textContent=save.wins;
+}
+
+function page(id){
+document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+if(id==="collection")renderCollection();
+if(id==="battle")renderBattle();
+}
+
+function getChar(id){return roster.find(c=>c.id===id)}
+
+function renderCollection(){
+const area=document.getElementById("characters");
+area.innerHTML="";
+roster.forEach(c=>{
+const owned=save.owned.includes(c.id);
+const chosen=save.selected===c.id;
+const div=document.createElement("div");
+div.className="card"+(chosen?" selected":"");
+div.innerHTML=`
+<span class="tag ${c.rarity.toLowerCase()}">${c.rarity}</span>
+<div class="avatar">${owned?c.emoji:"🔒"}</div>
+<h3>${c.name}</h3>
+<div class="stats">❤️ ${c.hp} HP | ⚔️ ${c.atk} ATK<br>✨ ${c.power}</div>
+<p>${owned?"Odblokowana":"Zablokowana"}</p>
+<button ${owned&&!chosen?"":"disabled"}>${chosen?"Wybrana":"Wybierz"}</button>`;
+div.querySelector("button").onclick=()=>{
+save.selected=c.id;store();renderCollection();
+};
+area.appendChild(div);
+});
+}
+
+function openChest(){
+if(save.coins<100){alert("Masz za mało monet!");return}
+save.coins-=100;
+let roll=Math.random()*100,rarity="Common";
+for(const [r,chance] of chances){
+roll-=chance;
+if(roll<0){rarity=r;break}
+}
+const pool=roster.filter(c=>c.rarity===rarity);
+const found=pool[Math.floor(Math.random()*pool.length)];
+const result=document.getElementById("chestResult");
+if(save.owned.includes(found.id)){
+save.coins+=50;
+result.textContent="Duplikat: "+found.emoji+" "+found.name+"! +50 monet";
+}else{
+save.owned.push(found.id);
+result.textContent="Odblokowano: "+found.emoji+" "+found.name+" ("+found.rarity+")!";
+}
+store();
+}
+
+function startBattle(){
+const c=getChar(save.selected);
+const enemies=roster.filter(x=>x.id!==c.id);
+const b=enemies[Math.floor(Math.random()*enemies.length)];
+player={...c,current:c.hp};
+bot={...b,current:b.hp};
+active=true;busy=false;turn=0;specialCD=0;
+playerShield=0;botShield=0;botStunned=false;
+document.getElementById("battleLog").innerHTML="";
+document.getElementById("battleStatus").textContent="Walka trwa!";
+log("Przeciwnik: "+b.name+"!");
+renderBattle();
+}
+
+function log(msg){
+const el=document.getElementById("battleLog");
+const p=document.createElement("div");
+p.textContent="• "+msg;
+el.appendChild(p);
+el.scrollTop=el.scrollHeight;
+}
+
+function damage(target,amount,who){
+let shield=who==="player"?playerShield:botShield;
+let blocked=Math.min(shield,amount);
+amount-=blocked;
+if(who==="player")playerShield-=blocked;
+else botShield-=blocked;
+target.current=Math.max(0,target.current-amount);
+return amount;
+}
+
+function useSpecial(c,target,isPlayer){
+let text="";
+let attacker=isPlayer?player:bot;
+let targetSide=isPlayer?"bot":"player";
+switch(c.type){
+case "damage":
+let dealt=damage(target,c.value,targetSide);
+text=c.name+" używa "+c.power+"! -"+dealt+" HP";
+break;
+case "shield":
+if(isPlayer)playerShield+=c.value;
+else botShield+=c.value;
+text=c.name+" tworzy tarczę o sile "+c.value+"!";
+break;
+case "heal":
+let healed=Math.min(c.value,attacker.hp-attacker.current);
+attacker.current+=healed;
+text=c.name+" odzyskuje "+healed+" HP!";
+break;
+case "thorns":
+let hit=damage(target,c.value,targetSide);
+let heal=Math.min(15,attacker.hp-attacker.current);
+attacker.current+=heal;
+text=c.name+" atakuje kolcami! -"+hit+" HP, +"+heal+" HP!";
+break;
+case "stun":
+let stunHit=damage(target,c.value,targetSide);
+if(isPlayer)botStunned=true;
+text=c.name+" uderza kotwicą! -"+stunHit+" HP!";
+if(!isPlayer)text+=" Przeciwnik zostaje oszołomiony!";
+break;
+case "drain":
+let drained=damage(target,c.value,targetSide);
+attacker.current=Math.min(attacker.hp,attacker.current+Math.floor(drained/2));
+text=c.name+" pochłania energię! -"+drained+" HP!";
+break;
+}
+return text;
+}
+
+function playerMove(move){
+if(!active||busy)return;
+busy=true;
+turn++;
+if(specialCD>0)specialCD--;
+
+if(move==="attack"){
+let amount=damage(bot,player.atk+Math.floor(Math.random()*9),"bot");
+log(player.name+" atakuje! -"+amount+" HP");
+}else if(move==="defend"){
+playerShield+=20;
+log(player.name+" otrzymuje tarczę +20!");
+}else if(move==="special"){
+if(specialCD>0){busy=false;return}
+log(useSpecial(player,bot,true));
+specialCD=3;
+}
+renderBattle();
+if(checkEnd())return;
+
+setTimeout(()=>{
+if(!active)return;
+if(botStunned){
+log(bot.name+" traci turę przez oszołomienie!");
+botStunned=false;
+}else{
+let choice=Math.random();
+if(bot.current<bot.hp*.4&&bot.type==="heal"&&choice<.6){
+log(useSpecial(bot,player,false));
+}else if(choice<.3){
+log(useSpecial(bot,player,false));
+}else{
+let amount=damage(player,bot.atk+Math.floor(Math.random()*8),"player");
+log(bot.name+" atakuje! -"+amount+" HP");
+}
+}
+renderBattle();
+if(!checkEnd())busy=false;
+renderBattle();
+},650);
+}
+
+function checkEnd(){
+if(player.current>0&&bot.current>0)return false;
+active=false;busy=false;
+if(player.current<=0&&bot.current<=0){
+document.getElementById("battleStatus").textContent="Remis!";
+log("Obaj wojownicy zostali pokonani.");
+}else if(bot.current<=0){
+save.wins++;
+save.coins+=75;
+store();
+document.getElementById("battleStatus").textContent="🏆 ZWYCIĘSTWO!";
+log("Wygrałeś! Zdobywasz 75 monet!");
+}else{
+save.coins+=20;
+store();
+document.getElementById("battleStatus").textContent="💀 PORAŻKA";
+log("Przegrałeś. Otrzymujesz 20 monet.");
+}
+renderBattle();
+return true;
+}
+
+function renderBattle(){
+const c=player||getChar(save.selected);
+const b=bot;
+document.getElementById("playerAvatar").textContent=c.emoji;
+document.getElementById("playerName").textContent=c.name;
+document.getElementById("playerHealth").textContent=
+(player?player.current:c.hp)+" / "+c.hp+" HP 🛡️"+playerShield;
+document.getElementById("playerHP").style.width=
+100*(player?player.current:c.hp)/c.hp+"%";
+
+document.getElementById("botAvatar").textContent=b?b.emoji:"🤖";
+document.getElementById("botName").textContent=b?b.name:"Losowy bot";
+document.getElementById("botHealth").textContent=b?b.current+" / "+b.hp+" HP 🛡️"+botShield:"";
+document.getElementById("botHP").style.width=b?100*b.current/b.hp+"%":"100%";
+
+document.getElementById("attackBtn").disabled=!active||busy;
+document.getElementById("specialBtn").disabled=!active||busy||specialCD>0;
+document.getElementById("defendBtn").disabled=!active||busy;
+document.getElementById("specialBtn").textContent="✨ "+c.power;
+document.getElementById("cooldown").textContent=
+specialCD>0?"Moc specjalna: "+specialCD+" tury odnowienia":"Moc specjalna gotowa!";
+}
+
+store();
+renderCollection();
+renderBattle();
+</script>
+</body>
+</html>
