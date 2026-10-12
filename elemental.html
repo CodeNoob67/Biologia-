@@ -1,6 +1,6 @@
 <!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Power Clash Arena 8.0</title><style>
 *{box-sizing:border-box}body{margin:0;background:#090f20;color:#edf4ff;font-family:Arial,sans-serif;overflow:hidden}canvas{display:block;width:100vw;height:100vh;cursor:crosshair}.overlay{position:fixed;inset:0;background:#070d1ae8;display:flex;align-items:center;justify-content:center;z-index:5}.hidden{display:none!important}.menu{background:linear-gradient(145deg,#273e75,#152039);border:1px solid #526b98;border-radius:22px;padding:30px;text-align:center;max-width:590px;width:92%;box-shadow:0 18px 60px #0009}h1{color:#8be6ff;margin:0 0 8px}button{background:#526bf3;color:white;border:0;border-radius:10px;padding:11px 15px;font-weight:800;cursor:pointer}button:hover:not(:disabled){filter:brightness(1.2)}button:disabled{opacity:.45;cursor:default}.gold{color:#ffdf70}#shop{position:fixed;top:15px;left:15px;width:235px;background:#15223bea;border:1px solid #3d5377;border-radius:15px;padding:12px;max-height:76vh;overflow:auto}#shop h3,#roster h3{margin:0 0 9px}.item{display:flex;align-items:center;gap:7px;padding:8px;background:#253450;border-radius:9px;margin:6px 0}.item span{font-size:24px}.item small{display:block;color:#aebfdd}.item .detail{flex:1;font-size:13px}.item button{padding:7px;font-size:11px}#roster{position:fixed;right:15px;top:15px;width:235px;background:#15223bea;border:1px solid #3d5377;border-radius:15px;padding:12px;max-height:76vh;overflow:auto}#top{position:fixed;left:50%;top:12px;transform:translateX(-50%);text-align:center;background:#15223bdc;border-radius:14px;padding:9px 16px;pointer-events:none}#bottom{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;background:#15223be8;border-radius:14px;padding:10px}#notice{position:fixed;top:23%;left:50%;transform:translateX(-50%);font-weight:900;font-size:30px;text-shadow:0 3px 12px #000;text-align:center;pointer-events:none}.muted{color:#b5c4df;font-size:12px}#super{background:#9b47dc}@media(max-width:800px){#shop,#roster{width:160px;font-size:12px}#top{top:8px;font-size:12px}#bottom{bottom:5px}.item{flex-wrap:wrap}}
-#shop,#roster,#top,#bottom{display:none}body.playing #roster,body.playing #top,body.playing #bottom{display:block}body.playing #bottom{display:flex}body.shopping #shop{display:block;z-index:12;left:50%;top:50%;transform:translate(-50%,-50%);width:min(440px,92vw);max-height:75vh}body.shopping #shopList{display:grid;grid-template-columns:1fr 1fr;gap:5px}body.shopping #shop .item{flex-wrap:wrap}.menu button{margin:5px;min-width:140px}.menu .big{font-size:19px;padding:15px 24px}#shopClose{width:100%;margin-top:12px;background:#3a4765}#shopOverlay{display:none;position:fixed;inset:0;background:#030714d9;z-index:10}body.shopping #shopOverlay{display:block}body.shopping #menu{display:none}#shop{z-index:11}
+#shop,#roster,#top,#bottom{display:none}body.playing #top,body.playing #bottom{display:block}body.playing #bottom{display:flex}body.shopping #shop{display:block;z-index:12;left:50%;top:50%;transform:translate(-50%,-50%);width:min(440px,92vw);max-height:75vh}body.shopping #shopList{display:grid;grid-template-columns:1fr 1fr;gap:5px}body.shopping #shop .item{flex-wrap:wrap}.menu button{margin:5px;min-width:140px}.menu .big{font-size:19px;padding:15px 24px}#shopClose{width:100%;margin-top:12px;background:#3a4765}#shopOverlay{display:none;position:fixed;inset:0;background:#030714d9;z-index:10}body.shopping #shopOverlay{display:block}body.shopping #menu{display:none}#shop{z-index:11}
 
 /* Menu główne w stylu kolorowej gry arenowej */
 #menu.overlay{background:radial-gradient(circle at 51% 47%,#22cdf0 0%,#0ca7db 54%,#077bbd 100%);display:block;overflow:auto;padding:0;z-index:5}
@@ -15,14 +15,52 @@
 .menu-bottom{position:absolute;bottom:20px;left:20px;right:20px;display:flex;align-items:flex-end;justify-content:space-between;gap:16px;z-index:2}.menu-bottom .pass{background:linear-gradient(120deg,#ffdc27,#ff9e00);border:5px solid #142037;color:#182038;padding:16px 20px;border-radius:15px;text-align:left;font-size:19px;font-weight:900;min-width:235px;box-shadow:0 6px 0 #17273d}.menu-bottom .mode{background:#1d293f;border:5px solid #101d32;border-radius:16px;box-shadow:0 6px 0 #17273d;padding:14px 35px;min-width:280px;font-weight:900;font-size:21px}.menu-bottom .mode small{display:block;color:#6fff9c;font-size:16px;margin-top:5px}.menu-bottom .play{background:linear-gradient(#ffdf39,#ffb600);border:5px solid #132039;color:#111b30;border-radius:16px;box-shadow:0 7px 0 #17273d;font-size:42px;min-width:245px;min-height:105px;margin:0}
 #characterChooser{position:absolute;inset:0;background:#0b1527ed;z-index:7;display:none;align-items:center;justify-content:center;padding:20px}#characterChooser.visible{display:flex}.chooser-box{background:#263a60;border:3px solid #6b8fca;border-radius:20px;padding:22px;width:min(700px,95vw);max-height:85vh;overflow:auto}.chooser-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:15px 0}.chooser-grid button{background:#354d75;display:flex;flex-direction:column;gap:5px;align-items:center;font-size:16px}.chooser-grid button span{font-size:40px}.chooser-grid button:disabled{opacity:.5}
 @media(max-width:850px){.menu-top{height:90px}.profile b{font-size:16px}.profile-icon{font-size:22px}.counter{font-size:14px;padding:8px}.menu-side{top:105px}.menu-side button{min-width:78px;width:78px;min-height:65px;font-size:11px}.menu-center{top:43%}.menu-bottom .pass{display:none}.menu-bottom .mode{min-width:130px;padding:10px;font-size:13px}.menu-bottom .play{min-width:120px;min-height:70px;font-size:25px}.chooser-grid{grid-template-columns:repeat(2,1fr)}}
-</style></head><body><canvas id="game"></canvas><div id="shopOverlay"></div><div id="shop"><h3>🛒 Sklep postaci</h3><div class="gold">🎟️ Bilety: <b id="tickets">0</b></div><p class="muted">Wygrana: 1–5 biletów</p><div id="shopList"></div><button id="shopClose" onclick="closeShop()">← Wróć do menu</button></div><div id="roster"><h3>👥 Postacie</h3><div id="rosterList"></div></div><div id="top"><b>⚔️ POWER CLASH</b><div id="score" class="muted">WASD: ruch • mysz: celowanie • klik: atak • spacja: super</div></div><div id="bottom"><button onclick="showMenu()">☰ Menu</button><button onclick="startGame()">▶ Walka</button><button id="super" onclick="useSuper()">✨ SUPER</button></div><div id="notice"></div><div id="menu" class="overlay"><div class="menu">
+
+/* Kolekcja postaci – oddzielny ekran, jak w grach arenowych */
+#characterChooser,#characterDetail{position:fixed;inset:0;z-index:20;background:radial-gradient(circle at center,#1675ed,#0753c4 72%,#063a91);overflow-y:auto;color:#fff}
+#characterChooser{display:none;align-items:stretch;justify-content:initial;padding:0}
+#characterChooser.visible{display:block}
+#characterChooser:before,#characterDetail:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.10;background-image:radial-gradient(circle at center,#001d65 15%,transparent 17%);background-size:110px 110px}
+.collection-head,.detail-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:10px 24px;background:#070d1c;border-bottom:5px solid #030712;min-height:75px}
+.collection-head h2{font-size:32px;text-shadow:3px 3px #000;margin:0}.collection-head h2 span{color:#37d6ff}
+.collection-head button,.detail-head button{font-size:17px;background:#34425d;border:3px solid #07101f;box-shadow:0 4px #101827}
+.collection-grid{width:min(1150px,94%);margin:28px auto 60px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.fighter-card{height:290px;padding:0;position:relative;overflow:visible;background:#182e5b;border:5px solid #071328;border-radius:3px;box-shadow:6px 7px #001c53;display:flex;flex-direction:column;text-align:left;min-width:0;transition:transform .15s}
+.fighter-card:hover{transform:translateY(-5px);filter:brightness(1.07)}
+.fighter-card.astro{background:linear-gradient(145deg,#f8be25,#ec7a16 75%)}.fighter-card.power{background:linear-gradient(145deg,#d747b3,#8b36d7 75%)}
+.card-rank{position:absolute;top:-17px;left:-14px;z-index:2;background:#20bd89;border:3px solid #071328;clip-path:polygon(50% 0,100% 18%,100% 78%,50% 100%,0 78%,0 18%);padding:9px 13px;font-size:22px}
+.card-portrait{flex:1;position:relative;display:grid;place-items:center;overflow:hidden;background:linear-gradient(145deg,#8edaff55,#1b326077)}
+.card-portrait span{font-size:100px;position:relative;z-index:1;filter:drop-shadow(4px 6px 2px #0005);transition:transform .2s}.fighter-card:hover .card-portrait span{transform:scale(1.12) rotate(-4deg)}
+.portrait-shape{position:absolute;width:170px;height:170px;background:var(--fighter);border:8px solid #fff7;border-radius:50%;transform:rotate(-15deg);box-shadow:0 8px 0 #0003}.portrait-shape.square{border-radius:18px}.portrait-shape.triangle{clip-path:polygon(50% 0,100% 100%,0 100%);border:0;border-radius:0}
+.card-name{position:absolute;right:10px;bottom:55px;font-size:25px;font-weight:1000;text-shadow:3px 3px #09152c,-2px -2px #09152c}
+.card-bottom{background:linear-gradient(100deg,#ffe11a,#ff9a0a);border-top:5px solid #071328;padding:12px;text-align:center;color:#0a1833;font-size:17px;font-weight:1000;min-height:49px}
+.fighter-card.locked .card-portrait{filter:grayscale(.65) brightness(.7)}.fighter-card.locked .card-bottom{background:#607087;color:#fff}
+#characterDetail{display:none}#characterDetail.visible{display:block}
+.detail-layout{position:relative;display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:20px;min-height:calc(100vh - 85px);padding:40px 32px}
+.detail-left{align-self:center}.detail-left h1{font-size:clamp(35px,5vw,75px);margin:12px 0 0;text-shadow:4px 5px #071c55}.detail-left h3{margin:0 0 25px;color:#ffdf6a}.detail-left p{line-height:1.5}.rarity-label{display:inline-block;padding:9px 25px;transform:skew(-9deg);font-weight:900;font-size:22px;border:3px solid #0c1a36}
+#detailLock{background:#1c2949;border:3px solid #08162f;border-radius:8px;padding:15px;margin:30px 0 15px;font-weight:bold}
+#detailAction{width:100%;background:linear-gradient(#ffde25,#ffa51a);border:4px solid #101c35;color:#0b1c38;font-size:20px;box-shadow:0 5px #10203c}
+.detail-character{position:relative;display:flex;align-items:center;justify-content:center;min-height:390px;animation:menuBob 3s ease-in-out infinite}#detailAura{position:absolute;width:110%;height:100%;border-radius:50%}#detailAvatar{font-size:clamp(130px,17vw,270px);z-index:1;filter:drop-shadow(0 20px 5px #001a5980)}#detailShadow{position:absolute;bottom:8%;height:25px;width:65%;border-radius:50%;background:#00174e80;filter:blur(8px)}
+.detail-right{background:#0878d7aa;border:4px solid #1363b3;border-radius:8px;padding:25px;align-self:center;box-shadow:0 8px #034c9d}.detail-right h2{background:#091b40;text-align:center;padding:12px;margin:-25px -25px 24px}.stat-label{font-weight:900;margin:13px 0 6px}.stat-track{height:23px;background:#091b36;border:4px solid #081629;transform:skew(-8deg)}.stat-track>div{height:100%}.ability{background:#0b2b61;margin-top:22px;padding:14px;border-left:6px solid #ffcd23}.ability b{color:#ffe35c}.ability p{margin:8px 0 0;line-height:1.4}
+@media(max-width:850px){.collection-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.fighter-card{height:235px}.card-portrait span{font-size:70px}.portrait-shape{width:115px;height:115px}.detail-layout{grid-template-columns:1fr;gap:10px;padding:18px}.detail-character{min-height:220px;order:-1}#detailAvatar{font-size:150px}.detail-right{width:100%}.collection-head h2{font-size:20px}.collection-head button,.detail-head button{font-size:12px;padding:9px}}
+</style></head><body><canvas id="game"></canvas><div id="shopOverlay"></div><div id="shop"><h3>🛒 Sklep postaci</h3><div class="gold">🎟️ Bilety: <b id="tickets">0</b></div><p class="muted">Wygrana: 1–5 biletów</p><div id="shopList"></div><button id="shopClose" onclick="closeShop()">← Wróć do menu</button></div><div id="top"><b>⚔️ POWER CLASH</b><div id="score" class="muted">WASD: ruch • mysz: celowanie • klik: atak • spacja: super</div></div><div id="bottom"><button onclick="showMenu()">☰ Menu</button><button onclick="startGame()">▶ Walka</button><button id="super" onclick="useSuper()">✨ SUPER</button></div><div id="notice"></div><div id="menu" class="overlay"><div class="menu">
 <div class="menu-top"><div class="profile"><div class="profile-icon">👑</div><div><b>POWER CLASH</b><small>ZWYCIĘSTWA: <span id="menuWins">0</span></small></div></div><div class="currency"><div class="counter">🎟️ <span id="menuTickets">0</span></div><div class="counter">🏆 <span id="menuTrophies">0</span></div></div></div>
 <div class="menu-side left"><button onclick="openShop()"><span>🛒</span>SKLEP</button><button onclick="openChooser()"><span>👥</span>POSTACIE</button><button onclick="menuInfo('Za zwycięstwo otrzymujesz od 1 do 5 biletów!')"><span>🎁</span>NAGRODY</button></div>
 <div class="menu-side right"><button onclick="menuInfo('Kluby będą dostępne w przyszłości!')"><span>🛡️</span>KLUBY</button><button onclick="menuInfo('Tryb znajomych będzie dostępny w przyszłości!')"><span>🤝</span>ZNAJOMI</button></div>
 <div class="menu-center"><div id="menuFighter" class="menu-fighter"><div class="glow"></div><span class="symbol" id="menuEmoji">☄️</span></div><div class="menu-selected" id="menuSelected">Comet<small>ASTRO</small></div></div>
 <div class="menu-bottom"><div class="pass">🎟️ DROGA BILETÓW<br><small>Wygrywaj walki i kupuj postacie!</small></div><div class="mode">⚔️ POJEDYNEK 1V1<small>Okrągła arena</small></div><button class="play" onclick="startGame()">GRAJ</button></div>
 </div></div>
-<div id="characterChooser"><div class="chooser-box"><h2>👥 Wybierz postać</h2><div id="chooserGrid" class="chooser-grid"></div><button onclick="closeChooser()">← Wróć do menu</button></div></div>
+<div id="characterChooser">
+<div class="collection-head"><button onclick="closeChooser()">❮ WRÓĆ</button><h2>POSTACIE <span id="collectionCount"></span></h2><button onclick="showMenu()">⌂ MENU</button></div>
+<div id="chooserGrid" class="collection-grid"></div>
+</div>
+<div id="characterDetail">
+<div class="detail-head"><button onclick="closeDetail()">❮ POSTACIE</button><b>POWER CLASH</b><button onclick="closeDetail();closeChooser()">⌂ MENU</button></div>
+<div class="detail-layout">
+<div class="detail-left"><div id="detailRarity" class="rarity-label"></div><h1 id="detailName"></h1><h3 id="detailRole"></h3><p id="detailDesc"></p><div id="detailLock"></div><button id="detailAction"></button></div>
+<div class="detail-character"><div id="detailAura"></div><div id="detailAvatar"></div><div id="detailShadow"></div></div>
+<div class="detail-right"><h2>STATYSTYKI</h2><div id="detailStats"></div><div class="ability"><b>⚔️ ATAK</b><p id="detailAttack"></p></div><div class="ability"><b>✨ SUPERMOC</b><p id="detailSuper"></p></div></div>
+</div></div>
 <script>
 const canvas=document.getElementById('game'),ctx=canvas.getContext('2d');let W,H,cx,cy,R;function resize(){W=canvas.width=innerWidth;H=canvas.height=innerHeight;cx=W/2;cy=H/2;R=Math.min(W*.31,H*.38,320)}addEventListener('resize',resize);resize();
 const chars=[
@@ -34,13 +72,62 @@ const chars=[
 {id:'prism',name:'Prism',emoji:'🔷',rarity:'Astro',price:19,color:'#9bf7ff',hp:125,speed:3.25}
 ];
 const KEY='power-clash-arena-2-save';let save;try{save=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!save||!Array.isArray(save.owned))save={tickets:0,owned:['comet'],selected:'comet',wins:0};if(!save.owned.includes('comet'))save.owned.push('comet');save.owned=save.owned.filter(id=>!!chars.find(c=>c.id===id));if(!chars.find(c=>c.id===save.selected)||!save.owned.includes(save.selected))save.selected='comet';save.tickets=Math.max(0,Number(save.tickets)||0);const get=id=>chars.find(c=>c.id===id),$=id=>document.getElementById(id);function persist(){localStorage.setItem(KEY,JSON.stringify(save));renderPanels()}
-function renderPanels(){$('tickets').textContent=save.tickets;$('menuTickets').textContent=save.tickets;$('menuSelected').innerHTML=get(save.selected).name+'<small>'+get(save.selected).rarity.toUpperCase()+'</small>';$('menuWins').textContent=save.wins||0;$('menuTrophies').textContent=(save.wins||0)*25;$('menuEmoji').textContent=get(save.selected).emoji;$('menuFighter').className='menu-fighter '+(save.selected==='thorn'?'square':save.selected==='prism'?'triangle':'');for(const [listId,isShop] of [['shopList',true],['rosterList',false]]){const el=$(listId);el.innerHTML='';chars.forEach(c=>{let owned=save.owned.includes(c.id),div=document.createElement('div');div.className='item';let buttonLabel=isShop?(owned?'Kupiona':c.price+' 🎟️'):(owned?(save.selected===c.id?'✓ Wybrana':'Wybierz'):'🔒');div.innerHTML=`<span>${c.emoji}</span><div class="detail"><b>${c.name}</b><small>${c.rarity}</small></div>`;let btn=document.createElement('button');btn.textContent=buttonLabel;btn.disabled=isShop?(owned||save.tickets<c.price):(!owned||save.selected===c.id);btn.onclick=()=>{if(isShop){if(save.tickets<c.price||save.owned.includes(c.id))return;save.tickets-=c.price;save.owned.push(c.id)}else{save.selected=c.id}persist()};div.append(btn);el.append(div)})}}
+function renderPanels(){
+$('tickets').textContent=save.tickets;$('menuTickets').textContent=save.tickets;
+$('menuSelected').innerHTML=get(save.selected).name+'<small>'+get(save.selected).rarity.toUpperCase()+'</small>';
+$('menuWins').textContent=save.wins||0;$('menuTrophies').textContent=(save.wins||0)*25;
+$('menuEmoji').textContent=get(save.selected).emoji;
+$('menuFighter').className='menu-fighter '+(save.selected==='thorn'?'square':save.selected==='prism'?'triangle':'');
+const el=$('shopList');el.innerHTML='';chars.forEach(c=>{
+let owned=save.owned.includes(c.id),div=document.createElement('div');div.className='item';
+div.innerHTML=`<span>${c.emoji}</span><div class="detail"><b>${c.name}</b><small>${c.rarity}</small></div>`;
+let btn=document.createElement('button');btn.textContent=owned?'Kupiona':c.price+' 🎟️';btn.disabled=owned||save.tickets<c.price;
+btn.onclick=()=>{if(owned||save.tickets<c.price)return;save.tickets-=c.price;save.owned.push(c.id);persist()};
+div.append(btn);el.append(div)
+});
+}
 let player=null,bot=null,bullets=[],particles=[],bombs=[],beams=[],meteors=[],active=false,paused=false,keys={},mouse={x:0,y:0,down:false},frame=0,last=0,shake=0,superCD=0,noticeTimer=0,teleportAim=false,chains=[],teleportFX=[];const rand=(a,b)=>a+Math.random()*(b-a),distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y),clamp=(x,a,b)=>Math.max(a,Math.min(b,x));function createFighter(c,x,y){return {...c,x,y,r:22,hp:c.hp,maxHp:c.hp,angle:0,attackCD:0,stun:0,invuln:0,thornBuff:0,thornTick:0,orbiters:[0,1,2].map((_,i)=>({angle:i*Math.PI*2/3,respawn:0,launch:0})),anchorShield:0,burn:0,burnTick:0,slow:0,freeze:0,blackHole:0,spikeTick:0,orbitAnim:0,bombCD:0,beamCD:rand(6,90)}}
 function message(s,seconds=2){$('notice').textContent=s;noticeTimer=seconds*60}function showMenu(){paused=true;keys={};mouse.down=false;document.body.classList.remove('playing','shopping');$('menu').classList.remove('hidden')}function openShop(){paused=true;document.body.classList.remove('playing');document.body.classList.add('shopping');renderPanels()}function closeShop(){document.body.classList.remove('shopping');showMenu()}
 
 function menuInfo(msg){alert(msg)}
-function openChooser(){const grid=$('chooserGrid');grid.innerHTML='';chars.forEach(c=>{const owned=save.owned.includes(c.id),b=document.createElement('button');b.innerHTML='<span>'+c.emoji+'</span>'+c.name+'<small>'+(owned?c.rarity:'🔒 Kup w sklepie')+'</small>';b.disabled=!owned;b.onclick=()=>{save.selected=c.id;persist();closeChooser()};grid.appendChild(b)});$('characterChooser').classList.add('visible')}
-function closeChooser(){$('characterChooser').classList.remove('visible')}
+const descriptions={
+comet:['Kosmiczny wojownik','Wystrzeliwuje małe asteroidy.','Przywołuje ogromną kometę, która spada na arenę.'],
+orbit:['Władca orbity','Trzy kryształy krążą wokół Astro i ranią przeciwników.','Natychmiast odnawia wszystkie orbitujące kryształy.'],
+thorn:['Kolczasty obrońca','Nieruchome, trójkątne kolce zadają obrażenia przy kontakcie.','Powiększa kolce, zmieniając je w niebieskie hologramy.'],
+anchor:['Mistrz kotwicy','Rzuca kotwicą z szansą 25% na unieruchomienie wroga.','Otacza się tarczą z kotwic i staje się nieśmiertelny na 3 sekundy.'],
+fuse:['Bombowy strateg','Zostawia za sobą bombę co sekundę.','Rozstawia siedem bomb wokół siebie.'],
+prism:['Świetlny strzelec','Natychmiastowy promień światła pojawia się co losowe 0,1–1,5 sekundy.','Wysyła serię trzech błyskawicznych promieni.']
+};
+function openChooser(){
+ document.body.classList.remove('shopping');$('characterDetail').classList.remove('visible');
+ const grid=$('chooserGrid');grid.innerHTML='';
+ $('collectionCount').textContent=save.owned.length+'/'+chars.length;
+ chars.forEach(c=>{
+  const owned=save.owned.includes(c.id),card=document.createElement('button');
+  card.className='fighter-card '+c.rarity.toLowerCase()+(owned?'':' locked');
+  card.innerHTML=`<div class="card-rank">${owned?'★':'🔒'}</div><div class="card-portrait" style="--fighter:${c.color}"><div class="portrait-shape ${c.id==='thorn'?'square':c.id==='prism'?'triangle':''}"></div><span>${c.emoji}</span></div><div class="card-name">${c.name.toUpperCase()}</div><div class="card-bottom">${owned?(save.selected===c.id?'✓ WYBRANA':'ODKRYTA'):'🔒 ZABLOKOWANA'}</div>`;
+  card.onclick=()=>openDetail(c.id);grid.appendChild(card);
+ });
+ $('characterChooser').classList.add('visible');
+}
+function closeChooser(){$('characterChooser').classList.remove('visible');$('characterDetail').classList.remove('visible')}
+function openDetail(id){
+ const c=get(id),owned=save.owned.includes(id),info=descriptions[id];
+ $('detailName').textContent=c.name.toUpperCase();$('detailRole').textContent=info[0];
+ $('detailRarity').textContent=c.rarity.toUpperCase();$('detailRarity').style.background=c.rarity==='Astro'?'#dca51d':'#bf4269';
+ $('detailDesc').textContent='Poznaj moce wojownika i wybierz go do walki na arenie.';
+ $('detailAttack').textContent=info[1];$('detailSuper').textContent=info[2];
+ $('detailAvatar').textContent=c.emoji;$('detailAura').style.background=`radial-gradient(circle,${c.color}99,transparent 70%)`;
+ $('detailStats').innerHTML='';
+ const stats=[['ZDROWIE',Math.round(c.hp/200*100),'#48ec7e'],['SZYBKOŚĆ',Math.round(c.speed/4*100),'#44baff'],['ATAK',c.id==='prism'?92:c.id==='comet'?78:65,'#ff5757']];
+ stats.forEach(([name,pct,color])=>{$('detailStats').innerHTML+=`<div class="stat-label">${name}</div><div class="stat-track"><div style="width:${pct}%;background:${color}"></div></div>`});
+ $('detailLock').textContent=owned?'✓ POSTAĆ ODBLOKOWANA':'🔒 KUP W SKLEPIE ZA '+c.price+' 🎟️';
+ const action=$('detailAction');action.textContent=owned?(save.selected===id?'✓ WYBRANA':'WYBIERZ POSTAĆ'):'PRZEJDŹ DO SKLEPU';
+ action.disabled=owned&&save.selected===id;
+ action.onclick=()=>{if(!owned){closeDetail();closeChooser();openShop();return}save.selected=id;persist();closeDetail();openChooser()};
+ $('characterDetail').classList.add('visible');
+}
+function closeDetail(){$('characterDetail').classList.remove('visible')}
 
 function startGame(){const c=get(save.selected),enemies=chars.filter(a=>a.id!==c.id),enemy=enemies[Math.floor(Math.random()*enemies.length)];player=createFighter(c,cx-R*.48,cy);bot=createFighter(enemy,cx+R*.48,cy);bullets=[];particles=[];bombs=[];beams=[];meteors=[];chains=[];teleportFX=[];teleportAim=false;frame=0;active=true;paused=false;superCD=0;document.body.classList.remove('shopping');document.body.classList.add('playing');$('menu').classList.add('hidden');message('⚔️ WALKA!',1.4)}
 function inside(f){let dx=f.x-cx,dy=f.y-cy,d=Math.hypot(dx,dy);if(d>R-f.r-6){f.x=cx+dx/d*(R-f.r-6);f.y=cy+dy/d*(R-f.r-6)}}
@@ -347,7 +434,7 @@ canvas.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY});
 // Dzięki temu teleportacja działa nawet przy nałożonych elementach interfejsu.
 addEventListener('pointerdown',e=>{
  if(!teleportAim||!active||paused)return;
- if(e.target.closest&&e.target.closest('button,#roster,#bottom,#top,#menu,#shop'))return;
+ if(e.target.closest&&e.target.closest('button,#bottom,#top,#menu,#shop,#characterChooser,#characterDetail'))return;
  e.preventDefault();e.stopPropagation();
  teleportAim=false;mouse.down=false;superCD=360;
  $('notice').textContent='';noticeTimer=0;
