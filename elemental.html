@@ -1,19 +1,22 @@
-<!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Power Clash Arena 5</title><style>
+<!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Power Clash Arena 5.1</title><style>
 *{box-sizing:border-box}body{margin:0;background:#090f20;color:#edf4ff;font-family:Arial,sans-serif;overflow:hidden}canvas{display:block;width:100vw;height:100vh;cursor:crosshair}.overlay{position:fixed;inset:0;background:#070d1ae8;display:flex;align-items:center;justify-content:center;z-index:5}.hidden{display:none!important}.menu{background:linear-gradient(145deg,#273e75,#152039);border:1px solid #526b98;border-radius:22px;padding:30px;text-align:center;max-width:590px;width:92%;box-shadow:0 18px 60px #0009}h1{color:#8be6ff;margin:0 0 8px}button{background:#526bf3;color:white;border:0;border-radius:10px;padding:11px 15px;font-weight:800;cursor:pointer}button:hover:not(:disabled){filter:brightness(1.2)}button:disabled{opacity:.45;cursor:default}.gold{color:#ffdf70}#shop{position:fixed;top:15px;left:15px;width:235px;background:#15223bea;border:1px solid #3d5377;border-radius:15px;padding:12px;max-height:76vh;overflow:auto}#shop h3,#roster h3{margin:0 0 9px}.item{display:flex;align-items:center;gap:7px;padding:8px;background:#253450;border-radius:9px;margin:6px 0}.item span{font-size:24px}.item small{display:block;color:#aebfdd}.item .detail{flex:1;font-size:13px}.item button{padding:7px;font-size:11px}#roster{position:fixed;right:15px;top:15px;width:235px;background:#15223bea;border:1px solid #3d5377;border-radius:15px;padding:12px;max-height:76vh;overflow:auto}#top{position:fixed;left:50%;top:12px;transform:translateX(-50%);text-align:center;background:#15223bdc;border-radius:14px;padding:9px 16px;pointer-events:none}#bottom{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;background:#15223be8;border-radius:14px;padding:10px}#notice{position:fixed;top:23%;left:50%;transform:translateX(-50%);font-weight:900;font-size:30px;text-shadow:0 3px 12px #000;text-align:center;pointer-events:none}.muted{color:#b5c4df;font-size:12px}#super{background:#9b47dc}@media(max-width:800px){#shop,#roster{width:160px;font-size:12px}#top{top:8px;font-size:12px}#bottom{bottom:5px}.item{flex-wrap:wrap}}
 #shop,#roster,#top,#bottom{display:none}body.playing #roster,body.playing #top,body.playing #bottom{display:block}body.playing #bottom{display:flex}body.shopping #shop{display:block;z-index:12;left:50%;top:50%;transform:translate(-50%,-50%);width:min(440px,92vw);max-height:75vh}body.shopping #shopList{display:grid;grid-template-columns:1fr 1fr;gap:5px}body.shopping #shop .item{flex-wrap:wrap}.menu button{margin:5px;min-width:140px}.menu .big{font-size:19px;padding:15px 24px}#shopClose{width:100%;margin-top:12px;background:#3a4765}#shopOverlay{display:none;position:fixed;inset:0;background:#030714d9;z-index:10}body.shopping #shopOverlay{display:block}body.shopping #menu{display:none}#shop{z-index:11}
-</style></head><body><canvas id="game"></canvas><div id="shopOverlay"></div><div id="shop"><h3>🛒 Sklep postaci</h3><div class="gold">🎟️ Bilety: <b id="tickets">0</b></div><p class="muted">Wygrana: 1–5 biletów</p><div id="shopList"></div><button id="shopClose" onclick="closeShop()">← Wróć do menu</button></div><div id="roster"><h3>👥 Postacie</h3><div id="rosterList"></div></div><div id="top"><b>⚔️ POWER CLASH</b><div id="score" class="muted">WASD: ruch • mysz: celowanie • klik: atak • spacja: super</div></div><div id="bottom"><button onclick="showMenu()">☰ Menu</button><button onclick="startGame()">▶ Walka</button><button id="super" onclick="useSuper()">✨ SUPER</button></div><div id="notice"></div><div id="menu" class="overlay"><div class="menu"><h1>⚔️ POWER CLASH</h1><h2>ARENA 5.0</h2><div style="font-size:68px;margin:16px">☄️ 🪐 🌿 ⚓</div><p>Okrągła arena • pojedynki 1v1 • animowane moce</p><p class="gold">🎟️ <span id="menuTickets">0</span> biletów</p><p id="menuSelected">Wybrana postać: Comet</p><button class="big" onclick="startGame()">▶ GRAJ</button><button class="big" onclick="openShop()">🛒 SKLEP</button><p class="muted">Kup postacie za bilety w sklepie. Wybierz wojownika przed walką w panelu po prawej.</p><p class="muted">WASD — ruch • Mysz — celowanie • Klik — atak • Spacja — super</p></div></div>
+</style></head><body><canvas id="game"></canvas><div id="shopOverlay"></div><div id="shop"><h3>🛒 Sklep postaci</h3><div class="gold">🎟️ Bilety: <b id="tickets">0</b></div><p class="muted">Wygrana: 1–5 biletów</p><div id="shopList"></div><button id="shopClose" onclick="closeShop()">← Wróć do menu</button></div><div id="roster"><h3>👥 Postacie</h3><div id="rosterList"></div></div><div id="top"><b>⚔️ POWER CLASH</b><div id="score" class="muted">WASD: ruch • mysz: celowanie • klik: atak • spacja: super</div></div><div id="bottom"><button onclick="showMenu()">☰ Menu</button><button onclick="startGame()">▶ Walka</button><button id="super" onclick="useSuper()">✨ SUPER</button></div><div id="notice"></div><div id="menu" class="overlay"><div class="menu"><h1>⚔️ POWER CLASH</h1><h2>ARENA 7.0</h2><div style="font-size:68px;margin:16px">☄️ 🪐 🌿 ⚓ 💣 🔷</div><p>Okrągła arena • pojedynki 1v1 • animowane moce</p><p class="gold">🎟️ <span id="menuTickets">0</span> biletów</p><p id="menuSelected">Wybrana postać: Comet</p><button class="big" onclick="startGame()">▶ GRAJ</button><button class="big" onclick="openShop()">🛒 SKLEP</button><p class="muted">Kup postacie za bilety w sklepie. Wybierz wojownika przed walką w panelu po prawej.</p><p class="muted">WASD — ruch • Mysz — celowanie • Klik — atak • Spacja — super</p></div></div>
 <script>
 const canvas=document.getElementById('game'),ctx=canvas.getContext('2d');let W,H,cx,cy,R;function resize(){W=canvas.width=innerWidth;H=canvas.height=innerHeight;cx=W/2;cy=H/2;R=Math.min(W*.31,H*.38,320)}addEventListener('resize',resize);resize();
-const chars=[{id:'comet',name:'Comet',emoji:'☄️',rarity:'Astro',price:0,color:'#ff9848',hp:130,speed:3.1},{id:'orbit',name:'Orbit',emoji:'🪐',rarity:'Astro',price:12,color:'#ab8aff',hp:150,speed:3.1},{id:'thorn',name:'Thorn',emoji:'🌿',rarity:'Power',price:9,color:'#62e5a1',hp:150,speed:3.2},{id:'anchor',name:'Anchor',emoji:'⚓',rarity:'Power',price:15,color:'#65caff',hp:185,speed:2.75},
-{id:'blaze',name:'Blaze',emoji:'🔥',rarity:'Power',price:10,color:'#ff633c',hp:135,speed:3.5},
-{id:'frost',name:'Frost',emoji:'❄️',rarity:'Power',price:11,color:'#80eaff',hp:155,speed:3.0},
-{id:'volt',name:'Volt',emoji:'⚡',rarity:'Astro',price:18,color:'#ffe45d',hp:125,speed:4.1},
-{id:'nova',name:'Nova',emoji:'🌟',rarity:'Astro',price:22,color:'#ff79db',hp:145,speed:3.4}];
-const KEY='power-clash-arena-2-save';let save;try{save=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!save||!Array.isArray(save.owned))save={tickets:0,owned:['comet'],selected:'comet',wins:0};if(!save.owned.includes('comet'))save.owned.push('comet');if(!save.owned.includes(save.selected))save.selected='comet';save.tickets=Math.max(0,Number(save.tickets)||0);const get=id=>chars.find(c=>c.id===id),$=id=>document.getElementById(id);function persist(){localStorage.setItem(KEY,JSON.stringify(save));renderPanels()}
+const chars=[
+{id:'comet',name:'Comet',emoji:'☄️',rarity:'Astro',price:0,color:'#ff9848',hp:130,speed:3.1},
+{id:'orbit',name:'Astro',emoji:'🪐',rarity:'Astro',price:12,color:'#ab8aff',hp:150,speed:3.1},
+{id:'thorn',name:'Thorn',emoji:'🌿',rarity:'Power',price:9,color:'#62e5a1',hp:150,speed:3.2},
+{id:'anchor',name:'Anchor',emoji:'⚓',rarity:'Power',price:15,color:'#65caff',hp:185,speed:2.75},
+{id:'fuse',name:'Fuse',emoji:'💣',rarity:'Power',price:14,color:'#ffbe63',hp:155,speed:3.3},
+{id:'prism',name:'Prism',emoji:'🔷',rarity:'Astro',price:19,color:'#9bf7ff',hp:125,speed:3.25}
+];
+const KEY='power-clash-arena-2-save';let save;try{save=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!save||!Array.isArray(save.owned))save={tickets:0,owned:['comet'],selected:'comet',wins:0};if(!save.owned.includes('comet'))save.owned.push('comet');save.owned=save.owned.filter(id=>!!chars.find(c=>c.id===id));if(!chars.find(c=>c.id===save.selected)||!save.owned.includes(save.selected))save.selected='comet';save.tickets=Math.max(0,Number(save.tickets)||0);const get=id=>chars.find(c=>c.id===id),$=id=>document.getElementById(id);function persist(){localStorage.setItem(KEY,JSON.stringify(save));renderPanels()}
 function renderPanels(){$('tickets').textContent=save.tickets;$('menuTickets').textContent=save.tickets;$('menuSelected').textContent='Wybrana postać: '+get(save.selected).name;for(const [listId,isShop] of [['shopList',true],['rosterList',false]]){const el=$(listId);el.innerHTML='';chars.forEach(c=>{let owned=save.owned.includes(c.id),div=document.createElement('div');div.className='item';let buttonLabel=isShop?(owned?'Kupiona':c.price+' 🎟️'):(owned?(save.selected===c.id?'✓ Wybrana':'Wybierz'):'🔒');div.innerHTML=`<span>${c.emoji}</span><div class="detail"><b>${c.name}</b><small>${c.rarity}</small></div>`;let btn=document.createElement('button');btn.textContent=buttonLabel;btn.disabled=isShop?(owned||save.tickets<c.price):(!owned||save.selected===c.id);btn.onclick=()=>{if(isShop){if(save.tickets<c.price||save.owned.includes(c.id))return;save.tickets-=c.price;save.owned.push(c.id)}else{save.selected=c.id}persist()};div.append(btn);el.append(div)})}}
-let player=null,bot=null,bullets=[],particles=[],meteors=[],active=false,paused=false,keys={},mouse={x:0,y:0,down:false},frame=0,last=0,shake=0,superCD=0,noticeTimer=0,teleportAim=false,chains=[],teleportFX=[];const rand=(a,b)=>a+Math.random()*(b-a),distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y),clamp=(x,a,b)=>Math.max(a,Math.min(b,x));function createFighter(c,x,y){return {...c,x,y,r:22,hp:c.hp,maxHp:c.hp,angle:0,attackCD:0,stun:0,invuln:0,thornBuff:0,thornTick:0,orbiters:[0,1,2].map((_,i)=>({angle:i*Math.PI*2/3,respawn:0,launch:0})),anchorShield:0,burn:0,burnTick:0,slow:0,freeze:0,blackHole:0,spikeTick:0,orbitAnim:0}}
+let player=null,bot=null,bullets=[],particles=[],bombs=[],beams=[],meteors=[],active=false,paused=false,keys={},mouse={x:0,y:0,down:false},frame=0,last=0,shake=0,superCD=0,noticeTimer=0,teleportAim=false,chains=[],teleportFX=[];const rand=(a,b)=>a+Math.random()*(b-a),distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y),clamp=(x,a,b)=>Math.max(a,Math.min(b,x));function createFighter(c,x,y){return {...c,x,y,r:22,hp:c.hp,maxHp:c.hp,angle:0,attackCD:0,stun:0,invuln:0,thornBuff:0,thornTick:0,orbiters:[0,1,2].map((_,i)=>({angle:i*Math.PI*2/3,respawn:0,launch:0})),anchorShield:0,burn:0,burnTick:0,slow:0,freeze:0,blackHole:0,spikeTick:0,orbitAnim:0,bombCD:0,beamCD:rand(6,90)}}
 function message(s,seconds=2){$('notice').textContent=s;noticeTimer=seconds*60}function showMenu(){paused=true;keys={};mouse.down=false;document.body.classList.remove('playing','shopping');$('menu').classList.remove('hidden')}function openShop(){paused=true;document.body.classList.remove('playing');document.body.classList.add('shopping');renderPanels()}function closeShop(){document.body.classList.remove('shopping');showMenu()}
-function startGame(){const c=get(save.selected),enemies=chars.filter(a=>a.id!==c.id),enemy=enemies[Math.floor(Math.random()*enemies.length)];player=createFighter(c,cx-R*.48,cy);bot=createFighter(enemy,cx+R*.48,cy);bullets=[];particles=[];meteors=[];chains=[];teleportFX=[];teleportAim=false;frame=0;active=true;paused=false;superCD=0;document.body.classList.remove('shopping');document.body.classList.add('playing');$('menu').classList.add('hidden');message('⚔️ WALKA!',1.4)}
+function startGame(){const c=get(save.selected),enemies=chars.filter(a=>a.id!==c.id),enemy=enemies[Math.floor(Math.random()*enemies.length)];player=createFighter(c,cx-R*.48,cy);bot=createFighter(enemy,cx+R*.48,cy);bullets=[];particles=[];bombs=[];beams=[];meteors=[];chains=[];teleportFX=[];teleportAim=false;frame=0;active=true;paused=false;superCD=0;document.body.classList.remove('shopping');document.body.classList.add('playing');$('menu').classList.add('hidden');message('⚔️ WALKA!',1.4)}
 function inside(f){let dx=f.x-cx,dy=f.y-cy,d=Math.hypot(dx,dy);if(d>R-f.r-6){f.x=cx+dx/d*(R-f.r-6);f.y=cy+dy/d*(R-f.r-6)}}
 function burst(x,y,color,n=15){for(let i=0;i<n;i++){let a=rand(0,Math.PI*2),v=rand(1,5);particles.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:rand(12,35),color,r:rand(2,5)})}}
 function hurt(f,dmg){if(!active||f.invuln>0)return;f.hp=Math.max(0,f.hp-dmg);burst(f.x,f.y,f.color,9);shake=5;if(f.hp<=0){active=false;mouse.down=false;if(f===bot){let reward=Math.floor(rand(1,6));save.tickets+=reward;save.wins++;persist();message('🏆 WYGRANA! +'+reward+' 🎟️',99)}else message('💀 PRZEGRANA!',99)}}
@@ -21,7 +24,7 @@ function shoot(f,target){
 if(f.attackCD>0||f.stun>0||f.freeze>0||f.blackHole>0)return;
 let a=Math.atan2(target.y-f.y,target.x-f.x);f.angle=a;
 let base={x:f.x+Math.cos(a)*25,y:f.y+Math.sin(a)*25,vx:Math.cos(a)*9,vy:Math.sin(a)*9,r:7,life:65,damage:14,owner:f,color:f.color,kind:f.id,age:0};
-if(f.id==='orbit'||f.id==='thorn'){
+if(f.id==='orbit'||f.id==='thorn'||f.id==='fuse'||f.id==='prism'){
   // Ich podstawową bronią są obiekty wokół postaci i kolce.
   f.attackCD=20;return;
 }
@@ -39,6 +42,7 @@ burst(base.x,base.y,f.color,4);
 function useSuper(){
 if(!active||paused||superCD>0||player.stun>0||player.freeze>0)return;
 if(player.id==='volt'){
+ if(teleportAim)return;
  teleportAim=true;message('⚡ KLIKNIJ MIEJSCE TELEPORTACJI',3);return;
 }
 superCD=360;special(player,bot);
@@ -55,7 +59,11 @@ for(let i=0;i<18;i++){let k=i/18;particles.push({x:ox+(f.x-ox)*k,y:oy+(f.y-oy)*k
 meteors.push({type:'shock',x:f.x,y:f.y,progress:0,r:radius});
 }
 function special(f,target){
-if(f.id==='comet'){
+if(f.id==='fuse'){
+ for(let i=0;i<7;i++){let a=i*Math.PI*2/7;bombs.push({x:f.x+Math.cos(a)*66,y:f.y+Math.sin(a)*66,owner:f,age:0,armed:20,life:540,r:18})}burst(f.x,f.y,'#ffbc54',55);
+}else if(f.id==='prism'){
+ f.beamCD=0;for(let i=0;i<3;i++){setTimeout(()=>{if(active&&!paused&&f.hp>0)firePrism(f,f===player?bot:player,true)},i*130)}burst(f.x,f.y,'#b6faff',55);
+}else if(f.id==='comet'){
  meteors.push({type:'comet',x:target.x,y:target.y,fromY:cy-R-260,progress:0,r:76,owner:f});
  message('☄️ WIELKA KOMETA!',1.2);
 }else if(f.id==='orbit'){
@@ -77,6 +85,19 @@ if(f.id==='comet'){
  burst(f.x,f.y,'#bd6cff',75);
 }
 }
+function explodeBomb(b,target){
+ burst(b.x,b.y,'#ffb451',38);shake=Math.max(shake,9);
+ if(distance(b,target)<b.r+target.r+24)hurt(target,28);
+ meteors.push({type:'shock',x:b.x,y:b.y,r:57,progress:0});
+}
+function firePrism(f,target,superShot=false){
+ if(!active||f.freeze>0||f.stun>0||f.blackHole>0)return;
+ let a=f===player?Math.atan2(mouse.y-f.y,mouse.x-f.x):Math.atan2(target.y-f.y,target.x-f.x);
+ f.angle=a;let reach=R*2.2,ex=f.x+Math.cos(a)*reach,ey=f.y+Math.sin(a)*reach;
+ let vx=target.x-f.x,vy=target.y-f.y,along=vx*Math.cos(a)+vy*Math.sin(a),perp=Math.abs(vx*Math.sin(a)-vy*Math.cos(a));
+ if(along>=0&&along<=reach&&perp<=target.r+(superShot?7:3))hurt(target,superShot?20:9);
+ beams.push({x:f.x,y:f.y,x2:ex,y2:ey,life:superShot?13:5,super:superShot});
+}
 function contactDamage(f,target,dt){
 if(f.id==='thorn'&&f.stun<=0){
  let reach=f.thornBuff>0?85:45;
@@ -93,8 +114,15 @@ particles.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.life-=dt});particles=particles
 if(noticeTimer>0){noticeTimer-=dt;if(noticeTimer<=0)$('notice').textContent=''}
 if(!active||paused)return;
 frame+=dt;superCD=Math.max(0,superCD-dt);
+for(let i=bombs.length-1;i>=0;i--){let b=bombs[i];b.age+=dt;b.life-=dt;let target=b.owner===player?bot:player;
+ if(b.age>b.armed&&distance(b,target)<b.r+target.r+5){explodeBomb(b,target);bombs.splice(i,1);continue}
+ if(b.life<=0)bombs.splice(i,1);
+}
+for(let i=beams.length-1;i>=0;i--){beams[i].life-=dt;if(beams[i].life<=0)beams.splice(i,1)}
 for(const f of [player,bot]){
- f.attackCD=Math.max(0,f.attackCD-dt);f.stun=Math.max(0,f.stun-dt);f.freeze=Math.max(0,f.freeze-dt);
+ f.attackCD=Math.max(0,f.attackCD-dt);
+ if(f.id==='fuse'){f.bombCD-=dt;if(f.bombCD<=0){f.bombCD=60;let back=f.angle+Math.PI;bombs.push({x:f.x+Math.cos(back)*30,y:f.y+Math.sin(back)*30,owner:f,age:0,armed:18,life:720,r:17});if(bombs.length>55)bombs.shift()}}
+ if(f.id==='prism'){f.beamCD-=dt;if(f.beamCD<=0){firePrism(f,f===player?bot:player);f.beamCD=rand(6,90)}}f.stun=Math.max(0,f.stun-dt);f.freeze=Math.max(0,f.freeze-dt);
  f.slow=Math.max(0,f.slow-dt);f.invuln=Math.max(0,f.invuln-dt);
  f.anchorShield=Math.max(0,f.anchorShield-dt);f.thornBuff=Math.max(0,f.thornBuff-dt);
  f.blackHole=Math.max(0,f.blackHole-dt);f.orbitAnim=Math.max(0,f.orbitAnim-dt);
@@ -153,6 +181,7 @@ return null;
 }
 function drawFighter(f){
 if(!f)return;
+if(f.id==='comet'){f.trailVX=f.x-(f.lastTrailX??f.x);f.trailVY=f.y-(f.lastTrailY??f.y);f.lastTrailX=f.x;f.lastTrailY=f.y;}
 ctx.save();ctx.translate(f.x,f.y);
 if(f.id==='thorn'){
  let buff=f.thornBuff>0,reach=buff?83:44;
@@ -169,7 +198,7 @@ if(f.id==='orbit')f.orbiters.forEach((o,i)=>{
  let r=o.launch>0?54*(1-o.launch/(35+i*5)):54;
  let x=Math.cos(o.angle)*r,y=Math.sin(o.angle)*r;
  ctx.shadowBlur=18;ctx.shadowColor='#d6baff';ctx.fillStyle=['#c7aaff','#7de8ff','#ffdc8e'][i];
- ctx.beginPath();ctx.arc(x,y,11,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+ ctx.beginPath();ctx.moveTo(x,y-13);ctx.lineTo(x+10,y);ctx.lineTo(x,y+13);ctx.lineTo(x-10,y);ctx.closePath();ctx.fill();ctx.strokeStyle='#f4f5ff';ctx.lineWidth=1.6;ctx.stroke();ctx.shadowBlur=0;
 });
 if(f.id==='anchor'&&f.anchorShield>0){
  ctx.strokeStyle='#83e9ff88';ctx.lineWidth=6;ctx.beginPath();ctx.arc(0,0,63,0,Math.PI*2);ctx.stroke();
@@ -180,8 +209,25 @@ if(f.id==='nova'&&f.blackHole>0){
  ctx.beginPath();ctx.arc(0,0,32+Math.sin(frame*.2)*4,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
  ctx.strokeStyle='#d08bff';ctx.lineWidth=5;ctx.beginPath();ctx.ellipse(0,0,46,20,frame*.07,0,Math.PI*2);ctx.stroke();
 }else{
+ // Comet zostawia pomarańczowy, świetlisty ogon, skierowany przeciwnie do ruchu.
+ if(f.id==='comet'){
+  const motion=Math.hypot(f.trailVX||0,f.trailVY||0);
+  const a=motion>.08?Math.atan2(f.trailVY,f.trailVX):f.angle;
+  ctx.save();ctx.rotate(a);
+  const flicker=4*Math.sin(frame*.31);
+  const trail=ctx.createLinearGradient(-83,0,-8,0);
+  trail.addColorStop(0,'rgba(255,65,15,0)');trail.addColorStop(.5,'rgba(255,95,22,.52)');trail.addColorStop(1,'rgba(255,205,77,.95)');
+  ctx.fillStyle=trail;ctx.beginPath();ctx.moveTo(-9,-15);ctx.quadraticCurveTo(-42,-25,-85-flicker,0);ctx.quadraticCurveTo(-42,25,-9,15);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#ffdc7a';for(let k=0;k<4;k++){let px=-35-k*12,py=Math.sin(frame*.13+k*2)*7;ctx.beginPath();ctx.arc(px,py,2.5,0,Math.PI*2);ctx.fill()}
+  ctx.restore();
+ }
  ctx.shadowBlur=15;ctx.shadowColor=f.color;ctx.fillStyle=f.color;
- ctx.beginPath();ctx.arc(0,0,f.r,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+ ctx.beginPath();
+ if(f.id==='thorn'){ctx.rect(-f.r,-f.r,f.r*2,f.r*2)}
+ else if(f.id==='prism'){
+   ctx.moveTo(0,-f.r*1.28);ctx.lineTo(f.r*1.17,f.r*.9);ctx.lineTo(-f.r*1.17,f.r*.9);ctx.closePath();
+ }else{ctx.arc(0,0,f.r,0,Math.PI*2)}
+ ctx.fill();ctx.shadowBlur=0;
  ctx.lineWidth=3;ctx.strokeStyle='white';ctx.stroke();
  ctx.font='25px Arial';ctx.textAlign='center';
 const tint=statusTint(f);
@@ -219,6 +265,8 @@ ctx.fillStyle='#29505a';ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
 ctx.save();ctx.beginPath();ctx.arc(cx,cy,R-5,0,Math.PI*2);ctx.clip();ctx.strokeStyle='#ffffff13';ctx.lineWidth=2;
 for(let x=cx-R;x<cx+R;x+=42){ctx.beginPath();ctx.moveTo(x,cy-R);ctx.lineTo(x,cy+R);ctx.stroke()}
 for(let y=cy-R;y<cy+R;y+=42){ctx.beginPath();ctx.moveTo(cx-R,y);ctx.lineTo(cx+R,y);ctx.stroke()}ctx.restore();
+for(const b of bombs){ctx.save();ctx.translate(b.x,b.y);ctx.shadowBlur=14;ctx.shadowColor='#ff9a38';ctx.fillStyle=b.age<b.armed?'#5a6874':'#292d3a';ctx.strokeStyle='#ffc568';ctx.lineWidth=3;ctx.beginPath();ctx.arc(0,0,b.r,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.strokeStyle='#ffae4d';ctx.beginPath();ctx.moveTo(0,-b.r+3);ctx.lineTo(7,-b.r-9);ctx.stroke();ctx.fillStyle=frame%35<17?'#ffdf67':'#ff703d';ctx.beginPath();ctx.arc(7,-b.r-9,4,0,Math.PI*2);ctx.fill();ctx.restore()}
+for(const b of beams){ctx.save();ctx.globalAlpha=Math.min(1,b.life/9);ctx.strokeStyle='#63e6ff';ctx.shadowBlur=18;ctx.shadowColor='#8ffaff';ctx.lineWidth=b.super?8:3;ctx.beginPath();ctx.moveTo(b.x,b.y);ctx.lineTo(b.x2,b.y2);ctx.stroke();ctx.strokeStyle='#efffff';ctx.lineWidth=b.super?3:1.4;ctx.stroke();ctx.restore()}
 for(const m of meteors){
  if(m.type==='comet'){
   ctx.fillStyle='#ff6b2e33';ctx.strokeStyle='#ffb15b';ctx.lineWidth=3;ctx.beginPath();ctx.arc(m.x,m.y,m.r,0,Math.PI*2);ctx.fill();ctx.stroke();
@@ -266,5 +314,21 @@ for(const p of particles){ctx.globalAlpha=Math.min(1,p.life/20);ctx.fillStyle=p.
 $('score').textContent=player?'❤️ '+Math.ceil(player.hp)+'/'+player.maxHp+' VS 🤖 '+Math.ceil(bot.hp)+'/'+bot.maxHp:'WASD • mysz • klik • spacja';
 $('super').disabled=!active||paused||superCD>0;$('super').textContent=teleportAim?'🎯 WYBIERZ CEL':superCD>0?'⏳ '+Math.ceil(superCD/60)+'s':'✨ SUPER';
 }
-function loop(t){let dt=Math.min((t-last)/16.67||1,2);last=t;update(dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;if(e.code==='Space'){e.preventDefault();useSuper()}if(e.code==='Escape'){teleportAim=false;showMenu()}});addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);canvas.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY});canvas.addEventListener('mousedown',e=>{if(teleportAim&&active){teleportAim=false;superCD=360;teleport(player,e.clientX,e.clientY)}else mouse.down=true});addEventListener('mouseup',()=>mouse.down=false);renderPanels();
+function loop(t){let dt=Math.min((t-last)/16.67||1,2);last=t;update(dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;if(e.code==='Space'){e.preventDefault();if(!e.repeat)useSuper()}if(e.code==='Escape'){if(teleportAim){teleportAim=false;$('notice').textContent='';noticeTimer=0}else showMenu()}});
+addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
+canvas.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY});
+// Obsługujemy wybór celu w całym oknie, a nie wyłącznie na canvas.
+// Dzięki temu teleportacja działa nawet przy nałożonych elementach interfejsu.
+addEventListener('pointerdown',e=>{
+ if(!teleportAim||!active||paused)return;
+ if(e.target.closest&&e.target.closest('button,#roster,#bottom,#top,#menu,#shop'))return;
+ e.preventDefault();e.stopPropagation();
+ teleportAim=false;mouse.down=false;superCD=360;
+ $('notice').textContent='';noticeTimer=0;
+ teleport(player,e.clientX,e.clientY);
+},true);
+canvas.addEventListener('pointerdown',e=>{if(!teleportAim&&e.button===0)mouse.down=true});
+addEventListener('pointerup',()=>mouse.down=false);
+addEventListener('blur',()=>{mouse.down=false;keys={}});
+renderPanels();
 </script></body></html>
