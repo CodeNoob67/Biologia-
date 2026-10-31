@@ -1,21 +1,215 @@
-<!DOCTYPE html><html lang="pl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Evolution Lab — symulator życia</title><style>
-:root{color-scheme:dark;--bg:#0b1120;--panel:#162238;--line:#2d405d;--accent:#59e1a7;--text:#eaf2ff;--muted:#9eb2cd}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px system-ui,Segoe UI,Arial}header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 20px;border-bottom:1px solid var(--line);background:#111b2e}h1{margin:0;font-size:23px}h2{font-size:16px;margin:0 0 12px}small,.muted{color:var(--muted)}button,select{background:#263953;color:white;border:1px solid #425d7d;border-radius:8px;padding:8px 10px;cursor:pointer}button:hover{background:#36516f}.primary{background:#147a5e;border-color:#21ae84}.danger{background:#793d48}main{display:grid;grid-template-columns:275px minmax(360px,1fr) 310px;gap:12px;padding:12px;max-width:1700px;margin:auto}.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:15px;margin-bottom:12px}.row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:9px 0}.row label{flex:1}.value{color:var(--accent);font-variant-numeric:tabular-nums;min-width:55px;text-align:right}input[type=range]{width:100%;accent-color:#4cd8a0}.buttons{display:flex;gap:6px;flex-wrap:wrap}.statgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:12px}.stat{background:#182940;border:1px solid var(--line);padding:10px;border-radius:10px}.stat strong{display:block;font-size:19px;color:var(--accent);margin-top:4px}canvas{width:100%;display:block;border-radius:10px;border:1px solid #38516c;cursor:crosshair}#world{aspect-ratio: 1.55;max-height:65vh;background:#0b3541}.legend{display:flex;gap:12px;flex-wrap:wrap;margin:10px 0;color:var(--muted)}.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px}.scroll{max-height:260px;overflow:auto}.event{border-bottom:1px solid var(--line);padding:8px 0;font-size:12px}.species{border-bottom:1px solid var(--line);padding:8px 0;cursor:pointer}.species:hover{background:#223450}.species strong{display:block}.species small{display:block;margin-top:3px}.tag{border-radius:6px;padding:2px 6px;background:#283d56;font-size:11px}#chart{height:135px}.note{line-height:1.5;font-size:12px;color:var(--muted)}@media(max-width:1150px){main{grid-template-columns:250px 1fr}aside:last-child{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:12px}aside:last-child .panel{min-width:0}}@media(max-width:700px){main{display:block;padding:8px}.statgrid{grid-template-columns:repeat(2,1fr)}aside:last-child{display:block}header{flex-wrap:wrap}}
-</style></head><body><header><div><h1>🧬 Evolution Lab</h1><small>Interaktywny eksperyment z doborem naturalnym</small></div><div class="buttons"><button class="primary" id="toggle">⏸ Pauza</button><button id="restart">↻ Nowa planeta</button></div></header><main><aside><section class="panel"><h2>🌍 Środowisko</h2><div id="sliders"></div><button id="restore">Przywróć warunki początkowe</button></section><section class="panel"><h2>⏩ Czas symulacji</h2><div class="row"><label for="speed">Prędkość</label><span class="value" id="speedVal"></span></div><input type="range" id="speed" min="0" max="5" step="1" value="2"><p class="note">Lata symulacji nie odpowiadają rzeczywistej skali ewolucji. Jedna jednostka czasu to umowny rok modelu.</p></section><section class="panel"><h2>☄️ Zdarzenia</h2><div class="buttons"><button id="meteor">Meteoryt</button><button id="disease">Epidemia</button><button id="food">Rozkwit pożywienia</button><button id="predators">Dodaj drapieżniki</button></div></section></aside><section><div class="statgrid"><div class="stat"><small>Rok</small><strong id="year">0</strong></div><div class="stat"><small>Organizmy</small><strong id="population">0</strong></div><div class="stat"><small>Żywe gatunki</small><strong id="speciesCount">0</strong></div><div class="stat"><small>Nowe gatunki</small><strong id="newSpecies">0</strong></div></div><section class="panel"><div class="row"><h2>🌊 Ekosystem</h2><span id="rate" class="tag">100 lat/s</span></div><canvas id="world" width="930" height="600"></canvas><div class="legend"><span><i class="dot" style="background:#52e69a"></i>Samożywne</span><span><i class="dot" style="background:#f6cc62"></i>Cudzożywne</span><span><i class="dot" style="background:#f76d76"></i>Drapieżniki</span><span><i class="dot" style="background:#8798ff"></i>Martwa materia / zasoby</span></div><p class="note">Kliknij organizm, aby poznać jego gatunek i cechy. Organizmy zdobywają energię, rozmnażają się, mutują i giną. Nowe gatunki powstają po przekroczeniu progu różnic genetycznych.</p></section><section class="panel"><h2>📈 Historia populacji</h2><canvas id="chart" width="930" height="150"></canvas></section></section><aside><section class="panel"><h2>🔬 Wybrany organizm</h2><div id="inspector" class="note">Kliknij kropkę na mapie.</div></section><section class="panel"><h2>🌳 Gatunki i pochodzenie</h2><div class="scroll" id="speciesList"></div></section><section class="panel"><h2>📜 Dziennik ewolucji</h2><div class="scroll" id="log"></div></section><section class="panel"><h2>ℹ️ Zasady modelu</h2><p class="note">Nazwy gatunków są fikcyjne. Mutacje zmieniają cechy dziedziczne. Selekcja wynika z warunków środowiska i interakcji między organizmami. Specjacja jest uproszczona: nie modelujemy prawdziwych genomów, izolacji rozrodczej ani wielomilionowej historii życia.</p></section></aside></main><script>
-'use strict';const W=930,H=600,MAX=650;const canvas=document.getElementById('world'),ctx=canvas.getContext('2d'),chart=document.getElementById('chart'),cctx=chart.getContext('2d');const $=id=>document.getElementById(id);const rand=(a,b)=>a+Math.random()*(b-a),clamp=(v,a,b)=>Math.max(a,Math.min(b,v));const settings=[['temp','Temperatura','°C',-20,90,24],['oxygen','Tlen','%',0,40,12],['co2','CO₂','%',0,25,4],['salinity','Zasolenie','‰',0,70,15],['food','Zasoby','%',0,100,65],['radiation','Promieniowanie','%',0,100,10],['predation','Presja drapieżników','%',0,100,25]];let env={},organisms=[],species=new Map(),events=[],history=[],year=0,running=true,selected=null,nextId=1,nextSpecies=1,accumulator=0,last=performance.now(),lastUI=0,steps=0;const speedRates=[1,10,100,1000,10000,100000];const namesA=['Aqua','Proto','Micro','Vita','Thermo','Neo','Lumi','Cyto','Paleo','Xeno','Nano','Pelago','Evo','Crypto','Halo'];const namesB=['cellula','vivens','mobilis','vorax','viridis','mutans','rapida','lenta','marina','robusta','minuta','lucens','antiqua','nova','simplex'];function nameFor(i){return namesA[(i*7+2)%namesA.length]+ ' '+namesB[(i*11+3)%namesB.length]+' '+(Math.floor((i-1)/225)+1)}function log(msg){events.unshift({year:Math.floor(year),msg});if(events.length>70)events.pop()}
-function addSpecies(parent,type,traits,founder=false){let id=nextSpecies++;let sp={id,name:founder?'Primordia simplex':nameFor(id),parent,type,traits:{...traits},born:Math.floor(year),extinct:null,count:0};species.set(id,sp);if(!founder)log('🧬 Powstał gatunek '+sp.name+' (przodek: '+(species.get(parent)?.name||'nieznany')+').');return sp}
-function newOrg(sp,x=rand(10,W-10),y=rand(10,H-10),traits=null){return{id:nextId++,sp:sp.id,type:sp.type,x,y,energy:rand(55,95),age:0,traits:traits?{...traits}:{...sp.traits},phase:rand(0,6.28)}}
-function reset(){env={};settings.forEach(([key,,,,,def])=>env[key]=def);for(const [key] of settings)$(key).value=env[key];organisms=[];species.clear();events=[];history=[];year=0;nextId=1;nextSpecies=1;selected=null;accumulator=0;steps=0;let sp=addSpecies(null,0,{temp:24,salt:15,oxygen:7,speed:0.8,size:3,defense:0.3,efficiency:1.1},true);for(let i=0;i<85;i++)organisms.push(newOrg(sp));log('🌱 Pojawiło się życie: Primordia simplex.');refresh();}
-function mutate(t){let n={...t};let keys=['temp','salt','oxygen','speed','size','defense','efficiency'];let key=keys[Math.floor(rand(0,keys.length))];let scale={temp:5,salt:4,oxygen:3,speed:0.28,size:0.65,defense:0.22,efficiency:0.2};n[key]+=rand(-1,1)*scale[key];n.temp=clamp(n.temp,-20,90);n.salt=clamp(n.salt,0,70);n.oxygen=clamp(n.oxygen,0,40);for(let k of ['speed','size','defense','efficiency'])n[k]=clamp(n[k],k==='size'?1:0.1,k==='size'?9:3);return n}
-function divergence(a,b){return Math.abs(a.temp-b.temp)/20+Math.abs(a.salt-b.salt)/15+Math.abs(a.oxygen-b.oxygen)/12+Math.abs(a.speed-b.speed)/1.5+Math.abs(a.size-b.size)/3+Math.abs(a.defense-b.defense)+Math.abs(a.efficiency-b.efficiency)}
-function step(dt){year+=dt;steps++;const born=[];let prey=organisms.filter(o=>o.type!==2);for(let o of organisms){o.age+=dt/45;o.phase+=0.08;let t=o.traits;let stress=Math.abs(env.temp-t.temp)/55+Math.abs(env.salinity-t.salt)/55+(o.type===0?Math.abs(env.co2-5)/60:Math.max(0,t.oxygen-env.oxygen)/35)+env.radiation/260;let dx=rand(-1,1),dy=rand(-1,1);if(o.type===2&&prey.length){let target=null,dist=Infinity;for(let k=0;k<5;k++){let p=prey[Math.floor(rand(0,prey.length))];if(!p||p.energy<=0)continue;let d=(p.x-o.x)**2+(p.y-o.y)**2;if(d<dist){target=p;dist=d}}if(target&&dist<20000){dx=target.x-o.x;dy=target.y-o.y;let d=Math.hypot(dx,dy)||1;dx/=d;dy/=d;if(d<t.size+target.traits.size+6&&Math.random()<0.38*(env.predation/100)){target.energy-=38;o.energy+=35;}}}else if(o.type===1){let p=prey[Math.floor(rand(0,prey.length))];if(p&&p!==o){let d=Math.hypot(p.x-o.x,p.y-o.y);if(d<14&&Math.random()<0.08){p.energy-=12;o.energy+=9}}}
-let d=Math.hypot(dx,dy)||1;o.x=clamp(o.x+dx/d*t.speed*1.9,5,W-5);o.y=clamp(o.y+dy/d*t.speed*1.9,5,H-5);let gain=o.type===0?(env.food/100*1.65+env.co2/60)*t.efficiency:o.type===1?(env.food/100*.9)*t.efficiency:0.14;let cost=.46+t.size*.065+t.speed*.15+stress*1.8+(o.type===2?.26:0);o.energy+=(gain-cost)*dt/8;o.energy-=Math.max(0,o.age-65)*.0009*dt;if(o.energy>115&&organisms.length+born.length<MAX){o.energy*=.54;let nt={...t};if(Math.random()<.48+env.radiation/200)nt=mutate(nt);let sp=species.get(o.sp);if(divergence(nt,sp.traits)>1.45&&Math.random()<.28&&species.size<240){let type=o.type;if(Math.random()<.16){type=clamp(type+(Math.random()<.75?1:-1),0,2)}sp=addSpecies(o.sp,type,nt);o.sp=sp.id;o.type=type;}born.push(newOrg(sp,clamp(o.x+rand(-10,10),5,W-5),clamp(o.y+rand(-10,10),5,H-5),nt));} }
-organisms=organisms.filter(o=>o.energy>0&&o.age<130).concat(born);if(organisms.length===0&&steps%15===0)log('☠️ Wszystkie organizmy wyginęły. Możesz rozpocząć nową planetę.');if(steps%12===0){let counts=new Map();organisms.forEach(o=>counts.set(o.sp,(counts.get(o.sp)||0)+1));for(let sp of species.values()){sp.count=counts.get(sp.id)||0;if(sp.count===0&&sp.extinct===null){sp.extinct=Math.floor(year);log('☠️ Wymarł gatunek '+sp.name+'.')}}history.push({year,pop:organisms.length});if(history.length>240)history.shift();}}
-function draw(){let g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#103a50');g.addColorStop(1,'#0b2b3e');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);ctx.strokeStyle='#ffffff0a';for(let x=0;x<W;x+=45){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke()}for(let y=0;y<H;y+=45){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}for(let o of organisms){let r=o.traits.size+1;ctx.beginPath();ctx.arc(o.x,o.y,r,0,Math.PI*2);let hue=o.type===0?150:o.type===1?42:355;ctx.fillStyle=`hsl(${hue+o.traits.temp/8},82%,${clamp(53+o.energy/12,40,75)}%)`;ctx.fill();if(o.type===2){ctx.strokeStyle='#ffb2b9';ctx.stroke()}else ctx.strokeStyle='#ffffff45';ctx.lineWidth=.7;ctx.stroke();if(selected===o.id){ctx.strokeStyle='white';ctx.lineWidth=2;ctx.beginPath();ctx.arc(o.x,o.y,r+5,0,Math.PI*2);ctx.stroke()}}}
-function drawChart(){let w=chart.width,h=chart.height;cctx.clearRect(0,0,w,h);cctx.fillStyle='#0c1b2d';cctx.fillRect(0,0,w,h);cctx.strokeStyle='#344b65';for(let i=1;i<4;i++){cctx.beginPath();cctx.moveTo(0,i*h/4);cctx.lineTo(w,i*h/4);cctx.stroke()}if(history.length<2)return;let max=Math.max(20,...history.map(p=>p.pop));cctx.strokeStyle='#59e1a7';cctx.lineWidth=2.5;cctx.beginPath();history.forEach((p,i)=>{let x=i/(history.length-1)*w,y=h-8-p.pop/max*(h-20);if(i===0)cctx.moveTo(x,y);else cctx.lineTo(x,y)});cctx.stroke();cctx.fillStyle='#a8bad0';cctx.font='12px system-ui';cctx.fillText('max: '+max,8,15)}
-function refresh(){let counts=new Map();organisms.forEach(o=>counts.set(o.sp,(counts.get(o.sp)||0)+1));$('year').textContent=Math.floor(year).toLocaleString('pl-PL');$('population').textContent=organisms.length;$('speciesCount').textContent=counts.size;$('newSpecies').textContent=species.size-1;let selectedO=organisms.find(o=>o.id===selected);$('inspector').innerHTML=selectedO?(()=>{let sp=species.get(selectedO.sp),t=selectedO.traits;return `<b>${sp.name}</b><br>Typ: ${['samożywny','cudzożywny','drapieżnik'][selectedO.type]}<br>Energia: ${selectedO.energy.toFixed(1)}<br>Wiek: ${selectedO.age.toFixed(1)}<br>Optymalna temperatura: ${t.temp.toFixed(1)} °C<br>Optymalne zasolenie: ${t.salt.toFixed(1)} ‰<br>Zapotrzebowanie na tlen: ${t.oxygen.toFixed(1)}%<br>Szybkość: ${t.speed.toFixed(2)}<br>Wielkość: ${t.size.toFixed(2)}<br>Obrona: ${t.defense.toFixed(2)}<br>Wydajność: ${t.efficiency.toFixed(2)}<br>Przodek: ${species.get(sp.parent)?.name||'brak'}`})():'Kliknij kropkę na mapie.';$('speciesList').innerHTML=[...species.values()].reverse().slice(0,75).map(sp=>`<div class="species" data-sp="${sp.id}"><strong>${sp.count||counts.get(sp.id)||0?'🟢':'⚫'} ${sp.name}</strong><small>${['Samożywny','Cudzożywny','Drapieżnik'][sp.type]} · rok ${sp.born} · osobniki: ${counts.get(sp.id)||0}${sp.extinct!==null?' · wymarły':''}</small><small>↳ ${species.get(sp.parent)?.name||'początek życia'}</small></div>`).join('');$('log').innerHTML=events.slice(0,35).map(e=>`<div class="event"><span class="muted">Rok ${e.year.toLocaleString('pl-PL')}</span><br>${e.msg}</div>`).join('');drawChart()}
-for(let [key,label,unit,min,max,def] of settings){let wrap=document.createElement('div');wrap.innerHTML=`<div class="row"><label for="${key}">${label}</label><span class="value" id="${key}Val">${def} ${unit}</span></div><input type="range" id="${key}" min="${min}" max="${max}" value="${def}">`;$('sliders').appendChild(wrap);wrap.querySelector('input').addEventListener('input',e=>{env[key]=Number(e.target.value);$(key+'Val').textContent=env[key]+' '+unit})}
-$('toggle').onclick=()=>{running=!running;$('toggle').textContent=running?'⏸ Pauza':'▶ Start'};$('restart').onclick=()=>{if(confirm('Rozpocząć symulację od początku?'))reset()};$('restore').onclick=()=>{settings.forEach(([key,,unit,,,def])=>{env[key]=def;$(key).value=def;$(key+'Val').textContent=def+' '+unit})};$('speed').oninput=()=>{let r=speedRates[Number($('speed').value)];$('speedVal').textContent=r.toLocaleString('pl-PL')+' lat/s';$('rate').textContent=r.toLocaleString('pl-PL')+' lat/s'};$('speed').oninput();
-$('meteor').onclick=()=>{for(let o of organisms)if(Math.random()<.65)o.energy-=100;env.radiation=clamp(env.radiation+25,0,100);$('radiation').value=env.radiation;$('radiationVal').textContent=env.radiation+' %';log('☄️ Uderzenie meteorytu! Wzrosło promieniowanie.');refresh()};$('disease').onclick=()=>{for(let o of organisms)if(Math.random()<.42)o.energy-=85;log('🦠 Epidemia zmniejszyła populację.');refresh()};$('food').onclick=()=>{env.food=100;$('food').value=100;$('foodVal').textContent='100 %';for(let o of organisms)o.energy+=20;log('🌿 Nastąpił rozkwit zasobów.');refresh()};$('predators').onclick=()=>{if(!organisms.length){log('Brak organizmów, które mogłyby stać się drapieżnikami.');refresh();return}let ancestor=organisms[Math.floor(rand(0,organisms.length))];let sp=addSpecies(ancestor.sp,2,{...ancestor.traits,speed:1.7,size:5});for(let i=0;i<Math.min(8,MAX-organisms.length);i++)organisms.push(newOrg(sp));log('🐟 Wprowadzono drapieżniki: '+sp.name);refresh()};
-canvas.addEventListener('click',e=>{let r=canvas.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*W,y=(e.clientY-r.top)/r.height*H;let nearest=null,best=225;for(let o of organisms){let d=(o.x-x)**2+(o.y-y)**2;if(d<best){best=d;nearest=o}}selected=nearest?.id||null;refresh()});$('speciesList').addEventListener('click',e=>{let el=e.target.closest('[data-sp]');if(!el)return;let o=organisms.find(o=>o.sp===Number(el.dataset.sp));if(o){selected=o.id;refresh()}});
-function frame(now){let elapsed=Math.min((now-last)/1000,.12);last=now;if(running){let rate=speedRates[Number($('speed').value)];accumulator+=elapsed*rate;let n=0;while(accumulator>=8&&n<30){step(8);accumulator-=8;n++}if(n===30)accumulator=Math.min(accumulator,8)}draw();if(now-lastUI>450){refresh();lastUI=now}requestAnimationFrame(frame)}reset();requestAnimationFrame(frame);
+<!DOCTYPE html>
+<html lang="pl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Primordial Lab — symulator życia</title>
+<style>
+:root{color-scheme:dark;--bg:#090f19;--panel:#142235;--line:#30435a;--text:#e9f3ff;--muted:#a5bdd2;--accent:#64dbd4}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px system-ui,Arial}
+header{padding:14px 20px;border-bottom:1px solid var(--line);background:#111d2e;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+h1{font-size:22px;margin:0}h2{font-size:15px;margin:0 0 10px;color:#9fe9e2}small,.hint{color:var(--muted)}
+main{display:grid;grid-template-columns:270px minmax(400px,1fr) 280px;gap:12px;padding:12px;max-width:1800px;margin:auto}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:13px;margin-bottom:12px}
+button,select{background:#203a51;color:var(--text);border:1px solid #47647d;border-radius:7px;padding:8px;cursor:pointer;font:inherit}
+button:hover{background:#2e526d}button.active{background:#12776e;border-color:#6be6d4}button.danger{background:#68393a}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+label{display:block;margin:10px 0 3px;color:#d7e9f7}.row{display:flex;justify-content:space-between;gap:8px;align-items:center}
+input[type=range]{width:100%;accent-color:#55d9c9}
+#world{width:100%;display:block;image-rendering:pixelated;border-radius:9px;border:1px solid #45647a;cursor:crosshair;touch-action:none}
+#stage{position:relative}#overlay{position:absolute;left:10px;top:10px;background:#07111bc9;padding:8px;border-radius:8px;pointer-events:none;line-height:1.65}
+.stat{font-weight:700;color:#7ce8de}.pill{display:inline-block;padding:3px 7px;background:#263e54;border-radius:12px;margin:2px}
+#log{max-height:260px;overflow:auto;font-size:12px;line-height:1.5}#log div{padding:6px 0;border-bottom:1px solid #2b3c4d}
+#species{max-height:230px;overflow:auto;font-size:12px}#species div{padding:6px;border-bottom:1px solid #30435a}
+.swatch{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px}
+footer{padding:10px 18px;color:var(--muted);text-align:center}
+@media(max-width:1100px){main{grid-template-columns:240px 1fr}aside:last-child{grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}}
+@media(max-width:720px){main{display:block}aside:last-child{display:block}}
+</style></head><body>
+<header><div><h1>🧬 Primordial Lab</h1><small>Eksperymentalny ekosystem — organizmy, biomy, katastrofy i ewolucja</small></div><div><button id="pause">⏸ Pauza</button> <button id="reset" class="danger">↻ Nowa planeta</button></div></header>
+<main>
+<aside>
+<section class="panel"><h2>🖌️ Edytuj planetę</h2><div class="grid2" id="brushes"></div>
+<label>Rozmiar pędzla: <b id="brushValue">3</b></label><input id="brushSize" type="range" min="1" max="12" value="3">
+<p class="hint">Kliknij lub przeciągnij po mapie, aby zmienić środowisko. Życie potrzebuje odpowiednich warunków.</p>
+<button id="seed">🦠 Dodaj prymitywne życie</button></section>
+<section class="panel"><h2>☄️ Katastrofy i meteoryty</h2><div class="grid2">
+<button data-event="water">☄️ Lodowa kometa</button><button data-event="rock">☄️ Asteroida skalna</button>
+<button data-event="lava">🌋 Wulkanizm</button><button data-event="ice">❄️ Epoka lodowa</button>
+<button data-event="rain">🌧️ Ulewne deszcze</button><button data-event="radiation">☢️ Promieniowanie</button>
+</div><p class="hint">Kometa wnosi wodę (lód topnieje), a asteroida skalna niszczy teren i podgrzewa okolicę.</p></section>
+<section class="panel"><h2>🌫️ Atmosfera i klimat</h2>
+<label class="row">Temperatura planety <b id="tempV"></b></label><input id="temp" type="range" min="-40" max="130" value="22">
+<label class="row">Tlen O₂ <b id="oxygenV"></b></label><input id="oxygen" type="range" min="0" max="40" value="3">
+<label class="row">CO₂ <b id="co2V"></b></label><input id="co2" type="range" min="0" max="30" value="8">
+<label class="row">Substancje odżywcze <b id="foodV"></b></label><input id="food" type="range" min="0" max="100" value="70">
+<label class="row">Promieniowanie <b id="radV"></b></label><input id="rad" type="range" min="0" max="100" value="8">
+</section>
+</aside>
+<div>
+<section class="panel"><div class="row"><h2>🌍 Powierzchnia planety</h2><span id="toolName" class="pill">Pędzel: Woda</span></div>
+<div id="stage"><canvas id="world" width="960" height="600"></canvas><div id="overlay"></div></div>
+<p class="hint">Kolorowe kropki = osobniki. Kliknij kropkę narzędziem 🔍, aby zbadać organizm. Zmiana terenu wpływa na przeżywalność.</p></section>
+<section class="panel"><h2>⏩ Czas</h2><div class="row"><span>Prędkość</span><b id="speedV"></b></div>
+<input id="speed" type="range" min="0" max="6" step="1" value="2">
+<div class="grid2"><button id="step">+ 1 krok</button><button id="fast">🚀 Maksymalna prędkość</button></div>
+<p class="hint">Lata są umowną skalą modelu. Przyspieszenie wykonuje więcej pokoleń w sekundzie, nie odtwarza prawdziwej historii Ziemi.</p></section>
+<section class="panel"><h2>🔬 Zbadany organizm</h2><div id="inspector" class="hint">Wybierz narzędzie 🔍 i kliknij organizm na mapie.</div></section>
+</div>
+<aside>
+<section class="panel"><h2>📊 Statystyki</h2><div id="stats"></div></section>
+<section class="panel"><h2>🌳 Gatunki</h2><div id="species"></div></section>
+<section class="panel"><h2>📜 Historia ewolucji</h2><div id="log"></div></section>
+<section class="panel"><h2>ℹ️ Zasady biologiczne</h2><p class="hint">Organizmy żyją w wodzie, na lądzie lub w gorących źródłach. <b>Nie żyją w płynnej lawie</b> — jest zbyt gorąca. Mutacje zmieniają tolerancję temperatury, metabolizm, ruch i dietę. Nowe gatunki powstają, gdy potomstwo dostatecznie różni się od przodka.</p></section>
+</aside>
+</main><footer>Model edukacyjny: uproszczona ewolucja i ekologia, bez gwarancji realistycznych czasów lub konkretnych gatunków.</footer>
+<script>
+"use strict";
+const W=120,H=75,S=8,MAX=1000;
+const T={water:0,land:1,lava:2,ice:3,hot:4,rock:5};
+const names={water:"💧 Woda",land:"🌿 Ląd",lava:"🔥 Lawa",ice:"🧊 Lód",hot:"♨️ Gorące źródło",rock:"🪨 Skały",inspect:"🔍 Zbadaj"};
+const palette=["#1b659b","#647e55","#f15a1f","#b5e4f3","#40a5a1","#666b79"];
+const canvas=document.getElementById("world"),ctx=canvas.getContext("2d");
+const $=id=>document.getElementById(id),rand=(a,b)=>a+Math.random()*(b-a),clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+let tiles,heat,nutrients,orgs,species,history,years,stepNo,nextId,nextSpecies,paused=false,brush="water",size=3,selected=null;
+const env={temp:22,oxygen:3,co2:8,food:70,rad:8};
+const speeds=[0.5,1,3,8,20,50,120];
+const initialTraits=(habitat)=>({temp:habitat==="hot"?78:24,tolerance:habitat==="hot"?23:20,metabolism:rand(.7,1.3),speed:rand(.5,1.5),mutation:rand(.05,.12),diet:0,habitat});
+const speciesColor=(i)=>`hsl(${(i*137+170)%360} 85% 66%)`;
+function addLog(msg){history.unshift({y:Math.round(years),msg});if(history.length>70)history.pop();}
+function makeSpecies(parent,traits){
+ if(species.length>=250)return parent;
+ const id=nextSpecies++,name=`Protoforma ${String.fromCharCode(97+(id%26))}${Math.floor(id/26)+1}`;
+ const sp={id,name,parent:parent?.id??null,traits:{...traits},color:speciesColor(id),alive:0,born:Math.round(years)};
+ species.push(sp);addLog(`🧬 Nowy gatunek: ${name}${parent?" ← "+parent.name:" (organizm założycielski)"}`);
+ return sp;
+}
+function spawn(x,y,sp,energy=80,traits=null){if(orgs.length>=MAX)return;
+ const o={id:nextId++,x:clamp(x,1,W-2),y:clamp(y,1,H-2),energy,age:0,sp:sp.id,traits:{...(traits||sp.traits)}};
+ orgs.push(o);return o;}
+function reset(){
+ tiles=new Uint8Array(W*H);heat=new Float32Array(W*H);nutrients=new Float32Array(W*H);
+ orgs=[];species=[];history=[];years=0;stepNo=0;nextId=1;nextSpecies=1;selected=null;
+ for(let y=0;y<H;y++)for(let x=0;x<W;x++){let i=y*W+x;tiles[i]=(Math.sin(x/12)+Math.cos(y/10)+rand(-.7,.7)>1.0)?T.land:T.water;nutrients[i]=rand(35,100);}
+ for(let n=0;n<8;n++)paintDisk(rand(0,W),rand(0,H),rand(2,7),n%2?T.rock:T.hot,false);
+ const sp=makeSpecies(null,initialTraits("water"));
+ for(let i=0;i<35;i++){let x=rand(5,W-5),y=rand(5,H-5);if(tiles[Math.floor(y)*W+Math.floor(x)]===T.water)spawn(x,y,sp,rand(75,120));}
+ addLog("🌍 Powstała planeta. Pierwotne organizmy żyją w wodzie.");
+}
+function paintDisk(cx,cy,r,type,damage=true){
+ for(let y=Math.max(0,Math.floor(cy-r));y<=Math.min(H-1,Math.ceil(cy+r));y++)for(let x=Math.max(0,Math.floor(cx-r));x<=Math.min(W-1,Math.ceil(cx+r));x++){
+ const d=Math.hypot(x-cx,y-cy);if(d>r)continue;
+ let i=y*W+x;tiles[i]=type;if(type===T.lava)heat[i]=100;else if(type===T.hot)heat[i]=65;else heat[i]=0;
+ if(type===T.water)nutrients[i]=Math.max(nutrients[i],50);if(type===T.lava||type===T.rock)nutrients[i]=5;
+ }
+ if(damage)for(const o of orgs)if(Math.hypot(o.x-cx,o.y-cy)<r)o.energy-=type===T.water?15:75;
+}
+function tileAt(x,y){return tiles[clamp(Math.floor(y),0,H-1)*W+clamp(Math.floor(x),0,W-1)]}
+function indexAt(x,y){return clamp(Math.floor(y),0,H-1)*W+clamp(Math.floor(x),0,W-1)}
+function habitatMatch(o,t){const h=o.traits.habitat;
+ if(t===T.lava)return 0;
+ if(h==="water")return t===T.water?1:t===T.hot?.45:0;
+ if(h==="hot")return t===T.hot?1:t===T.water?.5:0;
+ return t===T.land?1:t===T.rock?.65:0;
+}
+function temperatureAt(o,t){return env.temp+(t===T.hot?55:t===T.lava?600:t===T.ice?-35:0)}
+function mutate(t){
+ const u={...t};for(const k of ["temp","tolerance","metabolism","speed","mutation"])if(Math.random()<.18+env.rad/250){
+ const scale=k==="temp"?8:k==="tolerance"?3:k==="mutation"?.02:.18;
+ u[k]+=rand(-scale,scale);}
+ u.temp=clamp(u.temp,-25,120);u.tolerance=clamp(u.tolerance,5,55);
+ u.metabolism=clamp(u.metabolism,.35,2.5);u.speed=clamp(u.speed,.1,3.5);u.mutation=clamp(u.mutation,.01,.4);
+ if(Math.random()<.008+env.rad/800)u.diet=clamp(u.diet+(Math.random()<.5?-1:1),0,2);
+ if(Math.random()<.008){u.habitat=["water","land","hot"][Math.floor(rand(0,3))];}
+ return u;
+}
+function divergence(a,b){return Math.abs(a.temp-b.temp)/22+Math.abs(a.tolerance-b.tolerance)/18+Math.abs(a.metabolism-b.metabolism)*1.3+Math.abs(a.speed-b.speed)+Math.abs(a.mutation-b.mutation)*5+(a.diet!==b.diet?1.6:0)+(a.habitat!==b.habitat?2.3:0)}
+function simulate(){
+ stepNo++;years+=250;
+ if(stepNo%2===0){for(let i=0;i<nutrients.length;i++){if(tiles[i]===T.water||tiles[i]===T.land||tiles[i]===T.hot)nutrients[i]=Math.min(100,nutrients[i]+env.food*.003);}}
+ let next=[];
+ for(const o of orgs){
+ o.age++;const tr=o.traits;
+ const dx=rand(-1,1)*tr.speed,dy=rand(-1,1)*tr.speed;
+ const nx=clamp(o.x+dx,0,W-.001),ny=clamp(o.y+dy,0,H-.001);
+ if(habitatMatch(o,tileAt(nx,ny))>0)o.x=nx,o.y=ny;
+ const i=indexAt(o.x,o.y),t=tiles[i],compat=habitatMatch(o,t);
+ const temperature=temperatureAt(o,t),tempFitness=clamp(1-Math.max(0,Math.abs(temperature-tr.temp)-tr.tolerance)/45,0,1);
+ const oxygenFactor=tr.diet===2?clamp(env.oxygen/12,0,1.5):1;
+ const foodFactor=tr.diet===0?clamp((env.co2+5)/12,.3,1.5):1;
+ const fit=compat*tempFitness*oxygenFactor*foodFactor;
+ const available=nutrients[i],eat=Math.min(available,tr.diet===2?1.4:tr.diet===1?2.8:3.3);
+ if(tr.diet!==2)nutrients[i]-=eat;
+ o.energy+=fit*(eat*2.5+2)-tr.metabolism*3.2-(1-fit)*10-env.rad*.014;
+ if(tr.diet===2){
+  for(let j=0;j<3;j++){let prey=orgs[Math.floor(Math.random()*orgs.length)];if(prey&&prey!==o&&prey.energy>0&&prey.traits.diet!==2&&Math.hypot(prey.x-o.x,prey.y-o.y)<3){prey.energy-=35;o.energy+=23;break;}}
+ }
+ if(o.energy<=0||o.age>rand(80,150))continue;
+ if(o.energy>145&&next.length+orgs.length<MAX){
+  o.energy*=.53;let childTraits=Math.random()<tr.mutation+env.rad/450?mutate(tr):{...tr};
+  const parentSp=species.find(s=>s.id===o.sp);
+  let sp=parentSp;
+  if(divergence(childTraits,parentSp.traits)>2.5&&species.length<250&&Math.random()<.12)sp=makeSpecies(parentSp,childTraits);
+  let child=spawn(o.x+rand(-2,2),o.y+rand(-2,2),sp,o.energy,childTraits);
+  if(child)next.push(child);
+ }
+ next.push(o);
+ }
+ // spawn() dopisuje do orgs, dlatego pozostawiamy tylko listę next
+ orgs=next.slice(0,MAX);
+ if(stepNo%100===0)for(let i=0;i<tiles.length;i++){if(tiles[i]===T.lava&&Math.random()<.05){tiles[i]=T.rock;heat[i]=0;}}
+}
+function draw(){
+ ctx.clearRect(0,0,960,600);
+ for(let y=0;y<H;y++)for(let x=0;x<W;x++){const i=y*W+x;ctx.fillStyle=palette[tiles[i]];ctx.fillRect(x*S,y*S,S,S);}
+ for(const o of orgs){const sp=species.find(s=>s.id===o.sp);ctx.beginPath();ctx.arc(o.x*S,o.y*S,clamp(1.8+o.energy/75,2,4.5),0,Math.PI*2);ctx.fillStyle=sp?.color||"#fff";ctx.fill();}
+ if(selected){const o=orgs.find(o=>o.id===selected);if(o){ctx.strokeStyle="#fff";ctx.lineWidth=2;ctx.beginPath();ctx.arc(o.x*S,o.y*S,8,0,Math.PI*2);ctx.stroke();}}
+}
+function updateUI(){
+ const counts=new Map();for(const o of orgs)counts.set(o.sp,(counts.get(o.sp)||0)+1);
+ const living=[...counts.keys()].length;
+ $("overlay").innerHTML=`⏳ <b>${Math.round(years).toLocaleString("pl-PL")}</b> lat<br>🦠 <b>${orgs.length}</b> osobników<br>🧬 <b>${living}</b> żyjących gatunków`;
+ $("stats").innerHTML=`<div>Osobniki: <b class="stat">${orgs.length}</b></div><div>Gatunki żyjące: <b class="stat">${living}</b></div><div>Wszystkie gatunki: <b>${species.length}</b></div><div>Wymarłe: <b>${species.length-living}</b></div><div>Czas: <b>${Math.round(years).toLocaleString("pl-PL")} lat</b></div>`;
+ $("species").innerHTML=species.slice(-35).reverse().map(s=>`<div><span class="swatch" style="background:${s.color}"></span><b>${s.name}</b> ${counts.get(s.id)||0?"("+counts.get(s.id)+")":"☠️"}<br><small>Przodek: ${s.parent===null?"brak":species.find(p=>p.id===s.parent)?.name||"?"} · ${s.traits.habitat} · ${s.traits.diet===2?"drapieżnik":s.traits.diet===1?"cudzożywny":"samożywny"}</small></div>`).join("");
+ $("log").innerHTML=history.slice(0,28).map(e=>`<div><small>${e.y.toLocaleString("pl-PL")} lat</small><br>${e.msg}</div>`).join("");
+ if(selected){const o=orgs.find(o=>o.id===selected);if(o){const s=species.find(s=>s.id===o.sp);$("inspector").innerHTML=`<b>${s.name}</b><br>Energia: ${o.energy.toFixed(1)}<br>Wiek: ${o.age} pokoleń<br>Biom: ${o.traits.habitat}<br>Optymalna temperatura: ${o.traits.temp.toFixed(1)} °C<br>Tolerancja: ±${o.traits.tolerance.toFixed(1)} °C<br>Metabolizm: ${o.traits.metabolism.toFixed(2)}<br>Ruchliwość: ${o.traits.speed.toFixed(2)}<br>Dieta: ${["samożywna","cudzożywna","drapieżna"][o.traits.diet]}`;}else $("inspector").textContent="Ten organizm już nie żyje.";}
+}
+function event(type){
+ let x=rand(15,W-15),y=rand(12,H-12),r=rand(7,14);
+ if(type==="water"){paintDisk(x,y,r,T.water);addLog("☄️ Uderzyła lodowa kometa. Powstał zbiornik wody.");}
+ if(type==="rock"){paintDisk(x,y,r,T.rock);addLog("☄️ Uderzyła skalna asteroida. Powstał krater.");}
+ if(type==="lava"){paintDisk(x,y,r,T.lava);addLog("🌋 Erupcja: pojawiła się lawa.");}
+ if(type==="ice"){env.temp=Math.max(-40,env.temp-18);$("temp").value=env.temp;for(let i=0;i<tiles.length;i++)if(tiles[i]===T.water&&Math.random()<.35)tiles[i]=T.ice;addLog("❄️ Ochłodzenie i zamarzanie zbiorników.");}
+ if(type==="rain"){for(let j=0;j<15;j++)paintDisk(rand(0,W),rand(0,H),rand(2,5),T.water,false);addLog("🌧️ Deszcze stworzyły nowe jeziora.");}
+ if(type==="radiation"){env.rad=Math.min(100,env.rad+30);$("rad").value=env.rad;addLog("☢️ Wzrost promieniowania i presji mutacyjnej.");}
+ syncSliders();draw();updateUI();
+}
+function seed(){const x=rand(8,W-8),y=rand(8,H-8),t=tileAt(x,y),h=t===T.hot?"hot":t===T.land||t===T.rock?"land":"water";
+ if(t===T.lava||t===T.ice){paintDisk(x,y,5,T.water,false);}
+ const traits=initialTraits(h);const sp=makeSpecies(null,traits);
+ for(let i=0;i<22;i++)spawn(x+rand(-4,4),y+rand(-4,4),sp,rand(90,130));
+ addLog("🦠 Dodano prymitywne życie: "+sp.name);updateUI();}
+function syncSliders(){for(const k of Object.keys(env)){$(k+"V").textContent=env[k]+(k==="temp"?" °C":k==="oxygen"||k==="co2"?"%":"%");}}
+for(const [key,label] of Object.entries(names)){const b=document.createElement("button");b.textContent=label;b.dataset.brush=key;b.onclick=()=>{brush=key;document.querySelectorAll("[data-brush]").forEach(x=>x.classList.toggle("active",x.dataset.brush===key));$("toolName").textContent="Pędzel: "+label;};$("brushes").appendChild(b);}
+document.querySelector('[data-brush="water"]').classList.add("active");
+for(const k of Object.keys(env))$(k).addEventListener("input",e=>{env[k]=Number(e.target.value);syncSliders();});
+$("brushSize").oninput=e=>{size=Number(e.target.value);$("brushValue").textContent=size;};
+$("speed").oninput=()=>{$("speedV").textContent=speeds[Number($("speed").value)]+" kroków/klatkę (maks.)";};
+$("speed").oninput();
+$("pause").onclick=()=>{paused=!paused;$("pause").textContent=paused?"▶ Wznów":"⏸ Pauza";};
+$("reset").onclick=()=>{if(confirm("Utworzyć nową planetę i wyczyścić historię?")){reset();updateUI();}};
+$("step").onclick=()=>{simulate();draw();updateUI();};
+$("fast").onclick=()=>{$("speed").value=6;$("speed").oninput();};
+$("seed").onclick=seed;
+document.querySelectorAll("[data-event]").forEach(b=>b.onclick=()=>event(b.dataset.event));
+let painting=false;
+function interact(e){const r=canvas.getBoundingClientRect(),x=clamp((e.clientX-r.left)/r.width*W,0,W-1),y=clamp((e.clientY-r.top)/r.height*H,0,H-1);
+ if(brush==="inspect"){let best=null,d=3;for(const o of orgs){let v=Math.hypot(o.x-x,o.y-y);if(v<d){d=v;best=o;}}selected=best?.id||null;updateUI();return;}
+ paintDisk(x,y,size,T[brush],false);}
+canvas.addEventListener("pointerdown",e=>{painting=true;canvas.setPointerCapture(e.pointerId);interact(e);});
+canvas.addEventListener("pointermove",e=>{if(painting&&brush!=="inspect")interact(e);});
+canvas.addEventListener("pointerup",()=>painting=false);
+canvas.addEventListener("pointercancel",()=>painting=false);
+document.querySelectorAll("[data-brush]").forEach(()=>{});
+reset();syncSliders();updateUI();draw();
+let last=0,acc=0,lastUI=0;
+function frame(t){if(!paused){acc+=Math.min(100,t-last||16);let batches=0;while(acc>=50&&batches<3){acc-=50;const n=speeds[Number($("speed").value)];for(let j=0;j<n;j++)simulate();batches++;}}last=t;draw();if(t-lastUI>350){updateUI();lastUI=t;}requestAnimationFrame(frame);}
+requestAnimationFrame(frame);
 </script></body></html>
