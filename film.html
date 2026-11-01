@@ -1,0 +1,90 @@
+<!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OD POCZĄTKU — film ewolucji 3D</title><style>
+*{box-sizing:border-box}body{margin:0;background:#02060d;color:#eaf6ff;font-family:system-ui,Arial;overflow:hidden}canvas{display:block;width:100vw;height:100vh}#shade{position:fixed;inset:0;pointer-events:none;background:linear-gradient(0deg,#010510dd,transparent 38%,#01051088);z-index:2}#title{position:fixed;top:7%;left:7%;z-index:4;pointer-events:none;text-shadow:0 3px 22px #000}#eyebrow{font-size:12px;letter-spacing:.35em;color:#83d8e8;text-transform:uppercase}h1{font-size:clamp(30px,5vw,76px);font-weight:300;letter-spacing:.07em;margin:12px 0 5px}#date{font-size:18px;color:#b7cbd9}#caption{position:fixed;bottom:110px;left:50%;transform:translateX(-50%);width:min(760px,88vw);text-align:center;z-index:5;font-size:clamp(16px,2vw,25px);line-height:1.5;text-shadow:0 2px 9px #000,0 2px 24px #000;pointer-events:none}#bar{position:fixed;bottom:0;left:0;right:0;z-index:8;background:#081321d9;backdrop-filter:blur(16px);border-top:1px solid #3a5868;padding:13px 18px}#controls{display:flex;align-items:center;gap:9px;flex-wrap:wrap}button,select,input{accent-color:#6fd9dc}button,select{background:#163044;border:1px solid #54768b;color:#eaf6ff;border-radius:7px;padding:8px 11px;cursor:pointer}button:hover{background:#24516b}#seek{width:100%;margin:0 0 10px}#time{margin-left:auto;font-variant-numeric:tabular-nums;color:#a9c9d7}#settings{position:fixed;right:16px;top:16px;z-index:10;width:300px;max-height:72vh;overflow:auto;background:#081725ed;border:1px solid #426077;border-radius:12px;padding:14px;display:none;box-shadow:0 12px 50px #0008}#settings.open{display:block}#settings label{display:block;margin:11px 0;font-size:13px}#settings input[type=text],#settings textarea{width:100%;background:#102b3c;color:#fff;border:1px solid #537389;border-radius:5px;padding:7px}#settings textarea{min-height:65px}#settings input[type=range]{width:100%}#hint{position:fixed;top:20px;right:18px;z-index:5;color:#a4cad6;font-size:12px}#credits{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;opacity:0;z-index:6;font-size:22px;letter-spacing:.13em}#loading{position:fixed;inset:0;display:grid;place-items:center;background:#030912;z-index:20;font-size:18px;color:#a9e9ef}small{color:#b0c6d2}@media(max-width:650px){#caption{bottom:155px}#hint{display:none}#controls{gap:5px}button,select{padding:6px}#settings{max-width:92vw}}
+</style></head><body><div id="loading">✦ Przygotowywanie sceny filmowej 3D…</div><div id="shade"></div><div id="title"><div id="eyebrow">PODRÓŻ PRZEZ CZAS</div><h1 id="era"></h1><div id="date"></div></div><div id="caption"></div><div id="credits">KONIEC PODRÓŻY<br><small>Historia życia trwa dalej.</small></div><div id="hint">Film 3D · rekonstrukcje artystyczne</div>
+<div id="settings"><b>🎬 Reżyseria filmu</b><label>Wybierz scenę <select id="editScene"></select></label><label>Nazwa epoki<input id="editTitle" type="text"></label><label>Podpis / narracja<textarea id="editText"></textarea></label><label>Długość sceny (s) <span id="durationLabel"></span><input id="editDuration" type="range" min="5" max="40" value="14"></label><label>Głośność muzyki i efektów <span id="volLabel"></span><input id="volume" type="range" min="0" max="100" value="45"></label><label>Tempo filmu <span id="rateLabel"></span><input id="rate" type="range" min="50" max="200" value="100"></label><label><input id="subtitles" type="checkbox" checked> Napisy</label><label><input id="narrator" type="checkbox"> Lektor komputerowy (polski, jeśli dostępny)</label><button id="apply">✓ Zapisz scenę</button> <button id="export">Eksport ustawień JSON</button><p><small>Dźwięk uruchamia się po kliknięciu Odtwórz. Możesz zmieniać napisy i długości scen.</small></p></div>
+<div id="bar"><input id="seek" type="range" min="0" max="1000" value="0"><div id="controls"><button id="play">▶ Odtwórz</button><button id="prev">⏮</button><button id="next">⏭</button><button id="sound">🔇 Dźwięk</button><button id="edit">⚙️ Edytuj film</button><select id="jump"></select><span id="time">00:00 / 00:00</span></div></div>
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js';
+const $=id=>document.getElementById(id),clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const scenes=[
+{title:"Pierwotny ocean",date:"3,5 miliarda lat temu",text:"W pradawnych oceanach mikroorganizmy tworzą złożone społeczności. Życie zaczyna zmieniać planetę.",kind:"micro",duration:14,base:0x092e43},
+{title:"Ediakar",date:"560 milionów lat temu",text:"Na morskim dnie pojawiają się niezwykłe organizmy, takie jak Dickinsonia.",kind:"ediacara",duration:13,base:0x14465a},
+{title:"Kambr",date:"518 milionów lat temu",text:"Anomalocaris pływa nad dnem morza. Jego boczne płaty falują, a przednie przydatki pomagają chwytać zdobycz.",kind:"cambrian",duration:20,base:0x0a4565},
+{title:"Ordowik",date:"470 milionów lat temu",text:"Morza tętnią życiem. Łodziki i inne zwierzęta przemierzają pradawne oceany.",kind:"ordovician",duration:14,base:0x0b3c56},
+{title:"Dewon",date:"375 milionów lat temu",text:"Tiktaalik pokazuje niezwykłe połączenie cech ryb i wczesnych czworonogów.",kind:"devonian",duration:18,base:0x1c5260},
+{title:"Karbon",date:"310 milionów lat temu",text:"Rozległe lasy bagienne pokrywają lądy. W wilgotnym powietrzu latają olbrzymie owady.",kind:"carbon",duration:15,base:0x173c34},
+{title:"Jura",date:"150 milionów lat temu",text:"Wśród paproci i drzew iglastych żyją dinozaury. Ich sylwetki dominują w krajobrazie.",kind:"jurassic",duration:17,base:0x344d32},
+{title:"Kreda",date:"68 milionów lat temu",text:"Tyrannosaurus rex przemierza późnokredowy krajobraz. Era nieptasich dinozaurów dobiega końca.",kind:"cretaceous",duration:17,base:0x55573b},
+{title:"Plejstocen",date:"40 tysięcy lat temu",text:"Mamuty włochate przemierzają zimne stepy epoki lodowcowej.",kind:"iceage",duration:17,base:0x718da4},
+{title:"Holocen",date:"Współczesność",text:"Homo sapiens poznaje historię życia i odkrywa, jak niezwykła była droga ewolucji.",kind:"modern",duration:15,base:0x466e6b}
+];
+let playing=false,soundOn=false,current=0,elapsed=0,last=0,rate=1,volume=.45,audio=null,osc=[],muted=false,lastSpoken=-1;
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:false});renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));renderer.outputColorSpace=THREE.SRGBColorSpace;document.body.prepend(renderer.domElement);
+const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(50,1,.1,200);scene.fog=new THREE.FogExp2(0x0b3548,.022);
+scene.add(new THREE.HemisphereLight(0xbcecff,0x123333,2.2));const key=new THREE.DirectionalLight(0xffefcb,2.5);key.position.set(-8,16,9);scene.add(key);
+const stage=new THREE.Group();scene.add(stage);const actors=[];const bubbles=[];const particles=[];
+const ball=new THREE.SphereGeometry(1,18,12),cylinder=new THREE.CylinderGeometry(1,1,1,10),cone=new THREE.ConeGeometry(1,1,10),plane=new THREE.PlaneGeometry(1,1);
+function material(color,metal=0){return new THREE.MeshStandardMaterial({color,roughness:.78,metalness:metal,side:THREE.DoubleSide})}
+function add(g,geom,color,pos,scale){const m=new THREE.Mesh(geom,material(color));m.position.set(...pos);m.scale.set(...scale);g.add(m);return m;}
+function oval(g,c,x,y,z,a,b,d){return add(g,ball,c,[x,y,z],[a,b,d])}
+function link(g,c,a,b,r){let v=new THREE.Vector3(...b).sub(new THREE.Vector3(...a));let m=add(g,new THREE.CylinderGeometry(r*.7,r,v.length(),7),c,[(a[0]+b[0])/2,(a[1]+b[1])/2,(a[2]+b[2])/2],[1,1,1]);m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),v.normalize());}
+function anomalocaris(){
+ const g=new THREE.Group();oval(g,0xc17d50,0,0,0,2.35,.38,.55);oval(g,0xdea077,1.8,.03,0,.52,.38,.48);
+ for(let i=0;i<11;i++){let x=-1.65+i*.34;for(let s of [-1,1]){const flap=oval(g,i%2?0xb5684e:0xd99564,x,-.15,s*.55,.35,.12,.63);flap.userData.flap={i,s};actors.push(flap);}}
+ for(let s of [-1,1]){oval(g,0xf7dfb4,2.03,.24,s*.33,.16,.16,.15);oval(g,0x102029,2.11,.26,s*.39,.065,.08,.065);for(let i=0;i<7;i++){let x=2.15+i*.16,y=-.18-i*.13;oval(g,0xc78153,x,y,s*.3,.13,.09,.13);}}
+ for(let i=0;i<4;i++)oval(g,0xa76d4d,-2.3-i*.22,.05,0,.4-i*.07,.09,.18);
+ return g;
+}
+function fish(tik=false){let g=new THREE.Group();oval(g,tik?0x668c74:0x75a7b1,0,0,0,1.7,.48,.55);oval(g,tik?0x63836c:0x8fb6b9,1.38,.12,0,.62,.36,.48);for(let s of [-1,1]){oval(g,0x101c1f,1.76,.25,s*.36,.1,.1,.1);for(let x of [-.8,.8])oval(g,0x6b8e80,x,-.3,s*.7,.5,.12,.4);}let tail=add(g,cone,0x7da2a1,[-1.92,0,0],[.5,.8,.48]);tail.rotation.z=Math.PI/2;return g;}
+function dino(){let g=new THREE.Group();oval(g,0x758454,0,.5,0,1.6,.85,.66);oval(g,0x71834f,1.25,1.25,0,.55,.55,.5);oval(g,0x7b8d58,1.6,1.48,0,.65,.28,.44);oval(g,0x6c7845,-1.8,.7,0,1.5,.28,.33);for(let s of [-1,1]){link(g,0x6a7950,[-.4,.1,s*.4],[-.25,-1.2,s*.55],.22);link(g,0x6a7950,[.8,1.05,s*.35],[1.1,.4,s*.6],.1);}return g;}
+function mammoth(){let g=new THREE.Group();oval(g,0x866349,0,.3,0,1.55,1.08,.75);oval(g,0x8b684d,1.32,.55,0,.65,.7,.65);for(let x of [-.9,.85])for(let s of [-1,1])link(g,0x72523d,[x,-.1,s*.5],[x,-1.35,s*.55],.24);for(let s of [-1,1]){link(g,0xe5d7b1,[1.55,.2,s*.42],[2.2,-.65,s*.75],.11);link(g,0xe5d7b1,[2.2,-.65,s*.75],[2.65,.1,s*.8],.08);}link(g,0x78553e,[1.9,.45,0],[2.1,-.85,0],.18);return g;}
+function human(){let g=new THREE.Group();oval(g,0xb68c70,0,1.85,0,.32,.38,.3);oval(g,0x597b6c,0,.9,0,.38,.65,.27);for(let s of [-1,1]){link(g,0xb68c70,[s*.3,1.3,0],[s*.53,.55,0],.11);link(g,0x454b45,[s*.18,.5,0],[s*.23,-.6,0],.16);}return g;}
+function strom(){let g=new THREE.Group();for(let i=0;i<9;i++)oval(g,i%2?0x6b8e77:0x91b49b,(i%3-1)*.65,.12+Math.floor(i/3)*.13,Math.floor(i/3)*.25,.48,.25,.44);return g;}
+function forest(){for(let i=0;i<32;i++){let x=Math.random()*34-17,z=Math.random()*25-13;let h=3+Math.random()*6;let g=new THREE.Group();link(g,0x665c43,[0,0,0],[0,h,0],.13);for(let j=0;j<5;j++)oval(g,0x3d7554,0,h-j*.45,0,1.2+j*.13,.3,1.1+j*.15);g.position.set(x,-3,z);stage.add(g);}}
+function createScene(){
+ stage.clear();actors.length=0;bubbles.length=0;particles.length=0;
+ const d=scenes[current];scene.background=new THREE.Color(d.base);scene.fog.color.setHex(d.base);
+ const underwater=['micro','ediacara','cambrian','ordovician','devonian'].includes(d.kind);
+ const floor=add(stage,new THREE.PlaneGeometry(120,120,20,20),underwater?0x294d53:0x52654d,[0,-3.2,0],[1,1,1]);floor.rotation.x=-Math.PI/2;
+ for(let i=0;i<85;i++){let x=Math.random()*50-25,z=Math.random()*38-20;let pebble=oval(stage,underwater?0x477579:0x64745b,x,-3.04,z,.2+Math.random()*.65,.1+Math.random()*.25,.25+Math.random()*.6);pebble.rotation.y=Math.random()*6;}
+ if(['carbon','jurassic','cretaceous','modern'].includes(d.kind))forest();
+ if(d.kind==='iceage'){for(let i=0;i<30;i++)oval(stage,0xd4e6ef,Math.random()*40-20,-3,Math.random()*28-14,.5+Math.random()*1,.2,.5+Math.random()*1);}
+ if(underwater){for(let i=0;i<100;i++){let m=oval(stage,0x93d7df,Math.random()*38-19,Math.random()*11-4,Math.random()*28-14,.02,.02,.02);m.material.transparent=true;m.material.opacity=.3+Math.random()*.4;bubbles.push(m);}}
+ let kinds={micro:strom,ediacara:()=>{let g=new THREE.Group();oval(g,0xbca7a0,0,0,0,1.6,.18,.85);for(let i=-8;i<=8;i++)add(g,new THREE.BoxGeometry(.025,.03,1.3*(1-Math.abs(i)/13)),0xd7bdb4,[i*.16,.16,0],[1,1,1]);return g;},cambrian:anomalocaris,ordovician:()=>{let g=new THREE.Group();let m=add(g,cone,0xb8a38b,[0,0,0],[.6,2.4,.6]);m.rotation.z=-Math.PI/2;oval(g,0x877768,1.2,0,0,.55,.45,.45);return g;},devonian:()=>fish(true),carbon:()=>{let g=new THREE.Group();oval(g,0x72907c,0,0,0,.9,.15,.15);for(let s of [-1,1])for(let i=0;i<2;i++)oval(g,0x9db5a6,i*.45-.2,.05,s*.6,.45,.04,.85);return g;},jurassic:dino,cretaceous:dino,iceage:mammoth,modern:human};
+ let count=d.kind==='micro'?7:d.kind==='cambrian'?4:3;
+ for(let i=0;i<count;i++){let g=kinds[d.kind]();g.position.set(i*6-(count-1)*3,underwater?-.4:-.8,-i*2);g.scale.setScalar(d.kind==='micro'?.85:1.15);g.userData.baseY=g.position.y;g.userData.phase=i*1.8;stage.add(g);actors.push(g);}
+ $('era').textContent=d.title;$('date').textContent=d.date;$('caption').textContent=d.text;$('jump').value=current;$('editScene').value=current;
+ if($('narrator').checked&&playing)speak();
+}
+function speak(){if(!('speechSynthesis' in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(scenes[current].text);u.lang='pl-PL';u.rate=.88;speechSynthesis.speak(u);}
+function total(){return scenes.reduce((a,s)=>a+s.duration,0)}
+function position(){return scenes.slice(0,current).reduce((a,s)=>a+s.duration,0)+elapsed}
+function go(i){current=clamp(i,0,scenes.length-1);elapsed=0;createScene();update();}
+function seek(sec){let i=0;while(i<scenes.length-1&&sec>=scenes[i].duration){sec-=scenes[i].duration;i++;}current=i;elapsed=clamp(sec,0,scenes[i].duration);createScene();update();}
+function clock(t){let m=Math.floor(t/60),s=Math.floor(t%60);return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')}
+function update(){$('time').textContent=clock(position())+' / '+clock(total());$('seek').value=position()/total()*1000;$('caption').style.display=$('subtitles').checked?'block':'none';$('credits').style.opacity=current===scenes.length-1&&elapsed>scenes[current].duration-3?1:0;}
+function initSound(){if(audio)return;audio=new (window.AudioContext||window.webkitAudioContext)();const gain=audio.createGain();gain.gain.value=0;gain.connect(audio.destination);for(const freq of [55,82.4,110,164.8]){let o=audio.createOscillator();o.type='sine';o.frequency.value=freq;let g=audio.createGain();g.gain.value=.08;o.connect(g);g.connect(gain);o.start();osc.push(o);}audio._gain=gain;}
+function audioUpdate(){if(!audio)return;audio._gain.gain.setTargetAtTime(soundOn?volume*.22:0,audio.currentTime,.3);}
+function refreshEditor(){let s=scenes[+$('editScene').value];$('editTitle').value=s.title;$('editText').value=s.text;$('editDuration').value=s.duration;$('durationLabel').textContent=s.duration+' s';}
+$('editScene').onchange=refreshEditor;$('editDuration').oninput=()=>$('durationLabel').textContent=$('editDuration').value+' s';
+$('volume').oninput=()=>{volume=+$('volume').value/100;$('volLabel').textContent=Math.round(volume*100)+'%';audioUpdate();};
+$('rate').oninput=()=>{rate=+$('rate').value/100;$('rateLabel').textContent=rate.toFixed(2)+'×';};
+$('apply').onclick=()=>{let i=+$('editScene').value;scenes[i].title=$('editTitle').value;scenes[i].text=$('editText').value;scenes[i].duration=+$('editDuration').value;buildMenus();go(i);};
+$('export').onclick=()=>{let b=new Blob([JSON.stringify(scenes,null,2)],{type:'application/json'});let a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='moj_film_epoki.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);};
+$('edit').onclick=()=>$('settings').classList.toggle('open');
+$('play').onclick=()=>{playing=!playing;$('play').textContent=playing?'⏸ Pauza':'▶ Odtwórz';if(playing&&$('narrator').checked)speak();if(!playing&&'speechSynthesis'in window)speechSynthesis.cancel();};
+$('prev').onclick=()=>go(current-1);$('next').onclick=()=>go(current+1);
+$('sound').onclick=()=>{initSound();audio.resume();soundOn=!soundOn;audioUpdate();$('sound').textContent=soundOn?'🔊 Dźwięk':'🔇 Dźwięk';};
+$('seek').oninput=()=>seek(+$('seek').value/1000*total());$('jump').onchange=()=>go(+$('jump').value);
+function buildMenus(){for(const id of ['jump','editScene']){$(id).innerHTML=scenes.map((s,i)=>`<option value="${i}">${i+1}. ${s.title}</option>`).join('');} $('jump').value=current;$('editScene').value=current;refreshEditor();}
+let camT=0;
+function animate(t){requestAnimationFrame(animate);let dt=Math.min(.08,(t-last)/1000||0);last=t;if(playing){elapsed+=dt*rate;if(elapsed>=scenes[current].duration){if(current<scenes.length-1)go(current+1);else{elapsed=scenes[current].duration;playing=false;$('play').textContent='▶ Odtwórz';}}update();}
+ camT+=dt;const underwater=['micro','ediacara','cambrian','ordovician','devonian'].includes(scenes[current].kind);
+ camera.position.set(Math.sin(camT*.09)*4,underwater?3.2:4.8,17+Math.cos(camT*.1)*1.8);camera.lookAt(0,underwater?-.2:0,0);
+ for(const o of actors){if(o.userData.flap){let {i,s}=o.userData.flap;o.rotation.x=Math.sin(camT*5-i*.65)*.3*s;}else if(o.userData.baseY!==undefined){o.position.y=o.userData.baseY+Math.sin(camT*1.4+o.userData.phase)*.23;o.rotation.y=Math.sin(camT*.45+o.userData.phase)*.17;}}
+ for(const b of bubbles){b.position.y+=dt*.45;if(b.position.y>7)b.position.y=-3;}
+ const w=innerWidth,h=innerHeight;if(renderer.domElement.width!==Math.floor(w*renderer.getPixelRatio())||renderer.domElement.height!==Math.floor(h*renderer.getPixelRatio())){renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
+ renderer.render(scene,camera);
+}
+buildMenus();createScene();update();$('loading').remove();requestAnimationFrame(animate);
+</script></body></html>
