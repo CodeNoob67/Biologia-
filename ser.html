@@ -55,11 +55,11 @@ footer{padding:10px 18px;color:var(--muted);text-align:center}
 </div>
 <aside>
 <section class="panel"><h2>📊 Statystyki</h2><div id="stats"></div></section>
-<section class="panel"><h2>🌳 Gatunki</h2><div id="species"></div></section>
+<section class="panel"><h2>🦴 Rzeczywiste organizmy w historii życia</h2><p class="hint">Przykłady znanych organizmów w kolejności geologicznej. Nie są udowodnionym łańcuchem bezpośrednich przodków człowieka. Daty są przybliżone.</p><div id="fossils"></div></section><section class="panel"><h2>🌳 Gatunki symulowane</h2><div id="species"></div></section>
 <section class="panel"><h2>📜 Historia ewolucji</h2><div id="log"></div></section>
 <section class="panel"><h2>ℹ️ Zasady biologiczne</h2><p class="hint">Organizmy żyją w wodzie, na lądzie lub w gorących źródłach. <b>Nie żyją w płynnej lawie</b> — jest zbyt gorąca. Mutacje zmieniają tolerancję temperatury, metabolizm, ruch i dietę. Nowe gatunki powstają, gdy potomstwo dostatecznie różni się od przodka.</p></section>
 </aside>
-</main><footer>Model edukacyjny: uproszczona ewolucja i ekologia, bez gwarancji realistycznych czasów lub konkretnych gatunków.</footer>
+</main><footer>Model edukacyjny: symulowane Protoformy są fikcyjne; panel skamieniałości zawiera rzeczywiste nazwy i przybliżone daty. Odkrywanie listy jest umowne, a nie symulacją powstania tych gatunków.</footer>
 <script>
 "use strict";
 const W=120,H=75,S=8,MAX=1000;
@@ -72,6 +72,27 @@ let tiles,heat,nutrients,orgs,species,history,years,stepNo,nextId,nextSpecies,pa
 const env={temp:22,oxygen:3,co2:8,food:70,rad:8};
 const speeds=[0.5,1,3,8,20,50,120];
 const initialTraits=(habitat)=>({temp:habitat==="hot"?78:24,tolerance:habitat==="hot"?23:20,metabolism:rand(.7,1.3),speed:rand(.5,1.5),mutation:rand(.05,.12),diet:0,habitat});
+const fossilTimeline=[
+ ["Stromatolity tworzone przez mikroorganizmy",3500,"Ślady społeczności drobnoustrojów; nie jeden gatunek."],
+ ["Grypania spiralis",1870,"Wczesny skamieniały organizm o niepewnej pozycji systematycznej."],
+ ["Bangiomorpha pubescens",1047,"Wczesny znany wielokomórkowy eukariont, prawdopodobnie krasnorost."],
+ ["Dickinsonia costata",558,"Organizm ediakarski; jego dokładne pokrewieństwo jest dyskutowane."],
+ ["Kimberella quadrata",555,"Prawdopodobny wczesny przedstawiciel linii mięczaków; pozycja niepewna."],
+ ["Haikouichthys ercaicunensis",518,"Wczesny strunowiec o cechach kręgowców; niepotwierdzony bezpośredni przodek."],
+ ["Entelognathus primordialis",419,"Wczesny szczękowiec pancerny."],
+ ["Eusthenopteron foordi",385,"Ryba mięśniopłetwa bliska linii czworonogów."],
+ ["Tiktaalik roseae",375,"Forma przejściowa ryba–czworonóg, bliski krewny linii czworonogów."],
+ ["Acanthostega gunnari",365,"Wczesny czworonóg z palcami, nadal silnie związany z wodą."],
+ ["Ichthyostega stensioei",365,"Wczesny czworonóg, niekoniecznie potomek Acanthostega."],
+ ["Hylonomus lyelli",315,"Jeden z najstarszych znanych zauropsydów."],
+ ["Morganucodon watsoni",205,"Wczesny ssakokształtny."],
+ ["Purgatorius unio",66,"Wczesny krewny naczelnych; pozycja systematyczna dyskutowana."],
+ ["Sahelanthropus tchadensis",7,"Potencjalny wczesny hominin; interpretacja jest sporna."],
+ ["Australopithecus afarensis",3.9,"Dwunożny hominin znany m.in. ze szkieletu Lucy."],
+ ["Homo habilis",2.4,"Wczesny przedstawiciel rodzaju Homo (klasyfikacja dyskutowana)."],
+ ["Homo erectus",1.9,"Długotrwale istniejący gatunek człowieka."],
+ ["Homo sapiens",0.3,"Nasz gatunek; najstarsze znane skamieniałości około 300 tys. lat."]
+];
 const speciesColor=(i)=>`hsl(${(i*137+170)%360} 85% 66%)`;
 function addLog(msg){history.unshift({y:Math.round(years),msg});if(history.length>70)history.pop();}
 function makeSpecies(parent,traits){
@@ -116,8 +137,8 @@ function mutate(t){
  u[k]+=rand(-scale,scale);}
  u.temp=clamp(u.temp,-25,120);u.tolerance=clamp(u.tolerance,5,55);
  u.metabolism=clamp(u.metabolism,.35,2.5);u.speed=clamp(u.speed,.1,3.5);u.mutation=clamp(u.mutation,.01,.4);
- if(Math.random()<.008+env.rad/800)u.diet=clamp(u.diet+(Math.random()<.5?-1:1),0,2);
- if(Math.random()<.008){u.habitat=["water","land","hot"][Math.floor(rand(0,3))];}
+ if(Math.random()<.025+env.rad/500)u.diet=clamp(u.diet+(Math.random()<.5?-1:1),0,2);
+ if(Math.random()<.025){u.habitat=["water","land","hot"][Math.floor(rand(0,3))];}
  return u;
 }
 function divergence(a,b){return Math.abs(a.temp-b.temp)/22+Math.abs(a.tolerance-b.tolerance)/18+Math.abs(a.metabolism-b.metabolism)*1.3+Math.abs(a.speed-b.speed)+Math.abs(a.mutation-b.mutation)*5+(a.diet!==b.diet?1.6:0)+(a.habitat!==b.habitat?2.3:0)}
@@ -142,11 +163,11 @@ function simulate(){
   for(let j=0;j<3;j++){let prey=orgs[Math.floor(Math.random()*orgs.length)];if(prey&&prey!==o&&prey.energy>0&&prey.traits.diet!==2&&Math.hypot(prey.x-o.x,prey.y-o.y)<3){prey.energy-=35;o.energy+=23;break;}}
  }
  if(o.energy<=0||o.age>rand(80,150))continue;
- if(o.energy>145&&next.length+orgs.length<MAX){
-  o.energy*=.53;let childTraits=Math.random()<tr.mutation+env.rad/450?mutate(tr):{...tr};
+ if(o.energy>105&&next.length<MAX-1){
+  o.energy*=.60;let childTraits=Math.random()<Math.min(.85,tr.mutation+.18+env.rad/230)?mutate(tr):{...tr};
   const parentSp=species.find(s=>s.id===o.sp);
   let sp=parentSp;
-  if(divergence(childTraits,parentSp.traits)>2.5&&species.length<250&&Math.random()<.12)sp=makeSpecies(parentSp,childTraits);
+  if(divergence(childTraits,parentSp.traits)>0.85&&species.length<250&&Math.random()<.34)sp=makeSpecies(parentSp,childTraits);
   let child=spawn(o.x+rand(-2,2),o.y+rand(-2,2),sp,o.energy,childTraits);
   if(child)next.push(child);
  }
@@ -162,7 +183,12 @@ function draw(){
  for(const o of orgs){const sp=species.find(s=>s.id===o.sp);ctx.beginPath();ctx.arc(o.x*S,o.y*S,clamp(1.8+o.energy/75,2,4.5),0,Math.PI*2);ctx.fillStyle=sp?.color||"#fff";ctx.fill();}
  if(selected){const o=orgs.find(o=>o.id===selected);if(o){ctx.strokeStyle="#fff";ctx.lineWidth=2;ctx.beginPath();ctx.arc(o.x*S,o.y*S,8,0,Math.PI*2);ctx.stroke();}}
 }
+function renderFossils(){
+ const unlocked=Math.min(fossilTimeline.length,1+Math.floor(stepNo/90));
+ $("fossils").innerHTML=fossilTimeline.map((f,i)=>`<div style="padding:5px;border-bottom:1px solid #30435a;opacity:${i<unlocked?1:.45}">${i<unlocked?"🟢":"🔒"} <b>${f[0]}</b> — ok. ${f[1]} mln lat temu<br><small>${f[2]}</small></div>`).join("");
+}
 function updateUI(){
+ renderFossils();
  const counts=new Map();for(const o of orgs)counts.set(o.sp,(counts.get(o.sp)||0)+1);
  const living=[...counts.keys()].length;
  $("overlay").innerHTML=`⏳ <b>${Math.round(years).toLocaleString("pl-PL")}</b> lat<br>🦠 <b>${orgs.length}</b> osobników<br>🧬 <b>${living}</b> żyjących gatunków`;
