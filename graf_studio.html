@@ -75,7 +75,8 @@
   #stage[data-pattern="none"]{background-image:none}
   #world{position:absolute;left:0;top:0;transform-origin:0 0;width:5000px;height:5000px}
   #svg{position:absolute;left:0;top:0;width:5000px;height:5000px;overflow:visible;pointer-events:none;z-index:1}
-  #nodes{position:absolute;left:0;top:0;width:5000px;height:5000px;z-index:3}
+  #nodes{position:absolute;left:0;top:0;width:5000px;height:5000px;z-index:3;pointer-events:none}
+  #nodes .node{pointer-events:auto}
   #stage::after{
     content:"";position:absolute;inset:0;background:rgba(3,7,12,.68);
     opacity:0;pointer-events:none;transition:opacity .18s;z-index:2
@@ -204,6 +205,15 @@
   .paintValue{font:700 12px monospace;color:#c9d7e8}
 
   .emojiBtn{position:relative}
+  .node.rectangle{border-radius:3px}
+  .node.freeText{border:0!important;background:transparent!important;box-shadow:none!important;border-radius:0;justify-content:flex-start;white-space:pre-wrap;text-align:left;min-width:1px;min-height:1px;width:max-content!important;height:max-content!important;padding:3px}
+  .node.freeText .nodeLabel{position:static;transform:none;white-space:pre-wrap;font-weight:inherit;font-size:inherit;text-shadow:none;max-width:none}
+  .node.freeText.selected{outline:1px dashed var(--accent)}
+  .freeLine{stroke-linecap:round;cursor:pointer;pointer-events:stroke}
+  .freeLine.selected{filter:drop-shadow(0 0 4px #00c9d4)}
+  #stage.line-drawing{cursor:crosshair}
+  .toolbarGroup{flex-shrink:0}
+  .topbar{overflow-x:auto;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -211,6 +221,9 @@
   <div class="topbar">
     <div class="brand">Graph <span>Studio</span></div>
     <button id="addNodeBtn" class="toolTab">＋ Koła</button>
+    <button id="addRectBtn" class="toolTab">▣ Kwadrat</button>
+    <button id="addTextBtn" class="toolTab">T Tekst</button>
+    <button id="drawLineBtn" class="toolTab">／ Linia</button>
     <button id="connectBtn" class="toolTab">↗ Połączenia</button>
     <div class="colorToolWrap">
       <button id="paintBtn" class="toolTab">🎨 Kolory</button>
@@ -263,7 +276,8 @@
           </div>
           <div class="field">
             <label>Rozmiar: <span id="sizeValue">90</span> px</label>
-            <input id="nodeSize" type="range" min="1" max="1000" step="1" value="90">
+            <input id="nodeSize" type="range" min="1" max="100000" step="1" value="90">
+            <input id="nodeSizeExact" type="number" min="1" max="100000" value="90" title="Dokładny rozmiar">
           </div>
           <div class="field">
             <label>Grubość obramowania</label>
@@ -288,6 +302,21 @@
         </div>
       </div>
 
+      <div id="textPanel" style="display:none">
+        <div class="section">
+          <div class="field"><label>Treść tekstu</label><textarea id="freeTextContent" rows="4" style="width:100%;background:#0d131d;color:white;border:1px solid #283448;border-radius:8px;padding:8px"></textarea></div>
+          <div class="field"><label>Wielkość czcionki (px)</label><input id="freeTextSize" type="number" min="1" max="100000" value="32"></div>
+          <div class="field"><label>Kolor tekstu</label><input id="freeTextColor" type="color" value="#ffffff"></div>
+          <div class="row"><div class="field"><label>X</label><input id="freeTextX" type="number"></div><div class="field"><label>Y</label><input id="freeTextY" type="number"></div></div>
+        </div>
+      </div>
+      <div id="freeLinePanel" style="display:none">
+        <div class="section">
+          <div class="field"><label>Grubość linii (px)</label><input id="freeLineWidth" type="number" min="1" max="100000" value="3"></div>
+          <div class="field"><label>Kolor linii</label><input id="freeLineColor" type="color" value="#aab7c9"></div>
+          <div class="row"><div class="field"><label>X1</label><input id="freeLineX1" type="number"></div><div class="field"><label>Y1</label><input id="freeLineY1" type="number"></div><div class="field"><label>X2</label><input id="freeLineX2" type="number"></div><div class="field"><label>Y2</label><input id="freeLineY2" type="number"></div></div>
+        </div>
+      </div>
       <div id="edgePanel" style="display:none">
         <div class="section">
           <div class="field">
@@ -396,6 +425,7 @@
   let nodes = [];
   let edges = [];
   let selected = null;
+  let drawLineMode = false;
   let connectMode = false;
   let connectSource = null;
   let paintMode = false;
@@ -418,7 +448,7 @@
 
   function applyView(){
     world.style.transform = `translate(${panX}px,${panY}px) scale(${scale})`;
-    $('#zoomText').textContent = Math.round(scale*100)+'%';
+    $('#zoomText').textContent = (scale*100<1?(scale*100).toFixed(3):Math.round(scale*100))+'%';
   }
 
   function applyAppearance(){
@@ -454,7 +484,8 @@
     nodes=d.nodes||[]; edges=d.edges||[]; idCounter=d.idCounter||1;
     scale=d.view?.scale??1; panX=d.view?.panX??0; panY=d.view?.panY??0;
     appearance={bg:d.appearance?.bg||'#0b0f16',pattern:d.appearance?.pattern||'grid',gridSize:d.appearance?.gridSize||32};
-    selected=null;connectMode=false;connectSource=null;stage.classList.remove('connect-focus');$('#connectBtn').classList.remove('active');
+    selected=null;       drawLineMode=false;stage.classList.remove('line-drawing');$('#drawLineBtn').classList.remove('active');
+       connectMode=false;connectSource=null;stage.classList.remove('connect-focus');$('#connectBtn').classList.remove('active');
     applyAppearance();applyView();render();persistProject(false);restoringHistory=false;updateHistoryButtons();
   }
   function undo(){
@@ -478,6 +509,17 @@
     pushHistory(); autoSave();
   }
 
+  function addSpecial(kind){
+    const r=stage.getBoundingClientRect(); const p=worldPoint(r.left+r.width/2,r.top+r.height/2);
+    const size=kind==='text'?32:100;
+    const n={id:uid('n'),x:Math.round(p.x-size/2),y:Math.round(p.y-size/2),size,name:kind==='text'?'Nowy tekst':'Kwadrat',kind,
+      color:kind==='text'?'#ffffff':'#202a39',border:'#66758a',borderWidth:3,image:null,icon:'',iconSize:lastEmojiSize};
+    nodes.push(n);selected={type:'node',id:n.id};render();pushHistory();autoSave();
+  }
+  function addFreeLine(x1,y1,x2,y2){
+    const e={id:uid('e'),free:true,x1,y1,x2,y2,color:'#aab7c9',width:3};
+    edges.push(e);selected={type:'edge',id:e.id};render();pushHistory();autoSave();
+  }
   function addEdge(a,b){
     if(a===b || edges.some(e => (e.a===a&&e.b===b)||(e.a===b&&e.b===a))) return;
     edges.push({id:uid('e'),a,b,color:'#aab7c9',width:3});
@@ -493,12 +535,12 @@
     svg.innerHTML='';
 
     edges.forEach(e=>{
-      const a=nodeById(e.a), b=nodeById(e.b);
-      if(!a||!b)return;
+             const a=e.free?null:nodeById(e.a), b=e.free?null:nodeById(e.b);
+       if(!e.free&&(!a||!b))return;
       const line=document.createElementNS('http://www.w3.org/2000/svg','line');
-      line.setAttribute('x1',a.x+a.size/2); line.setAttribute('y1',a.y+a.size/2);
-      line.setAttribute('x2',b.x+b.size/2); line.setAttribute('y2',b.y+b.size/2);
-      line.setAttribute('class','edge'+(selected?.type==='edge'&&selected.id===e.id?' selected':''));
+      line.setAttribute('x1',e.free?e.x1:a.x+a.size/2); line.setAttribute('y1',e.free?e.y1:a.y+a.size/2);
+      line.setAttribute('x2',e.free?e.x2:b.x+b.size/2); line.setAttribute('y2',e.free?e.y2:b.y+b.size/2);
+      line.setAttribute('class',(e.free?'freeLine':'edge')+(selected?.type==='edge'&&selected.id===e.id?' selected':''));
       line.setAttribute('stroke',e.color); line.setAttribute('stroke-width',e.width);
       line.style.pointerEvents='stroke';
       line.addEventListener('pointerdown',ev=>{ev.stopPropagation();select({type:'edge',id:e.id})});
@@ -507,14 +549,15 @@
 
     nodes.forEach(n=>{
       const el=document.createElement('div');
-      el.className='node'+(selected?.type==='node'&&selected.id===n.id?' selected':'')+(connectSource===n.id?' connect-source':'')+(n.image?' hasImage':'');
+      el.className='node'+(n.kind==='rect'?' rectangle':n.kind==='text'?' freeText':'')+(selected?.type==='node'&&selected.id===n.id?' selected':'')+(connectSource===n.id?' connect-source':'')+(n.image?' hasImage':'');
       el.dataset.id=n.id;
       Object.assign(el.style,{
         left:n.x+'px', top:n.y+'px', width:n.size+'px', height:n.size+'px',
-        background:n.image ? `url("${n.image}")` : n.color,
+                 background:n.kind==='text'?'transparent':(n.image ? `url("${n.image}")` : n.color),
         borderColor:n.border,borderWidth:n.borderWidth+'px'
       });
-      if(n.icon){
+             if(n.kind==='text'){el.style.fontSize=n.size+'px';el.style.color=n.color;}
+       if(n.icon&&n.kind!=='text'){
         const icon=document.createElement('div');
         const customId = typeof n.icon==='string' && n.icon.startsWith('custom:') ? n.icon.slice(7) : null;
         icon.className='nodeIcon'+(customId?' customIcon':'');
@@ -524,7 +567,7 @@
         el.appendChild(icon);
       }
       const lab=document.createElement('div');
-      lab.className='nodeLabel'; lab.textContent=n.name;
+             lab.className='nodeLabel'; lab.textContent=n.name;
       el.appendChild(lab);
 
       let dragging=false, dx=0,dy=0;
@@ -536,7 +579,8 @@
           render(); pushHistory(); autoSave();
           return;
         }
-        if(connectMode){
+                 if(drawLineMode)return;
+         if(connectMode){
           if(!connectSource){
             connectSource=n.id;
             selected={type:'node',id:n.id};
@@ -590,8 +634,8 @@
 
   function renderEdgesOnly(){
     [...svg.children].forEach((line,i)=>{
-      const e=edges[i], a=nodeById(e.a), b=nodeById(e.b);
-      if(!a||!b)return;
+             const e=edges[i], a=e.free?null:nodeById(e.a), b=e.free?null:nodeById(e.b);
+       if(e.free||!a||!b)return;
       line.setAttribute('x1',a.x+a.size/2); line.setAttribute('y1',a.y+a.size/2);
       line.setAttribute('x2',b.x+b.size/2); line.setAttribute('y2',b.y+b.size/2);
     });
@@ -601,17 +645,28 @@
 
   function updatePanel(){
     $('#emptyState').style.display=selected?'none':'block';
-    $('#nodePanel').style.display=selected?.type==='node'?'block':'none';
-    $('#edgePanel').style.display=selected?.type==='edge'?'block':'none';
+    const sn=selected?.type==='node'?nodeById(selected.id):null;
+    const se=selected?.type==='edge'?edgeById(selected.id):null;
+    $('#nodePanel').style.display=sn&&sn.kind!=='text'?'block':'none';
+    $('#textPanel').style.display=sn?.kind==='text'?'block':'none';
+    $('#freeLinePanel').style.display=se?.free?'block':'none';
+    $('#edgePanel').style.display=se&&!se.free?'block':'none';
 
-    if(selected?.type==='node'){
-      const n=nodeById(selected.id); if(!n)return;
-      $('#nodeName').value=n.name; $('#nodeSize').value=n.size; $('#sizeValue').textContent=n.size;
+        if(sn?.kind==='text'){
+      $('#freeTextContent').value=sn.name;$('#freeTextSize').value=sn.size;$('#freeTextColor').value=sn.color;$('#freeTextX').value=sn.x;$('#freeTextY').value=sn.y;
+    }
+    if(sn&&sn.kind!=='text'){
+       const n=sn; if(!n)return;
+      $('#nodeName').value=n.name; $('#nodeSize').value=n.size; $('#nodeSizeExact').value=n.size; $('#sizeValue').textContent=n.size;
       $('#borderWidth').value=n.borderWidth; $('#nodeX').value=n.x; $('#nodeY').value=n.y;
       if($('#emojiSize')){ const es=n.iconSize ?? lastEmojiSize; $('#emojiSize').value=es; $('#emojiSizeValue').textContent=es; }
     }
-    if(selected?.type==='edge'){
-      const e=edgeById(selected.id); if(!e)return;
+        if(se?.free){
+      $('#freeLineWidth').value=se.width;$('#freeLineColor').value=se.color;
+      for(const k of ['x1','y1','x2','y2'])$('#freeLine'+k.toUpperCase()).value=se[k];
+    }
+    if(se&&!se.free){
+       const e=se; if(!e)return;
       $('#edgeWidth').value=e.width; $('#edgeWidthValue').textContent=e.width;
       $('#edgeColor').value=e.color; $('#edgeColorText').textContent=e.color;
     }
@@ -622,7 +677,11 @@
     addNode(p.x-45,p.y-45);
   };
 
+  $('#addRectBtn').onclick=()=>addSpecial('rect');
+  $('#addTextBtn').onclick=()=>addSpecial('text');
+  $('#drawLineBtn').onclick=()=>{drawLineMode=!drawLineMode;connectMode=false;connectSource=null;paintMode=false;$('#connectBtn').classList.remove('active');$('#paintBtn').classList.remove('active');$('#paintMenu').classList.remove('open');stage.classList.remove('connect-focus');stage.classList.toggle('line-drawing',drawLineMode);$('#drawLineBtn').classList.toggle('active',drawLineMode);};
   $('#connectBtn').onclick=()=>{
+    drawLineMode=false;stage.classList.remove('line-drawing');$('#drawLineBtn').classList.remove('active');
     connectMode=!connectMode; connectSource=null;
     if(connectMode && paintMode){paintMode=false;$('#paintBtn').classList.remove('active');$('#paintMenu').classList.remove('open');}
     $('#connectBtn').classList.toggle('active',connectMode);
@@ -652,6 +711,7 @@
   }
   $('#paintBtn').onclick=e=>{
     e.stopPropagation();
+    drawLineMode=false;stage.classList.remove('line-drawing');$('#drawLineBtn').classList.remove('active');
     paintMode=!paintMode;
     $('#paintBtn').classList.toggle('active',paintMode);
     $('#paintMenu').classList.toggle('open',paintMode);
@@ -686,27 +746,31 @@
   stage.addEventListener('contextmenu',e=>e.preventDefault());
 
   let panning=false, lastX=0,lastY=0, panMoved=false;
+  let drawingLine=null;
   stage.addEventListener('pointerdown',e=>{
     if(e.button!==0)return;
     if(e.target.closest('.node')||e.target.tagName==='line')return;
     if(connectMode)return;
+    if(drawLineMode){const p=worldPoint(e.clientX,e.clientY);drawingLine={x1:p.x,y1:p.y,x2:p.x,y2:p.y};stage.setPointerCapture(e.pointerId);return;}
     selected=null;render();
     panning=true;panMoved=false;lastX=e.clientX;lastY=e.clientY;
     stage.classList.add('panning');stage.setPointerCapture(e.pointerId);
   });
   stage.addEventListener('pointermove',e=>{
+    if(drawingLine){const p=worldPoint(e.clientX,e.clientY);drawingLine.x2=p.x;drawingLine.y2=p.y;return;}
     if(!panning)return;
     const dx=e.clientX-lastX,dy=e.clientY-lastY;
     if(Math.abs(dx)+Math.abs(dy)>1)panMoved=true;
     panX+=dx;panY+=dy;lastX=e.clientX;lastY=e.clientY;applyView();
   });
   stage.addEventListener('pointerup',e=>{
+    if(drawingLine){const p=worldPoint(e.clientX,e.clientY);drawingLine.x2=p.x;drawingLine.y2=p.y;const d=drawingLine;drawingLine=null;if(Math.hypot(d.x2-d.x1,d.y2-d.y1)>1)addFreeLine(Math.round(d.x1),Math.round(d.y1),Math.round(d.x2),Math.round(d.y2));return;}
     if(!panning)return; panning=false; stage.classList.remove('panning');
     autoSave();
   });
 
   function zoomAt(factor,cx=stage.clientWidth/2,cy=stage.clientHeight/2){
-    const old=scale; scale=Math.max(.2,Math.min(3,scale*factor));
+    const old=scale; scale=Math.max(.0001,Math.min(10,scale*factor));
     panX=cx-(cx-panX)*(scale/old); panY=cy-(cy-panY)*(scale/old); applyView();
   }
   stage.addEventListener('wheel',e=>{
@@ -719,10 +783,10 @@
 
   $('#fitBtn').onclick=()=>{
     if(!nodes.length){scale=1;panX=0;panY=0;applyView();return}
-    const minX=Math.min(...nodes.map(n=>n.x)), minY=Math.min(...nodes.map(n=>n.y));
-    const maxX=Math.max(...nodes.map(n=>n.x+n.size)), maxY=Math.max(...nodes.map(n=>n.y+n.size));
+    const minX=Math.min(...nodes.map(n=>n.x),...edges.filter(e=>e.free).flatMap(e=>[e.x1,e.x2])), minY=Math.min(...nodes.map(n=>n.y),...edges.filter(e=>e.free).flatMap(e=>[e.y1,e.y2]));
+    const maxX=Math.max(...nodes.map(n=>n.x+(n.kind==='text'?n.name.length*n.size*.6:n.size)),...edges.filter(e=>e.free).flatMap(e=>[e.x1,e.x2])), maxY=Math.max(...nodes.map(n=>n.y+n.size),...edges.filter(e=>e.free).flatMap(e=>[e.y1,e.y2]));
     const w=maxX-minX+160,h=maxY-minY+160;
-    scale=Math.min(stage.clientWidth/w,stage.clientHeight/h,1.5);
+    scale=Math.max(.0001,Math.min(stage.clientWidth/w,stage.clientHeight/h,1.5));
     panX=(stage.clientWidth-(maxX-minX)*scale)/2-minX*scale;
     panY=(stage.clientHeight-(maxY-minY)*scale)/2-minY*scale;
     applyView();
@@ -736,11 +800,20 @@
     $(sel).addEventListener('change',()=>{ if(selected?.type==='node') pushHistory(); });
   }
   bindNodeInput('#nodeName','name');
-  bindNodeInput('#nodeSize','size',Number);
+  bindNodeInput('#nodeSize','size',v=>Math.max(1,Math.min(100000,Number(v))));
+  bindNodeInput('#nodeSizeExact','size',v=>Math.max(1,Math.min(100000,Number(v))));
   bindNodeInput('#borderWidth','borderWidth',Number);
   bindNodeInput('#nodeX','x',Number);
   bindNodeInput('#nodeY','y',Number);
 
+  for(const [id,key,parse] of [['freeTextContent','name',String],['freeTextSize','size',Number],['freeTextColor','color',String],['freeTextX','x',Number],['freeTextY','y',Number]]){
+    $('#'+id).addEventListener('input',ev=>{if(selected?.type!=='node')return;const n=nodeById(selected.id);if(n?.kind!=='text')return;n[key]=parse(ev.target.value);render();autoSave();});
+    $('#'+id).addEventListener('change',pushHistory);
+  }
+  for(const [id,key,parse] of [['freeLineWidth','width',Number],['freeLineColor','color',String],['freeLineX1','x1',Number],['freeLineY1','y1',Number],['freeLineX2','x2',Number],['freeLineY2','y2',Number]]){
+    $('#'+id).addEventListener('input',ev=>{if(selected?.type!=='edge')return;const e=edgeById(selected.id);if(!e?.free)return;e[key]=parse(ev.target.value);render();autoSave();});
+    $('#'+id).addEventListener('change',pushHistory);
+  }
   $('#edgeWidth').addEventListener('input',e=>{
     if(selected?.type!=='edge')return;edgeById(selected.id).width=Number(e.target.value);render();autoSave();
   });
