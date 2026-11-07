@@ -1,0 +1,365 @@
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dimension Portal — 0D do 4D</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#050713;color:white;font-family:Arial,sans-serif;overflow:hidden}
+canvas{display:block}
+#lobby{
+ position:absolute;inset:0;z-index:10;
+ background:radial-gradient(ellipse at center,#17254d,#050713 75%);
+ display:flex;flex-direction:column;align-items:center;
+ justify-content:center;padding:20px;overflow-y:auto
+}
+h1{font-size:clamp(30px,6vw,62px);margin:0;text-align:center;letter-spacing:3px}
+.subtitle{color:#a6b5d9;text-align:center;margin:14px 0 30px}
+.portals{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.portal{
+ width:155px;height:210px;background:#101a32;
+ border:2px solid var(--c);border-radius:18px;
+ box-shadow:0 0 20px color-mix(in srgb,var(--c) 25%,transparent);
+ display:flex;flex-direction:column;align-items:center;
+ justify-content:center;cursor:pointer;transition:.2s
+}
+.portal:hover{transform:translateY(-12px);box-shadow:0 0 35px var(--c)}
+.portal .symbol{font-size:65px;color:var(--c);font-weight:bold}
+.portal strong{font-size:24px;margin:12px}
+.portal small{color:#aab5ca}
+#hud{position:absolute;top:18px;left:18px;z-index:5;display:none;
+ background:#0a1024dd;padding:17px;border:1px solid #34466d;border-radius:12px;max-width:340px}
+#hud h2{margin:0 0 8px;color:#7cddff}
+#description{font-size:14px;line-height:1.5;color:#d0daef}
+#coords{font-family:monospace;font-size:13px;color:#83f7c6;margin-top:10px}
+#back{
+ position:absolute;right:18px;top:18px;z-index:6;
+ padding:13px 20px;background:#182847;color:white;
+ border:1px solid #70d9ff;border-radius:10px;cursor:pointer;display:none
+}
+#back:hover{background:#31518a}
+#help{
+ position:absolute;bottom:15px;left:50%;transform:translateX(-50%);
+ background:#080f24d9;border:1px solid #34466d;
+ padding:12px 20px;border-radius:10px;text-align:center;
+ font-size:13px;z-index:5;display:none;max-width:95vw
+}
+#screen2d{position:absolute;inset:0;display:none}
+@media(max-width:600px){
+ .portal{width:120px;height:155px}
+ .portal .symbol{font-size:45px}
+ #hud{top:65px;left:10px;max-width:260px}
+}
+</style>
+</head>
+<body>
+
+<div id="lobby">
+ <h1>DIMENSION PORTAL</h1>
+ <div class="subtitle">Wybierz wymiar, do którego chcesz wejść</div>
+ <div class="portals">
+  <div class="portal" style="--c:#ff647a" onclick="enter(0)">
+   <div class="symbol">•</div><strong>0D</strong><small>Punkt</small>
+  </div>
+  <div class="portal" style="--c:#ffbd59" onclick="enter(1)">
+   <div class="symbol">━</div><strong>1D</strong><small>Linia</small>
+  </div>
+  <div class="portal" style="--c:#65e5a2" onclick="enter(2)">
+   <div class="symbol">□</div><strong>2D</strong><small>Płaszczyzna</small>
+  </div>
+  <div class="portal" style="--c:#62baff" onclick="enter(3)">
+   <div class="symbol">⬡</div><strong>3D</strong><small>Przestrzeń</small>
+  </div>
+  <div class="portal" style="--c:#c28aff" onclick="enter(4)">
+   <div class="symbol">◇</div><strong>4D</strong><small>Hiperprzestrzeń</small>
+  </div>
+ </div>
+ <p style="color:#7788aa;margin-top:30px">Pięć światów. Pięć różnych zasad przestrzeni.</p>
+</div>
+
+<div id="hud">
+ <h2 id="worldTitle"></h2>
+ <div id="description"></div>
+ <div id="coords"></div>
+</div>
+<button id="back" onclick="goBack()">↩ Powrót do lobby</button>
+<div id="help"></div>
+<canvas id="screen2d"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.min.js"></script>
+<script>
+let dimension=-1;
+let x=0,y=0,z=0,w=0;
+let keys={};
+let scene,camera,renderer,player;
+let objects=[];
+let clock=new THREE.Clock();
+let canvas2d=document.getElementById("screen2d");
+let ctx=canvas2d.getContext("2d");
+let last=performance.now();
+
+const descriptions=[
+ "Zero wymiarów: istnieje tylko jeden punkt. Nie ma kierunków ani odległości, po których można podróżować.",
+ "Jeden wymiar: możesz poruszać się tylko wzdłuż jednej osi — w lewo lub prawo.",
+ "Dwa wymiary: świat ma szerokość i wysokość, ale nie ma głębokości.",
+ "Trzy wymiary: możesz poruszać się wzdłuż osi X, Y i Z.",
+ "Cztery wymiary przestrzenne: oprócz X, Y i Z istnieje oś W. Oglądasz przekrój świata 4D."
+];
+
+const instructions=[
+ "0D: brak ruchu",
+ "1D: A / D lub strzałki lewo / prawo",
+ "2D: WASD lub strzałki",
+ "3D: WASD — ruch, Q / E — dół / góra, mysz — obrót kamery",
+ "4D: WASD — ruch, Q / E — oś Z, R / F — oś W, mysz — obrót kamery"
+];
+
+function enter(d){
+ dimension=d;x=0;y=0;z=0;w=0;
+ document.getElementById("lobby").style.display="none";
+ document.getElementById("hud").style.display="block";
+ document.getElementById("back").style.display="block";
+ document.getElementById("help").style.display="block";
+ document.getElementById("worldTitle").textContent=d+"D WORLD";
+ document.getElementById("description").textContent=descriptions[d];
+ document.getElementById("help").textContent=instructions[d];
+ if(d<=2){
+  document.getElementById("screen2d").style.display="block";
+  if(renderer)renderer.domElement.style.display="none";
+ }else{
+  document.getElementById("screen2d").style.display="none";
+  setup3D();
+ }
+ updateCoords();
+}
+
+function goBack(){
+ dimension=-1;
+ document.getElementById("lobby").style.display="flex";
+ document.getElementById("hud").style.display="none";
+ document.getElementById("back").style.display="none";
+ document.getElementById("help").style.display="none";
+ document.getElementById("screen2d").style.display="none";
+ if(renderer)renderer.domElement.style.display="none";
+ document.exitPointerLock?.();
+ keys={};
+}
+
+function resize(){
+ canvas2d.width=innerWidth;
+ canvas2d.height=innerHeight;
+ if(renderer){
+  renderer.setSize(innerWidth,innerHeight);
+  camera.aspect=innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+ }
+}
+window.addEventListener("resize",resize);
+resize();
+
+document.addEventListener("keydown",e=>{
+ keys[e.code]=true;
+ if(["ArrowLeft","ArrowRight","ArrowUp","ArrowDown","Space"].includes(e.code))e.preventDefault();
+ if(e.code==="Escape" && document.pointerLockElement!==renderer?.domElement)goBack();
+});
+document.addEventListener("keyup",e=>keys[e.code]=false);
+
+function updateCoords(){
+ let a=["Punkt: (0)","X: "+x.toFixed(2),
+ "X: "+x.toFixed(2)+" | Y: "+y.toFixed(2),
+ "X: "+x.toFixed(2)+" | Y: "+y.toFixed(2)+" | Z: "+z.toFixed(2),
+ "X: "+x.toFixed(2)+" | Y: "+y.toFixed(2)+" | Z: "+z.toFixed(2)+" | W: "+w.toFixed(2)];
+ if(dimension>=0)document.getElementById("coords").textContent=a[dimension];
+}
+
+function draw2D(){
+ let W=canvas2d.width,H=canvas2d.height;
+ ctx.fillStyle="#070d1e";ctx.fillRect(0,0,W,H);
+ let cx=W/2,cy=H/2;
+
+ if(dimension===0){
+  ctx.fillStyle="#ff647a";
+  ctx.shadowColor="#ff647a";ctx.shadowBlur=45;
+  ctx.beginPath();ctx.arc(cx,cy,9,0,Math.PI*2);ctx.fill();
+  ctx.shadowBlur=0;
+ }
+ if(dimension===1){
+  ctx.strokeStyle="#ffbd59";ctx.lineWidth=4;
+  ctx.beginPath();ctx.moveTo(0,cy);ctx.lineTo(W,cy);ctx.stroke();
+  for(let i=-100;i<=100;i++){
+   let px=cx+i*60;
+   if(px<0||px>W)continue;
+   ctx.fillStyle="#b88a48";
+   ctx.fillRect(px-1,cy-7,2,14);
+  }
+  ctx.fillStyle="#ffebae";
+  ctx.beginPath();ctx.arc(cx+x*60,cy,11,0,Math.PI*2);ctx.fill();
+ }
+ if(dimension===2){
+  let unit=55;
+  ctx.strokeStyle="#20314c";ctx.lineWidth=1;
+  for(let gx=cx%unit;gx<W;gx+=unit){
+   ctx.beginPath();ctx.moveTo(gx,0);ctx.lineTo(gx,H);ctx.stroke();
+  }
+  for(let gy=cy%unit;gy<H;gy+=unit){
+   ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(W,gy);ctx.stroke();
+  }
+  ctx.fillStyle="#65e5a2";
+  ctx.fillRect(cx+x*unit-12,cy-y*unit-12,24,24);
+  ctx.fillStyle="#ffbd59";
+  for(let i=0;i<15;i++){
+   let ox=Math.sin(i*13.7)*6;
+   let oy=Math.cos(i*8.3)*4;
+   ctx.fillRect(cx+ox*unit-8,cy+oy*unit-8,16,16);
+  }
+ }
+}
+
+let yaw=0,pitch=0;
+function setup3D(){
+ if(!renderer){
+  renderer=new THREE.WebGLRenderer({antialias:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.setSize(innerWidth,innerHeight);
+  document.body.insertBefore(renderer.domElement,document.body.firstChild);
+  renderer.domElement.addEventListener("click",()=>{
+   if(dimension>=3)renderer.domElement.requestPointerLock();
+  });
+ }
+ renderer.domElement.style.display="block";
+ scene=new THREE.Scene();
+ scene.background=new THREE.Color(dimension===3?0x071327:0x130921);
+ scene.fog=new THREE.Fog(scene.background,20,100);
+ camera=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,.05,250);
+ scene.add(new THREE.AmbientLight(0xffffff,1.5));
+ let light=new THREE.DirectionalLight(0xffffff,2);
+ light.position.set(5,10,5);scene.add(light);
+ objects=[];
+ yaw=0;pitch=0;
+
+ let grid=new THREE.GridHelper(100,50,dimension===3?0x3377aa:0x7733aa,0x24324a);
+ grid.position.y=-2;
+ scene.add(grid);
+
+ if(dimension===3){
+  for(let i=0;i<50;i++){
+   let mesh=new THREE.Mesh(
+    new THREE.BoxGeometry(1.5,1.5,1.5),
+    new THREE.MeshStandardMaterial({
+     color:new THREE.Color().setHSL(i/50,.7,.5),
+     roughness:.4
+    })
+   );
+   mesh.position.set(Math.sin(i*2.4)*15,Math.cos(i*1.3)*5,Math.cos(i*2.4)*15);
+   scene.add(mesh);
+  }
+ }else{
+  // Hipersześcian: 16 wierzchołków w przestrzeni 4D
+  let verts=[];
+  for(let a=-1;a<=1;a+=2)
+  for(let b=-1;b<=1;b+=2)
+  for(let c=-1;c<=1;c+=2)
+  for(let d=-1;d<=1;d+=2)
+   verts.push([a,b,c,d]);
+
+  // Krawędzie łączą wierzchołki różniące się jedną współrzędną
+  let edges=[];
+  for(let i=0;i<verts.length;i++)
+   for(let j=i+1;j<verts.length;j++){
+    let dif=0;
+    for(let k=0;k<4;k++)if(verts[i][k]!==verts[j][k])dif++;
+    if(dif===1)edges.push([i,j]);
+   }
+
+  let material=new THREE.LineBasicMaterial({color:0xd39aff});
+  let geometry=new THREE.BufferGeometry();
+  let positions=new Float32Array(edges.length*6);
+  geometry.setAttribute("position",new THREE.BufferAttribute(positions,3));
+  let lines=new THREE.LineSegments(geometry,material);
+  scene.add(lines);
+  objects.push({verts,edges,geometry,positions,lines});
+ }
+ camera.position.set(0,1,9);
+}
+
+document.addEventListener("mousemove",e=>{
+ if(document.pointerLockElement!==renderer?.domElement)return;
+ yaw-=e.movementX*.002;
+ pitch-=e.movementY*.002;
+ pitch=Math.max(-1.5,Math.min(1.5,pitch));
+});
+
+function update4D(){
+ if(!objects.length)return;
+ let o=objects[0];
+ let angle=performance.now()*.00025+w*.3;
+ let ca=Math.cos(angle),sa=Math.sin(angle);
+ let projected=o.verts.map(v=>{
+  // Rotacja w płaszczyźnie XW
+  let X=v[0]*ca-v[3]*sa;
+  let W=v[0]*sa+v[3]*ca;
+  let Y=v[1],Z=v[2];
+  // Perspektywiczny rzut 4D na 3D
+  let scale=4/(4-W);
+  return [X*scale*2,Y*scale*2,Z*scale*2];
+ });
+ let k=0;
+ for(let [a,b] of o.edges){
+  for(let n of projected[a])o.positions[k++]=n;
+  for(let n of projected[b])o.positions[k++]=n;
+ }
+ o.geometry.attributes.position.needsUpdate=true;
+ o.geometry.computeBoundingSphere();
+ o.lines.position.set(0,0,-7);
+}
+
+function update(dt){
+ let speed=3*dt;
+ if(dimension===1){
+  if(keys.KeyA||keys.ArrowLeft)x-=speed;
+  if(keys.KeyD||keys.ArrowRight)x+=speed;
+  x=Math.max(-innerWidth/120,Math.min(innerWidth/120,x));
+ }
+ if(dimension===2){
+  if(keys.KeyA||keys.ArrowLeft)x-=speed;
+  if(keys.KeyD||keys.ArrowRight)x+=speed;
+  if(keys.KeyW||keys.ArrowUp)y+=speed;
+  if(keys.KeyS||keys.ArrowDown)y-=speed;
+ }
+ if(dimension>=3){
+  let forward=(keys.KeyW||keys.ArrowUp?1:0)-(keys.KeyS||keys.ArrowDown?1:0);
+  let side=(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.ArrowLeft?1:0);
+  let vertical=(keys.KeyE?1:0)-(keys.KeyQ?1:0);
+  let len=Math.hypot(forward,side,vertical)||1;
+  forward/=len;side/=len;vertical/=len;
+  x+=(Math.sin(yaw)*forward+Math.cos(yaw)*side)*speed;
+  z+=(-Math.cos(yaw)*forward+Math.sin(yaw)*side)*speed;
+  y+=vertical*speed;
+  if(dimension===4){
+   if(keys.KeyR)w+=speed;
+   if(keys.KeyF)w-=speed;
+   update4D();
+  }
+  camera.position.set(x,y+1,z+9);
+  camera.rotation.order="YXZ";
+  camera.rotation.y=yaw;
+  camera.rotation.x=pitch;
+  renderer.render(scene,camera);
+ }
+ updateCoords();
+}
+
+function animate(now){
+ requestAnimationFrame(animate);
+ let dt=Math.min((now-last)/1000,.05);
+ last=now;
+ if(dimension<0)return;
+ update(dt);
+ if(dimension<=2)draw2D();
+}
+requestAnimationFrame(animate);
+</script>
+</body>
+</html>
