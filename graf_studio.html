@@ -59,12 +59,21 @@
   }
   .edge{stroke:#aab7c9;stroke-width:3;fill:none;pointer-events:stroke;cursor:pointer}
   .edge.selected{stroke:var(--accent);stroke-width:5}
-  .node{
-    position:absolute;border-radius:50%;display:flex;align-items:center;justify-content:center;
-    background:#202a39;border:3px solid #66758a;color:white;
-    min-width:30px;min-height:30px;cursor:grab;user-select:none;
-    box-shadow:0 8px 22px rgba(0,0,0,.27);
-  }
+.node{
+  position:absolute;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#202a39;
+  border:3px solid #66758a;
+  color:white;
+  min-width:1px;
+  min-height:1px;
+  cursor:grab;
+  user-select:none;
+  box-shadow:0 8px 22px rgba(0,0,0,.27);
+}
   .node:active{cursor:grabbing}
   .node.selected{outline:4px solid rgba(0,201,212,.25);border-color:var(--accent)}
   .node.connect-source{box-shadow:0 0 0 7px rgba(0,201,212,.18),0 8px 22px rgba(0,0,0,.27)}
@@ -167,7 +176,7 @@
           </div>
           <div class="field">
             <label>Rozmiar: <span id="sizeValue">90</span> px</label>
-            <input id="nodeSize" type="range" min="30" max="250" value="90">
+            <input id="nodeSize" type="range" min="1" max="1000" step="1" value="90">
           </div>
           <div class="field">
             <label>Kolor koła</label>
