@@ -884,7 +884,7 @@
       acts.append(open,copy,del);row.append(info,acts);list.appendChild(row);
     });
   }
-  function escapeHtml(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+  function escapeHtml(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&','<':'<','>':'>','"':'"',"'":'''}[c]));}
 
   $('#saveBtn').onclick=()=>persistProject(true);
   $('#sheetPlus').onclick=()=>newBlankProject();
@@ -918,4 +918,210 @@
   function closeModal(el){ el.classList.remove('open'); el.setAttribute('aria-hidden','true'); }
   $('#bgBtn').onclick=()=>openModal(bgModal);
   $('#keybindsBtn').onclick=()=>openModal(keybindsModal);
-  do... (21 KB left)
+  document.querySelectorAll('[data-close-modal]').forEach(b=>b.onclick=()=>closeModal($('#'+b.dataset.closeModal)));
+  document.querySelectorAll('.modalOverlay').forEach(m=>m.addEventListener('pointerdown',e=>{if(e.target===m)closeModal(m);}));
+
+  function updateBgPreview(){
+    const p=$('#bgPreview'); if(!p)return;
+    p.style.backgroundColor=appearance.bg;
+    const c=appearance.bg.toLowerCase()==='#f8fafc'||appearance.bg.toLowerCase()==='#fff7ed'?'rgba(40,55,75,.22)':'rgba(160,185,215,.18)';
+    const s=appearance.gridSize+'px';
+    if(appearance.pattern==='grid'){p.style.backgroundImage=`linear-gradient(${c} 1px,transparent 1px),linear-gradient(90deg,${c} 1px,transparent 1px)`;p.style.backgroundSize=`${s} ${s}`;}
+    else if(appearance.pattern==='dots'){p.style.backgroundImage=`radial-gradient(circle,${c} 1.5px,transparent 1.6px)`;p.style.backgroundSize=`${s} ${s}`;}
+    else if(appearance.pattern==='cross'){p.style.backgroundImage=`linear-gradient(${c} 1px,transparent 1px),linear-gradient(90deg,${c} 1px,transparent 1px)`;p.style.backgroundSize=`${s} ${s}`;}
+    else {p.style.backgroundImage='none';}
+  }
+
+  $('#stageBgColor').addEventListener('input',e=>{appearance.bg=e.target.value;applyAppearance();updateBgPreview();autoSave();});
+  $('#stageBgColor').addEventListener('change',pushHistory);
+  document.querySelectorAll('.bgSwatch').forEach(b=>b.onclick=()=>{appearance.bg=b.dataset.bg;applyAppearance();updateBgPreview();pushHistory();autoSave();});
+  document.querySelectorAll('.patternBtn').forEach(b=>b.onclick=()=>{appearance.pattern=b.dataset.pattern;applyAppearance();updateBgPreview();pushHistory();autoSave();});
+  $('#gridSize').addEventListener('input',e=>{appearance.gridSize=Number(e.target.value);applyAppearance();updateBgPreview();autoSave();});
+  $('#gridSize').addEventListener('change',pushHistory);
+
+  // Emoji do wybranego koła
+  // Własne ikonki w stylu emoji (SVG) — działają także dla zwierząt bez oficjalnego emoji.
+  const CUSTOM_ICONS={
+    echidna:`<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M10 37 4 31l9-1-5-8 10 4-1-10 8 7 4-10 5 10 8-7-1 11 10-3-6 9 9 2-8 6c-3 9-13 14-25 13C17 53 9 47 10 37Z" fill="#8b5a3c"/><ellipse cx="39" cy="39" rx="18" ry="13" fill="#b9784f"/><path d="M48 38c7-2 11 0 13 3-5 3-10 4-16 3Z" fill="#d49a72"/><circle cx="47" cy="35" r="2.3" fill="#171717"/><circle cx="59" cy="41" r="2" fill="#171717"/><path d="M24 48c-1 5-4 7-8 7M39 50c0 4-2 6-6 7" stroke="#4b3023" stroke-width="3" stroke-linecap="round"/></svg>`,
+    platypus:`<svg viewBox="0 0 64 64" aria-hidden="true"><ellipse cx="31" cy="35" rx="23" ry="15" fill="#8a5a3b"/><ellipse cx="27" cy="28" rx="16" ry="13" fill="#9b6846"/><path d="M38 31c8-5 19-3 23 2-5 6-16 8-24 4Z" fill="#e6a64c"/><circle cx="22" cy="25" r="2.3" fill="#111"/><circle cx="33" cy="25" r="2.3" fill="#111"/><path d="M9 39C2 39 0 45 5 49c6 5 14 2 17-3Z" fill="#6d472f"/><path d="M20 47c-2 6-7 8-11 5M40 47c2 5 7 6 11 3" stroke="#e6a64c" stroke-width="4" stroke-linecap="round"/></svg>`,
+    koala:`<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="13" cy="23" r="11" fill="#8e969f"/><circle cx="51" cy="23" r="11" fill="#8e969f"/><circle cx="13" cy="23" r="6" fill="#c8cdd2"/><circle cx="51" cy="23" r="6" fill="#c8cdd2"/><ellipse cx="32" cy="34" rx="22" ry="24" fill="#aeb5bc"/><circle cx="24" cy="30" r="3" fill="#111"/><circle cx="40" cy="30" r="3" fill="#111"/><ellipse cx="32" cy="39" rx="7" ry="9" fill="#26282b"/><path d="M28 48c3 3 5 3 8 0" stroke="#555" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>`,
+    opossum:`<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M12 42C2 39 1 31 8 27c10-6 29-6 39 2 7 6 5 16-5 20-11 5-23 2-30-7Z" fill="#aeb3b8"/><path d="M39 27c7-8 17-8 22-2-2 8-10 15-20 16Z" fill="#e8d7cf"/><path d="m45 22 4-9 6 9M33 25l-1-10 8 7" fill="#d58c93"/><circle cx="49" cy="29" r="2.4" fill="#111"/><circle cx="60" cy="28" r="2" fill="#e76f7c"/><path d="M9 43C1 45 0 52 7 55c8 4 14-1 15-6" stroke="#e4a0a8" stroke-width="3" fill="none" stroke-linecap="round"/></svg>`,
+    hamster:`<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="17" cy="18" r="10" fill="#c98a4b"/><circle cx="47" cy="18" r="10" fill="#c98a4b"/><circle cx="17" cy="18" r="5" fill="#f1c49a"/><circle cx="47" cy="18" r="5" fill="#f1c49a"/><ellipse cx="32" cy="36" rx="23" ry="24" fill="#d79a58"/><path d="M15 35c4-8 10-12 17-12s13 4 17 12v20H15Z" fill="#f3d2ad"/><circle cx="24" cy="31" r="3" fill="#111"/><circle cx="40" cy="31" r="3" fill="#111"/><ellipse cx="32" cy="39" rx="4" ry="3" fill="#e78383"/><path d="M32 42v4m-7-3h-8m22 0h8" stroke="#6d4935" stroke-width="2" stroke-linecap="round"/></svg>`,
+    manatee:`<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M8 35c0-13 12-22 28-21 14 1 22 10 20 21-2 12-14 18-29 16C16 50 8 44 8 35Z" fill="#8f9ba3"/><path d="M11 39C4 42 2 48 6 53c7 1 12-3 15-8M49 42c7 1 11 5 11 10-6 2-11 0-15-5" fill="#7f8b93"/><circle cx="40" cy="28" r="2.2" fill="#111"/><circle cx="51" cy="34" r="1.5" fill="#343a3e"/><path d="M44 37c3 2 6 2 9 0" stroke="#5e686e" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`,
+    animalcell:`<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M9 34C6 19 17 8 32 9c17 0 26 11 23 27-2 14-13 21-28 19C16 54 11 47 9 34Z" fill="#ef8eb3" stroke="#c85886" stroke-width="3"/><circle cx="34" cy="31" r="11" fill="#8f6bd1"/><circle cx="37" cy="28" r="4" fill="#c8b4ef"/><ellipse cx="20" cy="25" rx="5" ry="3" fill="#f5c34f"/><ellipse cx="20" cy="43" rx="6" ry="3" fill="#63c6c3"/><path d="M45 43c4-5 7-5 10-1M14 34c4-3 7-3 10 0" stroke="#f6dce8" stroke-width="3" fill="none" stroke-linecap="round"/></svg>`,
+    plantcell:`<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="7" y="8" width="50" height="48" rx="10" fill="#83c96b" stroke="#3f8d48" stroke-width="4"/><rect x="12" y="13" width="40" height="38" rx="8" fill="#b7e58e"/><circle cx="34" cy="31" r="9" fill="#8b6ccf"/><ellipse cx="20" cy="22" rx="6" ry="3" fill="#3aa85a"/><ellipse cx="45" cy="43" rx="6" ry="3" fill="#3aa85a"/><rect x="16" y="31" width="12" height="12" rx="5" fill="#79cbe8" opacity=".9"/></svg>`
+  };
+  // Własna kolekcja: bez zwykłych emoji Unicode. Większość to ssaki.
+  // Dodatkowe zwierzęta korzystają z lekkich SVG w tym samym stylu co pozostałe własne ikonki.
+  function mammalSvg(kind, body='#a8754f', accent='#d9b08c'){
+    const shapes={
+      long:`<ellipse cx="30" cy="36" rx="21" ry="13" fill="${body}"/><circle cx="48" cy="28" r="10" fill="${body}"/><path d="M51 18l5-8 3 10M44 19l-2-8-5 9" fill="${accent}"/><circle cx="51" cy="27" r="2" fill="#111"/><path d="M10 36C2 31 3 24 9 22" stroke="${body}" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M20 46v9M39 46v9" stroke="${body}" stroke-width="5" stroke-linecap="round"/>`,
+      round:`<ellipse cx="31" cy="37" rx="23" ry="17" fill="${body}"/><circle cx="46" cy="27" r="11" fill="${body}"/><circle cx="42" cy="18" r="5" fill="${accent}"/><circle cx="53" cy="20" r="5" fill="${accent}"/><circle cx="49" cy="27" r="2" fill="#111"/><ellipse cx="57" cy="32" rx="4" ry="3" fill="${accent}"/><path d="M18 49v7M39 50v6" stroke="${body}" stroke-width="5" stroke-linecap="round"/>`,
+      hoof:`<ellipse cx="29" cy="35" rx="22" ry="12" fill="${body}"/><path d="M43 32c1-12 5-20 11-22 5 5 5 14 1 24Z" fill="${body}"/><circle cx="53" cy="17" r="2" fill="#111"/><path d="M17 44v12M29 45v11M40 43v13M50 40v16" stroke="${body}" stroke-width="4"/><path d="M50 11l-3-7M55 10l4-7" stroke="${accent}" stroke-width="3" stroke-linecap="round"/>`,
+      marine:`<ellipse cx="31" cy="34" rx="24" ry="14" fill="${body}"/><path d="M9 34 2 25v18Z" fill="${accent}"/><path d="M29 44c5 8 11 10 17 7-2-6-7-9-13-10Z" fill="${accent}"/><circle cx="49" cy="30" r="2" fill="#111"/>`,
+      primate:`<ellipse cx="31" cy="38" rx="18" ry="17" fill="${body}"/><circle cx="32" cy="22" r="14" fill="${body}"/><circle cx="19" cy="22" r="6" fill="${accent}"/><circle cx="45" cy="22" r="6" fill="${accent}"/><ellipse cx="32" cy="26" rx="9" ry="7" fill="${accent}"/><circle cx="27" cy="20" r="2" fill="#111"/><circle cx="37" cy="20" r="2" fill="#111"/><path d="M18 39 7 50M45 39l11 11" stroke="${body}" stroke-width="6" stroke-linecap="round"/>`,
+      rodent:`<ellipse cx="31" cy="38" rx="21" ry="14" fill="${body}"/><circle cx="47" cy="30" r="10" fill="${body}"/><circle cx="44" cy="21" r="6" fill="${accent}"/><circle cx="52" cy="23" r="5" fill="${accent}"/><circle cx="50" cy="29" r="2" fill="#111"/><path d="M11 40C2 45 2 54 10 57" stroke="${accent}" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M55 33h7M54 36h8" stroke="#ddd" stroke-width="1.5"/>`
+    };
+    return `<svg viewBox="0 0 64 64" aria-hidden="true">${shapes[kind]||shapes.long}</svg>`;
+  }
+
+  const MAMMALS = [
+    ['alpaca','alpaka','hoof','#caa77d','#eee0c7'],['antelope','antylopa','hoof','#b27b49','#e4c28f'],['armadillo','pancernik','round','#8d7b68','#b8aa9c'],
+    ['ayeaye','palczak madagaskarski','primate','#5b514c','#c2a58d'],['baboon','pawian','primate','#7c6657','#d0a88d'],['badger','borsuk','round','#555b61','#e8e8e8'],
+    ['beaver','bóbr','rodent','#8a5b3c','#c88955'],['bison','bizon','hoof','#6b432d','#a47452'],['buffalo','bawół','hoof','#49433d','#82776b'],
+    ['camel','wielbłąd','hoof','#b98552','#d9b17f'],['capybara','kapibara','rodent','#9a6b45','#c8996d'],['caracal','karakal','long','#c8874d','#2b211b'],
+    ['cheetah','gepard','long','#d9a64c','#4b3722'],['chinchilla','szynszyla','rodent','#929aa5','#d8dde3'],['chipmunk','pręgowiec','rodent','#a96d3f','#f0c38e'],
+    ['civet','cyweta','long','#8b7764','#d9c6a8'],['cougar','puma','long','#b98b63','#e3c3a1'],['coyote','kojot','long','#9a7a58','#d0b28d'],
+    ['dingo','dingo','long','#c48b4f','#e6bd86'],['donkey','osioł','hoof','#77736e','#bdb7ad'],['dormouse','popielica','rodent','#a7896a','#e1c9ad'],
+    ['dugong','diugoń','marine','#82939a','#b4c2c7'],['eland','eland','hoof','#aa7b54','#d8b896'],['ferret','fretka','long','#8a6a51','#e7d2b8'],
+    ['fossa','fossa','long','#8c6245','#c59a77'],['gazelle','gazela','hoof','#c18c55','#f0d2a8'],['gibbon','gibon','primate','#5e5148','#c7aa8e'],
+    ['giraffe','żyrafa','hoof','#d7a24d','#7a4c2e'],['gnu','gnu','hoof','#665e55','#a89c8e'],['groundhog','świstak','rodent','#8c664a','#c69a76'],
+    ['guineapig','świnka morska','rodent','#b56f42','#f2d1ad'],['hyena','hiena','long','#9b815f','#5c4b38'],['ibex','koziorożec','hoof','#8b735d','#c5ad91'],
+    ['jackal','szakal','long','#9c7651','#d0b184'],['jaguar','jaguar','long','#c9913f','#3c2b1d'],['jerboa','skoczek pustynny','rodent','#c79b6a','#ead1ad'],
+    ['lemur','lemur','primate','#6f7378','#e3e3e3'],['leopard','lampart','long','#d0a14d','#47301e'],['llama','lama','hoof','#bca184','#eee0ce'],
+    ['lynx','ryś','long','#a47d5b','#2d2926'],['macaque','makak','primate','#8b715f','#d4ad91'],['marmoset','marmozeta','primate','#75675d','#e6d7c8'],
+    ['marten','kuna','long','#76513b','#c99c70'],['meerkat','surykatka','long','#b98b5f','#e1bd92'],['mink','norka','long','#4f3b31','#9a7764'],
+    ['mole','kret','round','#4c4a49','#c9b3a8'],['mongoose','mangusta','long','#92735a','#c8a98d'],['moose','łoś','hoof','#76543d','#c69a6b'],
+    ['muskox','piżmowół','hoof','#5f4333','#a98567'],['narwhal','narwal','marine','#9eb4bd','#e9e4cf'],['ocelot','ocelot','long','#c89b5a','#493523'],
+    ['okapi','okapi','hoof','#6e4937','#e5dfd8'],['otter','wydra','long','#75513a','#b78b69'],['pangolin','łuskowiec','round','#92795e','#c2a98b'],
+    ['peccary','pekari','round','#67605a','#a69a8e'],['porcupine','jeżozwierz','round','#6f5b49','#d7c7ae'],['prairiedog','nieświszczuk','rodent','#ad7d55','#dfb58c'],
+    ['proboscismonkey','nosacz sundajski','primate','#9b735e','#d5a68b'],['quokka','kuoka','rodent','#9b704f','#d9ad86'],['raccoon','szop pracz','round','#666a6d','#d8d8d8'],
+    ['redpanda','panda mała','long','#b95d36','#f0c2a4'],['reindeer','renifer','hoof','#8d684c','#d4b18c'],['saiga','suhak','hoof','#b99a71','#e1c7a3'],
+    ['seal','foka','marine','#8c9aa2','#c3cdd2'],['serval','serwal','long','#d0a252','#443425'],['shrew','ryjówka','rodent','#6d625a','#b5a69a'],
+    ['skunk','skunks','long','#27292b','#f1f1f1'],['sloth','leniwiec','round','#887363','#d8c6ad'],['squirrel','wiewiórka','rodent','#b5683d','#e0a06c'],
+    ['stoat','gronostaj','long','#e7e1d8','#292929'],['tapir','tapir','round','#57504c','#9b8f87'],['tarsier','wyrak','primate','#76675d','#d8c4ad'],
+    ['tenrec','tenrek','round','#80654e','#c6a98d'],['vicuna','wikunia','hoof','#c38f5c','#ead0ae'],['walrus','mors','marine','#a87d68','#eee2c8'],
+    ['warthog','guziec','round','#6f5a4c','#c3a48c'],['weasel','łasica','long','#9a6642','#e6c5a3'],['wolverine','rosomak','round','#514239','#b98c68'],
+    ['yak','jak','hoof','#4b4038','#9f8a78'],['zebu','zebu','hoof','#9b8d7d','#d8cfc4'],['orca','orka','marine','#22272b','#f3f5f7'],
+    ['bluewhale','płetwal błękitny','marine','#657f91','#a8becb'],['spermwhale','kaszalot','marine','#6d7780','#aeb8bf'],['porpoise','morświn','marine','#738b96','#b7c8cf'],
+    ['elephantseal','słoń morski','marine','#7d7771','#b7afa8'],['leopardseal','lampart morski','marine','#777d80','#c6c9c9'],['treekangaroo','kangur drzewny','long','#9a5d3e','#d39b73'],
+    ['wombat','wombat','round','#7e6857','#b79a80'],['tasmaniandevil','diabeł tasmański','round','#363332','#c7a98e'],['numbat','mrówkożer workowaty','long','#b66c3e','#e6c09b'],
+    ['bandicoot','jamraj','rodent','#8c6b55','#c6a58b'],['bilby','wielkouch króliczy','rodent','#8a7f77','#d5c6bc'],['sugarglider','lotopałanka','rodent','#8b8580','#e3ded8'],
+    ['anteater','mrówkojad','long','#6e6258','#c3b3a4'],['aardvark','mrównik','long','#9b7762','#d2ad96'],['treepangolin','łuskowiec nadrzewny','round','#8a735b','#c3aa8b']
+  ];
+  MAMMALS.forEach(([id,name,kind,body,accent])=>{ CUSTOM_ICONS[id]=mammalSvg(kind,body,accent); });
+
+  const EMOJIS = [
+    ['custom:echidna','kolczatka echidna'],['custom:platypus','dziobak platypus'],['custom:koala','koala'],['custom:opossum','opos'],['custom:hamster','chomik'],['custom:manatee','manat'],
+    ...MAMMALS.map(([id,name])=>['custom:'+id,name]),
+    ['custom:animalcell','komórka zwierzęca komorka zwierzeca'],['custom:plantcell','komórka roślinna komorka roslinna'],
+    // Oficjalne emoji Unicode — kręgowce
+    ['🐶','pies'],['🐱','kot'],['🐭','mysz'],['🐹','chomik'],['🐰','królik krolik'],['🦊','lis'],['🐻','niedźwiedź niedzwiedz'],['🐼','panda'],['🐨','koala'],['🐯','tygrys'],['🦁','lew'],['🐮','krowa'],['🐷','świnia swinia'],['🐸','żaba zaba płaz plaz'],['🐵','małpa malpa'],['🐔','kura'],['🐧','pingwin'],['🐦','ptak'],['🐤','pisklę piskle'],['🦆','kaczka'],['🦅','orzeł orzel'],['🦉','sowa'],['🦇','nietoperz'],['🐺','wilk'],['🐗','dzik'],['🐴','koń kon'],['🦄','jednorożec jednorozec'],['🐝','pszczoła pszczola'],
+    ['🐍','wąż waz gad'],['🦎','jaszczurka gad'],['🐢','żółw zolw gad'],['🐊','krokodyl gad'],['🐲','smok'],['🦖','tyranozaur dinozaur'],['🦕','zauropod dinozaur'],
+    ['🐟','ryba'],['🐠','ryba tropikalna'],['🐡','rozdymka'],['🦈','rekin'],['🐬','delfin'],['🐳','wieloryb'],['🐋','wieloryb fiszbinowiec'],['🦭','foka'],
+    ['🦃','indyk'],['🦚','paw'],['🦜','papuga'],['🦢','łabędź labedz'],['🦩','flaming'],['🕊️','gołąb golab'],
+    // Człowiek i etapy życia
+    ['👶','dziecko niemowlę niemowle'],['🧒','dziecko'],['👦','chłopiec chlopiec'],['👧','dziewczynka'],['🧑','człowiek dorosły czlowiek dorosly'],['👨','mężczyzna mezczyzna'],['👩','kobieta'],['🧓','starsza osoba senior'],
+    // Organy i anatomia
+    ['🧠','mózg mozg organ'],['🫀','serce organ'],['🫁','płuca pluca organ'],['🦷','ząb zab zeby'],['🦴','kość kosc szkielet'],['👁️','oko narząd wzroku narzad'],['👂','ucho narząd słuchu narzad'],['👃','nos'],['👅','język jezyk'],['🩸','krew'],
+    // Biologia
+    ['🧬','DNA genetyka'],['🦠','mikrob bakteria'],['🔬','mikroskop'],['🧫','szalka petriego hodowla komórkowa komorkowa']
+  ];
+  function renderEmojiPicker(){
+    const grid=$('#emojiGrid'); if(!grid)return;
+    const q=($('#emojiSearch')?.value||'').trim().toLowerCase();
+    grid.innerHTML='';
+    EMOJIS.filter(([emoji,name])=>!q||name.includes(q)||emoji.includes(q)).forEach(([emoji,name])=>{
+      const b=document.createElement('button'); b.type='button'; b.className='emojiBtn';
+      if(emoji.startsWith('custom:')) b.innerHTML=CUSTOM_ICONS[emoji.slice(7)]||''; else b.textContent=emoji;
+      b.title=name; b.setAttribute('aria-label',name);
+      b.onclick=()=>{
+        if(selected?.type!=='node')return;
+        const n=nodeById(selected.id); if(!n)return;
+        n.icon=emoji; if(n.iconSize==null)n.iconSize=lastEmojiSize; render(); pushHistory(); autoSave();
+      };
+      grid.appendChild(b);
+    });
+  }
+  $('#emojiSearch').addEventListener('input',renderEmojiPicker);
+  $('#emojiSize').addEventListener('input',e=>{
+    const v=Math.max(1,Math.min(10,Number(e.target.value)||5));
+    lastEmojiSize=v; localStorage.setItem('graphStudioEmojiSize',String(v));
+    $('#emojiSizeValue').textContent=v;
+    if(selected?.type==='node'){ const n=nodeById(selected.id); if(n){n.iconSize=v; render(); autoSave();} }
+  });
+  $('#emojiSize').addEventListener('change',()=>{ if(selected?.type==='node') pushHistory(); });
+  $('#emojiClear').onclick=()=>{
+    if(selected?.type!=='node')return;
+    const n=nodeById(selected.id); if(!n)return;
+    n.icon=''; render(); pushHistory(); autoSave();
+  };
+  renderEmojiPicker();
+
+  // AI image panel
+  const aiPanel=$('#aiPanel');
+  $('#aiFab').onclick=()=>aiPanel.classList.toggle('open');
+  $('#aiClose').onclick=()=>aiPanel.classList.remove('open');
+  function blobToDataURL(blob){
+    return new Promise((resolve,reject)=>{
+      const r=new FileReader();
+      r.onload=()=>resolve(r.result); r.onerror=reject; r.readAsDataURL(blob);
+    });
+  }
+
+  $('#aiGenerate').onclick=async()=>{
+    const status=$('#aiStatus');
+    if(selected?.type!=='node'){
+      status.textContent='Najpierw zaznacz koło, do którego chcesz dodać obraz.';
+      return;
+    }
+    const prompt=$('#aiPrompt').value.trim();
+    if(!prompt){status.textContent='Wpisz opis obrazu.';return;}
+
+    const targetId=selected.id;
+    status.textContent='Generuję obraz…';
+    $('#aiGenerate').disabled=true;
+    try{
+      const url='https://gen.pollinations.ai/image/'+encodeURIComponent(prompt)+'?model=flux&width=768&height=768&nologo=true';
+      const res=await fetch(url);
+      if(!res.ok) throw new Error('Generator wymaga autoryzacji ('+res.status+')');
+      const blob=await res.blob();
+      const dataUrl=await blobToDataURL(blob);
+      const n=nodeById(targetId);
+      if(!n) throw new Error('Koło już nie istnieje');
+      n.image=dataUrl;
+      status.textContent='✓ Obraz został dodany do koła.';
+      render();pushHistory();autoSave();
+    }catch(err){
+      status.textContent='Generator AI nie pozwolił na wygenerowanie obrazu bez logowania. Sam edytor grafów działa normalnie.';
+    }finally{
+      $('#aiGenerate').disabled=false;
+    }
+  };
+
+  $('#removeImage').onclick=()=>{
+    if(selected?.type!=='node'){ $('#aiStatus').textContent='Najpierw zaznacz koło.'; return; }
+    const n=nodeById(selected.id);
+    if(n){n.image=null;render();pushHistory();autoSave();$('#aiStatus').textContent='Obraz usunięty.';}
+  };
+
+  // Start: przywróć ostatnio otwarty z wielu zapisów.
+  // Migracja starego pojedynczego zapisu, jeśli istnieje.
+  let allProjects=getProjects();
+  if(!Object.keys(allProjects).length){
+    const old=localStorage.getItem('graphStudioProject');
+    if(old){
+      try{ const d=JSON.parse(old); loadProject(d); createProject('Mój graf',d); }catch{}
+    }
+  }
+  allProjects=getProjects();
+  const remembered=localStorage.getItem(CURRENT_KEY);
+  const firstId=remembered&&allProjects[remembered]?remembered:Object.keys(allProjects)[0];
+  if(firstId){
+    currentProjectId=firstId; localStorage.setItem(CURRENT_KEY,firstId); loadProject(allProjects[firstId].data);
+  }else{
+    nodes=[];edges=[];idCounter=1;
+    addNode(340,240,'Początek'); addNode(610,240,'Etap 2'); addNode(880,380,'Cel');
+    addEdge(nodes[0].id,nodes[1].id); addEdge(nodes[1].id,nodes[2].id);
+    selected=null;render();applyView();createProject('Mój pierwszy graf',project());persistProject(false);
+  }
+  updateProjectUI();
+
+  applyAppearance();
+  if(!undoStack.length) undoStack=[snapshot()];
+  updateHistoryButtons();
+  window.addEventListener('beforeunload',()=>persistProject(false));
+})();
+</script>
+</body>
+</html>
