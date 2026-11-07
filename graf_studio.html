@@ -884,7 +884,17 @@
       acts.append(open,copy,del);row.append(info,acts);list.appendChild(row);
     });
   }
-  function escapeHtml(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&','<':'<','>':'>','"':'"',"'":'''}[c]));}
+ 
+function escapeHtml(v) {
+  return String(v).replace(/[&<>"']/g, c => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[c]));
+}
+
 
   $('#saveBtn').onclick=()=>persistProject(true);
   $('#sheetPlus').onclick=()=>newBlankProject();
